@@ -95,4 +95,6 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 ssavice-root = { id = "ssavice.root" }
 ssavice-android-application = { id = "ssavice.android.application" }
-ssavice-android-application-compose = { id = "momokji.android.application.compose" }
+ssavice-android-application-compose = { id = "ssavice.android.application.compose" }
+ssavice-android-library = { id = "ssavice.android.library" }
+ssavice-android-library-compose = { id = "ssavice.android.library.compose" }
