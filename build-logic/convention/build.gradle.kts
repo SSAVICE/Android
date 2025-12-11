@@ -32,5 +32,9 @@ gradlePlugin {
             id = libs.plugins.ssavice.android.application.compose.get().pluginId
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
+        register("androidApplication") {
+            id = libs.plugins.ssavice.android.application.asProvider().get().pluginId
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
     }
 }

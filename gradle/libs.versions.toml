@@ -94,4 +94,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 ssavice-root = { id = "ssavice.root" }
+ssavice-android-application = { id = "ssavice.android.application" }
 ssavice-android-application-compose = { id = "momokji.android.application.compose" }
