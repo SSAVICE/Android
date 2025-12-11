@@ -48,5 +48,9 @@ gradlePlugin {
             id = libs.plugins.ssavice.hilt.get().pluginId
             implementationClass = "HiltConventionPlugin"
         }
+        register("jvmLibrary") {
+            id = libs.plugins.ssavice.jvm.library.get().pluginId
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
     }
 }
