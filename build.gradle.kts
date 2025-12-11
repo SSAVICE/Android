@@ -9,4 +9,9 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.ssavice.root) apply false
+    alias(libs.plugins.ktlint) apply false
+}
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }
