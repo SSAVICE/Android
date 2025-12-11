@@ -44,5 +44,9 @@ gradlePlugin {
             id = libs.plugins.ssavice.android.library.asProvider().get().pluginId
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("hilt") {
+            id = libs.plugins.ssavice.hilt.get().pluginId
+            implementationClass = "HiltConventionPlugin"
+        }
     }
 }
