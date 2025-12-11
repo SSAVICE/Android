@@ -92,3 +92,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+ssavice-root = { id = "ssavice.root" }
+ssavice-android-application-compose = { id = "momokji.android.application.compose" }
