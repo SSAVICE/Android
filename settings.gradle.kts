@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -21,3 +22,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "Ssavice"
 include(":app")
+include(":core:data")
+include(":core:domain")
+include(":core:network")
+include(":core:ui")
+include(":core:model")
+include(":core:common")
+include(":feature:login")
