@@ -12,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ssavice.ssavice.ui.theme.SsaviceTheme
-import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.AndroidEntryPoint
 
-@HiltAndroidApp
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
