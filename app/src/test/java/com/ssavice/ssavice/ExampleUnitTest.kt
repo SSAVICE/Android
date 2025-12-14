@@ -16,6 +16,6 @@ class ExampleUnitTest {
 
     @Test
     fun invalid_test_case() {
-        assertEquals(5, 3 + 2)      // this test fails
+        assertEquals(5, 3 + 2) // this test fails
     }
 }
