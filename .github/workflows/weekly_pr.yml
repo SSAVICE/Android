@@ -2,7 +2,7 @@ name: Weekly Dev CI
 
 on:
   pull_request:
-    branches: [ "*" ]
+    branches: [ "week-*", "develop" ]
 
 jobs:
   test:
