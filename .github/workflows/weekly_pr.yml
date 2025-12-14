@@ -3,7 +3,7 @@ name: Weekly Dev CI
 on:
   pull_request:
     branches: [ "week-*", "develop" ]
-  merge:
+  push:
     branches: [ "week-*", "develop" ]
 
 jobs:
@@ -52,6 +52,7 @@ jobs:
 
         # Convention Check 후 PR 리뷰로 결과 전송
       - name: Run Ktlint and Publish Test Results
+        if: github.event_name == 'pull_request'
         uses: ScaCap/action-ktlint@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -62,11 +63,11 @@ jobs:
 
         # 유닛 테스트 후 PR 코멘트로 결과 전송
       - name: Run Unit Test
-        if: success() || failure()
+        if: github.event_name == 'pull_request' && success() || failure()
         run: ./gradlew test
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: success() || failure()
+        if: github.event_name == 'pull_request' && success() || failure()
         with:
           junit_files: '**/build/test-results/*/TEST-*.xml'
