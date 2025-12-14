@@ -3,6 +3,8 @@ name: Weekly Dev CI
 on:
   pull_request:
     branches: [ "week-*", "develop" ]
+  merge:
+    branches: [ "week-*", "develop" ]
 
 jobs:
   test:
