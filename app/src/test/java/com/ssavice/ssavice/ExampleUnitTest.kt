@@ -1,6 +1,6 @@
 package com.ssavice.ssavice
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
@@ -16,6 +16,6 @@ class ExampleUnitTest {
 
     @Test
     fun invalid_test_case() {
-        assertEquals(4, 3 + 2)      // this test fails
+        assertEquals(5, 3 + 2)      // this test fails
     }
 }
