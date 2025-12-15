@@ -19,7 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class ServiceRetrofit
@@ -31,50 +30,58 @@ object RetrofitModule {
     @Provides
     @Singleton
     @ServiceAuthRetrofit
-    fun provideServiceAuthRetrofitBuilder(): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BACKEND_URL)
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .build()
+    fun provideServiceAuthRetrofitBuilder(): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .build()
 
     @Provides
     @Singleton
     @ServiceRetrofit
-    fun provideServiceRetrofitBuilder(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BACKEND_URL)
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .client(okHttpClient)
-        .build()
+    fun provideServiceRetrofitBuilder(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .client(okHttpClient)
+            .build()
 
     @Provides
     @Singleton
-    fun provideHeaderInterceptor(tokenRepository: TokenRepository) =
-        HeaderInterceptor(tokenRepository)
+    fun provideHeaderInterceptor(tokenRepository: TokenRepository) = HeaderInterceptor(tokenRepository)
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenRepository: TokenRepository, authRepository: AuthenticationRepository) =
-        AuthInterceptor(tokenRepository, authRepository)
+    fun provideAuthInterceptor(
+        tokenRepository: TokenRepository,
+        authRepository: AuthenticationRepository,
+    ) = AuthInterceptor(tokenRepository, authRepository)
 
     @Provides
     @Singleton
     fun provideOkHttpClient(
         headerInterceptor: HeaderInterceptor,
         authInterceptor: AuthInterceptor,
-        loggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(headerInterceptor)
-        .addInterceptor(loggingInterceptor)
-        .authenticator(authInterceptor)
-        .build()
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient =
+        OkHttpClient
+            .Builder()
+            .addInterceptor(headerInterceptor)
+            .addInterceptor(loggingInterceptor)
+            .authenticator(authInterceptor)
+            .build()
 
     @Provides
     @Singleton
-    fun provideLoggingInterceptor() = HttpLoggingInterceptor()
-        .setLevel(
-            if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor.Level.BODY
-            } else {
-                HttpLoggingInterceptor.Level.NONE
-            }
-        )
+    fun provideLoggingInterceptor() =
+        HttpLoggingInterceptor()
+            .setLevel(
+                if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                },
+            )
 }

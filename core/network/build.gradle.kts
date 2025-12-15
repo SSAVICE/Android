@@ -14,15 +14,18 @@ android {
     namespace = "com.ssavice.core.network"
 }
 
-val localProps = providers
-    .fileContents(rootProject.layout.projectDirectory.file("local.properties"))
-    .asText
-    .map {
-        Properties().apply { load(it.reader())}
-    }
+val localProps =
+    providers
+        .fileContents(rootProject.layout.projectDirectory.file("local.properties"))
+        .asText
+        .map {
+            Properties().apply { load(it.reader()) }
+        }
 
-val backendURL = localProps.map { it.getProperty("BACKEND_URL") }
-    .orElse("http://example.com")
+val backendURL =
+    localProps
+        .map { it.getProperty("BACKEND_URL") }
+        .orElse("http://example.com")
 
 dependencies {
     implementation(libs.retrofit.kotlin.serialization)
@@ -33,8 +36,11 @@ dependencies {
 
 androidComponents {
     onVariants {
-        it.buildConfigFields!!.put("BACKEND_URL", backendURL.map { value ->
-            BuildConfigField(type = "String", value = """"$value"""", comment = null)
-        })
+        it.buildConfigFields!!.put(
+            "BACKEND_URL",
+            backendURL.map { value ->
+                BuildConfigField(type = "String", value = """"$value"""", comment = null)
+            },
+        )
     }
 }

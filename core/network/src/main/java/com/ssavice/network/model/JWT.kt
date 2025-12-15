@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class JWT(
     val expirationTick: Long,
     val refreshToken: String,
-    val accessToken: String
+    val accessToken: String,
 ) {
     fun isExpired(): Boolean = false
 }
