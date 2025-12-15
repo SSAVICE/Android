@@ -20,6 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Ssavice"
 include(":app")
 include(":core:data")

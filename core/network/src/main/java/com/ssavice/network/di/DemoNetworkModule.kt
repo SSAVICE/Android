@@ -13,8 +13,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 internal interface DemoNetworkModule {
     @Binds
-    fun binds(impl: DemoTokenRepository): TokenRepository
+    fun bindTokenRepository(impl: DemoTokenRepository): TokenRepository
 
     @Binds
-    fun binds(impl: DemoAuthenticationRepository): AuthenticationRepository
+    fun bindAuthenticationRepository(impl: DemoAuthenticationRepository): AuthenticationRepository
 }

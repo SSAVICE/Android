@@ -18,6 +18,11 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
+    implementation(projects.core.ui)
+    implementation(projects.core.data)
+    implementation(projects.core.model)
+
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
