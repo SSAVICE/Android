@@ -30,6 +30,7 @@ androidxComposeFoundation = "1.10.0"
 androidxComposeMaterial3Adaptive = "1.2.0"
 androidxComposeRuntimeTracing = "1.10.0"
 material3 = "1.4.0"
+mockk = "1.14.7"
 ktlint = "14.0.1"
 
 [libraries]
@@ -80,6 +81,7 @@ androidx-navigation-testing = { group = "androidx.navigation", name = "navigatio
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk"}
 
 # Dependencies of the included build-logic
 android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "androidGradlePlugin" }
