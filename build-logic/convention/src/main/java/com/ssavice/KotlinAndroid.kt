@@ -9,9 +9,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
-internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
+internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, *, *, *, *, *>) {
     commonExtension.apply {
         compileSdk = 36
 
@@ -39,14 +37,15 @@ internal fun Project.configureKotlinJvm() {
     configureKotlin<KotlinJvmProjectExtension>()
 }
 
-private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configure<T> {
-    // Treat all Kotlin warnings as errors (disabled by default)
-    // Override by setting warningsAsErrors=true in your ~/.gradle/gradle.properties
-    when (this) {
-        is KotlinAndroidProjectExtension -> compilerOptions
-        is KotlinJvmProjectExtension -> compilerOptions
-        else -> TODO("Unsupported project extension $this ${T::class}")
-    }.apply {
-        jvmTarget.set(JvmTarget.JVM_17)
+private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() =
+    configure<T> {
+        // Treat all Kotlin warnings as errors (disabled by default)
+        // Override by setting warningsAsErrors=true in your ~/.gradle/gradle.properties
+        when (this) {
+            is KotlinAndroidProjectExtension -> compilerOptions
+            is KotlinJvmProjectExtension -> compilerOptions
+            else -> TODO("Unsupported project extension $this ${T::class}")
+        }.apply {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
-}

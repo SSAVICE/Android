@@ -21,7 +21,6 @@ class HiltConventionPlugin : Plugin<Project> {
                 }
             }
 
-            /** Add support for Android modules, based on [AndroidBasePlugin] */
             pluginManager.withPlugin("com.android.base") {
                 apply(plugin = "dagger.hilt.android.plugin")
                 dependencies {
