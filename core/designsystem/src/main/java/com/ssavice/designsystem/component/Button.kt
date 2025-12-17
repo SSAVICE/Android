@@ -1,6 +1,5 @@
 package com.ssavice.designsystem.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -14,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.theme.SsaviceTheme
 
 @Composable
-fun SsaviceButton(
+private fun SsaviceButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -47,7 +47,7 @@ fun SsaviceButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    text: @Composable () -> Unit,
+    text: String?,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     SsaviceButton(
@@ -61,10 +61,28 @@ fun SsaviceButton(
         },
     ) {
         ButtonContent(
-            text = text,
+            text = { Text(text ?: "") },
             leadingIcon = leadingIcon,
         )
     }
+}
+
+@Composable
+fun SsaviceButtonOutlined(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    text: String?
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        contentPadding = ButtonDefaults.ContentPadding,
+        shape = RoundedCornerShape(12),
+        content = { Text(text ?: "")},
+        border = ButtonDefaults.outlinedButtonBorder(enabled).copy(width = 0.4.dp)
+    )
 }
 
 @Composable
@@ -98,7 +116,21 @@ fun ButtonPreview() {
         SsaviceBackground(modifier = Modifier.size(170.dp, 70.dp)) {
             SsaviceButton(
                 onClick = {},
-                text = { Text("Test button") },
+                text = "다음",
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun OutlinedButtonPreview() {
+    SsaviceTheme {
+        SsaviceBackground(modifier = Modifier.size(170.dp, 70.dp)) {
+            SsaviceButtonOutlined(
+                onClick = {},
+                text = "이전",
                 modifier = Modifier.padding(10.dp)
             )
         }
@@ -112,7 +144,7 @@ fun ButtonLeadingIconPreview() {
         SsaviceBackground(modifier = Modifier.size(170.dp, 70.dp)) {
             SsaviceButton(
                 onClick = {},
-                text = { Text("Test button") },
+                text = "Test Button",
                 leadingIcon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = null) },
                 modifier = Modifier.padding(10.dp)
             )
