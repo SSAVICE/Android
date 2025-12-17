@@ -38,7 +38,9 @@ fun BackgroundDefault() {
     SsaviceTheme {
         SsaviceBackground(
             Modifier.size(
-                100.dp
-            ), content = {})
+                100.dp,
+            ),
+            content = {},
+        )
     }
 }

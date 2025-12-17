@@ -33,7 +33,7 @@ fun SsaviceInputField(
     labelText: String? = null,
     multiLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     val shape = RoundedCornerShape(8.dp)
     OutlinedTextField(
@@ -41,40 +41,47 @@ fun SsaviceInputField(
         modifier = modifier,
         shape = shape,
         lineLimits =
-            if (multiLine) TextFieldLineLimits.SingleLine
-            else TextFieldLineLimits.MultiLine(
-                1,
-                4
-            ),
+            if (multiLine) {
+                TextFieldLineLimits.SingleLine
+            } else {
+                TextFieldLineLimits.MultiLine(
+                    1,
+                    4,
+                )
+            },
         placeholder = { PlaceHolderText(placeholderText ?: "") },
         contentPadding = PaddingValues(12.dp),
         label = {
             if (labelText != null) {
                 ProvideTextStyle(value = MaterialTheme.typography.labelSmall)
                 { Text(labelText) }
-            } else null
+            } else {
+                null
+            }
         },
         labelPosition = TextFieldLabelPosition.Above(),
         keyboardOptions = keyboardOptions,
         enabled = enabled,
-        colors = OutlinedTextFieldDefaults.colors().copy(
-            unfocusedIndicatorColor = SsaviceLightGray
-        )
+        colors =
+            OutlinedTextFieldDefaults.colors().copy(
+                unfocusedIndicatorColor = SsaviceLightGray,
+            ),
     )
 }
 
 @Preview
 @Composable
 private fun InputFieldPreview() {
-    val state = remember {
-        TextFieldState()
-    }
+    val state =
+        remember {
+            TextFieldState()
+        }
     SsaviceTheme {
         SsaviceBackground(modifier = Modifier.size(170.dp, 70.dp)) {
             SsaviceInputField(
                 modifier = Modifier.padding(10.dp),
                 state = state,
-                placeholderText = "이름"
+                placeholderText = "이름",
             )
         }
     }
@@ -83,20 +90,22 @@ private fun InputFieldPreview() {
 @Preview
 @Composable
 private fun LabeledInputFieldPreview() {
-    val state = remember {
-        TextFieldState()
-    }
+    val state =
+        remember {
+            TextFieldState()
+        }
     SsaviceTheme {
         SsaviceBackground(modifier = Modifier.size(200.dp, 150.dp)) {
             Box(
-                modifier = Modifier
-                    .size(170.dp, 120.dp)
-                    .padding(10.dp)
+                modifier =
+                    Modifier
+                        .size(170.dp, 120.dp)
+                        .padding(10.dp),
             ) {
                 SsaviceInputField(
                     state = state,
                     placeholderText = "홍길동",
-                    labelText = "이름"
+                    labelText = "이름",
                 )
             }
         }
@@ -106,22 +115,24 @@ private fun LabeledInputFieldPreview() {
 @Preview
 @Composable
 private fun LabeledInputFieldMultilinePreview() {
-    val state = remember {
-        TextFieldState(
-            "ABCDEFG\n대한민국 최고의 중식 전문점 최고의 맛을 보장합니다.\n예약문의: 010-1234-5678\n주차가능"
-        )
-    }
+    val state =
+        remember {
+            TextFieldState(
+                "ABCDEFG\n대한민국 최고의 중식 전문점 최고의 맛을 보장합니다.\n예약문의: 010-1234-5678\n주차가능",
+            )
+        }
     SsaviceTheme {
         SsaviceBackground(modifier = Modifier.size(350.dp, 600.dp)) {
             Box(
-                modifier = Modifier
-                    .size(170.dp, 120.dp)
-                    .padding(10.dp)
+                modifier =
+                    Modifier
+                        .size(170.dp, 120.dp)
+                        .padding(10.dp),
             ) {
                 SsaviceInputField(
                     state = state,
                     placeholderText = "홍길동",
-                    labelText = "설명"
+                    labelText = "설명",
                 )
             }
         }
@@ -133,8 +144,9 @@ private fun PlaceHolderText(text: String) {
     Text(
         text = text,
         style = Typography().bodyMedium,
-        modifier = Modifier
-            .wrapContentHeight(align = Alignment.CenterVertically),
-        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        modifier =
+            Modifier
+                .wrapContentHeight(align = Alignment.CenterVertically),
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
     )
 }

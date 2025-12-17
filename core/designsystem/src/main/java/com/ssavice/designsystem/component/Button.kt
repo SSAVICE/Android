@@ -33,12 +33,13 @@ private fun SsaviceButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+            ),
         contentPadding = contentPadding,
         content = content,
-        shape = RoundedCornerShape(12)
+        shape = RoundedCornerShape(12),
     )
 }
 
@@ -54,11 +55,12 @@ fun SsaviceButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        contentPadding = if (leadingIcon != null) {
-            ButtonDefaults.ButtonWithIconContentPadding
-        } else {
-            ButtonDefaults.ContentPadding
-        },
+        contentPadding =
+            if (leadingIcon != null) {
+                ButtonDefaults.ButtonWithIconContentPadding
+            } else {
+                ButtonDefaults.ContentPadding
+            },
     ) {
         ButtonContent(
             text = { Text(text ?: "") },
@@ -72,7 +74,7 @@ fun SsaviceButtonOutlined(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    text: String?
+    text: String?,
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -80,8 +82,8 @@ fun SsaviceButtonOutlined(
         enabled = enabled,
         contentPadding = ButtonDefaults.ContentPadding,
         shape = RoundedCornerShape(12),
-        content = { Text(text ?: "")},
-        border = ButtonDefaults.outlinedButtonBorder(enabled).copy(width = 0.4.dp)
+        content = { Text(text ?: "") },
+        border = ButtonDefaults.outlinedButtonBorder(enabled).copy(width = 0.4.dp),
     )
 }
 
@@ -98,11 +100,12 @@ private fun ButtonContent(
     Box(
         Modifier.Companion
             .padding(
-                start = if (leadingIcon != null) {
-                    ButtonDefaults.IconSpacing
-                } else {
-                    0.dp
-                },
+                start =
+                    if (leadingIcon != null) {
+                        ButtonDefaults.IconSpacing
+                    } else {
+                        0.dp
+                    },
             ),
     ) {
         text()
@@ -117,7 +120,7 @@ fun ButtonPreview() {
             SsaviceButton(
                 onClick = {},
                 text = "다음",
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(10.dp),
             )
         }
     }
@@ -131,7 +134,7 @@ fun OutlinedButtonPreview() {
             SsaviceButtonOutlined(
                 onClick = {},
                 text = "이전",
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(10.dp),
             )
         }
     }
@@ -146,7 +149,7 @@ fun ButtonLeadingIconPreview() {
                 onClick = {},
                 text = "Test Button",
                 leadingIcon = { Icon(imageVector = Icons.Rounded.Add, contentDescription = null) },
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(10.dp),
             )
         }
     }

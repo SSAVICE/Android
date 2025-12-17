@@ -12,11 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @VisibleForTesting
-val LightDefaultColorScheme = lightColorScheme(
-    primary = SsaviceOrange,
-    background = Color.White,
-    surface = SsaviceSurfaceGray
-)
+val LightDefaultColorScheme =
+    lightColorScheme(
+        primary = SsaviceOrange,
+        background = Color.White,
+        surface = SsaviceSurfaceGray,
+    )
 
 @Composable
 fun SsaviceTheme(
@@ -28,13 +29,14 @@ fun SsaviceTheme(
     // Color scheme
     val colorScheme = LightDefaultColorScheme
 
-    val backgroundTheme = BackgroundTheme(
-        color = colorScheme.surface,
-        tonalElevation = 2.dp,
-    )
+    val backgroundTheme =
+        BackgroundTheme(
+            color = colorScheme.surface,
+            tonalElevation = 2.dp,
+        )
 
     CompositionLocalProvider(
-        LocalBackgroundTheme provides backgroundTheme
+        LocalBackgroundTheme provides backgroundTheme,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
