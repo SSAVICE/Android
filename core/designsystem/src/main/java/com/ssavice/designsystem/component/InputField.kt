@@ -51,7 +51,7 @@ fun SsaviceInputField(
         label = {
             if (labelText != null) {
                 ProvideTextStyle(value = MaterialTheme.typography.labelSmall)
-                { labelText }
+                { Text(labelText) }
             } else null
         },
         labelPosition = TextFieldLabelPosition.Above(),
