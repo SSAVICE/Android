@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldLabelPosition
 import androidx.compose.material3.Typography
@@ -47,9 +48,12 @@ fun SsaviceInputField(
             ),
         placeholder = { PlaceHolderText(placeholderText ?: "") },
         contentPadding = PaddingValues(12.dp),
-        label = if (labelText != null) {
-            { LabelText(labelText) }
-        } else null,
+        label = {
+            if (labelText != null) {
+                ProvideTextStyle(value = MaterialTheme.typography.labelSmall)
+                { labelText }
+            } else null
+        },
         labelPosition = TextFieldLabelPosition.Above(),
         keyboardOptions = keyboardOptions,
         enabled = enabled,
@@ -132,13 +136,5 @@ private fun PlaceHolderText(text: String) {
         modifier = Modifier
             .wrapContentHeight(align = Alignment.CenterVertically),
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-    )
-}
-
-@Composable
-private fun LabelText(text: String) {
-    Text(
-        text = text,
-        style = Typography().labelSmall
     )
 }
