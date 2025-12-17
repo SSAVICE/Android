@@ -76,6 +76,13 @@ gradlePlugin {
                     .pluginId
             implementationClass = "JvmLibraryConventionPlugin"
         }
+        register("androidFeature") {
+            id =
+                libs.plugins.ssavice.android.feature
+                    .get()
+                    .pluginId
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
     }
 }
 

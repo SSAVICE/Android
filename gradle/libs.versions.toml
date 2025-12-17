@@ -108,6 +108,7 @@ ssavice-root = { id = "ssavice.root" }
 ssavice-hilt = { id = "ssavice.hilt" }
 ssavice-android-application = { id = "ssavice.android.application" }
 ssavice-android-application-compose = { id = "ssavice.android.application.compose" }
+ssavice-android-feature = { id = "ssavice.android.feature" }
 ssavice-android-library = { id = "ssavice.android.library" }
 ssavice-android-library-compose = { id = "ssavice.android.library.compose" }
 ssavice-jvm-library = { id = "ssavice.jvm.library" }
