@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.theme.SsaviceLightGray
@@ -41,11 +42,11 @@ fun SsaviceInputField(
         modifier = modifier,
         shape = shape,
         lineLimits =
-            if (multiLine) {
+            if (!multiLine) {
                 TextFieldLineLimits.SingleLine
             } else {
                 TextFieldLineLimits.MultiLine(
-                    1,
+                    2,
                     4,
                 )
             },
@@ -54,7 +55,7 @@ fun SsaviceInputField(
         label = {
             if (labelText != null) {
                 ProvideTextStyle(value = MaterialTheme.typography.labelSmall)
-                { Text(labelText) }
+                { Text(text = labelText, fontWeight = FontWeight.Black) }
             } else {
                 null
             }
