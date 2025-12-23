@@ -7,31 +7,25 @@ import com.ssavice.model.SellerMainInfo
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class RemoteSellerInfoRepository
-@Inject
-constructor(
-    private val companyRetrofitService: CompanyRetrofitService,
-) : SellerInfoRepository {
-    override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> =
-        processResponse(
-            companyRetrofitService.registerSeller(
-                AddCompanyDTO.fromModel(sellerInfo),
-            ),
-        )
-
-    override fun getSellerInformation(sellerId: Long): Flow<Result<SellerMainInfo>> {
-        return flow {
-            emit(
-                processResponseOnResponseData(
-                    companyRetrofitService.getCompanyInfo(sellerId)
-                ).map {
-                    it.toSellerMainInfoModel()
-                }
+    @Inject
+    constructor(
+        private val companyRetrofitService: CompanyRetrofitService,
+    ) : SellerInfoRepository {
+        override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> =
+            processResponse(
+                companyRetrofitService.registerSeller(
+                    AddCompanyDTO.fromModel(sellerInfo),
+                ),
             )
+
+    override suspend fun getSellerInformation(sellerId: Long): Result<SellerMainInfo> {
+        return processResponseOnResponseData(
+            companyRetrofitService.getCompanyInfo(sellerId)
+        ).map {
+            it.toSellerMainInfoModel()
         }
     }
 }
