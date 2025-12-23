@@ -5,8 +5,8 @@ import com.ssavice.network.authentication.TokenRepository
 import com.ssavice.network.model.JWT
 import javax.inject.Inject
 
-class
-DemoTokenRepository@Inject
+class DemoTokenRepository
+    @Inject
     constructor() : TokenRepository {
         override fun getJWT(): JWT =
             JWT(
