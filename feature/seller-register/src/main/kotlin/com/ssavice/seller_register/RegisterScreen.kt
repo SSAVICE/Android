@@ -41,7 +41,6 @@ fun RegisterScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val clickable = state !is SellerRegisterUiState.Loading
-
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
     ) {

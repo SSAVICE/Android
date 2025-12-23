@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.ssavice.designsystem.component.SsaviceTopBar
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.seller_register.RegisterScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SsaviceTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    topBar = { SsaviceTopBar("Ssavice") }
+                ) { innerPadding ->
                     RegisterScreen(Modifier.padding(innerPadding))
                 }
             }
