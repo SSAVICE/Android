@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.core)
+    api(projects.core.model)
 }
 
 androidComponents {
