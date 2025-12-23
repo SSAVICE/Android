@@ -1,6 +1,7 @@
 package com.ssavice.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -47,13 +48,14 @@ fun SellerServiceListItem(
             .clip(shape)
             .background(Color.White)
             .fillMaxWidth()
+            .clickable(true) { onClick }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(56.dp)
-                .clip(RoundedCornerShape(12.dp))
+                .size(68.dp)
+                .clip(RoundedCornerShape(6.dp))
                 .background(Color(0xFFF2F2F2))
         ) {
             thumbnail()
@@ -150,7 +152,7 @@ fun PreviewLikeItem() {
         status = ServiceStatus.IN_PROGRESS,
         thumbnail = {
             AsyncImage(
-                model = "https://images.unsplash.com/photo-1552196527-bffef41ef674?q=80&w=2226&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                model = yogaImage,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -158,3 +160,6 @@ fun PreviewLikeItem() {
         }
     )
 }
+
+private const val yogaImage
+= "https://images.unsplash.com/photo-1552196527-bffef41ef674?q=80&w=2226&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
