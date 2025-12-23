@@ -12,6 +12,7 @@ sealed interface SellerRegisterUiState {
     ): SellerRegisterUiState
 
     data class Error(
-        override val registrationStep: Int = 1
+        override val registrationStep: Int = 1,
+        val errorField: List<Int>
     ): SellerRegisterUiState
 }

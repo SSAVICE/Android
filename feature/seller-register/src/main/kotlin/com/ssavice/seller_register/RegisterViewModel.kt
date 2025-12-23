@@ -16,7 +16,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow<SellerRegisterUiState>(
         SellerRegisterUiState.Shown(1)
     )
-    val uiState:StateFlow<SellerRegisterUiState> = _uiState
+    val uiState: StateFlow<SellerRegisterUiState> = _uiState
 
     val sellerNameState = TextFieldState("")
     val businessRegistrationNumberState = TextFieldState("")
@@ -26,19 +26,63 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     val accountOwnerState = TextFieldState("")
     val accountNumberState = TextFieldState("")
 
+    private fun checkIncompleteFields(page: Int): List<Int> {
+        return when(page) {
+            1 -> checkBasicInfoPageFields()
+            2 -> checkLocationInfoPageFields()
+            3 -> checkAccountInfoPageFields()
+            else -> emptyList()
+        }
+    }
+
+    private fun checkBasicInfoPageFields(): List<Int> {
+        val result = mutableListOf<Int>()
+        if (sellerNameState.text.isEmpty()) result.add(0)
+        if (businessRegistrationNumberState.text.length != 10) result.add(1)
+        if (telState.text.length < 10) result.add(2)
+
+        return result
+    }
+
+    private fun checkLocationInfoPageFields(): List<Int> {
+        val result = mutableListOf<Int>()
+        if (addressState.text.isEmpty()) result.add(0)
+
+        return result
+    }
+
+    private fun checkAccountInfoPageFields(): List<Int> {
+        val result = mutableListOf<Int>()
+        if (accountOwnerState.text.isEmpty()) result.add(0)
+        if (accountNumberState.text.isEmpty()) result.add(1)
+
+        return result
+    }
+
     fun clickNextButton() {
         viewModelScope.launch {
-            _uiState.value = (_uiState.value as? SellerRegisterUiState.Shown)?.copy(
+            val incomplete = checkIncompleteFields(_uiState.value.registrationStep)
+
+            if (!incomplete.isEmpty()) {
+                _uiState.value =
+                    SellerRegisterUiState.Error(
+                        registrationStep = _uiState.value.registrationStep,
+                        errorField = incomplete
+                    )
+                return@launch
+            }
+
+            _uiState.value = SellerRegisterUiState.Shown(
                 registrationStep = min(_uiState.value.registrationStep + 1, 3)
-            )!!
+            )
         }
     }
 
     fun clickPrevButton() {
         viewModelScope.launch {
-            _uiState.value = (_uiState.value as? SellerRegisterUiState.Shown)?.copy(
+            _uiState.value = SellerRegisterUiState.Shown(
                 registrationStep = max(_uiState.value.registrationStep - 1, 1)
-            )!!
+            )
         }
     }
 }
