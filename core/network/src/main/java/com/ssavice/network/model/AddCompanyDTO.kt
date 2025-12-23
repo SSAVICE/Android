@@ -10,40 +10,46 @@ class AddCompanyDTO(
     val companyName: String,
     val ownerName: String,
     val phoneNumber: String,
-    val imageUrl: String,
     val businessNumber: String,
     val accountNumber: String,
-    val longitude: Double,
-    val latitude: Double,
     val description: String,
     val detail: String,
+    val longitude: Double,
+    val latitude: Double,
+    val postCode: String,
+    val address: String,
+    val detailAddress: String
 ) {
     fun toModel(): SellerInfo =
         SellerInfo(
             companyName = companyName,
             ownerName = ownerName,
             phoneNumber = phoneNumber,
-            imageUrl = imageUrl,
             businessNumber = businessNumber,
             accountNumber = accountNumber,
+            description = description,
+            detail = detail,
             longitude = longitude,
             latitude = latitude,
-            description = description,
-            detail = detail
+            postCode = postCode,
+            address = address,
+            detailAddress = detailAddress
         )
 
     companion object {
         fun fromModel(sellerInfo: SellerInfo): AddCompanyDTO = AddCompanyDTO(
-            companyName = sellerInfo.companyName,
+            companyName = sellerInfo. companyName,
             ownerName = sellerInfo.ownerName,
             phoneNumber = sellerInfo.phoneNumber,
-            imageUrl = sellerInfo.imageUrl,
             businessNumber = sellerInfo.businessNumber,
             accountNumber = sellerInfo.accountNumber,
+            description = sellerInfo.description,
+            detail = sellerInfo.detail,
             longitude = sellerInfo.longitude,
             latitude = sellerInfo.latitude,
-            description = sellerInfo.description,
-            detail = sellerInfo.detail
+            postCode = sellerInfo.postCode,
+            address = sellerInfo.address,
+            detailAddress = sellerInfo.detailAddress,
         )
     }
 }
