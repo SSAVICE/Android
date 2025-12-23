@@ -10,11 +10,11 @@ import retrofit2.http.POST
 interface CompanyRetrofitService {
     @POST("/api/company")
     suspend fun registerSeller(
-        @Body body: AddCompanyDTO
+        @Body body: AddCompanyDTO,
     ): Response<Unit>
 
     @POST("/api/company/login")
     suspend fun loginSeller(
-        @Body body: LoginDTO
+        @Body body: LoginDTO,
     ): Response<JWT>
 }

@@ -71,8 +71,9 @@ fun SsaviceInputField(
     Column {
         OutlinedTextField(
             state = state,
-            modifier = modifier
-                .offset(x= offsetX.value.dp),
+            modifier =
+                modifier
+                    .offset(x = offsetX.value.dp),
             shape = shape,
             lineLimits =
                 if (!multiLine) {
@@ -101,7 +102,7 @@ fun SsaviceInputField(
                     unfocusedIndicatorColor = SsaviceLightGray,
                 ),
             inputTransformation = inputTransformation,
-            outputTransformation = outputTransformation
+            outputTransformation = outputTransformation,
         )
 
         // Display the error message below the field
@@ -110,7 +111,7 @@ fun SsaviceInputField(
                 text = errorMessage,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 12.dp, top = 4.dp)
+                modifier = Modifier.padding(start = 12.dp, top = 4.dp),
             )
         }
     }
@@ -179,12 +180,13 @@ private fun LabeledInputFieldErrorPreview() {
                     placeholderText = "홍길동",
                     labelText = "이름",
                     errorMessage = "해당 필드는 필수입니다.",
-                    isError = true
+                    isError = true,
                 )
             }
         }
     }
 }
+
 @Preview
 @Composable
 private fun LabeledInputFieldMultilinePreview() {
@@ -225,49 +227,50 @@ private fun PlaceHolderText(text: String) {
 }
 
 object InputTransformations {
-    val phoneNumberInputTransformation = {InputTransformation.maxLength(11).then(
-        digitOnlyInputTransformation
-    )
+    val phoneNumberInputTransformation = {
+        InputTransformation.maxLength(11).then(
+            digitOnlyInputTransformation,
+        )
     }
 
-    val digitOnlyInputTransformation = object : InputTransformation {
-        override fun TextFieldBuffer.transformInput() {
-            if (asCharSequence().any { !it.isDigit() }) {
-                revertAllChanges()
+    val digitOnlyInputTransformation =
+        object : InputTransformation {
+            override fun TextFieldBuffer.transformInput() {
+                if (asCharSequence().any { !it.isDigit() }) {
+                    revertAllChanges()
+                }
             }
         }
-    }
 }
 
 object OutputTransformations {
-    val formatPhoneNumber = object : OutputTransformation {
-        override fun TextFieldBuffer.transformOutput() {
-            if (length > 3) {
-                if(length < 10) {
-                    insert(2, "-")
+    val formatPhoneNumber =
+        object : OutputTransformation {
+            override fun TextFieldBuffer.transformOutput() {
+                if (length > 3) {
+                    if (length < 10) {
+                        insert(2, "-")
+                    } else {
+                        insert(3, "-")
+                    }
                 }
-                else{
-                    insert(3, "-")
-                }
-            }
-            if (length > 7) {
-                if(length >= 12) {
-                    insert(8, "-")
-                }
-                else if(length == 11){
-                    insert(7, "-")
-                }
-                else{
-                    insert(6, "-")
+                if (length > 7) {
+                    if (length >= 12) {
+                        insert(8, "-")
+                    } else if (length == 11) {
+                        insert(7, "-")
+                    } else {
+                        insert(6, "-")
+                    }
                 }
             }
         }
-    }
 
-    val formatBusinessNumber = object : OutputTransformation {
-        override fun TextFieldBuffer.transformOutput() {
-            if (length > 3) insert(3, "-")
-            if (length > 6) insert(6, "-")
+    val formatBusinessNumber =
+        object : OutputTransformation {
+            override fun TextFieldBuffer.transformOutput() {
+                if (length > 3) insert(3, "-")
+                if (length > 6) insert(6, "-")
+            }
         }
-    }
 }

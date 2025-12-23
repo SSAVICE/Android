@@ -17,15 +17,15 @@ object CompanyRetrofitModule {
     @Provides
     @Singleton
     fun provideCompanyRetrofitService(
-        @RetrofitModule.ServiceRetrofit serviceRetrofit: Retrofit
-    ): CompanyRetrofitService = serviceRetrofit
-        .create(CompanyRetrofitService::class.java)
+        @RetrofitModule.ServiceRetrofit serviceRetrofit: Retrofit,
+    ): CompanyRetrofitService =
+        serviceRetrofit
+            .create(CompanyRetrofitService::class.java)
 
     @Provides
     @Singleton
-    fun provideSellerInfoRepository(
-        companyRetrofitService: CompanyRetrofitService
-    ): SellerInfoRepository = RemoteSellerInfoRepository(
-        companyRetrofitService
-    )
+    fun provideSellerInfoRepository(companyRetrofitService: CompanyRetrofitService): SellerInfoRepository =
+        RemoteSellerInfoRepository(
+            companyRetrofitService,
+        )
 }

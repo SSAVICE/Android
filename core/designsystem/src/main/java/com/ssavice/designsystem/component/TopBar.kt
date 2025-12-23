@@ -21,7 +21,7 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 @Composable
 fun SsaviceTopBar(
     title: String,
-    contentPadding: PaddingValues = TopAppBarDefaults.ContentPadding
+    contentPadding: PaddingValues = TopAppBarDefaults.ContentPadding,
 ) {
     Column {
         TopAppBar(
@@ -30,10 +30,10 @@ fun SsaviceTopBar(
                     Text(text = title, fontWeight = FontWeight.SemiBold)
                 }
             },
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
         )
         HorizontalDivider(
-            modifier = Modifier.padding(5.dp)
+            modifier = Modifier.padding(5.dp),
         )
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class LoginDTO (
+data class LoginDTO(
     @SerialName("token")
-    val kakaoAccessToken: String
+    val kakaoAccessToken: String,
 )

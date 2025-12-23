@@ -7,14 +7,15 @@ import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.processResponse
 import javax.inject.Inject
 
-internal class RemoteSellerInfoRepository @Inject constructor(
-    private val companyRetrofitService: CompanyRetrofitService
-) : SellerInfoRepository {
-    override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> {
-        return processResponse(
-            companyRetrofitService.registerSeller(
-                AddCompanyDTO.fromModel(sellerInfo)
+internal class RemoteSellerInfoRepository
+    @Inject
+    constructor(
+        private val companyRetrofitService: CompanyRetrofitService,
+    ) : SellerInfoRepository {
+        override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> =
+            processResponse(
+                companyRetrofitService.registerSeller(
+                    AddCompanyDTO.fromModel(sellerInfo),
+                ),
             )
-        )
     }
-}

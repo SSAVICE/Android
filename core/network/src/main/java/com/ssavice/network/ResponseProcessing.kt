@@ -4,15 +4,15 @@ import android.util.Log
 import com.ssavice.network.exception.ServerInternalErrorException
 import retrofit2.Response
 
-private fun<T> isResponseError(response: Response<T>): Boolean = (response.code() in 400 until 500)
+private fun <T> isResponseError(response: Response<T>): Boolean = (response.code() in 400 until 500)
 
 fun processResponse(response: Response<Unit>): Result<Unit> {
     Log.d(
         "KSC",
-        "ProcessExpenseDetail code: ${response.code()}, message: ${response.message()}"
+        "ProcessExpenseDetail code: ${response.code()}, message: ${response.message()}",
     )
 
-    if(isResponseError(response)){
+    if (isResponseError(response)) {
         return when (response.code()) {
             500 -> Result.failure(ServerInternalErrorException(response.message()))
             else -> Result.failure(ServerInternalErrorException(response.message()))
@@ -29,9 +29,9 @@ fun processResponse(response: Response<Unit>): Result<Unit> {
 internal fun <T> processResponseOnResponseData(response: Response<T>): Result<T> {
     Log.d(
         "KSC",
-        "ProcessExpenseDetail code: ${response.code()}, message: ${response.message()}"
+        "ProcessExpenseDetail code: ${response.code()}, message: ${response.message()}",
     )
-    if(isResponseError(response)){
+    if (isResponseError(response)) {
         return when (response.code()) {
             500 -> Result.failure(ServerInternalErrorException(response.message()))
             else -> Result.failure(ServerInternalErrorException(response.message()))

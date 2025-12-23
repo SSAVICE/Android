@@ -37,7 +37,7 @@ import com.ssavice.ui.ProgressBar
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = hiltViewModel()
+    viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val clickable = state !is SellerRegisterUiState.Loading
@@ -48,50 +48,59 @@ fun RegisterScreen(
             maxStep = 3,
             currentStep = state.registrationStep,
             Modifier.fillMaxWidth(),
-            showStep = true
+            showStep = true,
         )
 
         val errors = (state as? SellerRegisterUiState.Error)?.errorField
 
         Spacer(Modifier.height(30.dp))
         when (state.registrationStep) {
-            1 -> FirstPage(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                viewModel.sellerNameState,
-                viewModel.businessRegistrationNumberState,
-                viewModel.telState,
-                errors?.contains(0)?:false,
-                errors?.contains(1)?:false,
-                errors?.contains(2)?:false
-            )
+            1 -> {
+                FirstPage(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
+                    viewModel.sellerNameState,
+                    viewModel.businessRegistrationNumberState,
+                    viewModel.telState,
+                    errors?.contains(0) ?: false,
+                    errors?.contains(1) ?: false,
+                    errors?.contains(2) ?: false,
+                )
+            }
 
-            2 -> SecondPage(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                addressState = viewModel.addressState,
-                descriptionState = viewModel.descriptionState,
-                errors?.contains(0)?:false
-            )
+            2 -> {
+                SecondPage(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
+                    addressState = viewModel.addressState,
+                    descriptionState = viewModel.descriptionState,
+                    errors?.contains(0) ?: false,
+                )
+            }
 
-            3 -> ThirdPage(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                accountOwnerState = viewModel.accountOwnerState,
-                accountNumberState = viewModel.accountNumberState,
-                errors?.contains(0)?:false,
-                errors?.contains(1)?:false
-            )
+            3 -> {
+                ThirdPage(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(horizontal = 5.dp),
+                    accountOwnerState = viewModel.accountOwnerState,
+                    accountNumberState = viewModel.accountNumberState,
+                    errors?.contains(0) ?: false,
+                    errors?.contains(1) ?: false,
+                )
+            }
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             when (state.registrationStep) {
                 1 -> {
@@ -99,7 +108,7 @@ fun RegisterScreen(
                         onClick = viewModel::clickNextButton,
                         text = RegisterScreenDefaults.BUTTON_NEXT_TEXT,
                         modifier = Modifier.weight(1f),
-                        enabled = clickable
+                        enabled = clickable,
                     )
                 }
 
@@ -108,13 +117,13 @@ fun RegisterScreen(
                         onClick = viewModel::clickPrevButton,
                         text = RegisterScreenDefaults.BUTTON_PREV_TEXT,
                         modifier = Modifier.weight(1f),
-                        enabled = clickable
+                        enabled = clickable,
                     )
                     SsaviceButton(
                         onClick = viewModel::clickNextButton,
                         text = RegisterScreenDefaults.BUTTON_NEXT_TEXT,
                         modifier = Modifier.weight(1f),
-                        enabled = clickable
+                        enabled = clickable,
                     )
                 }
 
@@ -123,16 +132,15 @@ fun RegisterScreen(
                         onClick = viewModel::clickPrevButton,
                         text = RegisterScreenDefaults.BUTTON_PREV_TEXT,
                         modifier = Modifier.weight(1f),
-                        enabled = clickable
+                        enabled = clickable,
                     )
                     SsaviceButton(
                         onClick = viewModel::clickNextButton,
                         text = RegisterScreenDefaults.BUTTON_COMPLETE_TEXT,
                         modifier = Modifier.weight(1f),
-                        enabled = clickable
+                        enabled = clickable,
                     )
                 }
-
             }
         }
     }
@@ -146,13 +154,13 @@ fun FirstPage(
     telState: TextFieldState,
     sellerNameError: Boolean,
     businessRegistrationNumberError: Boolean,
-    telError: Boolean
+    telError: Boolean,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
             Text(
                 RegisterScreenDefaults.LABEL_FIRST_PAGE,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
 
@@ -162,35 +170,38 @@ fun FirstPage(
             placeholderText = RegisterScreenDefaults.SELLER_NAME_PLACEHOLDER,
             labelText = RegisterScreenDefaults.SELLER_NAME_TEXT,
             isError = sellerNameError,
-            errorMessage = if (sellerNameError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null
+            errorMessage = if (sellerNameError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
             state = businessRegistrationNumberState,
             placeholderText = RegisterScreenDefaults.SELLER_BUSINESS_REGISTRATION_NUMBER_PLACEHOLDER,
             labelText = RegisterScreenDefaults.SELLER_BUSINESS_REGISTRATION_NUMBER_TEXT,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            inputTransformation = InputTransformation.maxLength(10).then(
-                InputTransformations.digitOnlyInputTransformation
-            ),
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
+            inputTransformation =
+                InputTransformation.maxLength(10).then(
+                    InputTransformations.digitOnlyInputTransformation,
+                ),
             outputTransformation = OutputTransformations.formatBusinessNumber,
             isError = businessRegistrationNumberError,
-            errorMessage = if (businessRegistrationNumberError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null
+            errorMessage = if (businessRegistrationNumberError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
             state = telState,
             placeholderText = RegisterScreenDefaults.SELLER_TEL_PLACEHOLDER,
             labelText = RegisterScreenDefaults.SELLER_TEL_TEXT,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
             inputTransformation = InputTransformations.phoneNumberInputTransformation(),
             outputTransformation = OutputTransformations.formatPhoneNumber,
             isError = telError,
-            errorMessage = if (telError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null
+            errorMessage = if (telError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
     }
 }
@@ -200,13 +211,13 @@ fun SecondPage(
     modifier: Modifier = Modifier,
     addressState: TextFieldState,
     descriptionState: TextFieldState,
-    addressError: Boolean
+    addressError: Boolean,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
             Text(
                 RegisterScreenDefaults.LABEL_SECOND_PAGE,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
 
@@ -216,17 +227,16 @@ fun SecondPage(
             placeholderText = RegisterScreenDefaults.ADDRESS_PLACEHOLDER,
             labelText = RegisterScreenDefaults.ADDRESS_TEXT,
             isError = addressError,
-            errorMessage = if (addressError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null
+            errorMessage = if (addressError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
             state = descriptionState,
             multiLine = true,
             placeholderText = RegisterScreenDefaults.DESCRIPTION_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.DESCRIPTION_TEXT
+            labelText = RegisterScreenDefaults.DESCRIPTION_TEXT,
         )
     }
-
 }
 
 @Composable
@@ -235,13 +245,13 @@ fun ThirdPage(
     accountOwnerState: TextFieldState,
     accountNumberState: TextFieldState,
     accountOwnerError: Boolean,
-    accountNumberError: Boolean
+    accountNumberError: Boolean,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
             Text(
                 RegisterScreenDefaults.LABEL_THIRD_PAGE,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
 
@@ -251,23 +261,22 @@ fun ThirdPage(
             placeholderText = RegisterScreenDefaults.ACCOUNT_NAME_PLACEHOLDER,
             labelText = RegisterScreenDefaults.ACCOUNT_NAME_TEXT,
             isError = accountOwnerError,
-            errorMessage = if (accountOwnerError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null
-
+            errorMessage = if (accountOwnerError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
             state = accountNumberState,
             placeholderText = RegisterScreenDefaults.ACCOUNT_NUMBER_PLACEHOLDER,
             labelText = RegisterScreenDefaults.ACCOUNT_NUMBER_TEXT,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
             inputTransformation = InputTransformations.digitOnlyInputTransformation,
             isError = accountNumberError,
-            errorMessage = if (accountNumberError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null
+            errorMessage = if (accountNumberError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
     }
-
 }
 
 @Preview
@@ -276,7 +285,7 @@ private fun RegisterScreenPreview() {
     SsaviceTheme {
         SsaviceBackground {
             RegisterScreen(
-                modifier = Modifier.size(480.dp, 720.dp)
+                modifier = Modifier.size(480.dp, 720.dp),
             )
         }
     }

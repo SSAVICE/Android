@@ -13,7 +13,6 @@ fun SsaviceTopBar(
     rightButtonIcon: ImageVector,
     rightButtonIconContentDescription: String,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors()
-    ) {
-
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+) {
 }

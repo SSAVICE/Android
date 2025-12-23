@@ -27,15 +27,16 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 @Composable
 fun WideBar(
     active: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .height(6.dp)
-            .background(
-                if (active) MaterialTheme.colorScheme.primary else Color.LightGray,
-                RoundedCornerShape(12.dp)
-            )
+        modifier =
+            modifier
+                .height(6.dp)
+                .background(
+                    if (active) MaterialTheme.colorScheme.primary else Color.LightGray,
+                    RoundedCornerShape(12.dp),
+                ),
     )
 }
 
@@ -48,15 +49,17 @@ fun ProgressBar(
 ) {
     Column {
         Row(
-            modifier = modifier.padding(
-                horizontal = RegisterProgressBarDefaults.HORIZONTAL_PADDING, vertical = 5.dp
-            ),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            modifier =
+                modifier.padding(
+                    horizontal = RegisterProgressBarDefaults.HORIZONTAL_PADDING,
+                    vertical = 5.dp,
+                ),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             for (i in 0 until maxStep) {
                 WideBar(
                     active = i < currentStep,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -71,7 +74,6 @@ fun ProgressBar(
     }
 }
 
-
 @Preview
 @Composable
 fun WideBarPreview() {
@@ -79,8 +81,10 @@ fun WideBarPreview() {
         SsaviceBackground(Modifier.size(width = 400.dp, height = 300.dp)) {
             Box(modifier = Modifier.fillMaxSize()) {
                 ProgressBar(
-                    3, 0, modifier = Modifier.fillMaxWidth(),
-                    showStep = true
+                    3,
+                    0,
+                    modifier = Modifier.fillMaxWidth(),
+                    showStep = true,
                 )
             }
         }

@@ -12,5 +12,5 @@ data class SellerInfo(
     val latitude: Double,
     val postCode: String,
     val address: String,
-    val detailAddress: String
+    val detailAddress: String,
 )

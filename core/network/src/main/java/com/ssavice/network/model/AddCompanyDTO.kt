@@ -18,7 +18,7 @@ class AddCompanyDTO(
     val latitude: Double,
     val postCode: String,
     val address: String,
-    val detailAddress: String
+    val detailAddress: String,
 ) {
     fun toModel(): SellerInfo =
         SellerInfo(
@@ -33,23 +33,24 @@ class AddCompanyDTO(
             latitude = latitude,
             postCode = postCode,
             address = address,
-            detailAddress = detailAddress
+            detailAddress = detailAddress,
         )
 
     companion object {
-        fun fromModel(sellerInfo: SellerInfo): AddCompanyDTO = AddCompanyDTO(
-            companyName = sellerInfo. companyName,
-            ownerName = sellerInfo.ownerName,
-            phoneNumber = sellerInfo.phoneNumber,
-            businessNumber = sellerInfo.businessNumber,
-            accountNumber = sellerInfo.accountNumber,
-            description = sellerInfo.description,
-            detail = sellerInfo.detail,
-            longitude = sellerInfo.longitude,
-            latitude = sellerInfo.latitude,
-            postCode = sellerInfo.postCode,
-            address = sellerInfo.address,
-            detailAddress = sellerInfo.detailAddress,
-        )
+        fun fromModel(sellerInfo: SellerInfo): AddCompanyDTO =
+            AddCompanyDTO(
+                companyName = sellerInfo.companyName,
+                ownerName = sellerInfo.ownerName,
+                phoneNumber = sellerInfo.phoneNumber,
+                businessNumber = sellerInfo.businessNumber,
+                accountNumber = sellerInfo.accountNumber,
+                description = sellerInfo.description,
+                detail = sellerInfo.detail,
+                longitude = sellerInfo.longitude,
+                latitude = sellerInfo.latitude,
+                postCode = sellerInfo.postCode,
+                address = sellerInfo.address,
+                detailAddress = sellerInfo.detailAddress,
+            )
     }
 }
