@@ -1,5 +1,7 @@
 package com.ssavice.data.di
 
+import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.data.repositoryimpl.RemoteSellerInfoRepository
 import com.ssavice.data.service.CompanyRetrofitService
 import com.ssavice.network.retrofit.RetrofitModule
 import dagger.Module
@@ -18,4 +20,12 @@ object CompanyRetrofitModule {
         @RetrofitModule.ServiceRetrofit serviceRetrofit: Retrofit
     ): CompanyRetrofitService = serviceRetrofit
         .create(CompanyRetrofitService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSellerInfoRepository(
+        companyRetrofitService: CompanyRetrofitService
+    ): SellerInfoRepository = RemoteSellerInfoRepository(
+        companyRetrofitService
+    )
 }

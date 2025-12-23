@@ -6,39 +6,27 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class HeaderInterceptor
-    @Inject
-    constructor(
-        private val tokenRepository: TokenRepository,
-    ) : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            if (chain.request().headers[SKIP_AUTH_KEY] == SKIP_AUTH_VALUE) {
-                val newRequest =
-                    chain
-                        .request()
-                        .newBuilder()
-                        .removeHeader(SKIP_AUTH_KEY)
-                        .build()
-                return chain.proceed(newRequest)
-            }
-
-            if (tokenRepository.isTokenExpired()) {
-                tokenRepository.markRefreshNeeded()
-            }
-
-            val newRequest =
-                chain
-                    .request()
-                    .newBuilder()
-                    .apply {
-                        header(AUTH_HEADER_KEY, "Bearer ${tokenRepository.getJWT()}")
-                    }.build()
-
-            return chain.proceed(newRequest)
+@Inject
+constructor(
+    private val tokenRepository: TokenRepository,
+) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        if (tokenRepository.isTokenExpired()) {
+            tokenRepository.markRefreshNeeded()
         }
 
-        companion object {
-            private const val AUTH_HEADER_KEY = "Authorization"
-            private const val SKIP_AUTH_KEY = "Auth"
-            private const val SKIP_AUTH_VALUE = "false"
-        }
+        val newRequest =
+            chain
+                .request()
+                .newBuilder()
+                .apply {
+                    header(AUTH_HEADER_KEY, "Bearer ${tokenRepository.getJWT().accessToken}")
+                }.build()
+
+        return chain.proceed(newRequest)
     }
+
+    companion object {
+        private const val AUTH_HEADER_KEY = "Authorization"
+    }
+}

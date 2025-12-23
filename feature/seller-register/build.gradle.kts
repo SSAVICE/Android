@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.ssavice.feature.sellerregister"
 }
+
+dependencies {
+    implementation(projects.core.data)
+}

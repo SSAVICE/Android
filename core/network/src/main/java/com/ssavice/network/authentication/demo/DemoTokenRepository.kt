@@ -3,8 +3,9 @@ package com.ssavice.network.authentication.demo
 import com.ssavice.core.network.BuildConfig
 import com.ssavice.network.authentication.TokenRepository
 import com.ssavice.network.model.JWT
+import javax.inject.Inject
 
-class DemoTokenRepository : TokenRepository {
+class DemoTokenRepository@Inject constructor() : TokenRepository {
     override fun getJWT(): JWT =
         JWT(
             System.currentTimeMillis() + 1_000_000L,
@@ -19,7 +20,7 @@ class DemoTokenRepository : TokenRepository {
     }
 
     override fun consumeRefreshFlag(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun updateJwt(jwt: JWT) {

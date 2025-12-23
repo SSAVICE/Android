@@ -3,6 +3,8 @@ package com.ssavice.seller_register
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.model.SellerInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +14,9 @@ import kotlin.math.max
 import kotlin.math.min
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class RegisterViewModel @Inject constructor(
+    private val repository: SellerInfoRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow<SellerRegisterUiState>(
         SellerRegisterUiState.Shown(1)
     )
@@ -72,9 +76,33 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
                 return@launch
             }
 
-            _uiState.value = SellerRegisterUiState.Shown(
-                registrationStep = min(_uiState.value.registrationStep + 1, 3)
-            )
+            if(_uiState.value.registrationStep == 3) {
+                _uiState.value = SellerRegisterUiState.Loading(_uiState.value.registrationStep)
+
+                repository.registerSellerInformation(
+                    SellerInfo(
+                        companyName = sellerNameState.text.toString(),
+                        businessNumber = businessRegistrationNumberState.text.toString(),
+                        phoneNumber = telState.text.toString(),
+                        address = addressState.text.toString(),
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        postCode = "12345",
+                        description = descriptionState.text.toString(),
+                        detail = "",
+                        detailAddress = "",
+                        ownerName = accountOwnerState.text.toString(),
+                        accountNumber = accountNumberState.text.toString()
+                    )
+                )
+            }
+            else{
+                _uiState.value = SellerRegisterUiState.Shown(
+                    registrationStep = min(_uiState.value.registrationStep + 1, 3)
+                )
+            }
+
+
         }
     }
 
