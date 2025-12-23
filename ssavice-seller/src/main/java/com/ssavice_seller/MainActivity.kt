@@ -23,8 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SsaviceTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = { SsaviceTopBar("Ssavice") }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    topBar = { SsaviceTopBar("Ssavice") },
                 ) { innerPadding ->
                     RegisterScreen(Modifier.padding(innerPadding))
                 }
@@ -34,10 +35,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(
+    name: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
