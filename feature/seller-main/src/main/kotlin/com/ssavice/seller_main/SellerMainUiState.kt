@@ -2,9 +2,13 @@ package com.ssavice.seller_main
 
 import java.net.URL
 
-data class SellerMainUiState (
-    val items: List<SellerItemUiState>
-)
+sealed interface SellerMainUiState {
+    data object Loading: SellerMainUiState
+
+    data class Error(val message: String): SellerMainUiState
+
+    data class Shown(val items: List<SellerItemUiState>): SellerMainUiState
+}
 
 data class SellerItemUiState (
     val id: Long,

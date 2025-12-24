@@ -1,15 +1,23 @@
 package com.ssavice.seller_main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,9 +25,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.ui.SellerServiceListItem
@@ -29,11 +42,33 @@ import java.net.URL
 
 @Composable
 fun SellerMainScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SellerMainViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    SellerMainScreen(
+        state = state,
+        modifier = modifier,
+        onAddClick = {}
+    )
+}
+
+@Composable
+fun SellerMainScreen(
     state: SellerMainUiState,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
-    // 썸네일은 화면마다 달라질 수 있으니 슬롯으로 받는 형태 추천
-    thumbnail: @Composable (SellerItemUiState) -> Unit,
+    thumbnail: @Composable (SellerItemUiState) -> Unit = {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(it.imageUrl.toString())
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+    },
     onServiceClick: (SellerItemUiState) -> Unit = {}
 ) {
     Column(
@@ -48,11 +83,14 @@ fun SellerMainScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "등록된 서비스",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color(0xFF111111)
-            )
+            ProvideTextStyle(
+                value = MaterialTheme.typography.titleMedium
+            ) {
+                Text(
+                    text = "등록된 서비스",
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
 
             Spacer(Modifier.weight(1f))
 
@@ -71,7 +109,7 @@ fun SellerMainScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(
-                items = state.items,
+                items = if (state is SellerMainUiState.Shown) state.items else emptyList(),
                 key = { it.id }
             ) { item ->
                 // 클릭이 필요하면 카드에 clickable 추가하면 됨 (여기선 레이아웃 위주로 유지)
@@ -117,7 +155,7 @@ fun SellerMainScreenPreview() {
             )
         )
     }
-    val state = SellerMainUiState(items)
+    val state = SellerMainUiState.Shown(items)
     SsaviceTheme {
         SellerMainScreen(
             state = state,
@@ -125,7 +163,10 @@ fun SellerMainScreenPreview() {
             onServiceClick = {},
             thumbnail = {
                 AsyncImage(
-                    model = it.imageUrl.host,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(it.imageUrl.toString())
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
