@@ -39,8 +39,6 @@ class SellerMainViewModel @Inject constructor(
                 e ->
                 SellerMainUiState.Error(e.message?:"")
             }
-        }.onStart {
-            emit(SellerMainUiState.Loading)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
