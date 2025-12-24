@@ -4,6 +4,7 @@ import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.SellerInfo
 import com.ssavice.model.SellerMainInfo
 import com.ssavice.model.Service
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.lang.Thread.sleep
@@ -39,7 +40,7 @@ constructor() : SellerInfoRepository {
         )
 
         return flow {
-            sleep(1000)
+            delay(1000)
             emit(
                 Result.success(
                     SellerMainInfo(
