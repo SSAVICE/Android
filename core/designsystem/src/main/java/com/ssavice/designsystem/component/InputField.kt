@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.theme.SsaviceLightGray
+import com.ssavice.designsystem.theme.SsaviceRoundRectShape
 import com.ssavice.designsystem.theme.SsaviceTheme
 
 @Composable
@@ -44,7 +45,6 @@ fun SsaviceInputField(
     isError: Boolean = false, // New parameter
     errorMessage: String? = null, // New parameter
 ) {
-    val shape = RoundedCornerShape(8.dp)
 
     LabeledComponent(
         labelText = labelText,
@@ -54,7 +54,7 @@ fun SsaviceInputField(
     ){
         OutlinedTextField(
             state = state,
-            shape = shape,
+            shape = SsaviceRoundRectShape,
             lineLimits =
                 if (!multiLine) {
                     TextFieldLineLimits.SingleLine
@@ -234,6 +234,18 @@ object OutputTransformations {
             override fun TextFieldBuffer.transformOutput() {
                 if (length > 3) insert(3, "-")
                 if (length > 6) insert(6, "-")
+            }
+        }
+
+    val number =
+        object : OutputTransformation {
+            override fun TextFieldBuffer.transformOutput() {
+                val currentText = asCharSequence().toString()
+                val numberText = currentText.toIntOrNull()?.toString()
+
+                if (numberText != null && numberText != currentText) {
+                    replace(0, length, numberText)
+                }
             }
         }
 }
