@@ -2,10 +2,10 @@ package com.ssavice.designsystem.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.theme.SsaviceLightGray
 import com.ssavice.designsystem.theme.SsaviceRoundRectShape
 import com.ssavice.designsystem.theme.SsaviceTheme
+import kotlin.math.max
+import kotlin.math.min
 
 @Composable
 fun SsaviceInputField(
@@ -51,7 +53,7 @@ fun SsaviceInputField(
         isError = isError,
         errorMessage = errorMessage,
         modifier = modifier
-    ){
+    ) {
         OutlinedTextField(
             state = state,
             shape = SsaviceRoundRectShape,
@@ -75,7 +77,7 @@ fun SsaviceInputField(
                 ),
             inputTransformation = inputTransformation,
             outputTransformation = outputTransformation,
-            modifier = modifier
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -199,11 +201,25 @@ object InputTransformations {
     val digitOnlyInputTransformation =
         object : InputTransformation {
             override fun TextFieldBuffer.transformInput() {
-                if (asCharSequence().any { !it.isDigit() }) {
-                    revertAllChanges()
+                val formatted = (asCharSequence().filter { it.isDigit() }.toString().toLongOrNull()
+                    ?: 0L).toString()
+                if (formatted != asCharSequence().toString()) {
+                    replace(0, length, formatted)
                 }
             }
         }
+
+    fun minMaxInputTransformation(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE) =
+        object : InputTransformation {
+            override fun TextFieldBuffer.transformInput() {
+                val number =
+                    asCharSequence().filter { it.isDigit() }.toString().toLongOrNull() ?: 0L
+                val formatted = max(min(number, max), min).toString()
+                if (formatted != asCharSequence().toString())
+                    replace(0, length, formatted)
+            }
+        }
+
 }
 
 object OutputTransformations {
@@ -237,14 +253,14 @@ object OutputTransformations {
             }
         }
 
-    val number =
+    val formatNumberWithCommas =
         object : OutputTransformation {
             override fun TextFieldBuffer.transformOutput() {
-                val currentText = asCharSequence().toString()
-                val numberText = currentText.toIntOrNull()?.toString()
+                val digitsOnly = asCharSequence().filter { it.isDigit() }
+                if (digitsOnly.isEmpty()) return
 
-                if (numberText != null && numberText != currentText) {
-                    replace(0, length, numberText)
+                for (i in digitsOnly.length - 3 downTo 1 step 3) {
+                    insert(i, ",")
                 }
             }
         }
