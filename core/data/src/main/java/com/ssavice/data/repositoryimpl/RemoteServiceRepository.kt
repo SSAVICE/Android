@@ -5,6 +5,7 @@ import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.model.ServiceInfo
 import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.processResponse
+import com.ssavice.network.processResponseOnResponseData
 import javax.inject.Inject
 
 class RemoteServiceRepository
@@ -13,7 +14,7 @@ class RemoteServiceRepository
         private val serviceRetrofitService: ServiceRetrofitService,
     ) : ServiceRepository {
         override suspend fun postService(service: ServiceInfo): Result<Long> =
-            processResponse(
+            processResponseOnResponseData(
                 serviceRetrofitService
                     .postService(AddServiceDTO.fromModel(service)),
             ).map { it.serviceId }

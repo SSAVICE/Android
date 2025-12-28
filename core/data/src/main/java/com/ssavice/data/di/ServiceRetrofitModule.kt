@@ -1,7 +1,9 @@
 package com.ssavice.data.di
 
 import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repositoryimpl.RemoteSellerInfoRepository
+import com.ssavice.data.repositoryimpl.RemoteServiceRepository
 import com.ssavice.data.service.CompanyRetrofitService
 import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.network.retrofit.RetrofitModule
@@ -25,8 +27,8 @@ object ServiceRetrofitModule {
 
     @Provides
     @Singleton
-    fun provideServiceRepository(companyRetrofitService: CompanyRetrofitService): SellerInfoRepository =
-        RemoteSellerInfoRepository(
-            companyRetrofitService,
+    fun provideServiceRepository(serviceRetrofitService: ServiceRetrofitService): ServiceRepository =
+        RemoteServiceRepository(
+            serviceRetrofitService,
         )
 }

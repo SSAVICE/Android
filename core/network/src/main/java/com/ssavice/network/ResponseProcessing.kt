@@ -26,7 +26,7 @@ fun processResponse(response: Response<Unit>): Result<Unit> {
     }
 }
 
-fun <T> processResponse(response: Response<T>): Result<T> {
+fun <T> processResponseOnResponseData(response: Response<T>): Result<T> {
     Log.d(
         "KSC",
         "ProcessExpenseDetail code: ${response.code()}, message: ${response.message()}",
