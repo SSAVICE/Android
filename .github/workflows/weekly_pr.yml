@@ -29,8 +29,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Gradle Caching
-        uses: actions/cache@v4
+      - name: Restore Cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.gradle/caches
@@ -71,3 +71,15 @@ jobs:
         if: github.event_name == 'pull_request' && success() || failure()
         with:
           junit_files: '**/build/test-results/*/TEST-*.xml'
+
+
+      - name: Save Cache
+        if: github.event_name == 'push'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
