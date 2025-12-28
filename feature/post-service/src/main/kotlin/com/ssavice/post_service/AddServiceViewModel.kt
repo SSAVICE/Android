@@ -1,6 +1,7 @@
 package com.ssavice.post_service
 
 import androidx.lifecycle.ViewModel
+import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.TimeStamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +9,9 @@ import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
-class AddServiceViewModel @Inject constructor() : ViewModel() {
+class AddServiceViewModel @Inject constructor(
+    private val serviceRepository: ServiceRepository
+) : ViewModel() {
     val uiState = MutableStateFlow(
         AddServiceUiState(
             form = Form(

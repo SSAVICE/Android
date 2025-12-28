@@ -2,6 +2,7 @@ package com.ssavice.network.model
 
 import android.annotation.SuppressLint
 import com.ssavice.model.SellerInfo
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -19,6 +20,7 @@ class AddCompanyDTO(
     val postCode: String,
     val address: String,
     val detailAddress: String,
+    val depositor: String // TODO: SHOULD BE CHANGED
 ) {
     fun toModel(): SellerInfo =
         SellerInfo(
@@ -51,6 +53,7 @@ class AddCompanyDTO(
                 postCode = sellerInfo.postCode,
                 address = sellerInfo.address,
                 detailAddress = sellerInfo.detailAddress,
+                depositor = "Test"
             )
     }
 }

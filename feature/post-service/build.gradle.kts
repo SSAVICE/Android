@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.ssavice.feature.post_service"
 }
+
+dependencies {
+    implementation(projects.core.data)
+}
