@@ -1,15 +1,11 @@
 package com.ssavice.designsystem.component
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
@@ -22,20 +18,20 @@ import androidx.compose.foundation.text.input.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldLabelPosition
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.theme.SsaviceLightGray
+import com.ssavice.designsystem.theme.SsaviceRoundRectShape
 import com.ssavice.designsystem.theme.SsaviceTheme
+import kotlin.math.max
+import kotlin.math.min
 
 @Composable
 fun SsaviceInputField(
@@ -51,30 +47,15 @@ fun SsaviceInputField(
     isError: Boolean = false, // New parameter
     errorMessage: String? = null, // New parameter
 ) {
-    val shape = RoundedCornerShape(8.dp)
-    // For the shaking animation
-    val offsetX = remember { Animatable(0f) }
-
-    // Trigger the shake animation when isError becomes true
-    LaunchedEffect(isError) {
-        if (isError) {
-            offsetX.animateTo(0f) // Reset position
-            // Shake effect: left -> right -> left -> center
-            offsetX.animateTo(5f, tween(50))
-            offsetX.animateTo(-5f, tween(50))
-            offsetX.animateTo(2f, tween(50))
-            offsetX.animateTo(-2f, tween(50))
-            offsetX.animateTo(0f, tween(50))
-        }
-    }
-
-    Column {
+    LabeledComponent(
+        labelText = labelText,
+        isError = isError,
+        errorMessage = errorMessage,
+        modifier = modifier,
+    ) {
         OutlinedTextField(
             state = state,
-            modifier =
-                modifier
-                    .offset(x = offsetX.value.dp),
-            shape = shape,
+            shape = SsaviceRoundRectShape,
             lineLimits =
                 if (!multiLine) {
                     TextFieldLineLimits.SingleLine
@@ -86,14 +67,6 @@ fun SsaviceInputField(
                 },
             placeholder = { PlaceHolderText(placeholderText ?: "") },
             contentPadding = PaddingValues(12.dp),
-            label = {
-                if (labelText != null) {
-                    ProvideTextStyle(value = MaterialTheme.typography.labelSmall)
-                    { Text(text = labelText, fontWeight = FontWeight.Black) }
-                } else {
-                    null
-                }
-            },
             labelPosition = TextFieldLabelPosition.Above(),
             keyboardOptions = keyboardOptions,
             enabled = enabled,
@@ -103,17 +76,8 @@ fun SsaviceInputField(
                 ),
             inputTransformation = inputTransformation,
             outputTransformation = outputTransformation,
+            modifier = Modifier.fillMaxWidth(),
         )
-
-        // Display the error message below the field
-        if (isError && errorMessage != null) {
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 12.dp, top = 4.dp),
-            )
-        }
     }
 }
 
@@ -236,11 +200,30 @@ object InputTransformations {
     val digitOnlyInputTransformation =
         object : InputTransformation {
             override fun TextFieldBuffer.transformInput() {
-                if (asCharSequence().any { !it.isDigit() }) {
-                    revertAllChanges()
+                val formatted =
+                    (
+                        asCharSequence().filter { it.isDigit() }.toString().toLongOrNull()
+                            ?: 0L
+                    ).toString()
+                if (formatted != asCharSequence().toString()) {
+                    replace(0, length, formatted)
                 }
             }
         }
+
+    fun minMaxInputTransformation(
+        min: Long = Long.MIN_VALUE,
+        max: Long = Long.MAX_VALUE,
+    ) = object : InputTransformation {
+        override fun TextFieldBuffer.transformInput() {
+            val number =
+                asCharSequence().filter { it.isDigit() }.toString().toLongOrNull() ?: 0L
+            val formatted = max(min(number, max), min).toString()
+            if (formatted != asCharSequence().toString()) {
+                replace(0, length, formatted)
+            }
+        }
+    }
 }
 
 object OutputTransformations {
@@ -271,6 +254,18 @@ object OutputTransformations {
             override fun TextFieldBuffer.transformOutput() {
                 if (length > 3) insert(3, "-")
                 if (length > 6) insert(6, "-")
+            }
+        }
+
+    val formatNumberWithCommas =
+        object : OutputTransformation {
+            override fun TextFieldBuffer.transformOutput() {
+                val digitsOnly = asCharSequence().filter { it.isDigit() }
+                if (digitsOnly.isEmpty()) return
+
+                for (i in digitsOnly.length - 3 downTo 1 step 3) {
+                    insert(i, ",")
+                }
             }
         }
 }
