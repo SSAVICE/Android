@@ -1,8 +1,6 @@
 name: Weekly Dev CI
 
 on:
-  pull_request:
-    branches: [ "week-*", "develop" ]
   push:
     branches: [ "week-*", "develop" ]
 
