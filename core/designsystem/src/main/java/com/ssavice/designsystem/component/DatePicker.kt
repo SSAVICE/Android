@@ -43,7 +43,7 @@ fun SsaviceDateSpinner(
     onDateSelected: (timestamp: Long) -> Unit,
     modifier: Modifier = Modifier,
     text: String = "연도-월-일",
-    labelText: String = "시작일",
+    labelText: String? = null,
     isError: Boolean = false,
     errorMessage: String? = null,
 ) {
@@ -51,7 +51,7 @@ fun SsaviceDateSpinner(
 
     // Format the timestamp into a readable date string for display
     val formattedDate = remember(selectedTimestamp) {
-        if (selectedTimestamp != null) {
+        if (selectedTimestamp != null && selectedTimestamp != 0L) {
             val instant = Instant.ofEpochMilli(selectedTimestamp)
             val zonedDateTime = instant.atZone(ZoneId.of("Asia/Seoul"))
             // Format to "YYYY-MM-DD"
@@ -105,7 +105,8 @@ fun SsaviceDateSpinner(
             },
             onDismiss = {
                 showDatePicker = false
-            }
+            },
+            selectedTimestamp = if (selectedTimestamp?.equals(0L) == true) null else selectedTimestamp
         )
     }
 }
@@ -125,6 +126,7 @@ fun SsaviceDateSpinner(
 fun SsaviceDatePickerDialog(
     onDateSelected: (timestamp: Long) -> Unit,
     onDismiss: () -> Unit,
+    selectedTimestamp: Long? = null
 ) {
     // KST (Korea Standard Time) is UTC+9
     val kstZoneId = ZoneId.of("Asia/Seoul")
@@ -132,7 +134,8 @@ fun SsaviceDatePickerDialog(
     // Use rememberDatePickerState to manage the state of the DatePicker
     val datePickerState = rememberDatePickerState(
         // You can set an initial selected date, e.g., today in KST
-        initialSelectedDateMillis = Instant.now().atZone(kstZoneId).toInstant().toEpochMilli()
+        initialSelectedDateMillis = selectedTimestamp ?: Instant.now().atZone(kstZoneId).toInstant()
+            .toEpochMilli()
     )
 
     DatePickerDialog(
