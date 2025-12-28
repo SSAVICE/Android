@@ -67,7 +67,6 @@ jobs:
 
         # 유닛 테스트 후 PR 코멘트로 결과 전송
       - name: Run Unit Test
-        if: github.event_name == 'pull_request' && success() || failure()
         run: ./gradlew test
 
       - name: Publish Test Results
