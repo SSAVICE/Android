@@ -20,7 +20,8 @@ class AddCompanyDTO(
     val postCode: String,
     val address: String,
     val detailAddress: String,
-    val depositor: String // TODO: SHOULD BE CHANGED
+    // TODO: SHOULD BE CHANGED
+    val depositor: String,
 ) {
     fun toModel(): SellerInfo =
         SellerInfo(
@@ -53,7 +54,7 @@ class AddCompanyDTO(
                 postCode = sellerInfo.postCode,
                 address = sellerInfo.address,
                 detailAddress = sellerInfo.detailAddress,
-                depositor = "Test"
+                depositor = "Test",
             )
     }
 }

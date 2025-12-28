@@ -22,7 +22,7 @@ fun LabeledComponent(
     labelText: String? = null,
     isError: Boolean = false,
     errorMessage: String? = null,
-    body: @Composable () -> Unit
+    body: @Composable () -> Unit,
 ) {
     val offsetX = remember { Animatable(0f) }
 
@@ -39,19 +39,19 @@ fun LabeledComponent(
     }
 
     Column(modifier = modifier) {
-        Column (modifier = Modifier.offset(x = offsetX.value.dp)) {
+        Column(modifier = Modifier.offset(x = offsetX.value.dp)) {
             if (labelText != null) {
                 ProvideTextStyle(value = MaterialTheme.typography.labelSmall)
                 {
                     Text(
                         text = labelText,
                         fontWeight = FontWeight.Black,
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                bottom = 4.dp
-                            )
-                            .alpha(0.85f)
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = 4.dp,
+                                    bottom = 4.dp,
+                                ).alpha(0.85f),
                     )
                 }
             }

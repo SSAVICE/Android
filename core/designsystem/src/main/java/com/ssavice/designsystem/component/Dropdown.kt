@@ -41,11 +41,11 @@ fun SsaviceDropdown(
         modifier,
         labelText,
         isError,
-        errorMessage
+        errorMessage,
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = it }
+            onExpandedChange = { expanded = it },
         ) {
             ProvideTextStyle(value = MaterialTheme.typography.bodyMedium) {
                 OutlinedTextField(
@@ -56,12 +56,12 @@ fun SsaviceDropdown(
                     modifier = modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                     trailingIcon = {
                         Icon(Icons.Filled.ArrowDropDown, contentDescription = "Open Dropdown")
-                    }
+                    },
                 )
 
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
                 ) {
                     options.forEach { option ->
                         DropdownMenuItem(
@@ -69,10 +69,9 @@ fun SsaviceDropdown(
                             onClick = {
                                 onOptionSelected(option)
                                 expanded = false
-                            }
+                            },
                         )
                     }
-
                 }
             }
         }
@@ -91,7 +90,7 @@ private fun SsaviceDropdownPreview() {
                 modifier = Modifier.size(300.dp).padding(horizontal = 10.dp, vertical = 200.dp),
                 selectedOption = options[0],
                 onOptionSelected = {},
-                labelText = "카테고리"
+                labelText = "카테고리",
             )
         }
     }

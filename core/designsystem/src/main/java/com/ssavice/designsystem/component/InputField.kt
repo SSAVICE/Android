@@ -47,12 +47,11 @@ fun SsaviceInputField(
     isError: Boolean = false, // New parameter
     errorMessage: String? = null, // New parameter
 ) {
-
     LabeledComponent(
         labelText = labelText,
         isError = isError,
         errorMessage = errorMessage,
-        modifier = modifier
+        modifier = modifier,
     ) {
         OutlinedTextField(
             state = state,
@@ -77,7 +76,7 @@ fun SsaviceInputField(
                 ),
             inputTransformation = inputTransformation,
             outputTransformation = outputTransformation,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
@@ -201,25 +200,30 @@ object InputTransformations {
     val digitOnlyInputTransformation =
         object : InputTransformation {
             override fun TextFieldBuffer.transformInput() {
-                val formatted = (asCharSequence().filter { it.isDigit() }.toString().toLongOrNull()
-                    ?: 0L).toString()
+                val formatted =
+                    (
+                        asCharSequence().filter { it.isDigit() }.toString().toLongOrNull()
+                            ?: 0L
+                    ).toString()
                 if (formatted != asCharSequence().toString()) {
                     replace(0, length, formatted)
                 }
             }
         }
 
-    fun minMaxInputTransformation(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE) =
-        object : InputTransformation {
-            override fun TextFieldBuffer.transformInput() {
-                val number =
-                    asCharSequence().filter { it.isDigit() }.toString().toLongOrNull() ?: 0L
-                val formatted = max(min(number, max), min).toString()
-                if (formatted != asCharSequence().toString())
-                    replace(0, length, formatted)
+    fun minMaxInputTransformation(
+        min: Long = Long.MIN_VALUE,
+        max: Long = Long.MAX_VALUE,
+    ) = object : InputTransformation {
+        override fun TextFieldBuffer.transformInput() {
+            val number =
+                asCharSequence().filter { it.isDigit() }.toString().toLongOrNull() ?: 0L
+            val formatted = max(min(number, max), min).toString()
+            if (formatted != asCharSequence().toString()) {
+                replace(0, length, formatted)
             }
         }
-
+    }
 }
 
 object OutputTransformations {

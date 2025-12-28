@@ -23,7 +23,7 @@ data class AddServiceDTO(
     val latitude: Double,
     val postCode: String,
     val address: String,
-    val detailAddress: String
+    val detailAddress: String,
 ) {
     companion object {
         fun fromModel(serviceInfo: ServiceInfo): AddServiceDTO =
@@ -40,11 +40,11 @@ data class AddServiceDTO(
                 tag = serviceInfo.tags,
                 startDate = serviceInfo.startDate.toString(),
                 endDate = serviceInfo.endDate.toString(),
-                longitude = 0.0,  //TODO
+                longitude = 0.0, // TODO
                 latitude = 0.0,
                 postCode = "12345",
                 address = "54321",
-                detailAddress = "ABCDE"
+                detailAddress = "ABCDE",
             )
     }
 }
@@ -52,5 +52,5 @@ data class AddServiceDTO(
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class AddServiceResponseDTO(
-    val serviceId: Long
+    val serviceId: Long,
 )

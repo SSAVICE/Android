@@ -50,24 +50,25 @@ fun SsaviceDateSpinner(
     var showDatePicker by remember { mutableStateOf(false) }
 
     // Format the timestamp into a readable date string for display
-    val formattedDate = remember(selectedTimestamp) {
-        if (selectedTimestamp != null && selectedTimestamp != 0L) {
-            val instant = Instant.ofEpochMilli(selectedTimestamp)
-            val zonedDateTime = instant.atZone(ZoneId.of("Asia/Seoul"))
-            // Format to "YYYY-MM-DD"
-            "${zonedDateTime.year}-${
-                zonedDateTime.monthValue.toString().padStart(2, '0')
-            }-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
-        } else {
-            "" // Display nothing if no date is selected
+    val formattedDate =
+        remember(selectedTimestamp) {
+            if (selectedTimestamp != null && selectedTimestamp != 0L) {
+                val instant = Instant.ofEpochMilli(selectedTimestamp)
+                val zonedDateTime = instant.atZone(ZoneId.of("Asia/Seoul"))
+                // Format to "YYYY-MM-DD"
+                "${zonedDateTime.year}-${
+                    zonedDateTime.monthValue.toString().padStart(2, '0')
+                }-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
+            } else {
+                "" // Display nothing if no date is selected
+            }
         }
-    }
 
     LabeledComponent(
         modifier,
         labelText,
         isError,
-        errorMessage
+        errorMessage,
     ) {
         Box {
             OutlinedTextField(
@@ -79,20 +80,21 @@ fun SsaviceDateSpinner(
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.CalendarToday,
-                        contentDescription = "Open Date Picker"
+                        contentDescription = "Open Date Picker",
                     )
                 },
-                shape = SsaviceRoundRectShape
+                shape = SsaviceRoundRectShape,
             )
 
             Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable(
-                        onClick = { showDatePicker = true },
-                        indication = null, // No ripple effect
-                        interactionSource = remember { MutableInteractionSource() }
-                    )
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .clickable(
+                            onClick = { showDatePicker = true },
+                            indication = null, // No ripple effect
+                            interactionSource = remember { MutableInteractionSource() },
+                        ),
             )
         }
     }
@@ -106,7 +108,7 @@ fun SsaviceDateSpinner(
             onDismiss = {
                 showDatePicker = false
             },
-            selectedTimestamp = if (selectedTimestamp?.equals(0L) == true) null else selectedTimestamp
+            selectedTimestamp = if (selectedTimestamp?.equals(0L) == true) null else selectedTimestamp,
         )
     }
 }
@@ -126,17 +128,22 @@ fun SsaviceDateSpinner(
 fun SsaviceDatePickerDialog(
     onDateSelected: (timestamp: Long) -> Unit,
     onDismiss: () -> Unit,
-    selectedTimestamp: Long? = null
+    selectedTimestamp: Long? = null,
 ) {
     // KST (Korea Standard Time) is UTC+9
     val kstZoneId = ZoneId.of("Asia/Seoul")
 
     // Use rememberDatePickerState to manage the state of the DatePicker
-    val datePickerState = rememberDatePickerState(
-        // You can set an initial selected date, e.g., today in KST
-        initialSelectedDateMillis = selectedTimestamp ?: Instant.now().atZone(kstZoneId).toInstant()
-            .toEpochMilli()
-    )
+    val datePickerState =
+        rememberDatePickerState(
+            // You can set an initial selected date, e.g., today in KST
+            initialSelectedDateMillis =
+                selectedTimestamp ?: Instant
+                    .now()
+                    .atZone(kstZoneId)
+                    .toInstant()
+                    .toEpochMilli(),
+        )
 
     DatePickerDialog(
         onDismissRequest = { onDismiss() },
@@ -152,7 +159,7 @@ fun SsaviceDatePickerDialog(
                         onDateSelected(zonedDateTime.toInstant().toEpochMilli())
                     }
                     onDismiss()
-                }
+                },
             ) {
                 Text("Apply")
             }
@@ -161,7 +168,7 @@ fun SsaviceDatePickerDialog(
             TextButton(onClick = { onDismiss() }) {
                 Text("Cancel")
             }
-        }
+        },
     ) {
         // The DatePicker itself
         DatePicker(state = datePickerState)
@@ -187,12 +194,11 @@ private fun SsaviceDatePickerDialogPreview() {
                 onDismiss = {
                     showDialog = false
                     println("Dialog dismissed")
-                }
+                },
             )
         }
     }
 }
-
 
 // This replaces the existing preview content to show the new component
 @Preview
@@ -208,9 +214,10 @@ private fun SsaviceDateSpinnerPreview() {
                 onDateSelected = { timestamp ->
                     selectedTimestamp = timestamp
                 },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(vertical = 100.dp)
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .padding(vertical = 100.dp),
             )
         }
     }

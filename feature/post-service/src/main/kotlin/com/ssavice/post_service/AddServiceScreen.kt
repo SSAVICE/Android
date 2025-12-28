@@ -59,16 +59,32 @@ import com.ssavice.post_service.AddServiceScreenDefaults.TAG_TEXT
 fun AddServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: AddServiceViewModel = hiltViewModel(),
-    onSubmit: (Long) -> Unit = {}
+    onSubmit: (Long) -> Unit = {},
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     val serviceNameTextState = rememberTextFieldState(state.value.form.name)
     var category by remember { mutableStateOf(state.value.form.category) }
     val tagTextState = rememberTextFieldState(state.value.form.tag)
-    val minRecruitTextState = rememberTextFieldState(state.value.form.minRecruit.toString())
-    val maxRecruitTextState = rememberTextFieldState(state.value.form.maxRecruit.toString())
-    val priceTextState = rememberTextFieldState(state.value.form.price.toString())
-    val discountRatioState = rememberTextFieldState(state.value.form.discountRatio.toString())
+    val minRecruitTextState =
+        rememberTextFieldState(
+            state.value.form.minRecruit
+                .toString(),
+        )
+    val maxRecruitTextState =
+        rememberTextFieldState(
+            state.value.form.maxRecruit
+                .toString(),
+        )
+    val priceTextState =
+        rememberTextFieldState(
+            state.value.form.price
+                .toString(),
+        )
+    val discountRatioState =
+        rememberTextFieldState(
+            state.value.form.discountRatio
+                .toString(),
+        )
     val descriptionTextState = rememberTextFieldState(state.value.form.description)
 
     LaunchedEffect(serviceNameTextState) {
@@ -136,9 +152,8 @@ fun AddServiceRoute(
         onEndDateChanged = viewModel::onEndDateChanged,
         onCategoryChanged = { category = it },
         onSubmitClicked = viewModel::onSubmitButtonClicked,
-        onDismissClicked = viewModel::onDismissButtonClicked
+        onDismissClicked = viewModel::onDismissButtonClicked,
     )
-
 }
 
 @Composable
@@ -169,7 +184,7 @@ fun AddServiceScreen(
     onEndDateChanged: (TimeStamp) -> Unit = {},
     onCategoryChanged: (String) -> Unit = {},
     onSubmitClicked: () -> Unit = {},
-    onDismissClicked: () -> Unit = {}
+    onDismissClicked: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
@@ -185,7 +200,7 @@ fun AddServiceScreen(
             placeholderText = SERVICE_NAME_PLACEHOLDER,
             inputTransformation = InputTransformation.maxLength(12),
             isError = serviceNameTextStateErrorMessage != null,
-            errorMessage = serviceNameTextStateErrorMessage
+            errorMessage = serviceNameTextStateErrorMessage,
         )
 
         SsaviceDropdown(
@@ -195,7 +210,7 @@ fun AddServiceScreen(
             selectedOption = category,
             onOptionSelected = onCategoryChanged,
             isError = categoryErrorMessage != null,
-            errorMessage = categoryErrorMessage
+            errorMessage = categoryErrorMessage,
         )
 
         SsaviceInputField(
@@ -205,7 +220,7 @@ fun AddServiceScreen(
             placeholderText = TAG_PLACEHOLDER,
             inputTransformation = InputTransformation.maxLength(12),
             isError = tagTextStateErrorMessage != null,
-            errorMessage = tagTextStateErrorMessage
+            errorMessage = tagTextStateErrorMessage,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
@@ -214,12 +229,12 @@ fun AddServiceScreen(
             placeholderText = DESCRIPTION_PLACEHOLDER,
             multiLine = true,
             isError = descriptionTextStateErrorMessage != null,
-            errorMessage = descriptionTextStateErrorMessage
+            errorMessage = descriptionTextStateErrorMessage,
         )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
         ) {
             SsaviceInputField(
                 modifier = Modifier.weight(1f),
@@ -229,13 +244,14 @@ fun AddServiceScreen(
                     KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
-                inputTransformation = InputTransformation.maxLength(4).then(
-                    InputTransformations.digitOnlyInputTransformation.then(
-                        InputTransformations.minMaxInputTransformation(1, 200)
-                    )
-                ),
+                inputTransformation =
+                    InputTransformation.maxLength(4).then(
+                        InputTransformations.digitOnlyInputTransformation.then(
+                            InputTransformations.minMaxInputTransformation(1, 200),
+                        ),
+                    ),
                 isError = minRecruitTextStateErrorMessage != null,
-                errorMessage = minRecruitTextStateErrorMessage
+                errorMessage = minRecruitTextStateErrorMessage,
             )
 
             SsaviceInputField(
@@ -246,13 +262,14 @@ fun AddServiceScreen(
                     KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
-                inputTransformation = InputTransformation.maxLength(4).then(
-                    InputTransformations.digitOnlyInputTransformation.then(
-                        InputTransformations.minMaxInputTransformation(1, 200)
-                    )
-                ),
+                inputTransformation =
+                    InputTransformation.maxLength(4).then(
+                        InputTransformations.digitOnlyInputTransformation.then(
+                            InputTransformations.minMaxInputTransformation(1, 200),
+                        ),
+                    ),
                 isError = maxRecruitTextStateErrorMessage != null,
-                errorMessage = maxRecruitTextStateErrorMessage
+                errorMessage = maxRecruitTextStateErrorMessage,
             )
         }
         SsaviceInputField(
@@ -263,12 +280,13 @@ fun AddServiceScreen(
                 KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                 ),
-            inputTransformation = InputTransformation.maxLength(13).then(
-                InputTransformations.digitOnlyInputTransformation
-            ),
+            inputTransformation =
+                InputTransformation.maxLength(13).then(
+                    InputTransformations.digitOnlyInputTransformation,
+                ),
             outputTransformation = OutputTransformations.formatNumberWithCommas,
             isError = priceTextStateErrorMessage != null,
-            errorMessage = priceTextStateErrorMessage
+            errorMessage = priceTextStateErrorMessage,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
@@ -278,17 +296,18 @@ fun AddServiceScreen(
                 KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                 ),
-            inputTransformation = InputTransformation.maxLength(4).then(
-                InputTransformations.digitOnlyInputTransformation.then(
-                    InputTransformations.minMaxInputTransformation(0, 100)
-                )
-            ),
+            inputTransformation =
+                InputTransformation.maxLength(4).then(
+                    InputTransformations.digitOnlyInputTransformation.then(
+                        InputTransformations.minMaxInputTransformation(0, 100),
+                    ),
+                ),
             isError = discountRatioStateErrorMessage != null,
-            errorMessage = discountRatioStateErrorMessage
+            errorMessage = discountRatioStateErrorMessage,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
         ) {
             SsaviceDateSpinner(
                 startDate.timeInMillis,
@@ -296,7 +315,7 @@ fun AddServiceScreen(
                 modifier = Modifier.weight(1f, false),
                 labelText = START_DATE_TEXT,
                 isError = startDateErrorMessage != null,
-                errorMessage = startDateErrorMessage
+                errorMessage = startDateErrorMessage,
             )
             SsaviceDateSpinner(
                 endDate.timeInMillis,
@@ -304,24 +323,25 @@ fun AddServiceScreen(
                 modifier = Modifier.weight(1f, false),
                 labelText = END_DATE_TEXT,
                 isError = endDateErrorMessage != null,
-                errorMessage = endDateErrorMessage
+                errorMessage = endDateErrorMessage,
             )
         }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
         ) {
             SsaviceButtonOutlined(
                 modifier = Modifier.weight(1f),
                 text = "취소",
-                onClick = onSubmitClicked
+                onClick = onSubmitClicked,
             )
             SsaviceButton(
                 modifier = Modifier.weight(1f),
                 text = "등록",
-                onClick = onDismissClicked
+                onClick = onDismissClicked,
             )
         }
     }
@@ -346,9 +366,10 @@ private fun AddServiceScreenPreview() {
     SsaviceTheme {
         SsaviceBackground {
             Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxSize(),
+                modifier =
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxSize(),
             ) {
                 AddServiceScreen(
                     modifier = Modifier,
@@ -365,7 +386,7 @@ private fun AddServiceScreenPreview() {
                     startDate = startDate,
                     endDate = endDate,
                     onStartDateChanged = { startDate = it },
-                    onEndDateChanged = { endDate = it }
+                    onEndDateChanged = { endDate = it },
                 )
             }
         }
