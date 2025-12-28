@@ -1,10 +1,10 @@
-name: Weekly Dev CI
+name: Dev CI
 
 on:
   pull_request:
-    branches: [ "week-*", "develop" ]
+    branches: [ "develop" ]
   push:
-    branches: [ "week-*", "develop" ]
+    branches: [ "develop" ]
 
 jobs:
   test:
@@ -35,7 +35,11 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles(
+              'gradle/wrapper/gradle-wrapper.properties',
+              'gradle/libs.versions.toml',
+              '**/gradle.lockfile',
+              '**/*.versions.toml') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -80,6 +84,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          key: ${{ runner.os }}-gradle-${{ hashFiles(
+            'gradle/wrapper/gradle-wrapper.properties',
+            'gradle/libs.versions.toml',
+            '**/gradle.lockfile',
+            '**/*.versions.toml') }}
