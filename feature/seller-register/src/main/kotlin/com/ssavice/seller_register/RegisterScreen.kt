@@ -149,6 +149,11 @@ fun RegisterScreen(
                     )
                 }
             }
+            SsaviceButton(
+                onClick = viewModel::submit,
+                text = "TEST",
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }

@@ -20,7 +20,7 @@ constructor() : SellerInfoRepository {
         return Result.success(Unit)
     }
 
-    override fun getSellerInformation(sellerId: Long): Flow<Result<SellerMainInfo>> {
+    override fun getMySellerInformation(): Flow<Result<SellerMainInfo>> {
         val rand = Random(LocalDateTime.now().second)
         fun createService(name: String, tags: List<String> = listOf("A", "B", "C")) = Service(
             id = rand.nextLong(),

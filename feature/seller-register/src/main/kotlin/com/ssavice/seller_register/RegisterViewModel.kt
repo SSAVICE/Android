@@ -101,7 +101,7 @@ constructor(
         }
     }
 
-    private fun submit() {
+    fun submit() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = SellerRegisterUiState.Loading(_uiState.value.registrationStep)
             repository.registerSellerInformation(

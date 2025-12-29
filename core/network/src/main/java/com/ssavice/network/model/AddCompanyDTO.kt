@@ -36,7 +36,7 @@ class AddCompanyDTO(
             latitude = latitude,
             postCode = postCode,
             address = address,
-            detailAddress = detailAddress,
+            detailAddress = detailAddress
         )
 
     companion object {

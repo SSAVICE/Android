@@ -18,7 +18,7 @@ class SellerMainViewModel @Inject constructor(
     private val repository: SellerInfoRepository
 ): ViewModel() {
     val uiState: StateFlow<SellerMainUiState> =
-        repository.getSellerInformation(0L).map {
+        repository.getMySellerInformation().map {
             it.fold(
                 onSuccess = { info ->
                     SellerMainUiState.Shown(

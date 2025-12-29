@@ -21,8 +21,6 @@ interface CompanyRetrofitService {
         @Body body: LoginDTO,
     ): Response<JWT>
 
-    @GET("/api/company/{companyId}")
-    suspend fun getCompanyInfo(
-        @Path("companyId") companyId: Long,
-    ): Response<GetCompanyInfoDTO>
+    @GET("/api/company")
+    suspend fun getCompanyInfo(): Response<GetCompanyInfoDTO>
 }
