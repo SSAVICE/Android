@@ -12,25 +12,25 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class RemoteSellerInfoRepository
-@Inject
-constructor(
-    private val companyRetrofitService: CompanyRetrofitService,
-) : SellerInfoRepository {
-    override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> =
-        processResponse(
-            companyRetrofitService.registerSeller(
-                AddCompanyDTO.fromModel(sellerInfo),
-            ),
-        )
+    @Inject
+    constructor(
+        private val companyRetrofitService: CompanyRetrofitService,
+    ) : SellerInfoRepository {
+        override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> =
+            processResponse(
+                companyRetrofitService.registerSeller(
+                    AddCompanyDTO.fromModel(sellerInfo),
+                ),
+            )
 
-    override fun getMySellerInformation(): Flow<Result<SellerMainInfo>> {
-        return flow {
-            emit(
-                processResponseOnResponseData(
-                    companyRetrofitService.getCompanyInfo()
-                ).map {
-                    it.toSellerMainInfoModel()
-                })
-        }
+        override fun getMySellerInformation(): Flow<Result<SellerMainInfo>> =
+            flow {
+                emit(
+                    processResponseOnResponseData(
+                        companyRetrofitService.getCompanyInfo(),
+                    ).map {
+                        it.toSellerMainInfoModel()
+                    },
+                )
+            }
     }
-}

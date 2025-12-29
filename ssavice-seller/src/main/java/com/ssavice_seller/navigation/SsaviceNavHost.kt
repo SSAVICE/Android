@@ -10,20 +10,18 @@ import com.ssavice.seller_register.navigation.RegisterRoute
 import com.ssavice.seller_register.navigation.registerScreen
 
 @Composable
-fun SsaviceNavHost(
-    modifier: Modifier = Modifier
-) {
+fun SsaviceNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = RegisterRoute,
-        modifier = modifier
+        modifier = modifier,
     ) {
         mainScreen()
         registerScreen(
             onSubmit = {
                 navController.navigateToMain()
-            }
+            },
         )
     }
 }

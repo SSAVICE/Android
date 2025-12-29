@@ -39,17 +39,16 @@ import com.ssavice.ui.SellerServiceListItem
 import com.ssavice.ui.ServiceStatus
 import java.net.URL
 
-
 @Composable
 fun SellerMainScreen(
     modifier: Modifier = Modifier,
-    viewModel: SellerMainViewModel = hiltViewModel()
+    viewModel: SellerMainViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     SellerMainScreen(
         state = state,
         modifier = modifier,
-        onAddClick = {}
+        onAddClick = {},
     )
 }
 
@@ -60,35 +59,38 @@ fun SellerMainScreen(
     modifier: Modifier = Modifier,
     thumbnail: @Composable (SellerItemUiState) -> Unit = {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(it.imageUrl.toString())
-                .crossfade(true)
-                .build(),
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(it.imageUrl.toString())
+                    .crossfade(true)
+                    .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     },
-    onServiceClick: (SellerItemUiState) -> Unit = {}
+    onServiceClick: (SellerItemUiState) -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(horizontal = 16.dp),
     ) {
         Spacer(Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             ProvideTextStyle(
-                value = MaterialTheme.typography.titleMedium
+                value = MaterialTheme.typography.titleMedium,
             ) {
                 Text(
                     text = "등록된 서비스",
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
 
@@ -96,7 +98,7 @@ fun SellerMainScreen(
 
             SsaviceButton(
                 onClick = onAddClick,
-                text = "+ 추가"
+                text = "+ 추가",
             )
         }
 
@@ -106,11 +108,11 @@ fun SellerMainScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             items(
                 items = if (state is SellerMainUiState.Shown) state.items else emptyList(),
-                key = { it.id }
+                key = { it.id },
             ) { item ->
                 // 클릭이 필요하면 카드에 clickable 추가하면 됨 (여기선 레이아웃 위주로 유지)
                 SellerServiceListItem(
@@ -118,15 +120,20 @@ fun SellerMainScreen(
                     category = item.category,
                     meta = item.meta,
                     priceText = item.priceText,
-                    status = if (item.isRecruiting) ServiceStatus.IN_PROGRESS
-                    else ServiceStatus.RECRUITING,
+                    status =
+                        if (item.isRecruiting) {
+                            ServiceStatus.IN_PROGRESS
+                        } else {
+                            ServiceStatus.RECRUITING
+                        },
                     thumbnail = { thumbnail(item) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                        .shadow(8.dp, RoundedCornerShape(14.dp), clip = false)
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(Color.White)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .shadow(8.dp, RoundedCornerShape(14.dp), clip = false)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Color.White),
                 )
             }
         }
@@ -136,25 +143,38 @@ fun SellerMainScreen(
 @Preview
 @Composable
 fun SellerMainScreenPreview() {
-    val items = remember {
-        listOf(
-            SellerItemUiState(
-                0, "요가 레슨", "운동/피트니스", "15명",
-                "₩400,000", true,
-                URL(YOGA_PREVIEW)
-            ),
-            SellerItemUiState(
-                1, "기초 영어 회화", "운동/학습", "12명",
-                "₩400,000", true,
-                URL(YOGA_PREVIEW)
-            ),
-            SellerItemUiState(
-                2, "유기농 과자 공구", "운동/피트니스", "45명",
-                "₩750,000", false,
-                URL(YOGA_PREVIEW)
+    val items =
+        remember {
+            listOf(
+                SellerItemUiState(
+                    0,
+                    "요가 레슨",
+                    "운동/피트니스",
+                    "15명",
+                    "₩400,000",
+                    true,
+                    URL(YOGA_PREVIEW),
+                ),
+                SellerItemUiState(
+                    1,
+                    "기초 영어 회화",
+                    "운동/학습",
+                    "12명",
+                    "₩400,000",
+                    true,
+                    URL(YOGA_PREVIEW),
+                ),
+                SellerItemUiState(
+                    2,
+                    "유기농 과자 공구",
+                    "운동/피트니스",
+                    "45명",
+                    "₩750,000",
+                    false,
+                    URL(YOGA_PREVIEW),
+                ),
             )
-        )
-    }
+        }
     val state = SellerMainUiState.Shown(items)
     SsaviceTheme {
         SellerMainScreen(
@@ -163,19 +183,20 @@ fun SellerMainScreenPreview() {
             onServiceClick = {},
             thumbnail = {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(it.imageUrl.toString())
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(it.imageUrl.toString())
+                            .crossfade(true)
+                            .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
-            }
+            },
         )
     }
 }
-
 
 private const val YOGA_PREVIEW =
     "https://images.unsplash.com/photo-1552196527-bffef41ef674?q=80&w=2226&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"

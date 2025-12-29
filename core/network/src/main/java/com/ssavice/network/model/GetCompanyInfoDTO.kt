@@ -20,39 +20,40 @@ data class GetCompanyInfoDTO(
     val description: String,
     val detail: String,
     val service: List<ServiceDTO>,
-    val review: List<ReviewDTO>
+    val review: List<ReviewDTO>,
 ) {
-    fun toSellerMainInfoModel(): SellerMainInfo {
-        return SellerMainInfo(
+    fun toSellerMainInfoModel(): SellerMainInfo =
+        SellerMainInfo(
             companyName = companyName,
             ownerName = ownerName,
             phoneNumber = phoneNumber,
             businessNumber = businessNumber,
             description = description,
-            services = service.map {
-                val timeParsed = try {
-                    LocalDateTime.parse(it.deadline)
-                } catch (e: Exception) {
-                    Log.e("KSC", "Invalid Time Format")
-                    LocalDateTime.MIN
-                }
-                Service(
-                    name = it.title,
-                    id = it.serviceId,
-                    image = URL(it.serviceImageUrl),
-                    latitude = it.latitude,
-                    longitude = it.longitude,
-                    currentMember = it.currentMember.toInt(),
-                    minimumMember = it.minimumMember.toInt(),
-                    basePrice = it.basePrice,
-                    discountRatio = it.discountRatio,
-                    discountedPrice = it.discountedPrice,
-                    deadLine = timeParsed,
-                    serviceTag = it.tag
-                )
-            }
+            services =
+                service.map {
+                    val timeParsed =
+                        try {
+                            LocalDateTime.parse(it.deadline)
+                        } catch (e: Exception) {
+                            Log.e("KSC", "Invalid Time Format")
+                            LocalDateTime.MIN
+                        }
+                    Service(
+                        name = it.title,
+                        id = it.serviceId,
+                        image = URL(it.serviceImageUrl),
+                        latitude = it.latitude,
+                        longitude = it.longitude,
+                        currentMember = it.currentMember.toInt(),
+                        minimumMember = it.minimumMember.toInt(),
+                        basePrice = it.basePrice,
+                        discountRatio = it.discountRatio,
+                        discountedPrice = it.discountedPrice,
+                        deadLine = timeParsed,
+                        serviceTag = it.tag,
+                    )
+                },
         )
-    }
 }
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -75,7 +76,7 @@ data class ServiceDTO(
     val discountRatio: Double,
     val discountedPrice: Long,
     val deadline: String,
-    val tag: List<String>
+    val tag: List<String>,
 )
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -85,5 +86,5 @@ data class ReviewDTO(
     val comment: String,
     val serviceName: String,
     val createdAt: String,
-    val rate: Int
+    val rate: Int,
 )

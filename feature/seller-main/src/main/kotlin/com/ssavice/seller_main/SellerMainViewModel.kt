@@ -14,34 +14,37 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerMainViewModel @Inject constructor(
-    private val repository: SellerInfoRepository
-): ViewModel() {
-    val uiState: StateFlow<SellerMainUiState> =
-        repository.getMySellerInformation().map {
-            it.fold(
-                onSuccess = { info ->
-                    SellerMainUiState.Shown(
-                        info.services.map { service ->
-                            SellerItemUiState(
-                                id = service.id,
-                                title = service.name,
-                                category = service.serviceTag[0],
-                                meta = "${service.currentMember}명",
-                                priceText = "₩${service.discountedPrice}",
-                                isRecruiting = service.deadLine.isAfter(LocalDateTime.now()) ,
-                                imageUrl = service.image,
+class SellerMainViewModel
+    @Inject
+    constructor(
+        private val repository: SellerInfoRepository,
+    ) : ViewModel() {
+        val uiState: StateFlow<SellerMainUiState> =
+            repository
+                .getMySellerInformation()
+                .map {
+                    it.fold(
+                        onSuccess = { info ->
+                            SellerMainUiState.Shown(
+                                info.services.map { service ->
+                                    SellerItemUiState(
+                                        id = service.id,
+                                        title = service.name,
+                                        category = service.serviceTag[0],
+                                        meta = "${service.currentMember}명",
+                                        priceText = "₩${service.discountedPrice}",
+                                        isRecruiting = service.deadLine.isAfter(LocalDateTime.now()),
+                                        imageUrl = service.image,
+                                    )
+                                },
                             )
-                        }
-                    )
-                }
-            ){
-                e ->
-                SellerMainUiState.Error(e.message?:"")
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = SellerMainUiState.Loading
-        )
-}
+                        },
+                    ) { e ->
+                        SellerMainUiState.Error(e.message ?: "")
+                    }
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = SellerMainUiState.Loading,
+                )
+    }

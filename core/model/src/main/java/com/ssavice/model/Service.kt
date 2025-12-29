@@ -15,5 +15,5 @@ data class Service(
     val discountRatio: Double,
     val discountedPrice: Long,
     val deadLine: LocalDateTime,
-    val serviceTag: List<String>
+    val serviceTag: List<String>,
 )

@@ -18,8 +18,7 @@ fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.mainScreen(
-) {
+fun NavGraphBuilder.mainScreen() {
     composable<MainRoute>
     {
         SellerMainScreen()

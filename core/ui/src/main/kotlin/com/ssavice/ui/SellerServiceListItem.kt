@@ -2,28 +2,39 @@ package com.ssavice.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 
-
-enum class ServiceStatus(val label: String) {
+enum class ServiceStatus(
+    val label: String,
+) {
     IN_PROGRESS("진행중"),
-    RECRUITING("모집완료")
+    RECRUITING("모집완료"),
 }
 
 @Composable
@@ -36,29 +47,31 @@ fun SellerServiceListItem(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 14.dp,
     elevation: Dp = 8.dp,
-    onClick: ((Int) ->  Unit)? = null,
+    onClick: ((Int) -> Unit)? = null,
     thumbnail: @Composable () -> Unit,
 ) {
     val shape = RoundedCornerShape(cornerRadius)
     Box(
-        modifier = Modifier.background(Color.Transparent)
+        modifier = Modifier.background(Color.Transparent),
     ) {
         Row(
-            modifier = modifier
-                // 그림자 + round rect (clip 전에 shadow가 오도록)
-                .shadow(elevation = elevation, shape = shape, clip = false)
-                .clip(shape)
-                .background(Color.White)
-                .fillMaxWidth()
-                .clickable(true) { onClick }
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                modifier
+                    // 그림자 + round rect (clip 전에 shadow가 오도록)
+                    .shadow(elevation = elevation, shape = shape, clip = false)
+                    .clip(shape)
+                    .background(Color.White)
+                    .fillMaxWidth()
+                    .clickable(true) { onClick }
+                    .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
-                    .size(68.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Color(0xFFF2F2F2))
+                modifier =
+                    Modifier
+                        .size(68.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(Color(0xFFF2F2F2)),
             ) {
                 thumbnail()
             }
@@ -67,7 +80,7 @@ fun SellerServiceListItem(
 
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -77,7 +90,7 @@ fun SellerServiceListItem(
                         color = Color(0xFF111111),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     Spacer(Modifier.width(8.dp))
                     StatusChip(status = status)
@@ -90,7 +103,7 @@ fun SellerServiceListItem(
                     fontSize = 12.sp,
                     color = Color(0xFF8A8A8A),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 Spacer(Modifier.height(6.dp))
@@ -98,18 +111,18 @@ fun SellerServiceListItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         text = meta,
                         fontSize = 12.sp,
-                        color = Color(0xFF8A8A8A)
+                        color = Color(0xFF8A8A8A),
                     )
                     Text(
                         text = priceText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF111111)
+                        color = Color(0xFF111111),
                     )
                 }
             }
@@ -120,25 +133,29 @@ fun SellerServiceListItem(
 @Composable
 private fun StatusChip(
     status: ServiceStatus,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val (bg, fg) = when (status) {
-        ServiceStatus.IN_PROGRESS -> Color(0xFFE9F7EF) to Color(0xFF1E8E3E) // 진행중(연녹/진녹)
-        ServiceStatus.RECRUITING -> Color(0xFFEFF1F3) to Color(0xFF6B7280)   // 모집완료(회색)
-    }
+    val (bg, fg) =
+        when (status) {
+            ServiceStatus.IN_PROGRESS -> Color(0xFFE9F7EF) to Color(0xFF1E8E3E)
+
+            // 진행중(연녹/진녹)
+            ServiceStatus.RECRUITING -> Color(0xFFEFF1F3) to Color(0xFF6B7280) // 모집완료(회색)
+        }
 
     Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(999.dp))
-            .background(bg)
-            .padding(horizontal = 10.dp, vertical = 5.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(999.dp))
+                .background(bg)
+                .padding(horizontal = 10.dp, vertical = 5.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = status.label,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
-            color = fg
+            color = fg,
         )
     }
 }
@@ -155,14 +172,14 @@ fun PreviewLikeItem() {
         status = ServiceStatus.IN_PROGRESS,
         thumbnail = {
             AsyncImage(
-                model = yogaImage,
+                model = YOGA_IMAGE_URL,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
-        }
+        },
     )
 }
 
-private const val yogaImage
-= "https://images.unsplash.com/photo-1552196527-bffef41ef674?q=80&w=2226&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+private const val YOGA_IMAGE_URL =
+    "https://images.unsplash.com/photo-1552196527-bffef41ef674?q=80&w=2226&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
