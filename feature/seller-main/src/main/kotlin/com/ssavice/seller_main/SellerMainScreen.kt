@@ -106,7 +106,7 @@ fun SellerMainScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             items(
                 items = if (state is SellerMainUiState.Shown) state.items else emptyList(),
@@ -123,10 +123,10 @@ fun SellerMainScreen(
                     thumbnail = { thumbnail(item) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .shadow(4.dp, RoundedCornerShape(8.dp), clip = false)
-                        .clip(RoundedCornerShape(8.dp))
+                        .padding(4.dp)
+                        .shadow(8.dp, RoundedCornerShape(14.dp), clip = false)
+                        .clip(RoundedCornerShape(14.dp))
                         .background(Color.White)
-                        .padding(0.dp)
                 )
             }
         }

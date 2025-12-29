@@ -40,75 +40,78 @@ fun SellerServiceListItem(
     thumbnail: @Composable () -> Unit,
 ) {
     val shape = RoundedCornerShape(cornerRadius)
-
-    Row(
-        modifier = modifier
-            // 그림자 + round rect (clip 전에 shadow가 오도록)
-            .shadow(elevation = elevation, shape = shape, clip = false)
-            .clip(shape)
-            .background(Color.White)
-            .fillMaxWidth()
-            .clickable(true) { onClick }
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Box(
+        modifier = Modifier.background(Color.Transparent)
     ) {
-        Box(
-            modifier = Modifier
-                .size(68.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(Color(0xFFF2F2F2))
+        Row(
+            modifier = modifier
+                // 그림자 + round rect (clip 전에 shadow가 오도록)
+                .shadow(elevation = elevation, shape = shape, clip = false)
+                .clip(shape)
+                .background(Color.White)
+                .fillMaxWidth()
+                .clickable(true) { onClick }
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            thumbnail()
-        }
-
-        Spacer(Modifier.width(12.dp))
-
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF111111),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(Modifier.width(8.dp))
-                StatusChip(status = status)
+            Box(
+                modifier = Modifier
+                    .size(68.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color(0xFFF2F2F2))
+            ) {
+                thumbnail()
             }
 
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.width(12.dp))
 
-            Text(
-                text = category,
-                fontSize = 12.sp,
-                color = Color(0xFF8A8A8A),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(Modifier.height(6.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
             ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = title,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF111111),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    StatusChip(status = status)
+                }
+
+                Spacer(Modifier.height(4.dp))
+
                 Text(
-                    text = meta,
+                    text = category,
                     fontSize = 12.sp,
-                    color = Color(0xFF8A8A8A)
+                    color = Color(0xFF8A8A8A),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    text = priceText,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF111111)
-                )
+
+                Spacer(Modifier.height(6.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = meta,
+                        fontSize = 12.sp,
+                        color = Color(0xFF8A8A8A)
+                    )
+                    Text(
+                        text = priceText,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF111111)
+                    )
+                }
             }
         }
     }
