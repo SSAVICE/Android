@@ -2,7 +2,7 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.service.ServiceRetrofitService
-import com.ssavice.model.Service.ServiceAddForm
+import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.processResponseOnResponseData
 import javax.inject.Inject

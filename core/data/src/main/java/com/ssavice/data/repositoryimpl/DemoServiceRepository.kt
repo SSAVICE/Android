@@ -1,7 +1,7 @@
 package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.ServiceRepository
-import com.ssavice.model.Service.ServiceAddForm
+import com.ssavice.model.service.ServiceAddForm
 import kotlinx.coroutines.delay
 
 class DemoServiceRepository : ServiceRepository {

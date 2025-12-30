@@ -1,4 +1,4 @@
-package com.ssavice.model.Service
+package com.ssavice.model.service
 
 import java.net.URL
 import java.time.LocalDateTime

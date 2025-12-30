@@ -3,7 +3,7 @@ package com.ssavice.seller_register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.model.Seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerRegisterForm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,7 +1,7 @@
 package com.ssavice.network.model
 
 import android.annotation.SuppressLint
-import com.ssavice.model.Seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerRegisterForm
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")

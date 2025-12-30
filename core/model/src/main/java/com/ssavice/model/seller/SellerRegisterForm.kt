@@ -1,4 +1,4 @@
-package com.ssavice.model.Seller
+package com.ssavice.model.seller
 
 import com.ssavice.model.RegionInfo
 

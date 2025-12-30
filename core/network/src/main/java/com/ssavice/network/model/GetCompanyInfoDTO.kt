@@ -1,7 +1,7 @@
 import android.annotation.SuppressLint
 import android.util.Log
-import com.ssavice.model.Seller.SellerMainInfo
-import com.ssavice.model.Service.ServiceSummary
+import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.service.ServiceSummary
 import kotlinx.serialization.Serializable
 import java.net.URL
 import java.time.LocalDateTime
@@ -11,21 +11,21 @@ import java.time.LocalDateTime
 data class GetCompanyInfoDTO(
     val companyId: Long,
     val companyName: String,
-    val ownerName: String,
     val phoneNumber: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val businessNumber: String,
     val longitude: Double,
     val latitude: Double,
+    val postCode: String,
+    val address: String,
+    val detailAddress: String,
     val description: String,
     val detail: String,
     val service: List<ServiceDTO>,
-    val review: List<ReviewDTO>,
 ) {
     fun toSellerMainInfoModel(): SellerMainInfo =
         SellerMainInfo(
             companyName = companyName,
-            ownerName = ownerName,
             phoneNumber = phoneNumber,
             businessNumber = businessNumber,
             description = description,

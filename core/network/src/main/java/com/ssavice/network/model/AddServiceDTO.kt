@@ -1,7 +1,7 @@
 package com.ssavice.network.model
 
 import android.annotation.SuppressLint
-import com.ssavice.model.Service.ServiceAddForm
+import com.ssavice.model.service.ServiceAddForm
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")

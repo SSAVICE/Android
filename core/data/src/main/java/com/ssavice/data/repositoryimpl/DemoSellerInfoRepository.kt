@@ -1,9 +1,9 @@
 package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.model.Seller.SellerRegisterForm
-import com.ssavice.model.Seller.SellerMainInfo
-import com.ssavice.model.Service.ServiceSummary
+import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

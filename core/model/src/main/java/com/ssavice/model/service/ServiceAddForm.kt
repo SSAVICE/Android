@@ -1,4 +1,4 @@
-package com.ssavice.model.Service
+package com.ssavice.model.service
 
 import com.ssavice.model.Date
 
