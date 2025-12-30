@@ -23,15 +23,15 @@ fun NavGraphBuilder.addServiceScreen() {
         enterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Up,
-                animationSpec = tween()
+                animationSpec = tween(),
             )
         },
         exitTransition = {
             slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Down,
-                animationSpec = tween()
+                animationSpec = tween(),
             )
-        }
+        },
     )
     {
         AddServiceRoute()

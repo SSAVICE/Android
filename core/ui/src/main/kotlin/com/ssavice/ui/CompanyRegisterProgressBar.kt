@@ -38,24 +38,26 @@ fun WideBar(
         modifier =
             modifier
                 .height(6.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Color.LightGray,
-                    RoundedCornerShape(12.dp),
-                ),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        Color.LightGray,
+                        RoundedCornerShape(12.dp),
+                    ),
         )
         Box(
-            modifier = Modifier
-                .fillMaxWidth(min(max(fill, 0f), 1f))
-                .fillMaxHeight()
-                .background(
-                    MaterialTheme.colorScheme.primary,
-                    RoundedCornerShape(12.dp),
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth(min(max(fill, 0f), 1f))
+                    .fillMaxHeight()
+                    .background(
+                        MaterialTheme.colorScheme.primary,
+                        RoundedCornerShape(12.dp),
+                    ),
         )
     }
 }
@@ -68,9 +70,9 @@ fun ProgressBar(
     showStep: Boolean = false,
 ) {
     val step by animateFloatAsState(
-    targetValue = currentStep.toFloat(),
-    animationSpec = tween(durationMillis = 350)
-)
+        targetValue = currentStep.toFloat(),
+        animationSpec = tween(durationMillis = 350),
+    )
     Column {
         Row(
             modifier =
@@ -90,9 +92,10 @@ fun ProgressBar(
         if (showStep) {
             ProvideTextStyle(value = MaterialTheme.typography.labelSmall) {
                 Text(
-                    modifier = Modifier
-                        .padding(start = RegisterProgressBarDefaults.HORIZONTAL_PADDING)
-                        .alpha(0.6f),
+                    modifier =
+                        Modifier
+                            .padding(start = RegisterProgressBarDefaults.HORIZONTAL_PADDING)
+                            .alpha(0.6f),
                     text = "${RegisterProgressBarDefaults.STRING_STEP} $currentStep / $maxStep",
                 )
             }

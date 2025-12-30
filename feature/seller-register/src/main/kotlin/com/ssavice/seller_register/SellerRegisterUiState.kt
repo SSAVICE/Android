@@ -15,7 +15,6 @@ internal data class Form(
     val description: String,
     val accountDepositor: String,
     val accountNumber: String,
-
     val sellerNameErrorState: FormError = FormError.None,
     val businessOwnerNameErrorState: FormError = FormError.None,
     val businessRegistrationNumberErrorState: FormError = FormError.None,
@@ -23,15 +22,17 @@ internal data class Form(
     val addressErrorState: FormError = FormError.None,
     val descriptionErrorState: FormError = FormError.None,
     val accountDepositorErrorState: FormError = FormError.None,
-    val accountNumberErrorState: FormError = FormError.None
+    val accountNumberErrorState: FormError = FormError.None,
 )
 
-internal sealed interface SubmitState {
+sealed interface SubmitState {
     object Loading : SubmitState
 
     object Shown : SubmitState
 
-    data class Error(val message: String) : SubmitState
+    data class Error(
+        val message: String,
+    ) : SubmitState
 
     object Submit : SubmitState
 }

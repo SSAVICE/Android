@@ -35,7 +35,7 @@ fun SellerRegisterNavHost(
     val currentRoute = navController.currentDestination?.route
 
     LaunchedEffect(page) {
-        if(routeNumber[page] != currentRoute) {
+        if (routeNumber[page] != currentRoute) {
             val left = routeNumber[page + 1] == currentRoute
             when (page) {
                 1 -> navController.navigateToFirstPage(left)
@@ -68,32 +68,31 @@ fun SellerRegisterNavHost(
             } else {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween())
             }
-
-        }
+        },
     ) {
         firstPage(
             modifier = Modifier.padding(horizontal = 5.dp),
-            sellerNameState= sellerNameState,
-            businessOwnerState= businessOwnerState,
-            businessRegistrationNumberState= businessRegistrationNumberState,
-            telState= telState,
-            sellerNameError= sellerNameError,
-            businessOwnerError= businessOwnerError,
-            businessRegistrationNumberError= businessRegistrationNumberError,
-            telError= telError
+            sellerNameState = sellerNameState,
+            businessOwnerState = businessOwnerState,
+            businessRegistrationNumberState = businessRegistrationNumberState,
+            telState = telState,
+            sellerNameError = sellerNameError,
+            businessOwnerError = businessOwnerError,
+            businessRegistrationNumberError = businessRegistrationNumberError,
+            telError = telError,
         )
         secondPage(
             modifier = Modifier.padding(horizontal = 5.dp),
             addressState = addressState,
             descriptionState = descriptionState,
-            addressError = addressError
+            addressError = addressError,
         )
         thirdPage(
             modifier = Modifier.padding(horizontal = 5.dp),
             accountDepositorState = accountDepositorState,
             accountNumberState = accountNumberState,
             accountDepositorError = accountDepositorError,
-            accountNumberError = accountNumberError
+            accountNumberError = accountNumberError,
         )
     }
 }

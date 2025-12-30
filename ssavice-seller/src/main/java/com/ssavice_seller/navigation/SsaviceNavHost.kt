@@ -22,7 +22,7 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
         mainScreen(
             onAddClick = {
                 navController.navigateToAddService()
-            }
+            },
         )
         registerScreen(
             onSubmit = {

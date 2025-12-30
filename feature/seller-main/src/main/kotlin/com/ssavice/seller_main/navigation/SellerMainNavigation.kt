@@ -20,13 +20,11 @@ fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.mainScreen(
-    onAddClick: () -> Unit = {}
-) {
+fun NavGraphBuilder.mainScreen(onAddClick: () -> Unit = {}) {
     composable<MainRoute>
     {
         SellerMainScreen(
-            onAddClick = onAddClick
+            onAddClick = onAddClick,
         )
     }
 }

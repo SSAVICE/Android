@@ -31,7 +31,7 @@ fun FirstPage(
     sellerNameError: Boolean,
     businessRegistrationNumberError: Boolean,
     telError: Boolean,
-    businessOwnerError: Boolean
+    businessOwnerError: Boolean,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {

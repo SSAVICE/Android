@@ -58,14 +58,14 @@ fun RegisterScreen(
                 sellerNameState.text.toString(),
                 businessOwnerState.text.toString(),
                 businessRegistrationNumberState.text.toString(),
-                telState.text.toString()
+                telState.text.toString(),
             )
         }.collect {
             viewModel.onFirstPageFormChanged(
                 it.first,
                 it.second,
                 it.third,
-                it.fourth
+                it.fourth,
             )
         }
     }
@@ -74,7 +74,7 @@ fun RegisterScreen(
         snapshotFlow {
             Pair(
                 addressState.text.toString(),
-                descriptionState.text.toString()
+                descriptionState.text.toString(),
             )
         }.collect {
             viewModel.onSecondPageFormChanged(
@@ -88,7 +88,7 @@ fun RegisterScreen(
         snapshotFlow {
             Pair(
                 accountOwnerState.text.toString(),
-                accountNumberState.text.toString()
+                accountNumberState.text.toString(),
             )
         }.collect {
             viewModel.onThirdPageFormChanged(
@@ -145,7 +145,7 @@ fun RegisterScreen(
     addressErrorState: FormError,
     accountOwnerErrorState: FormError,
     accountNumberErrorState: FormError,
-    submitButtonForTest: () -> Unit = {}
+    submitButtonForTest: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
@@ -182,7 +182,7 @@ fun RegisterScreen(
             accountDepositorState = accountOwnerState,
             accountNumberState = accountNumberState,
             accountDepositorError = accountOwnerErrorState != FormError.None,
-            accountNumberError = accountNumberErrorState != FormError.None
+            accountNumberError = accountNumberErrorState != FormError.None,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),

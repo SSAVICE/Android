@@ -24,15 +24,16 @@ object SecondPageRoute
 @Serializable
 object ThirdPageRoute
 
-val routeNumber = mapOf(
-    1 to FirstPageRoute::class.qualifiedName,
-    2 to SecondPageRoute::class.qualifiedName,
-    3 to ThirdPageRoute::class.qualifiedName,
-)
+val routeNumber =
+    mapOf(
+        1 to FirstPageRoute::class.qualifiedName,
+        2 to SecondPageRoute::class.qualifiedName,
+        3 to ThirdPageRoute::class.qualifiedName,
+    )
 
 fun NavController.navigateToFirstPage(
     isBack: Boolean,
-    navOptions: NavOptionsBuilder.() -> Unit = {}
+    navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
     navigate(route = FirstPageRoute) {
         if (isBack) {
@@ -47,7 +48,7 @@ fun NavController.navigateToFirstPage(
 
 fun NavController.navigateToSecondPage(
     isBack: Boolean,
-    navOptions: NavOptionsBuilder.() -> Unit = {}
+    navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
     navigate(route = SecondPageRoute) {
         if (isBack) {
@@ -62,7 +63,7 @@ fun NavController.navigateToSecondPage(
 
 fun NavController.navigateToThirdPage(
     isBack: Boolean,
-    navOptions: NavOptionsBuilder.() -> Unit = {}
+    navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
     navigate(route = ThirdPageRoute) {
         if (isBack) {
@@ -96,7 +97,7 @@ fun NavGraphBuilder.firstPage(
             sellerNameError = sellerNameError,
             businessOwnerError = businessOwnerError,
             businessRegistrationNumberError = businessRegistrationNumberError,
-            telError = telError
+            telError = telError,
         )
     }
 }

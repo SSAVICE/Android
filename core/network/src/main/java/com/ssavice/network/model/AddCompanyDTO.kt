@@ -36,7 +36,7 @@ class AddCompanyDTO(
             postCode = postCode,
             address = address,
             detailAddress = detailAddress,
-            accountDepositor = depositor
+            accountDepositor = depositor,
         )
 
     companion object {
@@ -54,7 +54,7 @@ class AddCompanyDTO(
                 postCode = sellerInfo.postCode,
                 address = sellerInfo.address,
                 detailAddress = sellerInfo.detailAddress,
-                depositor =  sellerInfo.accountDepositor,
+                depositor = sellerInfo.accountDepositor,
             )
     }
 }

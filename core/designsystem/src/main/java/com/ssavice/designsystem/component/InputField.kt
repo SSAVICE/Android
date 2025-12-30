@@ -204,9 +204,13 @@ object InputTransformations {
     val numberFormatInputTransformation =
         object : InputTransformation {
             override fun TextFieldBuffer.transformInput() {
-                val formatted = (asCharSequence()
-                    .filter { it.isDigit() }.toString().toLongOrNull() ?: 0L)
-                    .toString()
+                val formatted =
+                    (
+                        asCharSequence()
+                            .filter { it.isDigit() }
+                            .toString()
+                            .toLongOrNull() ?: 0L
+                    ).toString()
                 if (formatted != asCharSequence().toString()) {
                     replace(0, length, formatted)
                 }
