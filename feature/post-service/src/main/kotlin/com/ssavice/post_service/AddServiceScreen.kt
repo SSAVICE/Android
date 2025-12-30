@@ -62,6 +62,7 @@ fun AddServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: AddServiceViewModel = hiltViewModel(),
     onSubmit: (Long) -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
     Column(
         modifier =
@@ -141,6 +142,9 @@ fun AddServiceRoute(
             if (state.value.submitState is SubmitState.Success) {
                 onSubmit((state.value.submitState as SubmitState.Success).serviceId)
             }
+            else if(state.value.submitState is SubmitState.Dismiss) {
+                onDismiss()
+            }
         }
 
         AddServiceScreen(
@@ -164,6 +168,16 @@ fun AddServiceRoute(
             onCategoryChanged = { category = it },
             onSubmitClicked = viewModel::onSubmitButtonClicked,
             onDismissClicked = viewModel::onDismissButtonClicked,
+            serviceNameTextStateErrorMessage = state.value.form.nameErrorMessage,
+            categoryErrorMessage = state.value.form.categoryErrorMessage,
+            tagTextStateErrorMessage = state.value.form.tagErrorMessage,
+            minRecruitTextStateErrorMessage = state.value.form.minRecruitErrorMessage,
+            maxRecruitTextStateErrorMessage = state.value.form.maxRecruitErrorMessage,
+            priceTextStateErrorMessage = state.value.form.priceErrorMessage,
+            discountRatioStateErrorMessage = state.value.form.discountRatioErrorMessage,
+            descriptionTextStateErrorMessage = state.value.form.descriptionErrorMessage,
+            startDateErrorMessage = state.value.form.startDateErrorMessage,
+            endDateErrorMessage = state.value.form.endDateErrorMessage,
         )
     }
 }
@@ -348,12 +362,12 @@ fun AddServiceScreen(
             SsaviceButtonOutlined(
                 modifier = Modifier.weight(1f),
                 text = "취소",
-                onClick = onSubmitClicked,
+                onClick = onDismissClicked,
             )
             SsaviceButton(
                 modifier = Modifier.weight(1f),
                 text = "등록",
-                onClick = onDismissClicked,
+                onClick = onSubmitClicked,
             )
         }
     }

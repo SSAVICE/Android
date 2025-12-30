@@ -14,6 +14,7 @@ data class ServiceAddForm(
     val discountRatio: Int,
     val discountedPrice: Int,
     val startDate: Date,
+    val deadLine: Date,
     val endDate: Date,
     val tag: String,
     val region: RegionInfo

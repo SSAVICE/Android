@@ -30,6 +30,13 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             },
         )
 
-        addServiceScreen()
+        addServiceScreen(
+            onDismiss = {
+                navController.popBackStack()
+            },
+            onSubmit = {
+                navController.popBackStack()
+            },
+        )
     }
 }

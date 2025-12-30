@@ -38,7 +38,7 @@ data class AddServiceDTO(
                     maximumMember = maximumRecruit.toLong(),
                     basePrice = basePrice.toLong(),
                     discountedPrice = discountedPrice.toLong(),
-                    deadline = endDate.toString(),
+                    deadline = deadLine.toString(),
                     tag = tag,
                     startDate = startDate.toString(),
                     endDate = endDate.toString(),
