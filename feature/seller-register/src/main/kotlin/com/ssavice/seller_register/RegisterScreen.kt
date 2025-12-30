@@ -8,34 +8,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.then
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssavice.designsystem.component.InputTransformations
-import com.ssavice.designsystem.component.InputTransformations.digitOnlyInputTransformation
-import com.ssavice.designsystem.component.OutputTransformations
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.component.SsaviceButtonOutlined
-import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.seller_register.navigation.SellerRegisterNavHost
 import com.ssavice.ui.ProgressBar
 
 @Composable
@@ -166,50 +154,26 @@ fun RegisterScreen(
             if (page == 3) RegisterScreenDefaults.BUTTON_COMPLETE_TEXT else RegisterScreenDefaults.BUTTON_NEXT_TEXT
 
         Spacer(Modifier.height(30.dp))
-        when (page) {
-            1 -> {
-                FirstPage(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp),
-                    sellerNameState,
-                    businessRegistrationNumberState,
-                    telState,
-                    sellerNameErrorState != FormError.None,
-                    businessRegistrationNumberErrorState != FormError.None,
-                    telErrorState != FormError.None,
-                )
-            }
-
-            2 -> {
-                SecondPage(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp),
-                    addressState = addressState,
-                    descriptionState = descriptionState,
-                    addressErrorState != FormError.None,
-                )
-            }
-
-            3 -> {
-                ThirdPage(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp),
-                    accountOwnerState = accountOwnerState,
-                    accountNumberState = accountNumberState,
-                    accountOwnerErrorState != FormError.None,
-                    accountNumberErrorState != FormError.None,
-                )
-            }
-        }
+        SellerRegisterNavHost(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            page = page,
+            sellerNameState = sellerNameState,
+            businessRegistrationNumberState = businessRegistrationNumberState,
+            telState = telState,
+            sellerNameError = sellerNameErrorState != FormError.None,
+            businessRegistrationNumberError = businessRegistrationNumberErrorState != FormError.None,
+            telError = telErrorState != FormError.None,
+            addressState = addressState,
+            descriptionState = descriptionState,
+            addressError = addressErrorState != FormError.None,
+            accountOwnerState = accountOwnerState,
+            accountNumberState = accountNumberState,
+            accountOwnerError = accountOwnerErrorState != FormError.None,
+            accountNumberError = accountNumberErrorState != FormError.None
+        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -234,142 +198,6 @@ fun RegisterScreen(
                 modifier = Modifier.weight(1f),
             )
         }
-    }
-}
-
-@Composable
-fun FirstPage(
-    modifier: Modifier = Modifier,
-    sellerNameState: TextFieldState,
-    businessRegistrationNumberState: TextFieldState,
-    telState: TextFieldState,
-    sellerNameError: Boolean,
-    businessRegistrationNumberError: Boolean,
-    telError: Boolean,
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
-            Text(
-                RegisterScreenDefaults.LABEL_FIRST_PAGE,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = sellerNameState,
-            placeholderText = RegisterScreenDefaults.SELLER_NAME_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.SELLER_NAME_TEXT,
-            isError = sellerNameError,
-            errorMessage = if (sellerNameError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
-        )
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = businessRegistrationNumberState,
-            placeholderText = RegisterScreenDefaults.SELLER_BUSINESS_REGISTRATION_NUMBER_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.SELLER_BUSINESS_REGISTRATION_NUMBER_TEXT,
-            keyboardOptions =
-                KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                ),
-            inputTransformation =
-                InputTransformation.maxLength(10).then(
-                    digitOnlyInputTransformation,
-                ),
-            outputTransformation = OutputTransformations.formatBusinessNumber,
-            isError = businessRegistrationNumberError,
-            errorMessage = if (businessRegistrationNumberError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
-        )
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = telState,
-            placeholderText = RegisterScreenDefaults.SELLER_TEL_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.SELLER_TEL_TEXT,
-            keyboardOptions =
-                KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                ),
-            inputTransformation =
-                InputTransformation.maxLength(11).then(
-                    digitOnlyInputTransformation,
-                ),
-            outputTransformation = OutputTransformations.formatPhoneNumber,
-            isError = telError,
-            errorMessage = if (telError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
-        )
-    }
-}
-
-@Composable
-fun SecondPage(
-    modifier: Modifier = Modifier,
-    addressState: TextFieldState,
-    descriptionState: TextFieldState,
-    addressError: Boolean,
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
-            Text(
-                RegisterScreenDefaults.LABEL_SECOND_PAGE,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = addressState,
-            placeholderText = RegisterScreenDefaults.ADDRESS_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.ADDRESS_TEXT,
-            isError = addressError,
-            errorMessage = if (addressError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
-        )
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = descriptionState,
-            multiLine = true,
-            placeholderText = RegisterScreenDefaults.DESCRIPTION_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.DESCRIPTION_TEXT,
-        )
-    }
-}
-
-@Composable
-fun ThirdPage(
-    modifier: Modifier = Modifier,
-    accountOwnerState: TextFieldState,
-    accountNumberState: TextFieldState,
-    accountOwnerError: Boolean,
-    accountNumberError: Boolean,
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
-            Text(
-                RegisterScreenDefaults.LABEL_THIRD_PAGE,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = accountOwnerState,
-            placeholderText = RegisterScreenDefaults.ACCOUNT_NAME_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.ACCOUNT_NAME_TEXT,
-            isError = accountOwnerError,
-            errorMessage = if (accountOwnerError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
-        )
-        SsaviceInputField(
-            modifier = Modifier.fillMaxWidth(),
-            state = accountNumberState,
-            placeholderText = RegisterScreenDefaults.ACCOUNT_NUMBER_PLACEHOLDER,
-            labelText = RegisterScreenDefaults.ACCOUNT_NUMBER_TEXT,
-            keyboardOptions =
-                KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                ),
-            inputTransformation = InputTransformations.digitOnlyInputTransformation,
-            isError = accountNumberError,
-            errorMessage = if (accountNumberError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
-        )
     }
 }
 
