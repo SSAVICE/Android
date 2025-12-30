@@ -2,9 +2,10 @@ package com.ssavice.model
 
 data class SellerInfo(
     val companyName: String,
-    val ownerName: String,
+    val businessOwnerName: String,
     val phoneNumber: String,
     val businessNumber: String,
+    val accountDepositor: String,
     val accountNumber: String,
     val description: String,
     val detail: String,

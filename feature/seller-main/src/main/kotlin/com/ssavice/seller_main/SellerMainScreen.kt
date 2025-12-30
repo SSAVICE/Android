@@ -43,12 +43,13 @@ import java.net.URL
 fun SellerMainScreen(
     modifier: Modifier = Modifier,
     viewModel: SellerMainViewModel = hiltViewModel(),
+    onAddClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     SellerMainScreen(
         state = state,
         modifier = modifier,
-        onAddClick = {},
+        onAddClick = onAddClick,
     )
 }
 
