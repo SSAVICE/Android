@@ -44,7 +44,7 @@ fun RegisterScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val clickable = state !is SellerRegisterUiState.Loading
     LaunchedEffect(state.submitted) {
-        if(state.submitted) {
+        if (state.submitted) {
             onSubmit.invoke()
         }
     }
@@ -298,7 +298,7 @@ private fun RegisterScreenPreview() {
         SsaviceBackground {
             RegisterScreen(
                 modifier = Modifier.size(480.dp, 720.dp),
-                {}
+                {},
             )
         }
     }
