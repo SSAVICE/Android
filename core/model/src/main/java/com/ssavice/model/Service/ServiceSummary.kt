@@ -1,9 +1,9 @@
-package com.ssavice.model
+package com.ssavice.model.Service
 
 import java.net.URL
 import java.time.LocalDateTime
 
-data class Service(
+data class ServiceSummary(
     val name: String,
     val id: Long,
     val image: URL,

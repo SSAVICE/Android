@@ -1,7 +1,7 @@
 package com.ssavice.network.model
 
 import android.annotation.SuppressLint
-import com.ssavice.model.ServiceInfo
+import com.ssavice.model.Service.ServiceAddForm
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -26,7 +26,7 @@ data class AddServiceDTO(
     val detailAddress: String,
 ) {
     companion object {
-        fun fromModel(serviceInfo: ServiceInfo): AddServiceDTO =
+        fun fromModel(serviceInfo: ServiceAddForm): AddServiceDTO =
             AddServiceDTO(
                 imageCnt = serviceInfo.imageCount.toLong(),
                 category = serviceInfo.category,

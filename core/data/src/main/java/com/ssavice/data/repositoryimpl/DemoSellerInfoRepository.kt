@@ -1,9 +1,9 @@
 package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.model.SellerInfo
-import com.ssavice.model.SellerMainInfo
-import com.ssavice.model.Service
+import com.ssavice.model.Seller.SellerRegisterForm
+import com.ssavice.model.Seller.SellerMainInfo
+import com.ssavice.model.Service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +16,7 @@ import kotlin.random.Random
 internal class DemoSellerInfoRepository
     @Inject
     constructor() : SellerInfoRepository {
-        override suspend fun registerSellerInformation(sellerInfo: SellerInfo): Result<Unit> {
+        override suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm): Result<Unit> {
             sleep(500)
             return Result.success(Unit)
         }
@@ -27,7 +27,7 @@ internal class DemoSellerInfoRepository
             fun createService(
                 name: String,
                 tags: List<String> = listOf("A", "B", "C"),
-            ) = Service(
+            ) = ServiceSummary(
                 id = rand.nextLong(),
                 name = name,
                 image =

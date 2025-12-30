@@ -1,7 +1,7 @@
 import android.annotation.SuppressLint
 import android.util.Log
-import com.ssavice.model.SellerMainInfo
-import com.ssavice.model.Service
+import com.ssavice.model.Seller.SellerMainInfo
+import com.ssavice.model.Service.ServiceSummary
 import kotlinx.serialization.Serializable
 import java.net.URL
 import java.time.LocalDateTime
@@ -38,7 +38,7 @@ data class GetCompanyInfoDTO(
                             Log.e("KSC", "Invalid Time Format")
                             LocalDateTime.MIN
                         }
-                    Service(
+                    ServiceSummary(
                         name = it.title,
                         id = it.serviceId,
                         image = URL(it.serviceImageUrl),
@@ -60,7 +60,7 @@ data class GetCompanyInfoDTO(
 @Serializable
 data class ServiceDTO(
     val serviceId: Long,
-    val serviceImageUrl: String,
+    val serviceImageUrl: String?,
     val category: String,
     val companyId: Long,
     val companyName: String,

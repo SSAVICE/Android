@@ -1,6 +1,8 @@
-package com.ssavice.model
+package com.ssavice.model.Service
 
-data class ServiceInfo(
+import com.ssavice.model.Date
+
+data class ServiceAddForm(
     val imageCount: Int = 0,
     val category: String,
     val name: String,

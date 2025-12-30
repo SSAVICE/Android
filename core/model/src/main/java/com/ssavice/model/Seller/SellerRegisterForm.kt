@@ -1,6 +1,8 @@
-package com.ssavice.model
+package com.ssavice.model.Seller
 
-data class SellerInfo(
+import com.ssavice.model.RegionInfo
+
+data class SellerRegisterForm(
     val companyName: String,
     val businessOwnerName: String,
     val phoneNumber: String,
@@ -9,9 +11,5 @@ data class SellerInfo(
     val accountNumber: String,
     val description: String,
     val detail: String,
-    val longitude: Double,
-    val latitude: Double,
-    val postCode: String,
-    val address: String,
-    val detailAddress: String,
+    val region: RegionInfo
 )

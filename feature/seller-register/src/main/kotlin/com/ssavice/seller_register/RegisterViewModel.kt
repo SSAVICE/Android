@@ -3,7 +3,7 @@ package com.ssavice.seller_register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.model.SellerInfo
+import com.ssavice.model.Seller.SellerRegisterForm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -182,7 +182,7 @@ class RegisterViewModel
                     )
                 repository
                     .registerSellerInformation(
-                        SellerInfo(
+                        SellerRegisterForm(
                             companyName = _uiState.value.form.sellerName,
                             businessNumber = _uiState.value.form.businessRegistrationNumber,
                             phoneNumber = _uiState.value.form.tel,

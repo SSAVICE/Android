@@ -1,4 +1,6 @@
-package com.ssavice.model
+package com.ssavice.model.Seller
+
+import com.ssavice.model.Service.ServiceSummary
 
 data class SellerMainInfo(
     val companyName: String,
@@ -6,5 +8,5 @@ data class SellerMainInfo(
     val phoneNumber: String,
     val businessNumber: String,
     val description: String,
-    val services: List<Service>,
+    val services: List<ServiceSummary>,
 )
