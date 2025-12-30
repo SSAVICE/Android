@@ -31,13 +31,14 @@ class AddCompanyDTO(
             accountNumber = accountNumber,
             description = description,
             detail = detail,
-            region = com.ssavice.model.RegionInfo(
-                longitude = longitude,
-                latitude = latitude,
-                postCode = postCode,
-                address = address,
-                detailAddress = detailAddress,
-            ),
+            region =
+                com.ssavice.model.RegionInfo(
+                    longitude = longitude,
+                    latitude = latitude,
+                    postCode = postCode,
+                    address = address,
+                    detailAddress = detailAddress,
+                ),
             accountDepositor = depositor,
         )
 

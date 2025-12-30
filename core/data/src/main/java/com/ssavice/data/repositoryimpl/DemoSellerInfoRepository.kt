@@ -3,8 +3,8 @@ package com.ssavice.data.repositoryimpl
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
-import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -45,7 +45,7 @@ internal class DemoSellerInfoRepository
                 serviceTag = tags[0],
                 startDate = Date.parse(LocalDateTime.now()),
                 endDate = Date.parse(LocalDateTime.now()),
-                category = "카테고리"
+                category = "카테고리",
             )
 
             return flow {

@@ -17,5 +17,5 @@ data class ServiceAddForm(
     val deadLine: Date,
     val endDate: Date,
     val tag: String,
-    val region: RegionInfo
+    val region: RegionInfo,
 )

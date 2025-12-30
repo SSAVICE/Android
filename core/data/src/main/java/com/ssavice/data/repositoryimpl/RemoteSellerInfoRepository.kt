@@ -2,8 +2,8 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.service.CompanyRetrofitService
-import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData

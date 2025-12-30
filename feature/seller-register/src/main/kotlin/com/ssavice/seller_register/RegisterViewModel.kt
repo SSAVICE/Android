@@ -192,7 +192,7 @@ class RegisterViewModel
                             businessOwnerName = _uiState.value.form.businessOwnerName,
                             accountNumber = _uiState.value.form.accountNumber,
                             accountDepositor = _uiState.value.form.accountDepositor,
-                            region = RegionInfo.demo
+                            region = RegionInfo.demo,
                         ),
                     ).fold(
                         onSuccess = {

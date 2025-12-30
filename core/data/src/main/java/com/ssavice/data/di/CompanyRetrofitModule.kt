@@ -27,6 +27,6 @@ object CompanyRetrofitModule {
     @Singleton
     fun provideSellerInfoRepository(companyRetrofitService: CompanyRetrofitService): SellerInfoRepository =
         RemoteSellerInfoRepository(
-            companyRetrofitService
+            companyRetrofitService,
         )
 }

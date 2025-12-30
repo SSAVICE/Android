@@ -47,13 +47,14 @@ data class GetCompanyInfoDTO(
                         category = it.category,
                     )
                 },
-            region = RegionInfo(
-                latitude = latitude,
-                longitude = longitude,
-                address = address,
-                detailAddress = detailAddress,
-                postCode = postCode
-            )
+            region =
+                RegionInfo(
+                    latitude = latitude,
+                    longitude = longitude,
+                    address = address,
+                    detailAddress = detailAddress,
+                    postCode = postCode,
+                ),
         )
 }
 

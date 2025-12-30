@@ -11,5 +11,5 @@ data class SellerRegisterForm(
     val accountNumber: String,
     val description: String,
     val detail: String,
-    val region: RegionInfo
+    val region: RegionInfo,
 )

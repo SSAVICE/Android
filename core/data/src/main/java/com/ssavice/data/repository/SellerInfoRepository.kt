@@ -1,7 +1,7 @@
 package com.ssavice.data.repository
 
-import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.seller.SellerRegisterForm
 import kotlinx.coroutines.flow.Flow
 
 interface SellerInfoRepository {

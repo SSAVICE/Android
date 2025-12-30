@@ -62,7 +62,7 @@ fun AddServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: AddServiceViewModel = hiltViewModel(),
     onSubmit: (Long) -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -141,8 +141,7 @@ fun AddServiceRoute(
         LaunchedEffect(state.value.submitState) {
             if (state.value.submitState is SubmitState.Success) {
                 onSubmit((state.value.submitState as SubmitState.Success).serviceId)
-            }
-            else if(state.value.submitState is SubmitState.Dismiss) {
+            } else if (state.value.submitState is SubmitState.Dismiss) {
                 onDismiss()
             }
         }

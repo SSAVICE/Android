@@ -79,13 +79,8 @@ data class Date(
             return parse(timeParsed)
         }
 
-        fun parse(d: LocalDateTime): Date {
-            return Date(d.year, d.monthValue, d.dayOfMonth)
-        }
+        fun parse(d: LocalDateTime): Date = Date(d.year, d.monthValue, d.dayOfMonth)
 
-        fun now():Date {
-            return parse(LocalDateTime.now())
-        }
+        fun now(): Date = parse(LocalDateTime.now())
     }
-
 }

@@ -9,5 +9,5 @@ data class SellerMainInfo(
     val businessNumber: String,
     val description: String,
     val services: List<ServiceSummary>,
-    val region: RegionInfo
+    val region: RegionInfo,
 )
