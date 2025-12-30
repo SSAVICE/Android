@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.InputTransformations
+import com.ssavice.designsystem.component.InputTransformations.digitOnlyInputTransformation
 import com.ssavice.designsystem.component.OutputTransformations
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceButton
@@ -273,7 +274,7 @@ fun FirstPage(
                 ),
             inputTransformation =
                 InputTransformation.maxLength(10).then(
-                    InputTransformations.digitOnlyInputTransformation,
+                    digitOnlyInputTransformation,
                 ),
             outputTransformation = OutputTransformations.formatBusinessNumber,
             isError = businessRegistrationNumberError,
@@ -288,7 +289,10 @@ fun FirstPage(
                 KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                 ),
-            inputTransformation = InputTransformations.phoneNumberInputTransformation(),
+            inputTransformation =
+                InputTransformation.maxLength(11).then(
+                    digitOnlyInputTransformation,
+                ),
             outputTransformation = OutputTransformations.formatPhoneNumber,
             isError = telError,
             errorMessage = if (telError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,

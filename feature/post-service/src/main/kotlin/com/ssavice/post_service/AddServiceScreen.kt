@@ -246,7 +246,7 @@ fun AddServiceScreen(
                     ),
                 inputTransformation =
                     InputTransformation.maxLength(4).then(
-                        InputTransformations.digitOnlyInputTransformation.then(
+                        InputTransformations.numberFormatInputTransformation.then(
                             InputTransformations.minMaxInputTransformation(1, 200),
                         ),
                     ),
@@ -264,7 +264,7 @@ fun AddServiceScreen(
                     ),
                 inputTransformation =
                     InputTransformation.maxLength(4).then(
-                        InputTransformations.digitOnlyInputTransformation.then(
+                        InputTransformations.numberFormatInputTransformation.then(
                             InputTransformations.minMaxInputTransformation(1, 200),
                         ),
                     ),
@@ -282,7 +282,7 @@ fun AddServiceScreen(
                 ),
             inputTransformation =
                 InputTransformation.maxLength(13).then(
-                    InputTransformations.digitOnlyInputTransformation,
+                    InputTransformations.numberFormatInputTransformation,
                 ),
             outputTransformation = OutputTransformations.formatNumberWithCommas,
             isError = priceTextStateErrorMessage != null,
@@ -298,7 +298,7 @@ fun AddServiceScreen(
                 ),
             inputTransformation =
                 InputTransformation.maxLength(4).then(
-                    InputTransformations.digitOnlyInputTransformation.then(
+                    InputTransformations.numberFormatInputTransformation.then(
                         InputTransformations.minMaxInputTransformation(0, 100),
                     ),
                 ),
