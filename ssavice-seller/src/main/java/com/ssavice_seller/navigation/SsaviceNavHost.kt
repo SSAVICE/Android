@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.ssavice.post_service.navigation.addServiceScreen
+import com.ssavice.post_service.navigation.navigateToAddService
 import com.ssavice.seller_main.navigation.mainScreen
 import com.ssavice.seller_main.navigation.navigateToMain
 import com.ssavice.seller_register.navigation.RegisterRoute
@@ -17,11 +19,17 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
         startDestination = RegisterRoute,
         modifier = modifier,
     ) {
-        mainScreen()
+        mainScreen(
+            onAddClick = {
+                navController.navigateToAddService()
+            }
+        )
         registerScreen(
             onSubmit = {
                 navController.navigateToMain()
             },
         )
+
+        addServiceScreen()
     }
 }

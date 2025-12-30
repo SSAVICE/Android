@@ -1,5 +1,7 @@
 package com.ssavice.post_service
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,6 +63,10 @@ fun AddServiceRoute(
     viewModel: AddServiceViewModel = hiltViewModel(),
     onSubmit: (Long) -> Unit = {},
 ) {
+    Column(modifier = modifier
+        .verticalScroll(rememberScrollState())
+        .padding(horizontal = 6.dp)
+    ){
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     val serviceNameTextState = rememberTextFieldState(state.value.form.name)
     var category by remember { mutableStateOf(state.value.form.category) }
@@ -136,7 +142,8 @@ fun AddServiceRoute(
     }
 
     AddServiceScreen(
-        modifier = modifier,
+        modifier = modifier.background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 10.dp),
         serviceNameTextState = serviceNameTextState,
         category = category,
         categories = state.value.form.categoryList,
@@ -154,6 +161,7 @@ fun AddServiceRoute(
         onSubmitClicked = viewModel::onSubmitButtonClicked,
         onDismissClicked = viewModel::onDismissButtonClicked,
     )
+        }
 }
 
 @Composable

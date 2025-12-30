@@ -20,6 +20,7 @@ android {
 dependencies {
     implementation(projects.feature.sellerRegister)
     implementation(projects.feature.sellerMain)
+    implementation(projects.feature.postService)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)
