@@ -129,6 +129,7 @@ class AddServiceViewModel
         }
 
         fun onDismissButtonClicked() {
+
         }
 
         private fun checkEmptyField(): Pair<Form, Boolean> {

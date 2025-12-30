@@ -1,6 +1,8 @@
 package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.model.Date
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.service.ServiceSummary
@@ -34,15 +36,16 @@ internal class DemoSellerInfoRepository
                     URL(
                         "https://images.unsplash.com/photo-1766047125728-ebff5afcf314?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                     ),
-                latitude = 0.0,
-                longitude = 0.0,
                 minimumMember = 20,
                 currentMember = 10,
                 basePrice = 50000,
                 discountRatio = 10.0,
                 discountedPrice = 45000,
-                deadLine = LocalDateTime.now(),
-                serviceTag = tags,
+                deadLine = Date.parse(LocalDateTime.now()),
+                serviceTag = tags[0],
+                startDate = Date.parse(LocalDateTime.now()),
+                endDate = Date.parse(LocalDateTime.now()),
+                category = "카테고리"
             )
 
             return flow {
@@ -51,7 +54,6 @@ internal class DemoSellerInfoRepository
                     Result.success(
                         SellerMainInfo(
                             companyName = "주식회사 싸비스",
-                            ownerName = "홍길동",
                             phoneNumber = "010-1234-5678",
                             businessNumber = "123-45-67890",
                             description = "데모 판매자 정보입니다.",
@@ -60,6 +62,7 @@ internal class DemoSellerInfoRepository
                                     createService("서비스1"),
                                     createService("요가 클래스", listOf("힐링", "건강")),
                                 ),
+                            region = RegionInfo.demo,
                         ),
                     ),
                 )

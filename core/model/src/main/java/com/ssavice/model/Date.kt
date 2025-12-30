@@ -1,5 +1,6 @@
 package com.ssavice.model
 
+import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -41,8 +42,17 @@ data class Date(
         return TimeStamp(calendar.timeInMillis)
     }
 
+    fun isAfter(other: Date): Boolean = this.toTimeStamp().timeInMillis > other.toTimeStamp().timeInMillis
+
+    override fun toString(): String {
+        val timeStamp = this.toTimeStamp().timeInMillis
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US)
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        return sdf.format(java.util.Date(timeStamp))
+    }
+
     companion object {
-        fun fromTimeStamp(
+        fun parse(
             timeStamp: TimeStamp,
             timeZone: TimeZone = Calendar.getInstance().timeZone,
         ): Date {
@@ -58,7 +68,24 @@ data class Date(
                 timeZone = timeZone,
             )
         }
+
+        fun parse(s: String): Date {
+            val timeParsed =
+                try {
+                    LocalDateTime.parse(s)
+                } catch (e: Exception) {
+                    LocalDateTime.MIN
+                }
+            return parse(timeParsed)
+        }
+
+        fun parse(d: LocalDateTime): Date {
+            return Date(d.year, d.monthValue, d.dayOfMonth)
+        }
+
+        fun now():Date {
+            return parse(LocalDateTime.now())
+        }
     }
 
-    fun isAfter(other: Date): Boolean = this.toTimeStamp().timeInMillis > other.toTimeStamp().timeInMillis
 }

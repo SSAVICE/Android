@@ -1,6 +1,7 @@
 package com.ssavice.model.service
 
 import com.ssavice.model.Date
+import com.ssavice.model.RegionInfo
 
 data class ServiceAddForm(
     val imageCount: Int = 0,
@@ -14,5 +15,6 @@ data class ServiceAddForm(
     val discountedPrice: Int,
     val startDate: Date,
     val endDate: Date,
-    val tags: List<String>,
+    val tag: String,
+    val region: RegionInfo
 )
