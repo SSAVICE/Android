@@ -1,22 +1,37 @@
 package com.ssavice.seller_register
 
-sealed interface SellerRegisterUiState {
-    val registrationStep: Int
-    val submitted: Boolean
+internal data class SellerRegisterUiState(
+    val form: Form,
+    val submitState: SubmitState,
+)
 
-    data class Loading(
-        override val registrationStep: Int = 1,
-        override val submitted: Boolean = false,
-    ) : SellerRegisterUiState
+internal data class Form(
+    val registrationStep: Int,
+    val sellerName: String,
+    val businessRegistrationNumber: String,
+    val tel: String,
+    val address: String,
+    val description: String,
+    val accountOwner: String,
+    val accountNumber: String,
 
-    data class Shown(
-        override val registrationStep: Int = 1,
-        override val submitted: Boolean = false,
-    ) : SellerRegisterUiState
+    val sellerNameErrorState: FormError = FormError.None,
+    val businessRegistrationNumberErrorState: FormError = FormError.None,
+    val telErrorState: FormError = FormError.None,
+    val addressErrorState: FormError = FormError.None,
+    val descriptionErrorState: FormError = FormError.None,
+    val accountOwnerErrorState: FormError = FormError.None,
+    val accountNumberErrorState: FormError = FormError.None
+)
 
-    data class Error(
-        override val registrationStep: Int = 1,
-        override val submitted: Boolean = false,
-        val errorField: List<Int>,
-    ) : SellerRegisterUiState
+internal sealed interface SubmitState {
+    object Loading : SubmitState
+
+    object Shown : SubmitState
+
+    data class Error(val message: String) : SubmitState
+
+    object Submit : SubmitState
 }
+
+enum class FormError { None, EmptyField, InsufficientField, InvalidField }

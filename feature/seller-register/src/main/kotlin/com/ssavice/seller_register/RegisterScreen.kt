@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.maxLength
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,26 +44,128 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val clickable = state !is SellerRegisterUiState.Loading
-    LaunchedEffect(state.submitted) {
-        if (state.submitted) {
+    val clickable = state.submitState !is SubmitState.Loading
+
+    val sellerNameState = rememberTextFieldState(state.form.sellerName)
+    val businessRegistrationNumberState =
+        rememberTextFieldState(state.form.businessRegistrationNumber)
+    val telState = rememberTextFieldState(state.form.tel)
+    val addressState = rememberTextFieldState(state.form.address)
+    val descriptionState = rememberTextFieldState(state.form.description)
+    val accountOwnerState = rememberTextFieldState(state.form.accountOwner)
+    val accountNumberState = rememberTextFieldState(state.form.accountNumber)
+
+    LaunchedEffect(state.submitState is SubmitState.Submit) {
+        if (state.submitState is SubmitState.Submit) {
             onSubmit.invoke()
         }
     }
+
+    LaunchedEffect(sellerNameState, businessRegistrationNumberState, telState) {
+        snapshotFlow {
+            Triple(
+                sellerNameState.text.toString(),
+                businessRegistrationNumberState.text.toString(),
+                telState.text.toString()
+            )
+        }.collect {
+            viewModel.onFirstPageFormChanged(
+                it.first,
+                it.second,
+                it.third
+            )
+        }
+    }
+
+    LaunchedEffect(addressState, descriptionState) {
+        snapshotFlow {
+            Pair(
+                addressState.text.toString(),
+                descriptionState.text.toString()
+            )
+        }.collect {
+            viewModel.onSecondPageFormChanged(
+                it.first,
+                it.second,
+            )
+        }
+    }
+
+    LaunchedEffect(accountOwnerState, accountNumberState) {
+        snapshotFlow {
+            Pair(
+                accountOwnerState.text.toString(),
+                accountNumberState.text.toString()
+            )
+        }.collect {
+            viewModel.onThirdPageFormChanged(
+                it.first,
+                it.second,
+            )
+        }
+    }
+
+    RegisterScreen(
+        modifier = modifier,
+        onNextButtonClick = viewModel::clickNextButton,
+        onPrevButtonClick = viewModel::clickPrevButton,
+        active = clickable,
+        page = state.form.registrationStep,
+        sellerNameState = sellerNameState,
+        businessRegistrationNumberState = businessRegistrationNumberState,
+        telState = telState,
+        addressState = addressState,
+        descriptionState = descriptionState,
+        accountOwnerState = accountOwnerState,
+        accountNumberState = accountNumberState,
+        sellerNameErrorState = state.form.sellerNameErrorState,
+        businessRegistrationNumberErrorState = state.form.businessRegistrationNumberErrorState,
+        telErrorState = state.form.telErrorState,
+        addressErrorState = state.form.addressErrorState,
+        accountOwnerErrorState = state.form.accountOwnerErrorState,
+        accountNumberErrorState = state.form.accountNumberErrorState,
+        submitButtonForTest = viewModel::submit
+    )
+}
+
+@Composable
+fun RegisterScreen(
+    modifier: Modifier = Modifier,
+    onNextButtonClick: () -> Unit = {},
+    onPrevButtonClick: () -> Unit = {},
+    active: Boolean,
+    page: Int,
+    sellerNameState: TextFieldState,
+    businessRegistrationNumberState: TextFieldState,
+    telState: TextFieldState,
+    addressState: TextFieldState,
+    descriptionState: TextFieldState,
+    accountOwnerState: TextFieldState,
+    accountNumberState: TextFieldState,
+    sellerNameErrorState: FormError,
+    businessRegistrationNumberErrorState: FormError,
+    telErrorState: FormError,
+    addressErrorState: FormError,
+    accountOwnerErrorState: FormError,
+    accountNumberErrorState: FormError,
+    submitButtonForTest: () -> Unit = {}
+) {
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
     ) {
         ProgressBar(
             maxStep = 3,
-            currentStep = state.registrationStep,
+            currentStep = page,
             Modifier.fillMaxWidth(),
             showStep = true,
         )
 
-        val errors = (state as? SellerRegisterUiState.Error)?.errorField
+        val showPrevButton = (page != 1)
+        val nextButtonText =
+            if (page == 3) RegisterScreenDefaults.BUTTON_COMPLETE_TEXT else RegisterScreenDefaults.BUTTON_NEXT_TEXT
 
         Spacer(Modifier.height(30.dp))
-        when (state.registrationStep) {
+        when (page) {
             1 -> {
                 FirstPage(
                     modifier =
@@ -69,12 +173,12 @@ fun RegisterScreen(
                             .weight(1f)
                             .fillMaxWidth()
                             .padding(horizontal = 5.dp),
-                    viewModel.sellerNameState,
-                    viewModel.businessRegistrationNumberState,
-                    viewModel.telState,
-                    errors?.contains(0) ?: false,
-                    errors?.contains(1) ?: false,
-                    errors?.contains(2) ?: false,
+                    sellerNameState,
+                    businessRegistrationNumberState,
+                    telState,
+                    sellerNameErrorState != FormError.None,
+                    businessRegistrationNumberErrorState != FormError.None,
+                    telErrorState != FormError.None,
                 )
             }
 
@@ -85,9 +189,9 @@ fun RegisterScreen(
                             .weight(1f)
                             .fillMaxWidth()
                             .padding(horizontal = 5.dp),
-                    addressState = viewModel.addressState,
-                    descriptionState = viewModel.descriptionState,
-                    errors?.contains(0) ?: false,
+                    addressState = addressState,
+                    descriptionState = descriptionState,
+                    addressErrorState != FormError.None,
                 )
             }
 
@@ -98,10 +202,10 @@ fun RegisterScreen(
                             .weight(1f)
                             .fillMaxWidth()
                             .padding(horizontal = 5.dp),
-                    accountOwnerState = viewModel.accountOwnerState,
-                    accountNumberState = viewModel.accountNumberState,
-                    errors?.contains(0) ?: false,
-                    errors?.contains(1) ?: false,
+                    accountOwnerState = accountOwnerState,
+                    accountNumberState = accountNumberState,
+                    accountOwnerErrorState != FormError.None,
+                    accountNumberErrorState != FormError.None,
                 )
             }
         }
@@ -109,48 +213,22 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            when (state.registrationStep) {
-                1 -> {
-                    SsaviceButton(
-                        onClick = viewModel::clickNextButton,
-                        text = RegisterScreenDefaults.BUTTON_NEXT_TEXT,
-                        modifier = Modifier.weight(1f),
-                        enabled = clickable,
-                    )
-                }
-
-                2 -> {
-                    SsaviceButtonOutlined(
-                        onClick = viewModel::clickPrevButton,
-                        text = RegisterScreenDefaults.BUTTON_PREV_TEXT,
-                        modifier = Modifier.weight(1f),
-                        enabled = clickable,
-                    )
-                    SsaviceButton(
-                        onClick = viewModel::clickNextButton,
-                        text = RegisterScreenDefaults.BUTTON_NEXT_TEXT,
-                        modifier = Modifier.weight(1f),
-                        enabled = clickable,
-                    )
-                }
-
-                3 -> {
-                    SsaviceButtonOutlined(
-                        onClick = viewModel::clickPrevButton,
-                        text = RegisterScreenDefaults.BUTTON_PREV_TEXT,
-                        modifier = Modifier.weight(1f),
-                        enabled = clickable,
-                    )
-                    SsaviceButton(
-                        onClick = viewModel::clickNextButton,
-                        text = RegisterScreenDefaults.BUTTON_COMPLETE_TEXT,
-                        modifier = Modifier.weight(1f),
-                        enabled = clickable,
-                    )
-                }
+            if (showPrevButton) {
+                SsaviceButtonOutlined(
+                    onClick = onPrevButtonClick,
+                    text = RegisterScreenDefaults.BUTTON_PREV_TEXT,
+                    modifier = Modifier.weight(1f),
+                    enabled = active,
+                )
             }
             SsaviceButton(
-                onClick = viewModel::submit,
+                onClick = onNextButtonClick,
+                text = nextButtonText,
+                modifier = Modifier.weight(1f),
+                enabled = active,
+            )
+            SsaviceButton(
+                onClick = submitButtonForTest,
                 text = "TEST",
                 modifier = Modifier.weight(1f),
             )
