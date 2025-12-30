@@ -3,7 +3,8 @@ package com.ssavice.seller_register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.model.SellerInfo
+import com.ssavice.model.RegionInfo
+import com.ssavice.model.seller.SellerRegisterForm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -182,20 +183,16 @@ class RegisterViewModel
                     )
                 repository
                     .registerSellerInformation(
-                        SellerInfo(
+                        SellerRegisterForm(
                             companyName = _uiState.value.form.sellerName,
                             businessNumber = _uiState.value.form.businessRegistrationNumber,
                             phoneNumber = _uiState.value.form.tel,
-                            address = _uiState.value.form.address,
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            postCode = "12345",
                             description = _uiState.value.form.description,
                             detail = "",
-                            detailAddress = "",
                             businessOwnerName = _uiState.value.form.businessOwnerName,
                             accountNumber = _uiState.value.form.accountNumber,
                             accountDepositor = _uiState.value.form.accountDepositor,
+                            region = RegionInfo.demo,
                         ),
                     ).fold(
                         onSuccess = {

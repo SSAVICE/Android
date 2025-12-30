@@ -1,7 +1,7 @@
 package com.ssavice.network.model
 
 import android.annotation.SuppressLint
-import com.ssavice.model.ServiceInfo
+import com.ssavice.model.service.ServiceAddForm
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -14,9 +14,10 @@ data class AddServiceDTO(
     val minimumMember: Long,
     val maximumMember: Long,
     val basePrice: Long,
+    val discountRate: Long,
     val discountedPrice: Long,
     val deadline: String,
-    val tag: List<String>,
+    val tag: String,
     val startDate: String,
     val endDate: String,
     val longitude: Double,
@@ -26,26 +27,29 @@ data class AddServiceDTO(
     val detailAddress: String,
 ) {
     companion object {
-        fun fromModel(serviceInfo: ServiceInfo): AddServiceDTO =
-            AddServiceDTO(
-                imageCnt = serviceInfo.imageCount.toLong(),
-                category = serviceInfo.category,
-                title = serviceInfo.name,
-                description = serviceInfo.description,
-                minimumMember = serviceInfo.minimumRecruit.toLong(),
-                maximumMember = serviceInfo.maximumRecruit.toLong(),
-                basePrice = serviceInfo.basePrice.toLong(),
-                discountedPrice = serviceInfo.discountedPrice.toLong(),
-                deadline = serviceInfo.endDate.toString(),
-                tag = serviceInfo.tags,
-                startDate = serviceInfo.startDate.toString(),
-                endDate = serviceInfo.endDate.toString(),
-                longitude = 0.0, // TODO
-                latitude = 0.0,
-                postCode = "12345",
-                address = "54321",
-                detailAddress = "ABCDE",
-            )
+        fun fromModel(serviceInfo: ServiceAddForm): AddServiceDTO =
+            with(serviceInfo) {
+                AddServiceDTO(
+                    imageCnt = imageCount.toLong(),
+                    category = category,
+                    title = name,
+                    description = description,
+                    minimumMember = minimumRecruit.toLong(),
+                    maximumMember = maximumRecruit.toLong(),
+                    basePrice = basePrice.toLong(),
+                    discountedPrice = discountedPrice.toLong(),
+                    deadline = deadLine.toString(),
+                    tag = tag,
+                    startDate = startDate.toString(),
+                    endDate = endDate.toString(),
+                    longitude = region.longitude, // TODO
+                    latitude = region.latitude,
+                    postCode = region.postCode,
+                    address = region.address,
+                    detailAddress = region.detailAddress,
+                    discountRate = discountRatio.toLong(),
+                )
+            }
     }
 }
 
