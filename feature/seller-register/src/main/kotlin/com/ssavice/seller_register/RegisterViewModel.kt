@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.SellerInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -79,24 +80,7 @@ class RegisterViewModel
                 }
 
                 if (_uiState.value.registrationStep == 3) {
-                    _uiState.value = SellerRegisterUiState.Loading(_uiState.value.registrationStep)
-
-                    repository.registerSellerInformation(
-                        SellerInfo(
-                            companyName = sellerNameState.text.toString(),
-                            businessNumber = businessRegistrationNumberState.text.toString(),
-                            phoneNumber = telState.text.toString(),
-                            address = addressState.text.toString(),
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            postCode = "12345",
-                            description = descriptionState.text.toString(),
-                            detail = "",
-                            detailAddress = "",
-                            ownerName = accountOwnerState.text.toString(),
-                            accountNumber = accountNumberState.text.toString(),
-                        ),
-                    )
+                    submit()
                 } else {
                     _uiState.value =
                         SellerRegisterUiState.Shown(
@@ -112,6 +96,43 @@ class RegisterViewModel
                     SellerRegisterUiState.Shown(
                         registrationStep = max(_uiState.value.registrationStep - 1, 1),
                     )
+            }
+        }
+
+        fun submit() {
+            viewModelScope.launch(Dispatchers.IO) {
+                _uiState.value = SellerRegisterUiState.Loading(_uiState.value.registrationStep)
+                repository
+                    .registerSellerInformation(
+                        SellerInfo(
+                            companyName = sellerNameState.text.toString(),
+                            businessNumber = businessRegistrationNumberState.text.toString(),
+                            phoneNumber = telState.text.toString(),
+                            address = addressState.text.toString(),
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            postCode = "12345",
+                            description = descriptionState.text.toString(),
+                            detail = "",
+                            detailAddress = "",
+                            ownerName = accountOwnerState.text.toString(),
+                            accountNumber = accountNumberState.text.toString(),
+                        ),
+                    ).fold(
+                        onSuccess = {
+                            _uiState.value =
+                                SellerRegisterUiState.Loading(
+                                    submitted = true,
+                                    registrationStep = _uiState.value.registrationStep,
+                                )
+                        },
+                    ) {
+                        _uiState.value =
+                            SellerRegisterUiState.Error(
+                                _uiState.value.registrationStep,
+                                errorField = emptyList(),
+                            )
+                    }
             }
         }
     }
