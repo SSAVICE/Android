@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -37,10 +38,16 @@ import com.ssavice.ui.ProgressBar
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
+    onSubmit: () -> Unit = {},
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val clickable = state !is SellerRegisterUiState.Loading
+    LaunchedEffect(state.submitted) {
+        if (state.submitted) {
+            onSubmit.invoke()
+        }
+    }
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
     ) {
@@ -142,6 +149,11 @@ fun RegisterScreen(
                     )
                 }
             }
+            SsaviceButton(
+                onClick = viewModel::submit,
+                text = "TEST",
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }
@@ -286,6 +298,7 @@ private fun RegisterScreenPreview() {
         SsaviceBackground {
             RegisterScreen(
                 modifier = Modifier.size(480.dp, 720.dp),
+                {},
             )
         }
     }

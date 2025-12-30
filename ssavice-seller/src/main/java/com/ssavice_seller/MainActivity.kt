@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ssavice.designsystem.component.SsaviceTopBar
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.seller_register.RegisterScreen
+import com.ssavice_seller.navigation.SsaviceNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = { SsaviceTopBar("Ssavice") },
                 ) { innerPadding ->
-                    RegisterScreen(Modifier.padding(innerPadding))
+                    SsaviceNavHost(Modifier.padding(innerPadding))
                 }
             }
         }
