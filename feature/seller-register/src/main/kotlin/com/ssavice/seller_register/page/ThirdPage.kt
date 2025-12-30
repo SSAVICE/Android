@@ -20,9 +20,9 @@ import com.ssavice.seller_register.RegisterScreenDefaults
 @Composable
 fun ThirdPage(
     modifier: Modifier = Modifier,
-    accountOwnerState: TextFieldState,
+    accountDepositorState: TextFieldState,
     accountNumberState: TextFieldState,
-    accountOwnerError: Boolean,
+    accountDepositorError: Boolean,
     accountNumberError: Boolean,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -35,11 +35,11 @@ fun ThirdPage(
 
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),
-            state = accountOwnerState,
+            state = accountDepositorState,
             placeholderText = RegisterScreenDefaults.ACCOUNT_NAME_PLACEHOLDER,
             labelText = RegisterScreenDefaults.ACCOUNT_NAME_TEXT,
-            isError = accountOwnerError,
-            errorMessage = if (accountOwnerError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
+            isError = accountDepositorError,
+            errorMessage = if (accountDepositorError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),

@@ -78,9 +78,11 @@ fun NavController.navigateToThirdPage(
 fun NavGraphBuilder.firstPage(
     modifier: Modifier = Modifier,
     sellerNameState: TextFieldState,
+    businessOwnerState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
     telState: TextFieldState,
     sellerNameError: Boolean,
+    businessOwnerError: Boolean,
     businessRegistrationNumberError: Boolean,
     telError: Boolean,
 ) {
@@ -88,9 +90,11 @@ fun NavGraphBuilder.firstPage(
         FirstPage(
             modifier = modifier,
             sellerNameState = sellerNameState,
+            businessOwnerState = businessOwnerState,
             businessRegistrationNumberState = businessRegistrationNumberState,
             telState = telState,
             sellerNameError = sellerNameError,
+            businessOwnerError = businessOwnerError,
             businessRegistrationNumberError = businessRegistrationNumberError,
             telError = telError
         )
@@ -115,17 +119,17 @@ fun NavGraphBuilder.secondPage(
 
 fun NavGraphBuilder.thirdPage(
     modifier: Modifier = Modifier,
-    accountOwnerState: TextFieldState,
+    accountDepositorState: TextFieldState,
     accountNumberState: TextFieldState,
-    accountOwnerError: Boolean,
+    accountDepositorError: Boolean,
     accountNumberError: Boolean,
 ) {
     composable<ThirdPageRoute> {
         ThirdPage(
             modifier = modifier,
-            accountOwnerState = accountOwnerState,
+            accountDepositorState = accountDepositorState,
             accountNumberState = accountNumberState,
-            accountOwnerError = accountOwnerError,
+            accountDepositorError = accountDepositorError,
             accountNumberError = accountNumberError,
         )
     }

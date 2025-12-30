@@ -16,17 +16,19 @@ fun SellerRegisterNavHost(
     modifier: Modifier = Modifier,
     page: Int,
     sellerNameState: TextFieldState,
+    businessOwnerState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
     telState: TextFieldState,
     sellerNameError: Boolean,
+    businessOwnerError: Boolean,
     businessRegistrationNumberError: Boolean,
     telError: Boolean,
     addressState: TextFieldState,
     descriptionState: TextFieldState,
     addressError: Boolean,
-    accountOwnerState: TextFieldState,
+    accountDepositorState: TextFieldState,
     accountNumberState: TextFieldState,
-    accountOwnerError: Boolean,
+    accountDepositorError: Boolean,
     accountNumberError: Boolean,
 ) {
     val navController = rememberNavController()
@@ -71,25 +73,27 @@ fun SellerRegisterNavHost(
     ) {
         firstPage(
             modifier = Modifier.padding(horizontal = 5.dp),
-            sellerNameState,
-            businessRegistrationNumberState,
-            telState,
-            sellerNameError,
-            businessRegistrationNumberError,
-            telError
+            sellerNameState= sellerNameState,
+            businessOwnerState= businessOwnerState,
+            businessRegistrationNumberState= businessRegistrationNumberState,
+            telState= telState,
+            sellerNameError= sellerNameError,
+            businessOwnerError= businessOwnerError,
+            businessRegistrationNumberError= businessRegistrationNumberError,
+            telError= telError
         )
         secondPage(
             modifier = Modifier.padding(horizontal = 5.dp),
-            addressState,
-            descriptionState,
-            addressError
+            addressState = addressState,
+            descriptionState = descriptionState,
+            addressError = addressError
         )
         thirdPage(
             modifier = Modifier.padding(horizontal = 5.dp),
-            accountOwnerState,
-            accountNumberState,
-            accountOwnerError,
-            accountNumberError
+            accountDepositorState = accountDepositorState,
+            accountNumberState = accountNumberState,
+            accountDepositorError = accountDepositorError,
+            accountNumberError = accountNumberError
         )
     }
 }

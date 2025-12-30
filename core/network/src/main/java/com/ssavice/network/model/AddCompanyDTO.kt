@@ -2,7 +2,6 @@ package com.ssavice.network.model
 
 import android.annotation.SuppressLint
 import com.ssavice.model.SellerInfo
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -26,7 +25,7 @@ class AddCompanyDTO(
     fun toModel(): SellerInfo =
         SellerInfo(
             companyName = companyName,
-            ownerName = ownerName,
+            businessOwnerName = ownerName,
             phoneNumber = phoneNumber,
             businessNumber = businessNumber,
             accountNumber = accountNumber,
@@ -37,13 +36,14 @@ class AddCompanyDTO(
             postCode = postCode,
             address = address,
             detailAddress = detailAddress,
+            accountDepositor = depositor
         )
 
     companion object {
         fun fromModel(sellerInfo: SellerInfo): AddCompanyDTO =
             AddCompanyDTO(
                 companyName = sellerInfo.companyName,
-                ownerName = sellerInfo.ownerName,
+                ownerName = sellerInfo.businessOwnerName,
                 phoneNumber = sellerInfo.phoneNumber,
                 businessNumber = sellerInfo.businessNumber,
                 accountNumber = sellerInfo.accountNumber,
@@ -54,7 +54,7 @@ class AddCompanyDTO(
                 postCode = sellerInfo.postCode,
                 address = sellerInfo.address,
                 detailAddress = sellerInfo.detailAddress,
-                depositor = "Test",
+                depositor =  sellerInfo.accountDepositor,
             )
     }
 }

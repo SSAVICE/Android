@@ -26,10 +26,12 @@ fun FirstPage(
     modifier: Modifier = Modifier,
     sellerNameState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
+    businessOwnerState: TextFieldState,
     telState: TextFieldState,
     sellerNameError: Boolean,
     businessRegistrationNumberError: Boolean,
     telError: Boolean,
+    businessOwnerError: Boolean
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
@@ -45,6 +47,14 @@ fun FirstPage(
             placeholderText = RegisterScreenDefaults.SELLER_NAME_PLACEHOLDER,
             labelText = RegisterScreenDefaults.SELLER_NAME_TEXT,
             isError = sellerNameError,
+            errorMessage = if (sellerNameError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
+        )
+        SsaviceInputField(
+            modifier = Modifier.fillMaxWidth(),
+            state = businessOwnerState,
+            placeholderText = RegisterScreenDefaults.BUSINESS_OWNER_PLACEHOLDER,
+            labelText = RegisterScreenDefaults.BUSINESS_OWNER_TEXT,
+            isError = businessOwnerError,
             errorMessage = if (sellerNameError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(

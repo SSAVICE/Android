@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssavice.common.Quadruple
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.component.SsaviceButtonOutlined
@@ -36,12 +37,13 @@ fun RegisterScreen(
     val clickable = state.submitState !is SubmitState.Loading
 
     val sellerNameState = rememberTextFieldState(state.form.sellerName)
+    val businessOwnerState = rememberTextFieldState(state.form.businessOwnerName)
     val businessRegistrationNumberState =
         rememberTextFieldState(state.form.businessRegistrationNumber)
     val telState = rememberTextFieldState(state.form.tel)
     val addressState = rememberTextFieldState(state.form.address)
     val descriptionState = rememberTextFieldState(state.form.description)
-    val accountOwnerState = rememberTextFieldState(state.form.accountOwner)
+    val accountOwnerState = rememberTextFieldState(state.form.accountDepositor)
     val accountNumberState = rememberTextFieldState(state.form.accountNumber)
 
     LaunchedEffect(state.submitState is SubmitState.Submit) {
@@ -52,8 +54,9 @@ fun RegisterScreen(
 
     LaunchedEffect(sellerNameState, businessRegistrationNumberState, telState) {
         snapshotFlow {
-            Triple(
+            Quadruple(
                 sellerNameState.text.toString(),
+                businessOwnerState.text.toString(),
                 businessRegistrationNumberState.text.toString(),
                 telState.text.toString()
             )
@@ -61,7 +64,8 @@ fun RegisterScreen(
             viewModel.onFirstPageFormChanged(
                 it.first,
                 it.second,
-                it.third
+                it.third,
+                it.fourth
             )
         }
     }
@@ -101,6 +105,7 @@ fun RegisterScreen(
         active = clickable,
         page = state.form.registrationStep,
         sellerNameState = sellerNameState,
+        businessOwnerState = businessOwnerState,
         businessRegistrationNumberState = businessRegistrationNumberState,
         telState = telState,
         addressState = addressState,
@@ -108,12 +113,13 @@ fun RegisterScreen(
         accountOwnerState = accountOwnerState,
         accountNumberState = accountNumberState,
         sellerNameErrorState = state.form.sellerNameErrorState,
+        businessOwnerErrorState = state.form.businessOwnerNameErrorState,
         businessRegistrationNumberErrorState = state.form.businessRegistrationNumberErrorState,
         telErrorState = state.form.telErrorState,
         addressErrorState = state.form.addressErrorState,
-        accountOwnerErrorState = state.form.accountOwnerErrorState,
+        accountOwnerErrorState = state.form.accountDepositorErrorState,
         accountNumberErrorState = state.form.accountNumberErrorState,
-        submitButtonForTest = viewModel::submit
+        submitButtonForTest = viewModel::submit,
     )
 }
 
@@ -125,6 +131,7 @@ fun RegisterScreen(
     active: Boolean,
     page: Int,
     sellerNameState: TextFieldState,
+    businessOwnerState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
     telState: TextFieldState,
     addressState: TextFieldState,
@@ -132,6 +139,7 @@ fun RegisterScreen(
     accountOwnerState: TextFieldState,
     accountNumberState: TextFieldState,
     sellerNameErrorState: FormError,
+    businessOwnerErrorState: FormError,
     businessRegistrationNumberErrorState: FormError,
     telErrorState: FormError,
     addressErrorState: FormError,
@@ -161,17 +169,19 @@ fun RegisterScreen(
                     .fillMaxWidth(),
             page = page,
             sellerNameState = sellerNameState,
+            businessOwnerState = businessOwnerState,
             businessRegistrationNumberState = businessRegistrationNumberState,
             telState = telState,
             sellerNameError = sellerNameErrorState != FormError.None,
+            businessOwnerError = businessOwnerErrorState != FormError.None,
             businessRegistrationNumberError = businessRegistrationNumberErrorState != FormError.None,
             telError = telErrorState != FormError.None,
             addressState = addressState,
             descriptionState = descriptionState,
             addressError = addressErrorState != FormError.None,
-            accountOwnerState = accountOwnerState,
+            accountDepositorState = accountOwnerState,
             accountNumberState = accountNumberState,
-            accountOwnerError = accountOwnerErrorState != FormError.None,
+            accountDepositorError = accountOwnerErrorState != FormError.None,
             accountNumberError = accountNumberErrorState != FormError.None
         )
         Row(
@@ -217,6 +227,7 @@ private fun RegisterScreenPreview() {
 internal object RegisterScreenDefaults {
     const val LABEL_FIRST_PAGE = "기본 정보"
     const val SELLER_NAME_TEXT = "업체명"
+    const val BUSINESS_OWNER_TEXT = "대표자명"
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_TEXT = "사업자번호"
     const val SELLER_TEL_TEXT = "전화번호"
 
@@ -229,6 +240,7 @@ internal object RegisterScreenDefaults {
     const val ACCOUNT_NUMBER_TEXT = "계좌번호"
 
     const val SELLER_NAME_PLACEHOLDER = "예: 주식회사 싸비스"
+    const val BUSINESS_OWNER_PLACEHOLDER = "예: 권성찬"
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_PLACEHOLDER = "123-45-67890"
     const val SELLER_TEL_PLACEHOLDER = "010-1234-5678"
     const val ADDRESS_PLACEHOLDER = "서울특별시 강남구 ..."

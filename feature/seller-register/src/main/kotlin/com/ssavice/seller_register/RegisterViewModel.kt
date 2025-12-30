@@ -24,11 +24,12 @@ constructor(
                 form = Form(
                     registrationStep = 1,
                     sellerName = "",
+                    businessOwnerName = "",
                     businessRegistrationNumber = "",
                     tel = "",
                     address = "",
                     description = "",
-                    accountOwner = "",
+                    accountDepositor = "",
                     accountNumber = "",
                 ),
                 submitState = SubmitState.Shown
@@ -40,6 +41,13 @@ constructor(
         var hasError = false
 
         val nameState = if (_uiState.value.form.sellerName.isEmpty()) {
+            hasError = true
+            FormError.EmptyField
+        } else {
+            FormError.None
+        }
+
+        val ownerState = if(_uiState.value.form.businessOwnerName.isEmpty()) {
             hasError = true
             FormError.EmptyField
         } else {
@@ -69,6 +77,7 @@ constructor(
                     _uiState.value.form.copy(
                         registrationStep = nextStep,
                         sellerNameErrorState = nameState,
+                        businessOwnerNameErrorState = ownerState,
                         businessRegistrationNumberErrorState = businessRegistrationNumberState,
                         telErrorState = telState,
                     ),
@@ -100,7 +109,7 @@ constructor(
     private fun checkAccountInfoPageFieldsAndProcess() {
         var hasError = false
 
-        val accountOwnerState = if (_uiState.value.form.accountOwner.isEmpty()) {
+        val accountOwnerState = if (_uiState.value.form.accountDepositor.isEmpty()) {
             hasError = true
             FormError.EmptyField
         } else {
@@ -116,7 +125,7 @@ constructor(
             _uiState.value.copy(
                 form =
                     _uiState.value.form.copy(
-                        accountOwnerErrorState = accountOwnerState,
+                        accountDepositorErrorState = accountOwnerState,
                         accountNumberErrorState = accountNumberState,
                     ),
             )
@@ -157,17 +166,18 @@ constructor(
                 .registerSellerInformation(
                     SellerInfo(
                         companyName = _uiState.value.form.sellerName,
-                        businessNumber = _uiState.value.form.businessRegistrationNumber.toString(),
-                        phoneNumber = _uiState.value.form.tel.toString(),
-                        address = _uiState.value.form.address.toString(),
+                        businessNumber = _uiState.value.form.businessRegistrationNumber,
+                        phoneNumber = _uiState.value.form.tel,
+                        address = _uiState.value.form.address,
                         latitude = 0.0,
                         longitude = 0.0,
                         postCode = "12345",
-                        description = _uiState.value.form.description.toString(),
+                        description = _uiState.value.form.description,
                         detail = "",
                         detailAddress = "",
-                        ownerName = _uiState.value.form.accountOwner.toString(),
-                        accountNumber = _uiState.value.form.accountNumber.toString(),
+                        businessOwnerName = _uiState.value.form.businessOwnerName,
+                        accountNumber = _uiState.value.form.accountNumber,
+                        accountDepositor = _uiState.value.form.accountDepositor
                     ),
                 ).fold(
                     onSuccess = {
@@ -187,6 +197,7 @@ constructor(
 
     fun onFirstPageFormChanged(
         sellerName: String,
+        businessOwnerName: String,
         businessRegistrationNumber: String,
         tel: String
     ) {
@@ -195,6 +206,7 @@ constructor(
                 form =
                     _uiState.value.form.copy(
                         sellerName = sellerName,
+                        businessOwnerName = businessOwnerName,
                         businessRegistrationNumber = businessRegistrationNumber,
                         tel = tel,
                     ),
@@ -217,7 +229,7 @@ constructor(
             _uiState.value.copy(
                 form =
                     _uiState.value.form.copy(
-                        accountOwner = accountOwner,
+                        accountDepositor = accountOwner,
                         accountNumber = accountNumber
                     ),
             )
