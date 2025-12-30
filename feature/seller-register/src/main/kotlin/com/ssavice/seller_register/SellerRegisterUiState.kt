@@ -1,11 +1,11 @@
 package com.ssavice.seller_register
 
-internal data class SellerRegisterUiState(
+data class SellerRegisterUiState(
     val form: Form,
     val submitState: SubmitState,
 )
 
-internal data class Form(
+data class Form(
     val registrationStep: Int,
     val sellerName: String,
     val businessOwnerName: String,
