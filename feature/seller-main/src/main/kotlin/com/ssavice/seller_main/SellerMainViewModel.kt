@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.model.Date
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -30,10 +31,10 @@ class SellerMainViewModel
                                     SellerItemUiState(
                                         id = service.id,
                                         title = service.name,
-                                        category = service.serviceTag[0],
+                                        category = service.category,
                                         meta = "${service.currentMember}명",
                                         priceText = "₩${service.discountedPrice}",
-                                        isRecruiting = service.deadLine.isAfter(LocalDateTime.now()),
+                                        isRecruiting = service.deadLine.isAfter(Date.now()),
                                         imageUrl = service.image,
                                     )
                                 },

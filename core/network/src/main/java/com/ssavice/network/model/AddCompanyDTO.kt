@@ -1,7 +1,7 @@
 package com.ssavice.network.model
 
 import android.annotation.SuppressLint
-import com.ssavice.model.SellerInfo
+import com.ssavice.model.seller.SellerRegisterForm
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -11,8 +11,8 @@ class AddCompanyDTO(
     val ownerName: String,
     val phoneNumber: String,
     val businessNumber: String,
-    val accountNumber: String,
     val description: String,
+    val accountNumber: String,
     val detail: String,
     val longitude: Double,
     val latitude: Double,
@@ -22,8 +22,8 @@ class AddCompanyDTO(
     // TODO: SHOULD BE CHANGED
     val depositor: String,
 ) {
-    fun toModel(): SellerInfo =
-        SellerInfo(
+    fun toModel(): SellerRegisterForm =
+        SellerRegisterForm(
             companyName = companyName,
             businessOwnerName = ownerName,
             phoneNumber = phoneNumber,
@@ -31,16 +31,19 @@ class AddCompanyDTO(
             accountNumber = accountNumber,
             description = description,
             detail = detail,
-            longitude = longitude,
-            latitude = latitude,
-            postCode = postCode,
-            address = address,
-            detailAddress = detailAddress,
+            region =
+                com.ssavice.model.RegionInfo(
+                    longitude = longitude,
+                    latitude = latitude,
+                    postCode = postCode,
+                    address = address,
+                    detailAddress = detailAddress,
+                ),
             accountDepositor = depositor,
         )
 
     companion object {
-        fun fromModel(sellerInfo: SellerInfo): AddCompanyDTO =
+        fun fromModel(sellerInfo: SellerRegisterForm): AddCompanyDTO =
             AddCompanyDTO(
                 companyName = sellerInfo.companyName,
                 ownerName = sellerInfo.businessOwnerName,
@@ -49,11 +52,11 @@ class AddCompanyDTO(
                 accountNumber = sellerInfo.accountNumber,
                 description = sellerInfo.description,
                 detail = sellerInfo.detail,
-                longitude = sellerInfo.longitude,
-                latitude = sellerInfo.latitude,
-                postCode = sellerInfo.postCode,
-                address = sellerInfo.address,
-                detailAddress = sellerInfo.detailAddress,
+                longitude = sellerInfo.region.longitude,
+                latitude = sellerInfo.region.latitude,
+                postCode = sellerInfo.region.postCode,
+                address = sellerInfo.region.address,
+                detailAddress = sellerInfo.region.detailAddress,
                 depositor = sellerInfo.accountDepositor,
             )
     }

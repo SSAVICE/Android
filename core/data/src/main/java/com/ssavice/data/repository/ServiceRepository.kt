@@ -1,7 +1,7 @@
 package com.ssavice.data.repository
 
-import com.ssavice.model.ServiceInfo
+import com.ssavice.model.service.ServiceAddForm
 
 interface ServiceRepository {
-    suspend fun postService(service: ServiceInfo): Result<Long>
+    suspend fun postService(service: ServiceAddForm): Result<Long>
 }

@@ -43,4 +43,6 @@ sealed interface SubmitState {
     data class Error(
         val message: String,
     ) : SubmitState
+
+    data object Dismiss : SubmitState
 }

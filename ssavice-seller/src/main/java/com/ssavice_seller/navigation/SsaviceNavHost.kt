@@ -6,9 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
+import com.ssavice.seller_main.navigation.MainRoute
 import com.ssavice.seller_main.navigation.mainScreen
 import com.ssavice.seller_main.navigation.navigateToMain
-import com.ssavice.seller_register.navigation.RegisterRoute
 import com.ssavice.seller_register.navigation.registerScreen
 
 @Composable
@@ -16,7 +16,7 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = RegisterRoute,
+        startDestination = MainRoute,
         modifier = modifier,
     ) {
         mainScreen(
@@ -30,6 +30,13 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             },
         )
 
-        addServiceScreen()
+        addServiceScreen(
+            onDismiss = {
+                navController.popBackStack()
+            },
+            onSubmit = {
+                navController.popBackStack()
+            },
+        )
     }
 }

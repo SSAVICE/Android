@@ -1,10 +1,16 @@
 package com.ssavice.post_service
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.model.Date
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.TimeStamp
+import com.ssavice.model.service.ServiceAddForm
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -119,16 +125,67 @@ class AddServiceViewModel
         }
 
         fun onSubmitButtonClicked() {
-            val validate = checkEmptyField()
+            val validateEmptyForm = checkEmptyField()
 
             uiState.value =
                 uiState.value.copy(
-                    form = validate.first,
+                    form = validateEmptyForm.first,
                     submitState = uiState.value.submitState,
                 )
+
+            val validateInvalidTime = checkInvalidDueTime()
+            uiState.value =
+                uiState.value.copy(
+                    form = validateInvalidTime.first,
+                    submitState = uiState.value.submitState,
+                )
+
+            if (!validateEmptyForm.second && !validateInvalidTime.second) submit()
         }
 
         fun onDismissButtonClicked() {
+            uiState.value =
+                uiState.value.copy(
+                    submitState = SubmitState.Dismiss,
+                )
+        }
+
+        private fun submit() {
+            uiState.value = uiState.value.copy(submitState = SubmitState.Loading)
+            viewModelScope.launch(Dispatchers.IO) {
+                serviceRepository
+                    .postService(
+                        ServiceAddForm(
+                            name = uiState.value.form.name,
+                            category = uiState.value.form.category,
+                            imageCount = 0,
+                            minimumRecruit = uiState.value.form.minRecruit,
+                            maximumRecruit = uiState.value.form.maxRecruit,
+                            basePrice = uiState.value.form.price,
+                            discountRatio = uiState.value.form.discountRatio,
+                            tag = uiState.value.form.tag,
+                            endDate = Date.parse(uiState.value.form.endDate),
+                            startDate = Date.parse(uiState.value.form.startDate),
+                            description = uiState.value.form.description,
+                            region = RegionInfo.demo,
+                            discountedPrice =
+                                (uiState.value.form.price * (100 - uiState.value.form.discountRatio) / 100),
+                            deadLine = Date.parse(uiState.value.form.startDate),
+                        ),
+                    ).fold(
+                        onSuccess = {
+                            uiState.value =
+                                uiState.value.copy(submitState = SubmitState.Success(it))
+                        },
+                        onFailure = {
+                            uiState.value =
+                                uiState.value.copy(
+                                    submitState =
+                                        SubmitState.Error(it.message ?: "Unknown error"),
+                                )
+                        },
+                    )
+            }
         }
 
         private fun checkEmptyField(): Pair<Form, Boolean> {
@@ -156,8 +213,10 @@ class AddServiceViewModel
                     null
                 }
 
-            val serviceNameMessage: String? = validateAndGetMessage(uiState.value.form.name, "서비스명을 입력해주세요")
-            val categoryMessage: String? = validateAndGetMessage(uiState.value.form.category, "카테고리를 선택해주세요")
+            val serviceNameMessage: String? =
+                validateAndGetMessage(uiState.value.form.name, "서비스명을 입력해주세요")
+            val categoryMessage: String? =
+                validateAndGetMessage(uiState.value.form.category, "카테고리를 선택해주세요")
             val minRecruitMessage: String? =
                 validateAndGetMessage(
                     uiState.value.form.minRecruit
@@ -213,6 +272,30 @@ class AddServiceViewModel
                     endDateErrorMessage = endDateMessage,
                 )
 
+            return Pair(form, hasError)
+        }
+
+        private fun checkInvalidDueTime(): Pair<Form, Boolean> {
+            var form = uiState.value.form
+            var hasError = false
+            if ((uiState.value.form.startDate != TimeStamp(0L)) &&
+                (uiState.value.form.startDate.timeInMillis <= Date.now().toTimeStamp().timeInMillis)
+            ) {
+                form =
+                    form.copy(
+                        startDateErrorMessage = "시작일은 현재 날짜 이후여야 합니다",
+                    )
+                hasError = true
+            }
+            if ((uiState.value.form.endDate != TimeStamp(0L)) &&
+                (uiState.value.form.endDate.timeInMillis <= uiState.value.form.startDate.timeInMillis)
+            ) {
+                form =
+                    form.copy(
+                        endDateErrorMessage = "종료일은 시작일 이후여야 합니다",
+                    )
+                hasError = true
+            }
             return Pair(form, hasError)
         }
 

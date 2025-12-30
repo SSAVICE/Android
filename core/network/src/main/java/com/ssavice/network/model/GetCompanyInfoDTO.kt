@@ -1,58 +1,60 @@
 import android.annotation.SuppressLint
-import android.util.Log
-import com.ssavice.model.SellerMainInfo
-import com.ssavice.model.Service
+import com.ssavice.model.Date
+import com.ssavice.model.RegionInfo
+import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.service.ServiceSummary
 import kotlinx.serialization.Serializable
 import java.net.URL
-import java.time.LocalDateTime
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class GetCompanyInfoDTO(
     val companyId: Long,
     val companyName: String,
-    val ownerName: String,
     val phoneNumber: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val businessNumber: String,
     val longitude: Double,
     val latitude: Double,
+    val postCode: String,
+    val address: String,
+    val detailAddress: String,
     val description: String,
     val detail: String,
     val service: List<ServiceDTO>,
-    val review: List<ReviewDTO>,
 ) {
     fun toSellerMainInfoModel(): SellerMainInfo =
         SellerMainInfo(
             companyName = companyName,
-            ownerName = ownerName,
             phoneNumber = phoneNumber,
             businessNumber = businessNumber,
             description = description,
             services =
                 service.map {
-                    val timeParsed =
-                        try {
-                            LocalDateTime.parse(it.deadline)
-                        } catch (e: Exception) {
-                            Log.e("KSC", "Invalid Time Format")
-                            LocalDateTime.MIN
-                        }
-                    Service(
+                    ServiceSummary(
                         name = it.title,
                         id = it.serviceId,
                         image = URL(it.serviceImageUrl),
-                        latitude = it.latitude,
-                        longitude = it.longitude,
                         currentMember = it.currentMember.toInt(),
                         minimumMember = it.minimumMember.toInt(),
                         basePrice = it.basePrice,
-                        discountRatio = it.discountRatio,
+                        discountRatio = it.discountRate,
                         discountedPrice = it.discountedPrice,
-                        deadLine = timeParsed,
+                        deadLine = Date.parse(it.deadline),
+                        startDate = Date.parse(it.startDate),
+                        endDate = Date.parse(it.endDate),
                         serviceTag = it.tag,
+                        category = it.category,
                     )
                 },
+            region =
+                RegionInfo(
+                    latitude = latitude,
+                    longitude = longitude,
+                    address = address,
+                    detailAddress = detailAddress,
+                    postCode = postCode,
+                ),
         )
 }
 
@@ -60,23 +62,21 @@ data class GetCompanyInfoDTO(
 @Serializable
 data class ServiceDTO(
     val serviceId: Long,
-    val serviceImageUrl: String,
+    val serviceImageUrl: String?,
     val category: String,
-    val companyId: Long,
-    val companyName: String,
     val title: String,
-    val latitude: Double,
-    val longitude: Double,
-    val region1: String,
-    val region2: String,
     val currentMember: Long,
     val minimumMember: Long,
     val maximumMember: Long,
+    val description: String,
     val basePrice: Long,
-    val discountRatio: Double,
+    val discountRate: Double,
     val discountedPrice: Long,
+    val status: String,
+    val startDate: String,
+    val endDate: String,
     val deadline: String,
-    val tag: List<String>,
+    val tag: String,
 )
 
 @SuppressLint("UnsafeOptInUsageError")

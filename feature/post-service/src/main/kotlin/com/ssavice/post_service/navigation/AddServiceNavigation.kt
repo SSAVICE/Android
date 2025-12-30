@@ -18,7 +18,10 @@ fun NavController.navigateToAddService(navOptions: NavOptionsBuilder.() -> Unit 
     }
 }
 
-fun NavGraphBuilder.addServiceScreen() {
+fun NavGraphBuilder.addServiceScreen(
+    onDismiss: () -> Unit = {},
+    onSubmit: (Long) -> Unit = {},
+) {
     composable<AddServiceRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -34,6 +37,9 @@ fun NavGraphBuilder.addServiceScreen() {
         },
     )
     {
-        AddServiceRoute()
+        AddServiceRoute(
+            onSubmit = onSubmit,
+            onDismiss = onDismiss,
+        )
     }
 }
