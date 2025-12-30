@@ -1,5 +1,7 @@
 package com.ssavice.post_service
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,99 +63,109 @@ fun AddServiceRoute(
     viewModel: AddServiceViewModel = hiltViewModel(),
     onSubmit: (Long) -> Unit = {},
 ) {
-    val state = viewModel.uiState.collectAsStateWithLifecycle()
-    val serviceNameTextState = rememberTextFieldState(state.value.form.name)
-    var category by remember { mutableStateOf(state.value.form.category) }
-    val tagTextState = rememberTextFieldState(state.value.form.tag)
-    val minRecruitTextState =
-        rememberTextFieldState(
-            state.value.form.minRecruit
-                .toString(),
-        )
-    val maxRecruitTextState =
-        rememberTextFieldState(
-            state.value.form.maxRecruit
-                .toString(),
-        )
-    val priceTextState =
-        rememberTextFieldState(
-            state.value.form.price
-                .toString(),
-        )
-    val discountRatioState =
-        rememberTextFieldState(
-            state.value.form.discountRatio
-                .toString(),
-        )
-    val descriptionTextState = rememberTextFieldState(state.value.form.description)
+    Column(
+        modifier =
+            modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 6.dp),
+    ) {
+        val state = viewModel.uiState.collectAsStateWithLifecycle()
+        val serviceNameTextState = rememberTextFieldState(state.value.form.name)
+        var category by remember { mutableStateOf(state.value.form.category) }
+        val tagTextState = rememberTextFieldState(state.value.form.tag)
+        val minRecruitTextState =
+            rememberTextFieldState(
+                state.value.form.minRecruit
+                    .toString(),
+            )
+        val maxRecruitTextState =
+            rememberTextFieldState(
+                state.value.form.maxRecruit
+                    .toString(),
+            )
+        val priceTextState =
+            rememberTextFieldState(
+                state.value.form.price
+                    .toString(),
+            )
+        val discountRatioState =
+            rememberTextFieldState(
+                state.value.form.discountRatio
+                    .toString(),
+            )
+        val descriptionTextState = rememberTextFieldState(state.value.form.description)
 
-    LaunchedEffect(serviceNameTextState) {
-        snapshotFlow { serviceNameTextState.text.toString() }
-            .collect {
-                viewModel.onServiceNameChanged(it)
-            }
-    }
-    LaunchedEffect(category) {
-        snapshotFlow { category }
-            .collect {
-                viewModel.onCategoryChanged(it)
-            }
-    }
-    LaunchedEffect(tagTextState) {
-        snapshotFlow { tagTextState.text.toString() }
-            .collect {
-                viewModel.onTagChanged(it)
-            }
-    }
-    LaunchedEffect(minRecruitTextState) {
-        snapshotFlow { minRecruitTextState.text.toString().toIntOrNull() ?: 0 }
-            .collect {
-                viewModel.onMinRecruitChanged(it)
-            }
-    }
-    LaunchedEffect(maxRecruitTextState) {
-        snapshotFlow { maxRecruitTextState.text.toString().toIntOrNull() ?: 0 }
-            .collect {
-                viewModel.onMaxRecruitChanged(it)
-            }
-    }
-    LaunchedEffect(priceTextState) {
-        snapshotFlow { priceTextState.text.toString().toIntOrNull() ?: 0 }
-            .collect {
-                viewModel.onPriceChanged(it)
-            }
-    }
-    LaunchedEffect(descriptionTextState) {
-        snapshotFlow { descriptionTextState.text.toString() }
-            .collect {
-                viewModel.onDescriptionChanged(it)
-            }
-    }
-    LaunchedEffect(state.value.submitState) {
-        if (state.value.submitState is SubmitState.Success) {
-            onSubmit((state.value.submitState as SubmitState.Success).serviceId)
+        LaunchedEffect(serviceNameTextState) {
+            snapshotFlow { serviceNameTextState.text.toString() }
+                .collect {
+                    viewModel.onServiceNameChanged(it)
+                }
         }
-    }
+        LaunchedEffect(category) {
+            snapshotFlow { category }
+                .collect {
+                    viewModel.onCategoryChanged(it)
+                }
+        }
+        LaunchedEffect(tagTextState) {
+            snapshotFlow { tagTextState.text.toString() }
+                .collect {
+                    viewModel.onTagChanged(it)
+                }
+        }
+        LaunchedEffect(minRecruitTextState) {
+            snapshotFlow { minRecruitTextState.text.toString().toIntOrNull() ?: 0 }
+                .collect {
+                    viewModel.onMinRecruitChanged(it)
+                }
+        }
+        LaunchedEffect(maxRecruitTextState) {
+            snapshotFlow { maxRecruitTextState.text.toString().toIntOrNull() ?: 0 }
+                .collect {
+                    viewModel.onMaxRecruitChanged(it)
+                }
+        }
+        LaunchedEffect(priceTextState) {
+            snapshotFlow { priceTextState.text.toString().toIntOrNull() ?: 0 }
+                .collect {
+                    viewModel.onPriceChanged(it)
+                }
+        }
+        LaunchedEffect(descriptionTextState) {
+            snapshotFlow { descriptionTextState.text.toString() }
+                .collect {
+                    viewModel.onDescriptionChanged(it)
+                }
+        }
+        LaunchedEffect(state.value.submitState) {
+            if (state.value.submitState is SubmitState.Success) {
+                onSubmit((state.value.submitState as SubmitState.Success).serviceId)
+            }
+        }
 
-    AddServiceScreen(
-        modifier = modifier,
-        serviceNameTextState = serviceNameTextState,
-        category = category,
-        categories = state.value.form.categoryList,
-        tagTextState = tagTextState,
-        maxRecruitTextState = maxRecruitTextState,
-        minRecruitTextState = minRecruitTextState,
-        priceTextState = priceTextState,
-        descriptionTextState = descriptionTextState,
-        discountRatioState = discountRatioState,
-        startDate = state.value.form.startDate,
-        endDate = state.value.form.endDate,
-        onStartDateChanged = viewModel::onStartDateChanged,
-        onEndDateChanged = viewModel::onEndDateChanged,
-        onCategoryChanged = { category = it },
-        onSubmitClicked = viewModel::onSubmitButtonClicked,
-        onDismissClicked = viewModel::onDismissButtonClicked,
-    )
+        AddServiceScreen(
+            modifier =
+                modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(horizontal = 10.dp),
+            serviceNameTextState = serviceNameTextState,
+            category = category,
+            categories = state.value.form.categoryList,
+            tagTextState = tagTextState,
+            maxRecruitTextState = maxRecruitTextState,
+            minRecruitTextState = minRecruitTextState,
+            priceTextState = priceTextState,
+            descriptionTextState = descriptionTextState,
+            discountRatioState = discountRatioState,
+            startDate = state.value.form.startDate,
+            endDate = state.value.form.endDate,
+            onStartDateChanged = viewModel::onStartDateChanged,
+            onEndDateChanged = viewModel::onEndDateChanged,
+            onCategoryChanged = { category = it },
+            onSubmitClicked = viewModel::onSubmitButtonClicked,
+            onDismissClicked = viewModel::onDismissButtonClicked,
+        )
+    }
 }
 
 @Composable
@@ -246,7 +258,7 @@ fun AddServiceScreen(
                     ),
                 inputTransformation =
                     InputTransformation.maxLength(4).then(
-                        InputTransformations.digitOnlyInputTransformation.then(
+                        InputTransformations.numberFormatInputTransformation.then(
                             InputTransformations.minMaxInputTransformation(1, 200),
                         ),
                     ),
@@ -264,7 +276,7 @@ fun AddServiceScreen(
                     ),
                 inputTransformation =
                     InputTransformation.maxLength(4).then(
-                        InputTransformations.digitOnlyInputTransformation.then(
+                        InputTransformations.numberFormatInputTransformation.then(
                             InputTransformations.minMaxInputTransformation(1, 200),
                         ),
                     ),
@@ -282,7 +294,7 @@ fun AddServiceScreen(
                 ),
             inputTransformation =
                 InputTransformation.maxLength(13).then(
-                    InputTransformations.digitOnlyInputTransformation,
+                    InputTransformations.numberFormatInputTransformation,
                 ),
             outputTransformation = OutputTransformations.formatNumberWithCommas,
             isError = priceTextStateErrorMessage != null,
@@ -298,7 +310,7 @@ fun AddServiceScreen(
                 ),
             inputTransformation =
                 InputTransformation.maxLength(4).then(
-                    InputTransformations.digitOnlyInputTransformation.then(
+                    InputTransformations.numberFormatInputTransformation.then(
                         InputTransformations.minMaxInputTransformation(0, 100),
                     ),
                 ),
