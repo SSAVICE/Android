@@ -2,7 +2,6 @@ package com.ssavice.designsystem.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +10,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,9 +71,15 @@ fun InfiniteScrollContainer(
                     contentAlignment = Alignment.Center
                 ) {
                     if (isLoading) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(15.dp),
+                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth * 0.7f
+                        )
                     } else if (!hasMoreData) {
-                        Text("더 불러올 데이터가 없습니다.")
+                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                            Text("마지막 상품입니다.")
+                        }
+
                     }
                 }
             }
