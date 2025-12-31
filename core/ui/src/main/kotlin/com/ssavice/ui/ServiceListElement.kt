@@ -43,26 +43,23 @@ import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.theme.SsaviceTheme
 import java.text.NumberFormat
 import java.util.Locale
-import kotlin.math.roundToInt
 
 @Composable
 fun ServiceListElement(
     id: Long,
     imageUrl: String,
     sellerName: String,
-    sellerThumbnailUrl: String,
     serviceName: String,
     tags: List<String>,
     locationInfo: String,
     deadline: String,
     price: Int,
     discountedPrice: Int,
+    discountRate: Int,
     participationInfo: String,
     onServiceClick: (Long) -> Unit,
     thumbnail: @Composable (String) -> Unit = {}
 ) {
-    val discountRate = ((price - discountedPrice).toFloat() / price * 100).roundToInt()
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -216,12 +213,12 @@ private fun ServiceListElementPreview() {
                     id = 1L,
                     imageUrl = YOGA_IMAGE_URL,
                     sellerName = "힐링요가스튜디오",
-                    sellerThumbnailUrl = "",
                     serviceName = "주말 요가 클래스",
                     tags = listOf("요가", "힐링"),
                     locationInfo = "강남구 · 0.5km",
                     deadline = "2일 후 마감",
                     price = 70000,
+                    discountRate = 10,
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
                     onServiceClick = {}
@@ -242,12 +239,12 @@ private fun ServiceListElementPreview() {
                     id = 1L,
                     imageUrl = YOGA_IMAGE_URL,
                     sellerName = "힐링요가스튜디오",
-                    sellerThumbnailUrl = "",
                     serviceName = "주말 요가 클래스",
                     tags = listOf("요가", "힐링"),
                     locationInfo = "강남구 · 0.5km",
                     deadline = "2일 후 마감",
                     price = 70000,
+                    discountRate = 10,
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
                     onServiceClick = {}
@@ -256,12 +253,12 @@ private fun ServiceListElementPreview() {
                     id = 1L,
                     imageUrl = YOGA_IMAGE_URL,
                     sellerName = "힐링요가스튜디오",
-                    sellerThumbnailUrl = "",
                     serviceName = "주말 요가 클래스",
                     tags = listOf("요가", "힐링"),
                     locationInfo = "강남구 · 0.5km",
                     deadline = "2일 후 마감",
                     price = 70000,
+                    discountRate = 10,
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
                     onServiceClick = {}
