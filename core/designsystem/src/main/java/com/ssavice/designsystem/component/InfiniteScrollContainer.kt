@@ -62,25 +62,23 @@ fun InfiniteScrollContainer(
     ) {
         content()
 
-        if (isLoading || !hasMoreData) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(15.dp),
-                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth * 0.7f
-                        )
-                    } else if (!hasMoreData) {
-                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                            Text("마지막 상품입니다.")
-                        }
-
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (!isLoading && !hasMoreData) {
+                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                        Text("마지막 상품입니다.")
                     }
+                } else {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(15.dp),
+                        strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth * 0.7f
+                    )
+
                 }
             }
         }
@@ -90,8 +88,8 @@ fun InfiniteScrollContainer(
 @Preview(showBackground = true, name = "Loading State")
 @Composable
 private fun InfiniteScrollContainerLoadingPreview() {
-    SsaviceTheme{
-        SsaviceBackground(modifier = Modifier.size(height=540.dp, width=360.dp)) {
+    SsaviceTheme {
+        SsaviceBackground(modifier = Modifier.size(height = 540.dp, width = 360.dp)) {
             InfiniteScrollContainer(
                 isLoading = true,
                 hasMoreData = true,
@@ -108,8 +106,8 @@ private fun InfiniteScrollContainerLoadingPreview() {
 @Preview(showBackground = true, name = "No More Data State")
 @Composable
 private fun InfiniteScrollContainerNoMoreDataPreview() {
-    SsaviceTheme{
-        SsaviceBackground(modifier = Modifier.size(height=540.dp, width=360.dp)) {
+    SsaviceTheme {
+        SsaviceBackground(modifier = Modifier.size(height = 540.dp, width = 360.dp)) {
             InfiniteScrollContainer(
                 isLoading = false,
                 hasMoreData = false,
@@ -127,7 +125,7 @@ private fun InfiniteScrollContainerNoMoreDataPreview() {
 @Composable
 private fun InfiniteScrollContainerScrollablePreview() {
     SsaviceTheme {
-        SsaviceBackground(modifier = Modifier.size(height=540.dp, width=360.dp)) {
+        SsaviceBackground(modifier = Modifier.size(height = 540.dp, width = 360.dp)) {
             var isLoading by remember { mutableStateOf(false) }
             val items = remember { (1..20).toList() }
 
