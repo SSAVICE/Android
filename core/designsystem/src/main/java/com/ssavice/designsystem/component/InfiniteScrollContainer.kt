@@ -58,7 +58,7 @@ fun InfiniteScrollContainer(
 
     LazyColumn(
         modifier = modifier,
-        state = listState
+        state = listState,
     ) {
         content()
 

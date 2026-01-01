@@ -1,6 +1,10 @@
 package com.ssavice.ui.searchresult
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -53,8 +57,7 @@ internal fun SearchResultScreen(
         isLoading = state.status == SearchStatus.Loading,
         hasMoreData = state.hasNext,
     ) {
-        items(state.items.size) {
-            val item = state.items[it]
+        itemsIndexed(state.items) { index, item ->
             ServiceListElement(
                 id = item.id,
                 imageUrl = item.imageUrl,
@@ -81,6 +84,10 @@ internal fun SearchResultScreen(
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
                 )
+            }
+
+            if(index < state.items.lastIndex) {
+                HorizontalDivider(Modifier.padding(horizontal = 10.dp), DividerDefaults.Thickness, DividerDefaults.color.copy(alpha = 0.5f))
             }
         }
     }

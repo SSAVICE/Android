@@ -96,7 +96,7 @@ class DemoServiceRepository : ServiceRepository {
                 image = "https://picsum.photos/seed/$name/400",
                 category = query.category,
                 minimumMember = (10..25).random(),
-                currentMember = (2..5).random(),
+                currentMember = (0..40).random(),
                 basePrice = price,
                 discountRatio = discountRate,
                 discountedPrice = discountedPrice,

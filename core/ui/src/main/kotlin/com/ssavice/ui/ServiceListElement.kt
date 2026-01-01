@@ -22,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -145,7 +146,7 @@ fun ServiceListElement(
                         tint = Color.Gray
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = locationInfo, fontSize = 9.sp, color = Color.Gray)
+                    Text(text = locationInfo, fontSize = 10.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Default.Schedule,
@@ -154,7 +155,7 @@ fun ServiceListElement(
                         tint = Color.Gray
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = deadline, fontSize = 9.sp, color = Color.Gray)
+                    Text(text = deadline, fontSize = 11.sp, color = Color.Gray)
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -168,13 +169,13 @@ fun ServiceListElement(
                         Text(
                             text = "₩${discountedPrice.format()}",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
+                            fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.error
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "₩${price.format()}",
-                            fontSize = 12.sp,
+                            fontSize = 14.sp,
                             color = Color.Gray,
                             textDecoration = TextDecoration.LineThrough
                         )
@@ -186,12 +187,14 @@ fun ServiceListElement(
                             modifier = Modifier.size(14.dp),
                             tint = Color.Gray
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = participationInfo,
-                            fontSize = 9.sp,
-                            color = Color.Gray
-                        )
+                        Spacer(modifier = Modifier.width(1.dp))
+                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                            Text(
+                                text = participationInfo,
+                                fontSize = 11.sp,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
             }

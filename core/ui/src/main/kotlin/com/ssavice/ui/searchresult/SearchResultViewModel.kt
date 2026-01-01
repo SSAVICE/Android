@@ -96,6 +96,11 @@ class SearchResultViewModel @Inject constructor(
         val newItems = _uiState.value.items.toMutableList().apply {
             addAll(
                 searchResult.items.mapIndexed { i, item ->
+                    val memberStatusText =
+                        if(item.currentMember >= item.minimumMember)
+                            "${item.currentMember}"
+                        else
+                            "${item.currentMember}/${item.minimumMember}"
                     SearchResultItemUiState(
                         name = item.name,
                         tag = item.tag,
@@ -108,8 +113,8 @@ class SearchResultViewModel @Inject constructor(
                         deadLine = getDeadlineMessage(item.deadLine),
                         discountedPrice = item.discountedPrice.toInt(),
                         basePrice = item.basePrice.toInt(),
-                        discountRatio = item.discountRatio.toInt(),
-                        memberStatus = "${item.currentMember}/${item.minimumMember}명 참여중",
+                        discountRatio = item.discountRatio,
+                        memberStatus = memberStatusText,
                     )
                 }
             )
