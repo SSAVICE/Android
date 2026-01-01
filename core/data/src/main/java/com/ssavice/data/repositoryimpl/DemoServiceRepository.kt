@@ -7,16 +7,17 @@ import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
 import com.ssavice.model.service.ServiceAddForm
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 import kotlin.math.min
 
-class DemoServiceRepository : ServiceRepository {
+class DemoServiceRepository @Inject constructor() : ServiceRepository {
     override suspend fun postService(service: ServiceAddForm): Result<Long> {
         delay(300L)
         return Result.success(1L)
     }
-    
-    private fun generateRandomPrice(min: Int, max: Int): Int = (min/100..max/100).random()*100
-    
+
+    private fun generateRandomPrice(min: Int, max: Int): Int = (min / 100..max / 100).random() * 100
+
     private fun generateRandomRegion2(): String {
         val regions = listOf(
             "광진구", "달서구", "강남구", "해운대구", "서대문구", "유성구",
@@ -73,7 +74,7 @@ class DemoServiceRepository : ServiceRepository {
 
         return "$prefix${noun}${suffixes.random()}"
     }
-    
+
 
     override suspend fun searchService(
         query: SearchQuery,
@@ -83,10 +84,10 @@ class DemoServiceRepository : ServiceRepository {
     ): Result<SearchResult> {
         val virtualDbSize = 30
         val count = min(virtualDbSize - startIndex, searchCount)
-        delay((3..15).random()*100L)
+        delay((7..15).random() * 100L)
         val results = List(count) {
             val price = generateRandomPrice(query.minPrice, query.maxPrice).toLong()
-            val discountRate = (0..16).random()*5
+            val discountRate = (0..16).random() * 5
             val discountedPrice = price - (price * discountRate / 100)
             val name = generateRandomName()
             SearchResultItem(
@@ -107,7 +108,7 @@ class DemoServiceRepository : ServiceRepository {
                 region2 = generateRandomRegion2(),
                 companyName = generateRandomCompanyName(),
                 companyId = (0..100).random().toLong()
-            )            
+            )
         }
 
         return Result.success(
