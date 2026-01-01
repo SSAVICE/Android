@@ -35,7 +35,8 @@ fun InfiniteScrollContainer(
     isLoading: Boolean,
     hasMoreData: Boolean,
     onLoadMore: () -> Unit,
-    content: LazyListScope.() -> Unit
+    topElement: LazyListScope.() -> Unit = {},
+    content: LazyListScope.() -> Unit,
 ) {
     val isScrolledToEnd = remember {
         derivedStateOf {
@@ -60,6 +61,7 @@ fun InfiniteScrollContainer(
         modifier = modifier,
         state = listState,
     ) {
+        topElement()
         content()
 
         item {

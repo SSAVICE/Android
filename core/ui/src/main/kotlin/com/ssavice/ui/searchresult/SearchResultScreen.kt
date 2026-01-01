@@ -1,6 +1,7 @@
 package com.ssavice.ui.searchresult
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DividerDefaults
@@ -25,7 +26,8 @@ fun SearchResultScreen(
     viewModel: SearchResultViewModel = hiltViewModel(),
     query: SearchQuery,
     onServiceClick: (Long) -> Unit = {},
-    onItemCountChange: (Int) -> Unit = {}
+    onItemCountChange: (Int) -> Unit = {},
+    topElement: LazyListScope.() -> Unit = {}
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(query) {
@@ -40,22 +42,25 @@ fun SearchResultScreen(
         modifier = modifier,
         state = state.value,
         onServiceClick = onServiceClick,
-        onRefresh = viewModel::loadMoreItems
+        onRefresh = viewModel::loadMoreItems,
+        topElement = topElement
     )
 }
 
 @Composable
-internal fun SearchResultScreen(
+fun SearchResultScreen(
     modifier: Modifier = Modifier,
     onRefresh: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
-    state: SearchResultUiState
+    state: SearchResultUiState,
+    topElement: LazyListScope.() -> Unit = {}
 ) {
     InfiniteScrollContainer(
         modifier = modifier,
         onLoadMore = onRefresh,
         isLoading = state.status == SearchStatus.Loading,
         hasMoreData = state.hasNext,
+        topElement = topElement
     ) {
         itemsIndexed(state.items) { index, item ->
             ServiceListElement(
