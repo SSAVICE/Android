@@ -11,7 +11,7 @@ data class SearchResultItem(
     val minimumMember: Int,
     val currentMember: Int,
     val basePrice: Long,
-    val discountRatio: Double,
+    val discountRatio: Int,
     val discountedPrice: Long,
     val deadLine: Date,
     val latitude: Double,
