@@ -118,7 +118,7 @@ fun ServiceListElement(
                     tags.forEach { tag ->
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            color = MaterialTheme.colorScheme.primaryContainer,
                             modifier = Modifier
                                 .height(height = 20.dp)
                                 .align(Alignment.CenterVertically)
