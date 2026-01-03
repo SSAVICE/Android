@@ -11,12 +11,12 @@ interface ServiceRepository {
         query: SearchQuery,
         nextId: Long,
         searchCount: Int,
-        startIndex: Int
+        startIndex: Int,
     ): Result<SearchResult>
 
     suspend fun searchService(
         query: SearchQuery,
         searchCount: Int,
-        startIndex: Int
+        startIndex: Int,
     ): Result<SearchResult>
 }

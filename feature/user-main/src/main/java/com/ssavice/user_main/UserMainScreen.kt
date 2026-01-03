@@ -33,49 +33,53 @@ import com.ssavice.ui.searchresult.SearchResultScreen
 fun UserMainScreen(
     modifier: Modifier = Modifier,
     viewModel: UserMainViewModel = hiltViewModel(),
-    onSearchBarClicked: () -> Unit = {}
+    onSearchBarClicked: () -> Unit = {},
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     UserMainScreen(
         modifier = modifier,
         state = state.value,
         onCategoryClicked = viewModel::onCategorySelect,
-        onSearchBarClicked = onSearchBarClicked
+        onSearchBarClicked = onSearchBarClicked,
     )
 }
 
 @Composable
-fun UserMainScreen (
+fun UserMainScreen(
     modifier: Modifier = Modifier,
     state: UserMainUiState,
     onSearchBarClicked: () -> Unit = {},
-    onCategoryClicked: (Int) -> Unit = {}
+    onCategoryClicked: (Int) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         OutlinedTextFieldButton(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
             placeHolder = "서비스, 태그 검색 ...",
             text = state.defaultSearchQuery.query,
             onClick = onSearchBarClicked,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = "Search",
                 )
-            }
+            },
         )
         SearchResultScreen(
             modifier = Modifier.weight(1f),
-            query = state.defaultSearchQuery
+            query = state.defaultSearchQuery,
         ) {
             item {
                 CategoryPicker(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 15.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
                     categories = state.categories,
                     selection = state.selected,
-                    onSelectionChanged = onCategoryClicked
+                    onSelectionChanged = onCategoryClicked,
                 )
             }
         }
@@ -88,16 +92,21 @@ fun CategoryPicker(
     categories: List<String>,
     selection: Int,
     spacing: Dp = 7.dp,
-    onSelectionChanged: (Int) -> Unit = {}
+    onSelectionChanged: (Int) -> Unit = {},
 ) {
-    Row(modifier = modifier
-        .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(spacing)) {
+    Row(
+        modifier =
+            modifier
+                .horizontalScroll(rememberScrollState()),
+        horizontalArrangement =
+            androidx.compose.foundation.layout.Arrangement
+                .spacedBy(spacing),
+    ) {
         categories.forEachIndexed { i, category ->
             SsaviceChip(
                 selected = i == selection,
                 onSelectedChange = { onSelectionChanged(i) },
-                text = category
+                text = category,
             )
         }
     }
@@ -111,18 +120,19 @@ fun CategoryPickerPreview() {
 
     SsaviceTheme {
         SsaviceBackground(
-            modifier = Modifier.size(540.dp,833.dp)
+            modifier = Modifier.size(540.dp, 833.dp),
         ) {
             CategoryPicker(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 15.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp),
                 categories = categories,
                 selection = selection,
-                onSelectionChanged = { selection = it }
+                onSelectionChanged = { selection = it },
             )
         }
     }
-
 }
 
 @Preview
@@ -130,7 +140,7 @@ fun CategoryPickerPreview() {
 fun UserMainScreenPreview() {
     SsaviceTheme {
         SsaviceBackground(
-            modifier = Modifier.size(540.dp,833.dp)
+            modifier = Modifier.size(540.dp, 833.dp),
         ) {
             UserMainScreen()
         }

@@ -19,11 +19,11 @@ data class SearchResultItem(
     val region1: String,
     val region2: String,
     val companyName: String,
-    val companyId: Long
+    val companyId: Long,
 )
 
 data class SearchResult(
     val items: List<SearchResultItem>,
     val hasNext: Boolean,
-    val nextCursor: Long
+    val nextCursor: Long,
 )

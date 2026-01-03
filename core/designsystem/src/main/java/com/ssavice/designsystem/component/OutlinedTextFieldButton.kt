@@ -31,16 +31,18 @@ fun OutlinedTextFieldButton(
             value = text,
             onValueChange = {}, // Read-only, so this does nothing
             readOnly = true,
-            modifier = Modifier
-                .padding(0.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(0.dp)
+                    .fillMaxWidth(),
             label = {
                 ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
                     Text(
                         text = placeHolder,
-                        modifier = Modifier
-                            .padding(0.dp)
-                            .wrapContentHeight(align = Alignment.CenterVertically),
+                        modifier =
+                            Modifier
+                                .padding(0.dp)
+                                .wrapContentHeight(align = Alignment.CenterVertically),
                     )
                 }
             },
@@ -60,5 +62,4 @@ fun OutlinedTextFieldButton(
                     ),
         )
     }
-
 }

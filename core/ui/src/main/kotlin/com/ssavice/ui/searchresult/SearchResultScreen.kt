@@ -28,7 +28,7 @@ fun SearchResultScreen(
     query: SearchQuery,
     onServiceClick: (Long) -> Unit = {},
     onItemCountChange: (Int) -> Unit = {},
-    topElement: LazyListScope.() -> Unit = {}
+    topElement: LazyListScope.() -> Unit = {},
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(query) {
@@ -44,7 +44,7 @@ fun SearchResultScreen(
         state = state.value,
         onServiceClick = onServiceClick,
         onRefresh = viewModel::loadMoreItems,
-        topElement = topElement
+        topElement = topElement,
     )
 }
 
@@ -54,18 +54,19 @@ fun SearchResultScreen(
     onRefresh: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
     state: SearchResultUiState,
-    topElement: LazyListScope.() -> Unit = {}
+    topElement: LazyListScope.() -> Unit = {},
 ) {
-    val imageRequest = ImageRequest
-        .Builder(LocalContext.current)
-        .crossfade(true)
-        .decoderFactory(SvgDecoder.Factory())
+    val imageRequest =
+        ImageRequest
+            .Builder(LocalContext.current)
+            .crossfade(true)
+            .decoderFactory(SvgDecoder.Factory())
     InfiniteScrollContainer(
         modifier = modifier,
         onLoadMore = onRefresh,
         isLoading = state.status == SearchStatus.Loading,
         hasMoreData = state.hasNext,
-        topElement = topElement
+        topElement = topElement,
     ) {
         itemsIndexed(state.items) { index, item ->
             ServiceListElement(
@@ -80,13 +81,14 @@ fun SearchResultScreen(
                 discountedPrice = item.discountedPrice,
                 participationInfo = item.memberStatus,
                 onServiceClick = onServiceClick,
-                discountRate = item.discountRatio
+                discountRate = item.discountRatio,
             ) { url ->
                 AsyncImage(
                     modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                    model = imageRequest
-                        .data(url)
-                        .build(),
+                    model =
+                        imageRequest
+                            .data(url)
+                            .build(),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
                 )
@@ -96,7 +98,7 @@ fun SearchResultScreen(
                 HorizontalDivider(
                     Modifier.padding(horizontal = 10.dp),
                     DividerDefaults.Thickness,
-                    DividerDefaults.color.copy(alpha = 0.5f)
+                    DividerDefaults.color.copy(alpha = 0.5f),
                 )
             }
         }

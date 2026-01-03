@@ -23,12 +23,14 @@ data class SearchResultItemUiState(
     val discountedPrice: Int,
     val basePrice: Int,
     val discountRatio: Int,
-    val memberStatus: String
+    val memberStatus: String,
 )
 
 sealed interface SearchStatus {
     object Loading : SearchStatus
+
     object Shown : SearchStatus
+
     object Error : SearchStatus
 }
 

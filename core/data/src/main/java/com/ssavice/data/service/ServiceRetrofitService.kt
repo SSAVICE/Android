@@ -18,6 +18,6 @@ interface ServiceRetrofitService {
 
     @GET("/api/service/search")
     suspend fun searchService(
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): Response<SearchServiceResponseDTO>
 }

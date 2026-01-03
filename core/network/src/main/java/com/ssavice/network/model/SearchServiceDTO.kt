@@ -19,7 +19,7 @@ data class SearchServiceDTO(
     val maxPrice: Long,
     val sortBy: Int,
     val lastId: Long?,
-    val size: Int
+    val size: Int,
 ) {
     fun toMap(): Map<String, String> =
         if (lastId != null) {
@@ -33,7 +33,7 @@ data class SearchServiceDTO(
                 "maxPrice" to maxPrice.toString(),
                 "sortBy" to sortBy.toString(),
                 "lastId" to lastId.toString(),
-                "size" to size.toString()
+                "size" to size.toString(),
             )
         } else {
             mapOf(
@@ -45,7 +45,7 @@ data class SearchServiceDTO(
                 "minPrice" to minPrice.toString(),
                 "maxPrice" to maxPrice.toString(),
                 "sortBy" to sortBy.toString(),
-                "size" to size.toString()
+                "size" to size.toString(),
             )
         }
 
@@ -53,9 +53,9 @@ data class SearchServiceDTO(
         fun fromModel(
             query: SearchQuery,
             nextId: Long?,
-            searchCount: Int
-        ): SearchServiceDTO {
-            return SearchServiceDTO(
+            searchCount: Int,
+        ): SearchServiceDTO =
+            SearchServiceDTO(
                 category = query.category,
                 query = query.query,
                 region1 = query.region1,
@@ -65,28 +65,25 @@ data class SearchServiceDTO(
                 maxPrice = query.maxPrice.toLong(),
                 sortBy = query.sortBy.value,
                 lastId = nextId,
-                size = searchCount
+                size = searchCount,
             )
-        }
     }
 }
-
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SearchServiceResponseDTO(
     val content: List<SearchServiceItemDTO>,
     val hasNext: Boolean,
-    val nextCursor: Long?
+    val nextCursor: Long?,
 ) {
     fun toModel(): SearchResult =
         SearchResult(
             items = content.map { it.toModel() },
             hasNext = hasNext,
-            nextCursor = nextCursor ?: -1
+            nextCursor = nextCursor ?: -1,
         )
 }
-
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
@@ -126,9 +123,9 @@ data class SearchServiceItemDTO(
             deadLine = Date.parse(deadline),
             latitude = latitude,
             longitude = longitude,
-            region1 = region1?:"",
-            region2 = region2?:"",
+            region1 = region1 ?: "",
+            region2 = region2 ?: "",
             companyName = companyName,
-            companyId = companyId
+            companyId = companyId,
         )
 }

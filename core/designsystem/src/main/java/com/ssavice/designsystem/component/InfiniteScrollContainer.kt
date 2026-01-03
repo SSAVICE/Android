@@ -38,18 +38,19 @@ fun InfiniteScrollContainer(
     topElement: LazyListScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
-    val isScrolledToEnd = remember {
-        derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val visibleItemsInfo = layoutInfo.visibleItemsInfo
-            if (layoutInfo.totalItemsCount == 0) {
-                false
-            } else {
-                val lastVisibleItemIndex = visibleItemsInfo.lastOrNull()?.index ?: 0
-                lastVisibleItemIndex == layoutInfo.totalItemsCount - 1
+    val isScrolledToEnd =
+        remember {
+            derivedStateOf {
+                val layoutInfo = listState.layoutInfo
+                val visibleItemsInfo = layoutInfo.visibleItemsInfo
+                if (layoutInfo.totalItemsCount == 0) {
+                    false
+                } else {
+                    val lastVisibleItemIndex = visibleItemsInfo.lastOrNull()?.index ?: 0
+                    lastVisibleItemIndex == layoutInfo.totalItemsCount - 1
+                }
             }
         }
-    }
 
     LaunchedEffect(isScrolledToEnd.value) {
         if (isScrolledToEnd.value && !isLoading && hasMoreData) {
@@ -66,10 +67,11 @@ fun InfiniteScrollContainer(
 
         item {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 if (!isLoading && !hasMoreData) {
                     ProvideTextStyle(MaterialTheme.typography.bodySmall) {
@@ -78,9 +80,8 @@ fun InfiniteScrollContainer(
                 } else {
                     CircularProgressIndicator(
                         modifier = Modifier.size(15.dp),
-                        strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth * 0.7f
+                        strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth * 0.7f,
                     )
-
                 }
             }
         }
@@ -95,7 +96,7 @@ private fun InfiniteScrollContainerLoadingPreview() {
             InfiniteScrollContainer(
                 isLoading = true,
                 hasMoreData = true,
-                onLoadMore = {}
+                onLoadMore = {},
             ) {
                 items(5) {
                     Text("Sample Item $it", modifier = Modifier.padding(16.dp))
@@ -113,7 +114,7 @@ private fun InfiniteScrollContainerNoMoreDataPreview() {
             InfiniteScrollContainer(
                 isLoading = false,
                 hasMoreData = false,
-                onLoadMore = {}
+                onLoadMore = {},
             ) {
                 items(5) {
                     Text("Sample Item $it", modifier = Modifier.padding(16.dp))
@@ -143,7 +144,7 @@ private fun InfiniteScrollContainerScrollablePreview() {
                 hasMoreData = true,
                 onLoadMore = {
                     isLoading = true
-                }
+                },
             ) {
                 items(items) {
                     Text("Sample Item $it", modifier = Modifier.padding(16.dp))

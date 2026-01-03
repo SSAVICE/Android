@@ -59,30 +59,32 @@ fun ServiceListElement(
     discountRate: Int,
     participationInfo: String,
     onServiceClick: (Long) -> Unit,
-    thumbnail: @Composable (String) -> Unit = {}
+    thumbnail: @Composable (String) -> Unit = {},
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onServiceClick(id) },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onServiceClick(id) },
         shape = RoundedCornerShape(0.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
         ) {
             Box(
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(120.dp),
             ) {
                 thumbnail(imageUrl)
                 Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .height(34.dp)
-                        .wrapContentWidth()
-                        .padding(4.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .height(34.dp)
+                            .wrapContentWidth()
+                            .padding(4.dp),
                     color = MaterialTheme.colorScheme.surfaceTint,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     Text(
                         text = "$discountRate%",
@@ -90,10 +92,12 @@ fun ServiceListElement(
                         fontSize = 12.sp,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            .width(30.dp)
-                            .wrapContentHeight(align = Alignment.CenterVertically),
-                        textAlign = TextAlign.Center
+                        modifier =
+                            Modifier
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                .width(30.dp)
+                                .wrapContentHeight(align = Alignment.CenterVertically),
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -101,7 +105,7 @@ fun ServiceListElement(
             Spacer(modifier = Modifier.width(8.dp))
 
             Column(
-                modifier = Modifier.wrapContentHeight()
+                modifier = Modifier.wrapContentHeight(),
             ) {
                 Text(text = sellerName, fontSize = 10.sp, color = Color.Gray)
 
@@ -109,7 +113,7 @@ fun ServiceListElement(
                     text = serviceName,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    maxLines = 1
+                    maxLines = 1,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -119,17 +123,19 @@ fun ServiceListElement(
                         Surface(
                             shape = RoundedCornerShape(4.dp),
                             color = MaterialTheme.colorScheme.primaryContainer,
-                            modifier = Modifier
-                                .height(height = 20.dp)
-                                .align(Alignment.CenterVertically)
+                            modifier =
+                                Modifier
+                                    .height(height = 20.dp)
+                                    .align(Alignment.CenterVertically),
                         ) {
                             Text(
                                 text = tag,
                                 fontSize = 9.sp,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 0.dp)
-                                    .wrapContentHeight(align = Alignment.CenterVertically),
-                                style = MaterialTheme.typography.bodySmall
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 8.dp, vertical = 0.dp)
+                                        .wrapContentHeight(align = Alignment.CenterVertically),
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -143,7 +149,7 @@ fun ServiceListElement(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = "Location",
                         modifier = Modifier.size(14.dp),
-                        tint = Color.Gray
+                        tint = Color.Gray,
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = locationInfo, fontSize = 10.sp, color = Color.Gray)
@@ -152,7 +158,7 @@ fun ServiceListElement(
                         imageVector = Icons.Default.Schedule,
                         contentDescription = "Deadline",
                         modifier = Modifier.size(14.dp),
-                        tint = Color.Gray
+                        tint = Color.Gray,
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = deadline, fontSize = 11.sp, color = Color.Gray)
@@ -163,21 +169,21 @@ fun ServiceListElement(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Row(verticalAlignment = Alignment.Bottom) {
                         Text(
                             text = "₩${discountedPrice.format()}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.error
+                            color = MaterialTheme.colorScheme.error,
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "₩${price.format()}",
                             fontSize = 14.sp,
                             color = Color.Gray,
-                            textDecoration = TextDecoration.LineThrough
+                            textDecoration = TextDecoration.LineThrough,
                         )
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -185,14 +191,14 @@ fun ServiceListElement(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Participants",
                             modifier = Modifier.size(14.dp),
-                            tint = Color.Gray
+                            tint = Color.Gray,
                         )
                         Spacer(modifier = Modifier.width(1.dp))
                         ProvideTextStyle(MaterialTheme.typography.bodySmall) {
                             Text(
                                 text = participationInfo,
                                 fontSize = 11.sp,
-                                color = Color.Gray
+                                color = Color.Gray,
                             )
                         }
                     }
@@ -202,9 +208,7 @@ fun ServiceListElement(
     }
 }
 
-private fun Int.format(): String {
-    return NumberFormat.getNumberInstance(Locale.US).format(this)
-}
+private fun Int.format(): String = NumberFormat.getNumberInstance(Locale.US).format(this)
 
 @Preview(showBackground = true)
 @Composable
@@ -224,7 +228,7 @@ private fun ServiceListElementPreview() {
                     discountRate = 10,
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
-                    onServiceClick = {}
+                    onServiceClick = {},
                 ) { url ->
                     AsyncImage(
                         model =
@@ -235,7 +239,7 @@ private fun ServiceListElementPreview() {
                                 .build(),
                         contentDescription = "",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                        modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                     )
                 }
                 ServiceListElement(
@@ -250,7 +254,7 @@ private fun ServiceListElementPreview() {
                     discountRate = 10,
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
-                    onServiceClick = {}
+                    onServiceClick = {},
                 )
                 ServiceListElement(
                     id = 1L,
@@ -264,7 +268,7 @@ private fun ServiceListElementPreview() {
                     discountRate = 10,
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
-                    onServiceClick = {}
+                    onServiceClick = {},
                 )
             }
         }

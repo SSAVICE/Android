@@ -72,10 +72,11 @@ fun SellerMainScreen(
     },
     onServiceClick: (SellerItemUiState) -> Unit = {},
 ) {
-    val imageRequest = ImageRequest
-        .Builder(LocalContext.current)
-        .decoderFactory(SvgDecoder.Factory())
-        .crossfade(true)
+    val imageRequest =
+        ImageRequest
+            .Builder(LocalContext.current)
+            .decoderFactory(SvgDecoder.Factory())
+            .crossfade(true)
 
     Column(
         modifier =

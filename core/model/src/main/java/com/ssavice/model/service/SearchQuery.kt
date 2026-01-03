@@ -15,7 +15,9 @@ data class SearchQuery(
 )
 
 @Serializable
-enum class SortingOrder(val value: Int) {
+enum class SortingOrder(
+    val value: Int,
+) {
     POPULARITY(0),
     PRICE_ASC(1),
     PRICE_DESC(2),
