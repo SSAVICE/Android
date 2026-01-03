@@ -70,33 +70,17 @@ fun SsaviceDateSpinner(
         isError,
         errorMessage,
     ) {
-        Box {
-            OutlinedTextField(
-                value = formattedDate,
-                onValueChange = {}, // Read-only, so this does nothing
-                readOnly = true,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.CalendarToday,
-                        contentDescription = "Open Date Picker",
-                    )
-                },
-                shape = SsaviceRoundRectShape,
-            )
-
-            Box(
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .clickable(
-                            onClick = { showDatePicker = true },
-                            indication = null, // No ripple effect
-                            interactionSource = remember { MutableInteractionSource() },
-                        ),
-            )
-        }
+        OutlinedTextFieldButton(
+            placeHolder = text,
+            text = formattedDate,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.CalendarToday,
+                    contentDescription = "Open Date Picker",
+                )
+            },
+            onClick = { showDatePicker = true },
+        )
     }
 
     // Show the dialog when the state is true

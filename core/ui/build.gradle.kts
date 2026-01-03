@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.ssavice.android.library)
     alias(libs.plugins.ssavice.android.library.compose)
+    alias(libs.plugins.ssavice.hilt)
 }
 
 android {
@@ -19,4 +20,7 @@ dependencies {
 
     api(projects.core.designsystem)
     api(projects.core.model)
+
+    implementation(projects.core.data)
+    implementation(libs.androidx.hilt.navigation.compose)
 }
