@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.ssavice.designsystem.component.SsaviceTopBar
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.user_main.UserMainScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +21,6 @@ class MainActivity : ComponentActivity() {
             SsaviceTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    topBar = { SsaviceTopBar("Ssavice") },
                 ) { innerPadding ->
                     UserMainScreen(
                         modifier = Modifier.padding(innerPadding),

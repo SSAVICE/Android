@@ -3,6 +3,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.service.ServiceSummary
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URL
 
@@ -62,6 +63,7 @@ data class GetCompanyInfoDTO(
 @Serializable
 data class ServiceDTO(
     val serviceId: Long,
+    @SerialName("thumbnailUrl")
     val serviceImageUrl: String?,
     val category: String,
     val title: String,
