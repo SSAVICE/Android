@@ -39,4 +39,22 @@ constructor(
         ).map {
             it.toModel()
         }
+
+    override suspend fun searchService(
+        query: SearchQuery,
+        searchCount: Int,
+        startIndex: Int
+    ): Result<SearchResult> =
+        processResponseOnResponseData(
+            serviceRetrofitService
+                .searchService(
+                    SearchServiceDTO.fromModel(
+                        query = query,
+                        nextId = null,
+                        searchCount = searchCount
+                    ).toMap()
+                ),
+        ).map {
+            it.toModel()
+        }
 }

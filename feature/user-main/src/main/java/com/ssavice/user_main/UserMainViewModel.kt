@@ -1,6 +1,7 @@
 package com.ssavice.user_main
 
 import androidx.lifecycle.ViewModel
+import com.ssavice.model.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserMainViewModel @Inject constructor(): ViewModel() {
     private val _uiState = MutableStateFlow(UserMainUiState(
-        categories = listOf("요가", "헬스", "필라테스", "건강", "쇼핑", "취미", "문화")
+        categories = Category.entries.map { it.value }
     ))
     val uiState: StateFlow<UserMainUiState> = _uiState
 

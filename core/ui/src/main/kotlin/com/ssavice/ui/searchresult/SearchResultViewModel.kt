@@ -60,7 +60,29 @@ class SearchResultViewModel @Inject constructor(
         }
 
         searchJob = viewModelScope.launch(Dispatchers.IO) {
-            search()
+            val query = uiState.value.searchQuery
+            serviceRepository.searchService(
+                query = com.ssavice.model.service.SearchQuery(
+                    category = query.category,
+                    query = query.query,
+                    region1 = query.region1,
+                    region2 = query.region2,
+                    searchRange = query.searchRange,
+                    minPrice = query.minPrice,
+                    maxPrice = query.maxPrice,
+                    sortBy = query.sortBy
+                ),
+                searchCount = SEARCH_COUNT,
+                startIndex = uiState.value.items.size
+            )
+                .fold(
+                    onSuccess = {
+                        updateSearchResult(it)
+                    },
+                    onFailure = {
+                        onSearchFailure(it)
+                    }
+                )
         }
     }
 

@@ -18,27 +18,41 @@ data class SearchServiceDTO(
     val minPrice: Long,
     val maxPrice: Long,
     val sortBy: Int,
-    val lastId: Long,
+    val lastId: Long?,
     val size: Int
 ) {
     fun toMap(): Map<String, String> =
-        mapOf(
-            "category" to category,
-            "query" to query,
-            "region1" to region1,
-            "region2" to region2,
-            "range" to range.toString(),
-            "minPrice" to minPrice.toString(),
-            "maxPrice" to maxPrice.toString(),
-            "sortBy" to sortBy.toString(),
-            "lastId" to lastId.toString(),
-            "size" to size.toString()
-        )
+        if (lastId != null) {
+            mapOf(
+                "category" to category,
+                "query" to query,
+                "region1" to region1,
+                "region2" to region2,
+                "range" to range.toString(),
+                "minPrice" to minPrice.toString(),
+                "maxPrice" to maxPrice.toString(),
+                "sortBy" to sortBy.toString(),
+                "lastId" to lastId.toString(),
+                "size" to size.toString()
+            )
+        } else {
+            mapOf(
+                "category" to category,
+                "query" to query,
+                "region1" to region1,
+                "region2" to region2,
+                "range" to range.toString(),
+                "minPrice" to minPrice.toString(),
+                "maxPrice" to maxPrice.toString(),
+                "sortBy" to sortBy.toString(),
+                "size" to size.toString()
+            )
+        }
 
     companion object {
         fun fromModel(
             query: SearchQuery,
-            nextId: Long,
+            nextId: Long?,
             searchCount: Int
         ): SearchServiceDTO {
             return SearchServiceDTO(
@@ -87,33 +101,33 @@ data class SearchServiceItemDTO(
     val companyName: String,
     val latitude: Double,
     val longitude: Double,
-    val region1: String,
-    val region2: String,
+    val region1: String?,
+    val region2: String?,
     val currentMember: Long,
     val minimumMember: Long,
     val maximumMember: Long,
     val basePrice: Long,
     val discountRatio: Long,
     val discountedPrice: Long,
-    val deadLine: String,
+    val deadline: String,
 ) {
     fun toModel(): SearchResultItem =
         SearchResultItem(
             name = title,
             tag = tag,
             id = serviceId,
-            image = serviceImageUrl?:"",
+            image = serviceImageUrl ?: "",
             category = category,
             minimumMember = minimumMember.toInt(),
             currentMember = currentMember.toInt(),
             basePrice = basePrice,
             discountRatio = discountRatio.toInt(),
             discountedPrice = discountedPrice,
-            deadLine = Date.parse(deadLine),
+            deadLine = Date.parse(deadline),
             latitude = latitude,
             longitude = longitude,
-            region1 = region1,
-            region2 = region2,
+            region1 = region1?:"",
+            region2 = region2?:"",
             companyName = companyName,
             companyId = companyId
         )

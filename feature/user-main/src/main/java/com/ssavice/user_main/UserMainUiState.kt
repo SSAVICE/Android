@@ -13,7 +13,7 @@ data class UserMainUiState(
         category = "",
         searchRange = 1,
         minPrice = 0,
-        maxPrice = 100_000_000,
+        maxPrice = Int.MAX_VALUE,
         sortBy = SortingOrder.POPULARITY,
         searchCount = 10
     )

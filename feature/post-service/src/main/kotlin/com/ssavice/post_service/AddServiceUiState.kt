@@ -1,5 +1,6 @@
 package com.ssavice.post_service
 
+import com.ssavice.model.Category
 import com.ssavice.model.TimeStamp
 
 data class AddServiceUiState(
@@ -18,7 +19,7 @@ data class Form(
     val startDate: TimeStamp,
     val endDate: TimeStamp,
     val description: String = "",
-    val categoryList: List<String> = listOf("건강 / 생활", "식품", "취미", "스포츠", "요양", "문화"),
+    val categoryList: List<String> = Category.entries.map { it.value },
     val nameErrorMessage: String? = null,
     val categoryErrorMessage: String? = null,
     val tagErrorMessage: String? = null,

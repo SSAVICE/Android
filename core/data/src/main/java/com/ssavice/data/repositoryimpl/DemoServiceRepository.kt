@@ -119,4 +119,16 @@ class DemoServiceRepository @Inject constructor() : ServiceRepository {
             )
         )
     }
+
+    override suspend fun searchService(
+        query: SearchQuery,
+        searchCount: Int,
+        startIndex: Int
+    ): Result<SearchResult> =
+        searchService(
+            query = query,
+            nextId = 0,
+            searchCount = searchCount,
+            startIndex = startIndex
+        )
 }

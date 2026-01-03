@@ -2,6 +2,7 @@ package com.ssavice.data.di
 
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repositoryimpl.DemoServiceRepository
+import com.ssavice.data.repositoryimpl.RemoteServiceRepository
 import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.network.retrofit.RetrofitModule
 import dagger.Binds
@@ -29,5 +30,5 @@ object ServiceRetrofitModule {
 abstract class ServiceModule {
     @Binds
     @Singleton
-    internal abstract fun bindServiceRepository(remoteSellerInfoRepository: DemoServiceRepository): ServiceRepository
+    internal abstract fun bindServiceRepository(remoteSellerInfoRepository: RemoteServiceRepository): ServiceRepository
 }

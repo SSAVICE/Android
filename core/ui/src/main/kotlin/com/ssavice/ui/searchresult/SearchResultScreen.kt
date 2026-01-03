@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.InfiniteScrollContainer
 import com.ssavice.ui.ServiceListElement
@@ -55,6 +56,10 @@ fun SearchResultScreen(
     state: SearchResultUiState,
     topElement: LazyListScope.() -> Unit = {}
 ) {
+    val imageRequest = ImageRequest
+        .Builder(LocalContext.current)
+        .crossfade(true)
+        .decoderFactory(SvgDecoder.Factory())
     InfiniteScrollContainer(
         modifier = modifier,
         onLoadMore = onRefresh,
@@ -76,23 +81,23 @@ fun SearchResultScreen(
                 participationInfo = item.memberStatus,
                 onServiceClick = onServiceClick,
                 discountRate = item.discountRatio
-            ) {
-                url ->
+            ) { url ->
                 AsyncImage(
                     modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                    model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
+                    model = imageRequest
                         .data(url)
-                        .crossfade(true)
                         .build(),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
                 )
             }
 
-            if(index < state.items.lastIndex) {
-                HorizontalDivider(Modifier.padding(horizontal = 10.dp), DividerDefaults.Thickness, DividerDefaults.color.copy(alpha = 0.5f))
+            if (index < state.items.lastIndex) {
+                HorizontalDivider(
+                    Modifier.padding(horizontal = 10.dp),
+                    DividerDefaults.Thickness,
+                    DividerDefaults.color.copy(alpha = 0.5f)
+                )
             }
         }
     }
