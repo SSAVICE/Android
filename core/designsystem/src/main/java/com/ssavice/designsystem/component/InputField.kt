@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
@@ -46,6 +47,7 @@ fun SsaviceInputField(
     outputTransformation: OutputTransformation? = null,
     isError: Boolean = false, // New parameter
     errorMessage: String? = null, // New parameter
+    onSubmit: () -> Unit = {}
 ) {
     LabeledComponent(
         labelText = labelText,
@@ -77,6 +79,9 @@ fun SsaviceInputField(
             inputTransformation = inputTransformation,
             outputTransformation = outputTransformation,
             modifier = Modifier.fillMaxWidth(),
+            onKeyboardAction = { action ->
+                onSubmit()
+            },
         )
     }
 }
@@ -206,11 +211,11 @@ object InputTransformations {
             override fun TextFieldBuffer.transformInput() {
                 val formatted =
                     (
-                        asCharSequence()
-                            .filter { it.isDigit() }
-                            .toString()
-                            .toLongOrNull() ?: 0L
-                    ).toString()
+                            asCharSequence()
+                                .filter { it.isDigit() }
+                                .toString()
+                                .toLongOrNull() ?: 0L
+                            ).toString()
                 if (formatted != asCharSequence().toString()) {
                     replace(0, length, formatted)
                 }
