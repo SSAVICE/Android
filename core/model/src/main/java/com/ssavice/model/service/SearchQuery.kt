@@ -21,4 +21,6 @@ enum class SortingOrder(
     POPULARITY(0),
     PRICE_ASC(1),
     PRICE_DESC(2),
+    DISCOUNT_RATE(3),
+    DEADLINE_IMMINENT(4)
 }
