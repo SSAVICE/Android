@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.theme.SsaviceTheme
@@ -58,21 +59,25 @@ fun SellerMainScreen(
     state: SellerMainUiState,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
-    thumbnail: @Composable (SellerItemUiState) -> Unit = {
+    thumbnail: @Composable (SellerItemUiState, ImageRequest.Builder) -> Unit = { state, request ->
         AsyncImage(
             model =
-                ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(it.imageUrl.toString())
-                    .crossfade(true)
+                request
+                    .data(state.imageUrl.toString())
                     .build(),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize(),
         )
     },
     onServiceClick: (SellerItemUiState) -> Unit = {},
 ) {
+    val imageRequest =
+        ImageRequest
+            .Builder(LocalContext.current)
+            .decoderFactory(SvgDecoder.Factory())
+            .crossfade(true)
+
     Column(
         modifier =
             modifier
@@ -127,7 +132,7 @@ fun SellerMainScreen(
                         } else {
                             ServiceStatus.RECRUITING
                         },
-                    thumbnail = { thumbnail(item) },
+                    thumbnail = { thumbnail(item, imageRequest) },
                     modifier =
                         Modifier
                             .fillMaxWidth()
@@ -182,19 +187,6 @@ fun SellerMainScreenPreview() {
             state = state,
             onAddClick = {},
             onServiceClick = {},
-            thumbnail = {
-                AsyncImage(
-                    model =
-                        ImageRequest
-                            .Builder(LocalContext.current)
-                            .data(it.imageUrl.toString())
-                            .crossfade(true)
-                            .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                )
-            },
         )
     }
 }

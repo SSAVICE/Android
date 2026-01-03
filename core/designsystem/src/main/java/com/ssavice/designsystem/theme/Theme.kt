@@ -17,6 +17,8 @@ val LightDefaultColorScheme =
         primary = SsaviceOrange,
         background = Color.White,
         surface = SsaviceSurfaceGray,
+        primaryContainer = SsaviceSurfaceVariant,
+        onPrimaryContainer = SsaviceOnSurfaceVariant,
     )
 
 @Composable

@@ -1,9 +1,11 @@
 package com.ssavice.data.di
 
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.data.repositoryimpl.DemoServiceRepository
 import com.ssavice.data.repositoryimpl.RemoteServiceRepository
 import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.network.retrofit.RetrofitModule
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,11 +23,12 @@ object ServiceRetrofitModule {
     ): ServiceRetrofitService =
         serviceRetrofit
             .create(ServiceRetrofitService::class.java)
+}
 
-    @Provides
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class ServiceModule {
+    @Binds
     @Singleton
-    fun provideServiceRepository(serviceRetrofitService: ServiceRetrofitService): ServiceRepository =
-        RemoteServiceRepository(
-            serviceRetrofitService,
-        )
+    internal abstract fun bindServiceRepository(remoteSellerInfoRepository: RemoteServiceRepository): ServiceRepository
 }

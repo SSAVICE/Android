@@ -51,6 +51,24 @@ data class Date(
         return sdf.format(java.util.Date(timeStamp))
     }
 
+    fun addDay(daysToAdd: Int): Date {
+        val calendar =
+            Calendar.getInstance(timeZone).apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month - 1)
+                set(Calendar.DAY_OF_MONTH, day)
+            }
+
+        calendar.add(Calendar.DAY_OF_MONTH, daysToAdd)
+
+        return Date(
+            year = calendar.get(Calendar.YEAR),
+            month = calendar.get(Calendar.MONTH) + 1,
+            day = calendar.get(Calendar.DAY_OF_MONTH),
+            timeZone = this.timeZone,
+        )
+    }
+
     companion object {
         fun parse(
             timeStamp: TimeStamp,
