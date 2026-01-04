@@ -138,6 +138,12 @@ fun AddServiceRoute(
                     viewModel.onDescriptionChanged(it)
                 }
         }
+        LaunchedEffect(discountRatioState) {
+            snapshotFlow { discountRatioState.text.toString().toIntOrNull() ?: 0 }
+                .collect {
+                    viewModel.onDiscountRatioChanged(it)
+                }
+        }
         LaunchedEffect(state.value.submitState) {
             if (state.value.submitState is SubmitState.Success) {
                 onSubmit((state.value.submitState as SubmitState.Success).serviceId)
@@ -272,7 +278,7 @@ fun AddServiceScreen(
                 inputTransformation =
                     InputTransformation.maxLength(4).then(
                         InputTransformations.numberFormatInputTransformation.then(
-                            InputTransformations.minMaxInputTransformation(1, 200),
+                            InputTransformations.minMaxInputTransformation(0, 200),
                         ),
                     ),
                 isError = minRecruitTextStateErrorMessage != null,
@@ -290,7 +296,7 @@ fun AddServiceScreen(
                 inputTransformation =
                     InputTransformation.maxLength(4).then(
                         InputTransformations.numberFormatInputTransformation.then(
-                            InputTransformations.minMaxInputTransformation(1, 200),
+                            InputTransformations.minMaxInputTransformation(0, 200),
                         ),
                     ),
                 isError = maxRecruitTextStateErrorMessage != null,
