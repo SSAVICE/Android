@@ -17,7 +17,7 @@ class SearchFormViewModel @Inject constructor(
         SearchFormUiState(
             form = SearchForm(
                 query = savedStateHandle.get<String>(SearchFormRouteContract.QUERY) ?: "",
-                categories = Category.entries.map { it.name },
+                categories = Category.entries.map { it.value },
                 selectedCategory = savedStateHandle.get<Int>(SearchFormRouteContract.SELECTED_CATEGORY)
                     ?: 0,
                 searchRange = savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE) ?: 0,

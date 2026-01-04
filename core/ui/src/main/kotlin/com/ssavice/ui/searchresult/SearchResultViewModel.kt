@@ -3,7 +3,9 @@ package com.ssavice.ui.searchresult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.model.Category
 import com.ssavice.model.Date
+import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SortingOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,17 +40,13 @@ class SearchResultViewModel
                             minPrice = 0,
                             maxPrice = 0,
                             sortBy = SortingOrder.POPULARITY,
-                            category = "",
-                            searchCount = 0,
+                            category = Category.entries[0],
                         ),
                 ),
             )
         val uiState: StateFlow<SearchResultUiState> = _uiState
 
         fun newSearch(searchQuery: SearchQuery) {
-            if (searchQuery.searchCount == 0) {
-                return
-            }
 
             _uiState.value =
                 _uiState.value.copy(
