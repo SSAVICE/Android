@@ -1,13 +1,14 @@
 package com.ssavice.model.service
 
+import com.ssavice.model.Category
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchQuery(
-    val category: String,
+    val category: Category,
     val query: String,
-    val region1: String,
-    val region2: String,
+    val region1: String = "",
+    val region2: String = "",
     val searchRange: Int,
     val minPrice: Int,
     val maxPrice: Int,
@@ -21,4 +22,6 @@ enum class SortingOrder(
     POPULARITY(0),
     PRICE_ASC(1),
     PRICE_DESC(2),
+    DISCOUNT_RATE(3),
+    DEADLINE_IMMINENT(4),
 }

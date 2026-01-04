@@ -77,7 +77,7 @@ fun UserMainScreen(
                         Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp),
-                    categories = state.categories,
+                    categories = state.categories.map { it.value },
                     selection = state.selected,
                     onSelectionChanged = onCategoryClicked,
                 )

@@ -56,7 +56,7 @@ data class SearchServiceDTO(
             searchCount: Int,
         ): SearchServiceDTO =
             SearchServiceDTO(
-                category = query.category,
+                category = query.category.value,
                 query = query.query,
                 region1 = query.region1,
                 region2 = query.region2,

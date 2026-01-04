@@ -1,13 +1,11 @@
-package com.ssavice.user_main
+package com.ssavice.search_result
 
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SortingOrder
 
-data class UserMainUiState(
-    val categories: List<Category> = emptyList(),
-    val selected: Int = 0,
-    val defaultSearchQuery: SearchQuery =
+data class SearchResultUiState(
+    val searchQuery: SearchQuery =
         SearchQuery(
             query = "",
             region1 = "",
@@ -18,4 +16,5 @@ data class UserMainUiState(
             maxPrice = Int.MAX_VALUE,
             sortBy = SortingOrder.POPULARITY,
         ),
+    val searchCount: Int = 10,
 )
