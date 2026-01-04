@@ -1,5 +1,7 @@
 package com.ssavice.search.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -45,7 +47,20 @@ fun NavController.navigateToSearchForm(
 }
 
 fun NavGraphBuilder.searchFormScreen(onSearch: (SearchForm) -> Unit = {}) {
-    composable<SearchFormRoute> {
+    composable<SearchFormRoute>(
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                animationSpec = tween(),
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(),
+            )
+        },
+    ) {
         SearchFormScreen(onSearch = onSearch)
     }
 }
