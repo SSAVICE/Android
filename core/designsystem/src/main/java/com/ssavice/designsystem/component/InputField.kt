@@ -13,8 +13,6 @@ import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.insert
-import androidx.compose.foundation.text.input.maxLength
-import androidx.compose.foundation.text.input.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -46,6 +44,7 @@ fun SsaviceInputField(
     outputTransformation: OutputTransformation? = null,
     isError: Boolean = false, // New parameter
     errorMessage: String? = null, // New parameter
+    onSubmit: () -> Unit = {},
 ) {
     LabeledComponent(
         labelText = labelText,
@@ -77,6 +76,9 @@ fun SsaviceInputField(
             inputTransformation = inputTransformation,
             outputTransformation = outputTransformation,
             modifier = Modifier.fillMaxWidth(),
+            onKeyboardAction = { action ->
+                onSubmit()
+            },
         )
     }
 }

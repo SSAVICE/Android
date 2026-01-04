@@ -14,7 +14,7 @@ class UserMainViewModel
         private val _uiState =
             MutableStateFlow(
                 UserMainUiState(
-                    categories = Category.entries.map { it.value },
+                    categories = Category.entries,
                 ),
             )
         val uiState: StateFlow<UserMainUiState> = _uiState

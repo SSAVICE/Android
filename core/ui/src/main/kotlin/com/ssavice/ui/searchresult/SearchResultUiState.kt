@@ -1,6 +1,6 @@
 package com.ssavice.ui.searchresult
 
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.service.SearchQuery
 
 data class SearchResultUiState(
     val items: List<SearchResultItemUiState>,
@@ -33,15 +33,3 @@ sealed interface SearchStatus {
 
     object Error : SearchStatus
 }
-
-data class SearchQuery(
-    val query: String,
-    val region1: String,
-    val region2: String,
-    val category: String,
-    val searchRange: Int,
-    val minPrice: Int,
-    val maxPrice: Int,
-    val sortBy: SortingOrder,
-    val searchCount: Int = 10,
-)

@@ -174,7 +174,7 @@ class DemoServiceRepository
                         name = name,
                         tag = generateRandomTag(),
                         image = "https://picsum.photos/seed/$name/400",
-                        category = query.category,
+                        category = query.category.value,
                         minimumMember = (10..25).random(),
                         currentMember = (0..40).random(),
                         basePrice = price,
