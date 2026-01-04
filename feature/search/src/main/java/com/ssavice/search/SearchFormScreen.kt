@@ -30,16 +30,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.AdjustedSlider
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
@@ -50,6 +54,45 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Composable
+fun SearchFormRoute(
+    modifier: Modifier = Modifier,
+    viewModel: SearchFormViewModel = hiltViewModel(),
+    onSearch: (SearchForm) -> Unit = {}
+) {
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
+
+
+    val query = rememberTextFieldState("")
+    LaunchedEffect(query) {
+        snapshotFlow { query }.collect {
+            viewModel.onQuery(it.text.toString())
+        }
+    }
+
+    SearchFormScreen(
+        modifier = modifier,
+        form = state.value.form,
+        query = query,
+        onCategoryChange = {
+            viewModel::onCategorySelect
+        },
+        onSearchRangeChange = {
+            viewModel::onSearchRangeSelect
+        },
+        onPriceRangeChange = {
+            viewModel::onPriceRangeChange
+        },
+        onSortByChange = {
+            viewModel::onSortByChange
+        },
+        onSearchClick = {
+            onSearch(state.value.form)
+        }
+    )
+}
+
+
+@Composable
 fun SearchFormScreen(
     modifier: Modifier = Modifier,
     form: SearchForm,
@@ -57,7 +100,7 @@ fun SearchFormScreen(
     onCategoryChange: (Int) -> Unit = {},
     onSearchRangeChange: (Int) -> Unit = {},
     onPriceRangeChange: (IntRange) -> Unit = {},
-    onSortByChange: (SortingOrder) -> Unit = {},
+    onSortByChange: (Int) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
 ) {
     Column(modifier = modifier) {
@@ -86,9 +129,11 @@ fun SearchFormScreen(
                 )
             }
         }
-        HorizontalDivider(modifier = Modifier
-            .padding(horizontal = 5.dp)
-            .padding(top = 10.dp))
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .padding(top = 10.dp)
+        )
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -222,7 +267,7 @@ fun SearchFormScreen(
                                         .padding(horizontal = 8.dp),
                                     text = s,
                                     selected = form.sortBy.value == i,
-                                    onSelectedChange = { onSortByChange(SortingOrder.entries[i]) },
+                                    onSelectedChange = { onSortByChange(i) },
                                     innerPadding = PaddingValues(vertical = 10.dp)
                                 )
 
