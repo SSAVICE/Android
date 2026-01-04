@@ -64,8 +64,8 @@ fun SearchFormScreen(
 
     val query = rememberTextFieldState(state.form.query)
     LaunchedEffect(query) {
-        snapshotFlow { query }.collect {
-            viewModel.onQuery(it.text.toString())
+        snapshotFlow { query.text.toString() }.collect {
+            viewModel.onQuery(it)
         }
     }
 
