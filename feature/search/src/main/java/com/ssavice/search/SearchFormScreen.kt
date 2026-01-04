@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +63,6 @@ fun SearchFormScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-
     val query = rememberTextFieldState(state.form.query)
     LaunchedEffect(query) {
         snapshotFlow { query.text.toString() }.collect {
@@ -69,20 +70,27 @@ fun SearchFormScreen(
         }
     }
 
+    // 포커스 요청을 위한 FocusRequester 생성
+    val focusRequester = remember { FocusRequester() }
+
+    // 화면이 처음 그려질 때 포커스를 요청
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     SearchFormScreen(
-        modifier = modifier,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background),
         form = state.form,
         query = query,
         onCategoryChange = viewModel::onCategorySelect,
-        onSearchRangeChange = viewModel::onSearchRangeSelect
-        ,
-        onPriceRangeChange = viewModel::onPriceRangeChange
-        ,
-        onSortByChange = viewModel::onSortByChange
-        ,
+        onSearchRangeChange = viewModel::onSearchRangeSelect,
+        onPriceRangeChange = viewModel::onPriceRangeChange,
+        onSortByChange = viewModel::onSortByChange,
         onSearchClick = {
             onSearch(state.form)
-        }
+        },
+        focusRequester = focusRequester
     )
 }
 
@@ -97,6 +105,7 @@ fun SearchFormScreen(
     onPriceRangeChange: (IntRange) -> Unit = {},
     onSortByChange: (Int) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
+    focusRequester: FocusRequester? = null
 ) {
     Column(modifier = modifier) {
         Row(
@@ -107,7 +116,10 @@ fun SearchFormScreen(
         ) {
             SsaviceInputField(
                 state = query,
-                modifier = Modifier.weight(1f),
+                modifier = if (focusRequester != null) Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester) else Modifier
+                    .weight(1f),
                 placeholderText = "서비스, 태그 검색 ...",
                 onSubmit = {
                     onSearchClick(query.text.toString())
