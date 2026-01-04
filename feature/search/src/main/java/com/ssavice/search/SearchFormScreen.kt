@@ -54,15 +54,15 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Composable
-fun SearchFormRoute(
+fun SearchFormScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchFormViewModel = hiltViewModel(),
     onSearch: (SearchForm) -> Unit = {}
 ) {
-    val state = viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
 
-    val query = rememberTextFieldState("")
+    val query = rememberTextFieldState(state.form.query)
     LaunchedEffect(query) {
         snapshotFlow { query }.collect {
             viewModel.onQuery(it.text.toString())
@@ -71,22 +71,17 @@ fun SearchFormRoute(
 
     SearchFormScreen(
         modifier = modifier,
-        form = state.value.form,
+        form = state.form,
         query = query,
-        onCategoryChange = {
-            viewModel::onCategorySelect
-        },
-        onSearchRangeChange = {
-            viewModel::onSearchRangeSelect
-        },
-        onPriceRangeChange = {
-            viewModel::onPriceRangeChange
-        },
-        onSortByChange = {
-            viewModel::onSortByChange
-        },
+        onCategoryChange = viewModel::onCategorySelect,
+        onSearchRangeChange = viewModel::onSearchRangeSelect
+        ,
+        onPriceRangeChange = viewModel::onPriceRangeChange
+        ,
+        onSortByChange = viewModel::onSortByChange
+        ,
         onSearchClick = {
-            onSearch(state.value.form)
+            onSearch(state.form)
         }
     )
 }
@@ -182,7 +177,7 @@ fun SearchFormScreen(
                             listOf("대구광역시", "달서구").forEachIndexed { index, category ->
                                 SsaviceChip(
                                     text = category,
-                                    selected = form.selectedCategory == index,
+                                    selected = form.searchRange == index,
                                     onSelectedChange = { onSearchRangeChange(index) },
                                 )
                             }

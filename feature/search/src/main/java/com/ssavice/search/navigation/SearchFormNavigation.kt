@@ -1,13 +1,11 @@
 package com.ssavice.search.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.search.SearchForm
-import com.ssavice.search.SearchFormRoute
+import com.ssavice.search.SearchFormScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,17 +18,35 @@ data class SearchFormRoute(
     val sortBy: Int = 0,
 )
 
-fun NavController.navigateToSearchForm(navOptions: NavOptionsBuilder.() -> Unit = {},
-                                       onSearch: (SearchForm) -> Unit = {}) {
-    navigate(SearchFormRoute) {
+fun NavController.navigateToSearchForm(
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+    searchForm: SearchForm
+) {
+    navigate(
+        SearchFormRoute(
+            query = searchForm.query,
+            selectedCategory = searchForm.selectedCategory,
+            searchRange = searchForm.searchRange,
+            startPrice = searchForm.priceRange.first,
+            endPrice = searchForm.priceRange.last,
+            sortBy = searchForm.sortBy.value
+        )
+    ) {
         navOptions()
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+fun NavController.navigateToSearchForm(
+    navOptions: NavOptionsBuilder.() -> Unit = {}
+) {
+    navigate(SearchFormRoute()) {
+        navOptions()
+    }
+}
+
 fun NavGraphBuilder.searchFormScreen(onSearch: (SearchForm) -> Unit = {}) {
     composable<SearchFormRoute> {
-        SearchFormRoute(onSearch = onSearch)
+        SearchFormScreen(onSearch = onSearch)
     }
 }
 

@@ -19,6 +19,7 @@ android {
 
 dependencies {
     implementation(projects.feature.userMain)
+    implementation(projects.feature.search)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)

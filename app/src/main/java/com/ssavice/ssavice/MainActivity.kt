@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.ssavice.navigation.SsaviceNavHost
 import com.ssavice.user_main.UserMainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
-                    UserMainScreen(
+                    SsaviceNavHost(
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
