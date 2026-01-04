@@ -124,6 +124,16 @@ class AddServiceViewModel
                 )
         }
 
+        fun onDiscountRatioChanged(discount: Int) {
+            uiState.value =
+                uiState.value.copy(
+                    form =
+                        uiState.value.form.copy(
+                            discountRatio = discount,
+                        ),
+                )
+        }
+
         fun onSubmitButtonClicked() {
             val validateEmptyForm = checkEmptyField()
 
@@ -139,8 +149,16 @@ class AddServiceViewModel
                     form = validateInvalidTime.first,
                     submitState = uiState.value.submitState,
                 )
+            val validateInvalidateRecruit = checkInvalidateRecruit()
+            uiState.value =
+                uiState.value.copy(
+                    form = validateInvalidateRecruit.first,
+                    submitState = uiState.value.submitState,
+                )
 
-            if (!validateEmptyForm.second && !validateInvalidTime.second) submit()
+            if (!validateEmptyForm.second && !validateInvalidTime.second && !validateInvalidateRecruit.second) {
+                submit()
+            }
         }
 
         fun onDismissButtonClicked() {
@@ -293,6 +311,31 @@ class AddServiceViewModel
                 form =
                     form.copy(
                         endDateErrorMessage = "종료일은 시작일 이후여야 합니다",
+                    )
+                hasError = true
+            }
+            return Pair(form, hasError)
+        }
+
+        private fun checkInvalidateRecruit(): Pair<Form, Boolean> {
+            var form = uiState.value.form
+            var hasError = false
+
+            if ((uiState.value.form.minRecruit <= 0)) {
+                form =
+                    form.copy(
+                        minRecruitErrorMessage =
+                            "최소 모집인원은 0보다 커야합니다.",
+                    )
+                hasError = true
+            }
+            if ((uiState.value.form.minRecruit > uiState.value.form.maxRecruit)) {
+                form =
+                    form.copy(
+                        minRecruitErrorMessage =
+                            "최소 모집인원은 최대 모집인원 보다 작아야 합니다.",
+                        maxRecruitErrorMessage =
+                            "최소 모집인원은 최대 모집인원 보다 작아야 합니다.",
                     )
                 hasError = true
             }
