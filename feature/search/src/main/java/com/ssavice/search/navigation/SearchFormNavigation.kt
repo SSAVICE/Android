@@ -22,7 +22,7 @@ data class SearchFormRoute(
 
 fun NavController.navigateToSearchForm(
     navOptions: NavOptionsBuilder.() -> Unit = {},
-    searchForm: SearchForm
+    searchForm: SearchForm,
 ) {
     navigate(
         SearchFormRoute(
@@ -31,16 +31,14 @@ fun NavController.navigateToSearchForm(
             searchRange = searchForm.searchRange,
             startPrice = searchForm.priceRange.first,
             endPrice = searchForm.priceRange.last,
-            sortBy = searchForm.sortBy.value
-        )
+            sortBy = searchForm.sortBy.value,
+        ),
     ) {
         navOptions()
     }
 }
 
-fun NavController.navigateToSearchForm(
-    navOptions: NavOptionsBuilder.() -> Unit = {}
-) {
+fun NavController.navigateToSearchForm(navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(SearchFormRoute()) {
         navOptions()
     }

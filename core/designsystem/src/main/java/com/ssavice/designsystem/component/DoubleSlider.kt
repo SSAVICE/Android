@@ -23,7 +23,7 @@ fun DoubleSlider(
     modifier: Modifier = Modifier,
     values: IntRange,
     valueRange: IntRange = 0..100,
-    onValueChange: (IntRange) -> Unit
+    onValueChange: (IntRange) -> Unit,
 ) {
     val floatRange = valueRange.first.toFloat()..valueRange.last.toFloat()
     val sliderPosition = values.first.toFloat()..values.last.toFloat()
@@ -36,7 +36,7 @@ fun DoubleSlider(
             },
             valueRange = floatRange,
             startThumb = { SliderDefaults.Thumb(interactionSource = remember { MutableInteractionSource() }) },
-            endThumb = { SliderDefaults.Thumb(interactionSource = remember { MutableInteractionSource() }) }
+            endThumb = { SliderDefaults.Thumb(interactionSource = remember { MutableInteractionSource() }) },
         )
     }
 }
@@ -49,28 +49,35 @@ fun AdjustedSlider(
     valueRange: IntRange = 0..10_000_000,
     onValueChange: (IntRange) -> Unit,
 ) = with(DoubleSlider) {
-
     val totalRawSteps = SEG1_RAW_STEPS + SEG2_RAW_STEPS + SEG3_RAW_STEPS + SEG4_RAW_STEPS // 74
     val adjustedRange = (0f..totalRawSteps.toFloat())
 
-    fun displayToRaw(displayValue: Int): Float {
-        return when {
-            displayValue < 0 -> 0f
+    fun displayToRaw(displayValue: Int): Float =
+        when {
+            displayValue < 0 -> {
+                0f
+            }
+
             displayValue <= SEG1_MAX -> {
                 displayValue.toFloat() / SEG1_STEP
             }
+
             displayValue <= SEG2_MAX -> {
                 SEG1_RAW_STEPS.toFloat() + (displayValue - SEG1_MAX).toFloat() / SEG2_STEP
             }
+
             displayValue <= SEG3_MAX -> {
                 (SEG1_RAW_STEPS + SEG2_RAW_STEPS).toFloat() + (displayValue - SEG2_MAX).toFloat() / SEG3_STEP
             }
+
             displayValue <= SEG4_MAX -> {
                 (SEG1_RAW_STEPS + SEG2_RAW_STEPS + SEG3_RAW_STEPS).toFloat() + (displayValue - SEG3_MAX).toFloat() / SEG4_STEP
             }
-            else -> totalRawSteps.toFloat()
+
+            else -> {
+                totalRawSteps.toFloat()
+            }
         }
-    }
 
     fun rawToDisplay(rawValue: Float): Int {
         val rawStep = rawValue.roundToInt()
@@ -78,12 +85,15 @@ fun AdjustedSlider(
             rawStep <= SEG1_RAW_STEPS -> {
                 rawStep * SEG1_STEP
             }
+
             rawStep <= SEG1_RAW_STEPS + SEG2_RAW_STEPS -> {
                 SEG1_MAX + ((rawStep - SEG1_RAW_STEPS) * SEG2_STEP)
             }
+
             rawStep <= SEG1_RAW_STEPS + SEG2_RAW_STEPS + SEG3_RAW_STEPS -> {
                 SEG2_MAX + ((rawStep - (SEG1_RAW_STEPS + SEG2_RAW_STEPS)) * SEG3_STEP)
             }
+
             else -> {
                 val calculated = SEG3_MAX + ((rawStep - (SEG1_RAW_STEPS + SEG2_RAW_STEPS + SEG3_RAW_STEPS)) * SEG4_STEP)
                 minOf(calculated, SEG4_MAX)
@@ -97,15 +107,16 @@ fun AdjustedSlider(
         RangeSlider(
             value = adjustedValues,
             onValueChange = { newRawRange ->
-                val newDisplayRange = IntRange(
-                    rawToDisplay(newRawRange.start),
-                    rawToDisplay(newRawRange.endInclusive)
-                )
+                val newDisplayRange =
+                    IntRange(
+                        rawToDisplay(newRawRange.start),
+                        rawToDisplay(newRawRange.endInclusive),
+                    )
                 if (newDisplayRange != values) {
                     onValueChange(newDisplayRange)
                 }
             },
-            valueRange = adjustedRange
+            valueRange = adjustedRange,
         )
     }
 }
@@ -117,7 +128,7 @@ private fun DoubleSliderPreview() {
     DoubleSlider(
         valueRange = 0..100,
         values = values,
-        onValueChange = { values = it }
+        onValueChange = { values = it },
     )
 }
 
@@ -125,17 +136,16 @@ private fun DoubleSliderPreview() {
 @Composable
 private fun AdjustedSliderPreview() {
     Column(modifier = Modifier.padding(15.dp)) {
-
         var sliderValue2 by remember { mutableStateOf(500..100000) }
         Text("Value: (${sliderValue2.first}, ${sliderValue2.last})")
         AdjustedSlider(
             values = sliderValue2,
-            onValueChange = { sliderValue2 = it }
+            onValueChange = { sliderValue2 = it },
         )
     }
 }
 
-object DoubleSlider{
+object DoubleSlider {
     const val SEG1_MAX = 10_000
     const val SEG1_STEP = 500
     const val SEG1_RAW_STEPS = SEG1_MAX / SEG1_STEP // 20

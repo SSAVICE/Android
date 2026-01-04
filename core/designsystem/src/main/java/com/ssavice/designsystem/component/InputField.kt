@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
@@ -14,8 +13,6 @@ import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.insert
-import androidx.compose.foundation.text.input.maxLength
-import androidx.compose.foundation.text.input.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -47,7 +44,7 @@ fun SsaviceInputField(
     outputTransformation: OutputTransformation? = null,
     isError: Boolean = false, // New parameter
     errorMessage: String? = null, // New parameter
-    onSubmit: () -> Unit = {}
+    onSubmit: () -> Unit = {},
 ) {
     LabeledComponent(
         labelText = labelText,
@@ -211,11 +208,11 @@ object InputTransformations {
             override fun TextFieldBuffer.transformInput() {
                 val formatted =
                     (
-                            asCharSequence()
-                                .filter { it.isDigit() }
-                                .toString()
-                                .toLongOrNull() ?: 0L
-                            ).toString()
+                        asCharSequence()
+                            .filter { it.isDigit() }
+                            .toString()
+                            .toLongOrNull() ?: 0L
+                    ).toString()
                 if (formatted != asCharSequence().toString()) {
                     replace(0, length, formatted)
                 }

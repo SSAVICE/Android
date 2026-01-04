@@ -20,7 +20,7 @@ data class SearchResultRoute(
 
 fun NavController.navigateToSearchResult(
     navOptions: NavOptionsBuilder.() -> Unit = {},
-    searchQuery: SearchQuery
+    searchQuery: SearchQuery,
 ) {
     navigate(
         SearchResultRoute(
@@ -29,8 +29,8 @@ fun NavController.navigateToSearchResult(
             searchRange = searchQuery.searchRange,
             startPrice = searchQuery.minPrice,
             endPrice = searchQuery.maxPrice,
-            sortBy = searchQuery.sortBy.value
-        )
+            sortBy = searchQuery.sortBy.value,
+        ),
     ) {
         navOptions()
     }

@@ -14,7 +14,7 @@ data class SearchResultUiState(
             searchRange = 1,
             minPrice = 0,
             maxPrice = Int.MAX_VALUE,
-            sortBy = SortingOrder.POPULARITY
+            sortBy = SortingOrder.POPULARITY,
         ),
-    val searchCount: Int = 10
+    val searchCount: Int = 10,
 )

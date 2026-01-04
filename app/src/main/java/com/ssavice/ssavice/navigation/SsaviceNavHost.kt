@@ -25,7 +25,7 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
         mainScreen(
             onSearch = {
                 navController.navigateToSearchForm()
-            }
+            },
         )
         searchFormScreen(
             onSearch = { searchForm ->
@@ -35,33 +35,37 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
                             inclusive = false
                         }
                     },
-                    searchQuery = SearchQuery(
-                        category = Category.entries.getOrElse(
-                            searchForm.selectedCategory,
-                            { Category.entries[0] }),
-                        query = searchForm.query,
-                        minPrice = searchForm.priceRange.first,
-                        maxPrice = searchForm.priceRange.last,
-                        searchRange = searchForm.searchRange,
-                        sortBy = searchForm.sortBy
-                    )
+                    searchQuery =
+                        SearchQuery(
+                            category =
+                                Category.entries.getOrElse(
+                                    searchForm.selectedCategory,
+                                    { Category.entries[0] },
+                                ),
+                            query = searchForm.query,
+                            minPrice = searchForm.priceRange.first,
+                            maxPrice = searchForm.priceRange.last,
+                            searchRange = searchForm.searchRange,
+                            sortBy = searchForm.sortBy,
+                        ),
                 )
-            }
+            },
         )
 
         searchResultScreen(
             onSearchBarClicked = { query ->
                 navController.navigateToSearchForm(
-                    searchForm = SearchForm(
-                        query = query.query,
-                        categories = Category.entries.map { it.value },
-                        selectedCategory = query.category.index,
-                        searchRange = query.searchRange,
-                        priceRange = query.minPrice..query.maxPrice,
-                        sortBy = query.sortBy
-                    )
+                    searchForm =
+                        SearchForm(
+                            query = query.query,
+                            categories = Category.entries.map { it.value },
+                            selectedCategory = query.category.index,
+                            searchRange = query.searchRange,
+                            priceRange = query.minPrice..query.maxPrice,
+                            sortBy = query.sortBy,
+                        ),
                 )
-            }
+            },
         )
     }
 }

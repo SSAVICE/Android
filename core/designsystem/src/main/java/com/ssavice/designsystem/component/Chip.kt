@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.theme.SsaviceLightGray
 import com.ssavice.designsystem.theme.SsaviceTheme
@@ -46,36 +41,44 @@ fun SsaviceChip(
     innerPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
 ) {
     // FilterChip의 색상 로직을 그대로 가져옵니다.
-    val containerColor = when {
-        !enabled && selected -> MaterialTheme.colorScheme.onBackground.copy(alpha = SsaviceChipDefaults.DISABLED_CHIP_CONTAINER_ALPHA)
-        selected -> MaterialTheme.colorScheme.primary
-        else -> Color.Transparent
-    }
+    val containerColor =
+        when {
+            !enabled && selected -> MaterialTheme.colorScheme.onBackground.copy(alpha = SsaviceChipDefaults.DISABLED_CHIP_CONTAINER_ALPHA)
+            selected -> MaterialTheme.colorScheme.primary
+            else -> Color.Transparent
+        }
     val labelColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
 
     // FilterChip의 테두리 로직을 그대로 가져옵니다.
-    val border = when {
-        !enabled -> BorderStroke(SsaviceChipDefaults.ChipBorderWidth, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
-        selected -> null // 선택 시 테두리 없음
-        else -> BorderStroke(SsaviceChipDefaults.ChipBorderWidth, SsaviceLightGray)
-    }
+    val border =
+        when {
+            !enabled -> BorderStroke(SsaviceChipDefaults.ChipBorderWidth, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
+
+            selected -> null
+
+            // 선택 시 테두리 없음
+            else -> BorderStroke(SsaviceChipDefaults.ChipBorderWidth, SsaviceLightGray)
+        }
 
     // 1. 핵심: FilterChip 대신 Surface 사용
     Surface(
-        modifier = modifier
-            .clickable(
-                enabled = enabled,
-                onClick = { onSelectedChange(selected) },
-            ),
+        modifier =
+            modifier
+                .clickable(
+                    enabled = enabled,
+                    onClick = { onSelectedChange(selected) },
+                ),
         shape = RoundedCornerShape(6.dp),
         color = containerColor,
         border = border,
     ) {
         Box(
-            modifier = Modifier
-                .defaultMinSize(minWidth = 32.dp)
-                .padding(innerPadding), // <-- 원하는 패딩 값으로 조절!
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .defaultMinSize(minWidth = 32.dp)
+                    .padding(innerPadding),
+            // <-- 원하는 패딩 값으로 조절!
+            contentAlignment = Alignment.Center,
         ) {
             ProvideTextStyle(value = MaterialTheme.typography.bodySmall) {
                 Text(
@@ -107,7 +110,7 @@ private fun ChipPreviewList() {
         remember {
             mutableStateOf(
                 List(5) { Pair(it, "Item $it") }.plus(
-                    List(2) { Pair(it+5, "짧$it") },
+                    List(2) { Pair(it + 5, "짧$it") },
                 ),
             )
         }

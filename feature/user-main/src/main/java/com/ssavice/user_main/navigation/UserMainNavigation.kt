@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 object MainRoute
 
-fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {},) {
+fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(MainRoute) {
         navOptions()
     }

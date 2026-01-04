@@ -47,7 +47,6 @@ class SearchResultViewModel
         val uiState: StateFlow<SearchResultUiState> = _uiState
 
         fun newSearch(searchQuery: SearchQuery) {
-
             _uiState.value =
                 _uiState.value.copy(
                     searchQuery = searchQuery,
@@ -66,7 +65,7 @@ class SearchResultViewModel
                     serviceRepository
                         .searchService(
                             query =
-                                com.ssavice.model.service.SearchQuery(
+                                SearchQuery(
                                     category = query.category,
                                     query = query.query,
                                     region1 = query.region1,
@@ -94,7 +93,7 @@ class SearchResultViewModel
             serviceRepository
                 .searchService(
                     query =
-                        com.ssavice.model.service.SearchQuery(
+                        SearchQuery(
                             category = query.category,
                             query = query.query,
                             region1 = query.region1,

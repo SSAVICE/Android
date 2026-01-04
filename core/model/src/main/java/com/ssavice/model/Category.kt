@@ -2,7 +2,7 @@ package com.ssavice.model
 
 enum class Category(
     val value: String,
-    val index: Int
+    val index: Int,
 ) {
     HEALTH("건강", 0),
     SHOPPING("쇼핑", 1),

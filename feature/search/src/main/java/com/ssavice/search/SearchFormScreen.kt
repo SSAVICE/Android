@@ -59,7 +59,7 @@ import kotlin.math.min
 fun SearchFormScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchFormViewModel = hiltViewModel(),
-    onSearch: (SearchForm) -> Unit = {}
+    onSearch: (SearchForm) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -79,8 +79,9 @@ fun SearchFormScreen(
     }
 
     SearchFormScreen(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.background),
+        modifier =
+            modifier
+                .background(MaterialTheme.colorScheme.background),
         form = state.form,
         query = query,
         onCategoryChange = viewModel::onCategorySelect,
@@ -90,10 +91,9 @@ fun SearchFormScreen(
         onSearchClick = {
             onSearch(state.form)
         },
-        focusRequester = focusRequester
+        focusRequester = focusRequester,
     )
 }
-
 
 @Composable
 fun SearchFormScreen(
@@ -105,69 +105,79 @@ fun SearchFormScreen(
     onPriceRangeChange: (IntRange) -> Unit = {},
     onSortByChange: (Int) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
-    focusRequester: FocusRequester? = null
+    focusRequester: FocusRequester? = null,
 ) {
     Column(modifier = modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             SsaviceInputField(
                 state = query,
-                modifier = if (focusRequester != null) Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester) else Modifier
-                    .weight(1f),
+                modifier =
+                    if (focusRequester != null) {
+                        Modifier
+                            .weight(1f)
+                            .focusRequester(focusRequester)
+                    } else {
+                        Modifier
+                            .weight(1f)
+                    },
                 placeholderText = "서비스, 태그 검색 ...",
                 onSubmit = {
                     onSearchClick(query.text.toString())
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             )
             Spacer(modifier = Modifier.width(2.dp))
             IconButton(
-                onClick = { onSearchClick(query.text.toString()) }
+                onClick = { onSearchClick(query.text.toString()) },
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = "Search",
                 )
             }
         }
         HorizontalDivider(
-            modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .padding(top = 10.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 5.dp)
+                    .padding(top = 10.dp),
         )
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState()),
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(5.dp),
-                modifier = Modifier
-                    .padding(horizontal = 15.dp, vertical = 15.dp)
-                    .fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                modifier =
+                    Modifier
+                        .padding(horizontal = 15.dp, vertical = 15.dp)
+                        .fillMaxWidth(),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
-
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp, horizontal = 15.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 20.dp, horizontal = 15.dp),
                 ) {
-
                     InnerFieldWithLabel("카테고리") {
                         FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth(),
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
-                            verticalArrangement = spacedBy(10.dp)
+                            verticalArrangement = spacedBy(10.dp),
                         ) {
                             form.categories.forEachIndexed { index, category ->
                                 SsaviceChip(
@@ -181,10 +191,11 @@ fun SearchFormScreen(
 
                     InnerFieldWithLabel("검색 범위") {
                         FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth(),
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
-                            verticalArrangement = spacedBy(10.dp)
+                            verticalArrangement = spacedBy(10.dp),
                         ) {
                             listOf("대구광역시", "달서구").forEachIndexed { index, category ->
                                 SsaviceChip(
@@ -199,7 +210,7 @@ fun SearchFormScreen(
                     InnerFieldWithLabel("가격") {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.width(200.dp)
+                            modifier = Modifier.width(200.dp),
                         ) {
                             Text(text = "최소", style = MaterialTheme.typography.labelMedium)
                             Spacer(modifier = Modifier.width(10.dp))
@@ -208,15 +219,16 @@ fun SearchFormScreen(
                                 maxLines = 1,
                                 modifier = Modifier.weight(1f),
                                 onValueChange = {
-                                    val new = min(
+                                    val new =
                                         min(
-                                            max(it.filter { it.isDigit() }.toIntOrNull() ?: 0, 0),
-                                            10_000_000
-                                        ),
-                                        form.priceRange.last
-                                    )
+                                            min(
+                                                max(it.filter { it.isDigit() }.toIntOrNull() ?: 0, 0),
+                                                10_000_000,
+                                            ),
+                                            form.priceRange.last,
+                                        )
                                     onPriceRangeChange(new..form.priceRange.last)
-                                }
+                                },
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(text = "원", style = MaterialTheme.typography.bodyMedium)
@@ -224,8 +236,9 @@ fun SearchFormScreen(
                         Spacer(modifier = Modifier.padding(vertical = 5.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .width(200.dp),
+                            modifier =
+                                Modifier
+                                    .width(200.dp),
                         ) {
                             Text(text = "최대", style = MaterialTheme.typography.labelMedium)
                             Spacer(modifier = Modifier.width(10.dp))
@@ -234,15 +247,16 @@ fun SearchFormScreen(
                                 maxLines = 1,
                                 modifier = Modifier.weight(1f),
                                 onValueChange = {
-                                    val new = max(
-                                        min(
-                                            max(it.filter { it.isDigit() }.toIntOrNull() ?: 0, 0),
-                                            10_000_000
-                                        ),
-                                        form.priceRange.first
-                                    )
+                                    val new =
+                                        max(
+                                            min(
+                                                max(it.filter { it.isDigit() }.toIntOrNull() ?: 0, 0),
+                                                10_000_000,
+                                            ),
+                                            form.priceRange.first,
+                                        )
                                     onPriceRangeChange(form.priceRange.first..new)
-                                }
+                                },
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(text = "원", style = MaterialTheme.typography.bodyMedium)
@@ -259,25 +273,25 @@ fun SearchFormScreen(
 
                     InnerFieldWithLabel("정렬") {
                         Column(
-                            verticalArrangement = spacedBy(5.dp)
+                            verticalArrangement = spacedBy(5.dp),
                         ) {
                             listOf(
                                 "인기순",
                                 "높은 가격순",
                                 "낮은 가격순",
                                 "할인율순",
-                                "마감 임박순"
+                                "마감 임박순",
                             ).forEachIndexed { i, s ->
                                 SsaviceChip(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp),
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 8.dp),
                                     text = s,
                                     selected = form.sortBy.value == i,
                                     onSelectedChange = { onSortByChange(i) },
-                                    innerPadding = PaddingValues(vertical = 10.dp)
+                                    innerPadding = PaddingValues(vertical = 10.dp),
                                 )
-
                             }
                         }
                     }
@@ -287,22 +301,22 @@ fun SearchFormScreen(
     }
 }
 
-private fun formatPrice(price: Int): String {
-    return String.format("%,d", price)
-}
+private fun formatPrice(price: Int): String = String.format("%,d", price)
 
 @Composable
-private fun InnerFieldWithLabel(label: String, content: @Composable () -> Unit) {
+private fun InnerFieldWithLabel(
+    label: String,
+    content: @Composable () -> Unit,
+) {
     Text(
         modifier = Modifier.padding(bottom = 12.dp),
         text = label,
         style = MaterialTheme.typography.titleSmall,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.SemiBold,
     )
     content()
     Spacer(modifier = Modifier.padding(vertical = 20.dp))
 }
-
 
 @Preview(showSystemUi = false)
 @Composable
@@ -312,18 +326,20 @@ fun SearchFormPreview() {
     SsaviceTheme {
         SsaviceBackground(modifier = Modifier.size(540.dp, 720.dp)) {
             SearchFormScreen(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(),
-                form = SearchForm(
-                    query = query.text.toString(),
-                    categories = listOf("전체", "운동/피트니스", "교육/학습", "쇼핑/공동구매", "생활/취미"),
-                    selectedCategory = 0,
-                    searchRange = 1,
-                    priceRange = priceRange,
-                    sortBy = SortingOrder.POPULARITY,
-                ),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(),
+                form =
+                    SearchForm(
+                        query = query.text.toString(),
+                        categories = listOf("전체", "운동/피트니스", "교육/학습", "쇼핑/공동구매", "생활/취미"),
+                        selectedCategory = 0,
+                        searchRange = 1,
+                        priceRange = priceRange,
+                        sortBy = SortingOrder.POPULARITY,
+                    ),
                 query = query,
                 onSearchClick = {
                     query.clearText()

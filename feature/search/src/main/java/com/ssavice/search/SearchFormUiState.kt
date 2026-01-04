@@ -3,7 +3,7 @@ package com.ssavice.search
 import com.ssavice.model.service.SortingOrder
 
 data class SearchFormUiState(
-    val form: SearchForm
+    val form: SearchForm,
 )
 
 data class SearchForm(

@@ -15,7 +15,6 @@ import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.ui.searchresult.SearchResultScreen
 
-
 @Composable
 fun SearchResultScreen(
     modifier: Modifier = Modifier,
