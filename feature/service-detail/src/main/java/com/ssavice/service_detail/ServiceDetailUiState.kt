@@ -22,7 +22,7 @@ data class ServiceDetail(
     val deadLine: String,
     val startDate: String,
     val endDate: String,
-    val imageUrl: String,
+    val imageUrls: List<String>,
     val basePrice: Int,
     val discountedPrice: Int,
     val discountRatio: Int,

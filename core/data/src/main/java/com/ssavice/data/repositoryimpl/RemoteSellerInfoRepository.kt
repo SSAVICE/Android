@@ -35,7 +35,8 @@ internal class RemoteSellerInfoRepository
                 )
             }
 
-    override suspend fun getSellerSummary(id: Long): Result<SellerSummary> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
+        processResponseOnResponseData(
+            companyRetrofitService.getCompanySummary(id),
+        ).map { it.toModel() }
 }

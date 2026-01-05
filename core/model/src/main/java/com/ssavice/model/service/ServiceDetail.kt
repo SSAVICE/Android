@@ -4,7 +4,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
 
 data class ServiceDetail(
-    val imageUrl: String,
+    val imageUrls: List<String>,
     val id: Long,
     val category: String,
     val companyId: Long,

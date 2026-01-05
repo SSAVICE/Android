@@ -83,7 +83,7 @@ class ServiceDetailViewModel @Inject constructor(
                             deadLine = it.deadLine.toString(),
                             startDate = it.startDate.toSimpleString(),
                             endDate = it.endDate.toSimpleString(),
-                            imageUrl = it.imageUrl,
+                            imageUrls = it.imageUrls,
                             basePrice = it.basePrice,
                             discountedPrice = it.discountedPrice,
                             discountRatio = it.discountRatio,

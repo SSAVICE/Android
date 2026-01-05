@@ -227,7 +227,7 @@ class DemoServiceRepository
                 deadLine = Date.now().addDay(day),
                 startDate = Date.now().addDay(day + (1..10).random()),
                 endDate = Date.now().addDay(day + (1..10).random()),
-                imageUrl = "https://picsum.photos/id/$id/400",
+                imageUrls = List(3){"https://picsum.photos/id/${id * (it + 1)}/750/400"},
                 basePrice = price,
                 discountedPrice = discountedPrice,
                 discountRatio = discount,
