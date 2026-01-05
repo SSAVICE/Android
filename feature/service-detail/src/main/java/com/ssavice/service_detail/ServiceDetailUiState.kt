@@ -1,5 +1,6 @@
 package com.ssavice.service_detail
 
+
 sealed interface InfoState {
     object Waiting: InfoState
 
@@ -44,5 +45,13 @@ data class SellerSummary(
     val imageUrl: String,
     val rate: Double,
     val rateCount: Int,
-    val reviews: List<String>
+    val reviews: List<Review>
+)
+
+data class Review(
+    val userName: String,
+    val content: String,
+    val rating: Int,
+    val createdAt: String,
+    val serviceName: String
 )

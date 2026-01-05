@@ -11,6 +11,8 @@ import com.ssavice.search.navigation.navigateToSearchForm
 import com.ssavice.search.navigation.searchFormScreen
 import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
+import com.ssavice.service_detail.navigation.navigateToServiceDetail
+import com.ssavice.service_detail.navigation.serviceDetailScreen
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
 
@@ -66,6 +68,13 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
                         ),
                 )
             },
+            onServiceClicked = { serviceId ->
+                navController.navigateToServiceDetail(serviceId = serviceId)
+            },
+        )
+
+        serviceDetailScreen(
+
         )
     }
 }

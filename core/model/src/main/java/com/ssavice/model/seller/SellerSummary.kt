@@ -1,5 +1,7 @@
 package com.ssavice.model.seller
 
+import com.ssavice.model.Review
+
 data class SellerSummary(
     val companyId: Long,
     val companyName: String,
@@ -9,5 +11,5 @@ data class SellerSummary(
     val companyImageUrl: String?,
     val companyRate: Double,
     val rateCount: Int,
-    val review: List<String>
+    val review: List<Review>
 )

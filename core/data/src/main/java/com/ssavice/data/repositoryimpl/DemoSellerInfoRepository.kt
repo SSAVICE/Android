@@ -3,6 +3,7 @@ package com.ssavice.data.repositoryimpl
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
+import com.ssavice.model.Review
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerSummary
@@ -82,7 +83,11 @@ internal class DemoSellerInfoRepository
                 companyImageUrl = "https://picsum.photos/id/$id/400",
                 companyRate = 4.5,
                 rateCount = 100,
-                review = listOf("너무 좋아요", "사장님이 친절해요 \n서비스 퀄리티도 좋아요", "별로임"),
+                review = listOf(
+                    Review(userName = "권*찬", comment = "너무 좋아요", serviceName = "요가 클래스", createdAt = Date.now(), rating = 4),
+                    Review(userName = "장*욱", comment = "사장님이 친절해요 \n서비스 퀄리티도 좋아요", serviceName = "요가 클래스", createdAt = Date.now(), rating = 5),
+                    Review(userName = "추*훈", comment = "별로임", serviceName = "요가 클래스", createdAt = Date.now(), rating = 2),
+                )
             ),
         )
     }

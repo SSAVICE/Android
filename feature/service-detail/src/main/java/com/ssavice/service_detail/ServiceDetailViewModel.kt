@@ -5,12 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.service_detail.navigation.ServiceDetailRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,28 +17,10 @@ class ServiceDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val serviceRepository: ServiceRepository,
     private val sellerRepository: SellerInfoRepository
-): ViewModel() {
+) : ViewModel() {
     private val _sellerId = MutableStateFlow(-1L)
-    private val sellerId = _sellerId
-        .map {
-            if(it != -1L) {
-                loadSeller(it)
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5000),
-            initialValue = -1
-        )
-    private val serviceId = savedStateHandle.getStateFlow("serviceId", -1L)
-        .map {
-            if(it != -1L) {
-                loadSeller(it)
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5000),
-            initialValue = -1
-        )
+    val sellerId = _sellerId
+    val serviceId = savedStateHandle.getStateFlow(ServiceDetailRouteContract.ID, -1L)
     private val _uiState = MutableStateFlow(
         ServiceDetailUiState(
             serviceInfoState = InfoState.Waiting,
@@ -50,7 +30,7 @@ class ServiceDetailViewModel @Inject constructor(
 
     val uiState = _uiState
 
-    private fun loadSeller(id: Long) {
+    fun loadSeller(id: Long) {
         _uiState.value = _uiState.value.copy(
             sellerInfoState = InfoState.Loading
         )
@@ -66,10 +46,18 @@ class ServiceDetailViewModel @Inject constructor(
                             address = it.address,
                             description = it.description,
                             phoneNumber = it.phoneNumber,
-                            imageUrl = it.companyImageUrl?:"",
+                            imageUrl = it.companyImageUrl ?: "",
                             rate = it.companyRate,
                             rateCount = it.rateCount,
-                            reviews = it.review
+                            reviews = it.review.map { review ->
+                                Review(
+                                    userName = review.userName,
+                                    content = review.comment,
+                                    rating = review.rating,
+                                    createdAt = review.createdAt.toSimpleString(),
+                                    serviceName = review.serviceName
+                                )
+                            }
                         )
                     )
                 },
@@ -82,7 +70,7 @@ class ServiceDetailViewModel @Inject constructor(
         }
     }
 
-    private fun loadService(id: Long) {
+    fun loadService(id: Long) {
         _uiState.value = _uiState.value.copy(
             serviceInfoState = InfoState.Loading
         )
@@ -113,7 +101,8 @@ class ServiceDetailViewModel @Inject constructor(
                 },
                 onFailure = {
                     _uiState.value = _uiState.value.copy(
-                        serviceInfoState = InfoState.Error(it))
+                        serviceInfoState = InfoState.Error(it)
+                    )
                 })
         }
     }
