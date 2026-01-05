@@ -5,6 +5,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerSummary
 import com.ssavice.model.service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -68,4 +69,21 @@ internal class DemoSellerInfoRepository
                 )
             }
         }
+
+    override suspend fun getSellerSummary(id: Long): Result<SellerSummary> {
+        delay(500)
+        return Result.success(
+            SellerSummary(
+                companyId = id,
+                companyName = "주식회사 KSC",
+                address = "서울시 강남구 역삼동",
+                description = "최고의 서비스를 자랑하는 대한민국 명장 KSC입니다.\n전화 문의 운영 시간: 09:00 ~ 18:00\n언제든 편히 상담주세요.",
+                phoneNumber = "010-1234-5678",
+                companyImageUrl = "https://picsum.photos/id/$id/400",
+                companyRate = 4.5,
+                rateCount = 100,
+                review = listOf("너무 좋아요", "사장님이 친절해요 \n서비스 퀄리티도 좋아요", "별로임"),
+            ),
+        )
     }
+}

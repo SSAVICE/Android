@@ -46,8 +46,15 @@ data class Date(
 
     override fun toString(): String {
         val timeStamp = this.toTimeStamp().timeInMillis
-        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US)
-        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.KOREAN)
+        sdf.timeZone = TimeZone.getTimeZone("KST")
+        return sdf.format(java.util.Date(timeStamp))
+    }
+
+    fun toSimpleString(): String {
+        val timeStamp = this.toTimeStamp().timeInMillis
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        sdf.timeZone = TimeZone.getTimeZone("KST")
         return sdf.format(java.util.Date(timeStamp))
     }
 
