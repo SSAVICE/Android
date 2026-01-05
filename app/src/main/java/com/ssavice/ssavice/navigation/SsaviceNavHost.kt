@@ -28,6 +28,9 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             onSearch = {
                 navController.navigateToSearchForm()
             },
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it)
+            }
         )
         searchFormScreen(
             onSearch = { searchForm ->
