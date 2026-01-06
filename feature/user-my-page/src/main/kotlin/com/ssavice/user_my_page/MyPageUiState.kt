@@ -3,8 +3,8 @@ package com.ssavice.user_my_page
 data class MyPageUiState(
     val profile: ProfileState? = null,
     val participation: ParticipationState? = null,
-    val profileState: MyPageState = MyPageState.Loading,
-    val participationState: MyPageState = MyPageState.Loading,
+    val profileState: MyPageState = MyPageState.Waiting,
+    val participationState: MyPageState = MyPageState.Waiting,
 )
 
 data class ProfileState(
@@ -22,6 +22,8 @@ data class ParticipationState(
 )
 
 sealed interface MyPageState {
+    object Waiting: MyPageState
+
     object Loading : MyPageState
 
     object Done : MyPageState
