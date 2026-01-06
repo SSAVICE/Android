@@ -28,7 +28,7 @@ fun SearchResultScreen(
         modifier = modifier,
         state = state.value,
         onSearchBarClicked = onSearchBarClicked,
-        onServiceClicked = onServiceClicked
+        onServiceClicked = onServiceClicked,
     )
 }
 
@@ -58,7 +58,7 @@ fun SearchResultScreen(
         SearchResultScreen(
             modifier = Modifier.weight(1f),
             query = state.searchQuery,
-            onServiceClick = onServiceClicked
+            onServiceClick = onServiceClicked,
         )
     }
 }

@@ -16,12 +16,14 @@ fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.mainScreen(onSearch: () -> Unit = {},
-                               onServiceClick: (Long) -> Unit = {}) {
+fun NavGraphBuilder.mainScreen(
+    onSearch: () -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
+) {
     composable<MainRoute> {
         UserMainScreen(
             onSearchBarClicked = onSearch,
-            onServiceClick = onServiceClick
+            onServiceClick = onServiceClick,
         )
     }
 }

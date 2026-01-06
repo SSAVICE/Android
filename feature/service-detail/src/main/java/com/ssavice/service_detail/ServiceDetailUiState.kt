@@ -1,21 +1,22 @@
 package com.ssavice.service_detail
 
-
 sealed interface InfoState {
-    object Waiting: InfoState
+    object Waiting : InfoState
 
-    object Loading: InfoState
+    object Loading : InfoState
 
-    object Done: InfoState
+    object Done : InfoState
 
-    data class Error(val message: Throwable): InfoState
+    data class Error(
+        val message: Throwable,
+    ) : InfoState
 }
 
 data class ServiceDetailUiState(
     val serviceInfoState: InfoState = InfoState.Waiting,
     val sellerInfoState: InfoState = InfoState.Waiting,
     val service: ServiceDetail? = null,
-    val seller: SellerSummary? = null
+    val seller: SellerSummary? = null,
 )
 
 data class ServiceDetail(
@@ -45,7 +46,7 @@ data class SellerSummary(
     val imageUrl: String,
     val rate: Double,
     val rateCount: Int,
-    val reviews: List<Review>
+    val reviews: List<Review>,
 )
 
 data class Review(
@@ -53,5 +54,5 @@ data class Review(
     val content: String,
     val rating: Int,
     val createdAt: String,
-    val serviceName: String
+    val serviceName: String,
 )

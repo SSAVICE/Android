@@ -34,7 +34,7 @@ fun UserMainScreen(
     modifier: Modifier = Modifier,
     viewModel: UserMainViewModel = hiltViewModel(),
     onSearchBarClicked: () -> Unit = {},
-    onServiceClick: (Long) -> Unit = {}
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     UserMainScreen(
@@ -42,7 +42,7 @@ fun UserMainScreen(
         state = state.value,
         onCategoryClicked = viewModel::onCategorySelect,
         onSearchBarClicked = onSearchBarClicked,
-        onServiceClick = onServiceClick
+        onServiceClick = onServiceClick,
     )
 }
 
@@ -52,7 +52,7 @@ fun UserMainScreen(
     state: UserMainUiState,
     onSearchBarClicked: () -> Unit = {},
     onCategoryClicked: (Int) -> Unit = {},
-    onServiceClick: (Long) -> Unit = {}
+    onServiceClick: (Long) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         OutlinedTextFieldButton(
@@ -73,7 +73,7 @@ fun UserMainScreen(
         SearchResultScreen(
             modifier = Modifier.weight(1f),
             query = state.defaultSearchQuery,
-            onServiceClick = onServiceClick
+            onServiceClick = onServiceClick,
         ) {
             item {
                 CategoryPicker(

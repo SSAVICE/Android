@@ -5,5 +5,5 @@ data class Review(
     val comment: String,
     val serviceName: String,
     val createdAt: Date,
-    val rating: Int
+    val rating: Int,
 )

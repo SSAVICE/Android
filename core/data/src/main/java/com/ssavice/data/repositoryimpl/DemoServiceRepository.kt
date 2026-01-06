@@ -213,42 +213,43 @@ class DemoServiceRepository
                 startIndex = startIndex,
             )
 
-    override suspend fun getService(id: Long): Result<ServiceDetail> {
-        delay(300L)
-        val discount = (0..10).random() * 5
-        val price = generateRandomPrice(10000, 100000)
-        val discountedPrice = price - (price * discount / 100)
+        override suspend fun getService(id: Long): Result<ServiceDetail> {
+            delay(300L)
+            val discount = (0..10).random() * 5
+            val price = generateRandomPrice(10000, 100000)
+            val discountedPrice = price - (price * discount / 100)
 
-        val day = (1..10).random()
-        return Result.success(
-            ServiceDetail(
-                id = id,
-                name = generateRandomName(),
-                deadLine = Date.now().addDay(day),
-                startDate = Date.now().addDay(day + (1..10).random()),
-                endDate = Date.now().addDay(day + (1..10).random()),
-                imageUrls = List(3){"https://picsum.photos/id/${id * (it + 1)}/750/400"},
-                basePrice = price,
-                discountedPrice = discountedPrice,
-                discountRatio = discount,
-                minimumMember = 10,
-                maximumMember = 25,
-                currentMember = 5,
-                category = "카테고리",
-                tag = generateRandomTag(),
-                companyId = (0..100).random().toLong(),
-                description = "서비스 설명란입니다.",
-                liked = false,
-                status = "STATUS",
-                createdAt = Date.now(),
-                regionInfo = RegionInfo(
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    address = "서울특별시 강남구 역삼동",
-                    detailAddress = "",
-                    postCode = "",
+            val day = (1..10).random()
+            return Result.success(
+                ServiceDetail(
+                    id = id,
+                    name = generateRandomName(),
+                    deadLine = Date.now().addDay(day),
+                    startDate = Date.now().addDay(day + (1..10).random()),
+                    endDate = Date.now().addDay(day + (1..10).random()),
+                    imageUrls = List(3) { "https://picsum.photos/id/${id * (it + 1)}/750/400" },
+                    basePrice = price,
+                    discountedPrice = discountedPrice,
+                    discountRatio = discount,
+                    minimumMember = 10,
+                    maximumMember = 25,
+                    currentMember = 5,
+                    category = "카테고리",
+                    tag = generateRandomTag(),
+                    companyId = (0..100).random().toLong(),
+                    description = "서비스 설명란입니다.",
+                    liked = false,
+                    status = "STATUS",
+                    createdAt = Date.now(),
+                    regionInfo =
+                        RegionInfo(
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            address = "서울특별시 강남구 역삼동",
+                            detailAddress = "",
+                            postCode = "",
+                        ),
                 ),
             )
-        )
+        }
     }
-}

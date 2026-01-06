@@ -64,7 +64,7 @@ fun AsyncImageScrollList(
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomCenter,
     ) {
         // 1. 가로 스크롤이 가능한 이미지 페이저
         HorizontalPager(
@@ -73,31 +73,33 @@ fun AsyncImageScrollList(
             contentPadding = PaddingValues(horizontal = 16.dp), // 좌우에 다음/이전 이미지가 살짝 보이도록 패딩 설정
         ) { pageIndex ->
             val pageOffset = (pagerState.currentPage - pageIndex) + pagerState.currentPageOffsetFraction
-            val alpha = lerp(
-                start = 0.5f, // 좌우 이미지의 최소 투명도
-                stop = 1f,    // 중앙 이미지의 투명도
-                fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            )
+            val alpha =
+                lerp(
+                    start = 0.5f, // 좌우 이미지의 최소 투명도
+                    stop = 1f, // 중앙 이미지의 투명도
+                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
+                )
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrls[pageIndex])
-                    .crossfade(true) // 부드러운 이미지 로딩 효과
-                    .build(),
+                model =
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(imageUrls[pageIndex])
+                        .crossfade(true) // 부드러운 이미지 로딩 효과
+                        .build(),
                 contentDescription = "Image $pageIndex",
                 contentScale = contentScale,
-                modifier = Modifier
-                    .graphicsLayer {
-                        this.alpha = alpha
-                    }
-                    .run {
-                        if (imageAspectRatio != null) {
-                            aspectRatio(imageAspectRatio)
-                        } else {
-                            this
-                        }
-                    }
-                    .fillMaxWidth()
-                    .clickable { onImageClick(imageUrls[pageIndex]) }
+                modifier =
+                    Modifier
+                        .graphicsLayer {
+                            this.alpha = alpha
+                        }.run {
+                            if (imageAspectRatio != null) {
+                                aspectRatio(imageAspectRatio)
+                            } else {
+                                this
+                            }
+                        }.fillMaxWidth()
+                        .clickable { onImageClick(imageUrls[pageIndex]) },
             )
         }
 
@@ -105,7 +107,7 @@ fun AsyncImageScrollList(
         if (imageUrls.size > 1) {
             PagerIndicator(
                 modifier = Modifier.padding(bottom = 10.dp),
-                pagerState = pagerState
+                pagerState = pagerState,
             )
         }
     }
@@ -134,15 +136,16 @@ fun PagerIndicator(
     Row(
         modifier = modifier.wrapContentHeight(),
         horizontalArrangement = Arrangement.spacedBy(spacing),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(pagerState.pageCount) { iteration ->
             val color = if (pagerState.currentPage == iteration) activeColor else inactiveColor
             Box(
-                modifier = Modifier
-                    .size(indicatorSize)
-                    .clip(CircleShape)
-                    .background(color)
+                modifier =
+                    Modifier
+                        .size(indicatorSize)
+                        .clip(CircleShape)
+                        .background(color),
             )
         }
     }
@@ -154,25 +157,28 @@ fun PagerIndicator(
 @Preview(showBackground = true, name = "Image Scroll List Preview")
 @Composable
 private fun AsyncImageScrollListPreview() {
-    val fakeImageUrls = listOf(
-        // 미리보기용 플레이스홀더 이미지 URL
-        "https://via.placeholder.com/600/92c952",
-        "https://via.placeholder.com/600/771796",
-        "https://via.placeholder.com/600/24f355",
-        "https://via.placeholder.com/600/d32776",
-    )
+    val fakeImageUrls =
+        listOf(
+            // 미리보기용 플레이스홀더 이미지 URL
+            "https://via.placeholder.com/600/92c952",
+            "https://via.placeholder.com/600/771796",
+            "https://via.placeholder.com/600/24f355",
+            "https://via.placeholder.com/600/d32776",
+        )
 
     SsaviceTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+            contentAlignment = Alignment.Center,
         ) {
             AsyncImageScrollList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
                 imageUrls = fakeImageUrls,
             )
         }

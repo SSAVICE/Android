@@ -18,7 +18,7 @@ data class GetCompanySummaryDTO(
     val companyImageUrl: String?,
     val companyRate: Double,
     val rateCount: Long,
-    val review: List<ReviewDTO>
+    val review: List<ReviewDTO>,
 ) {
     fun toModel(): SellerSummary =
         SellerSummary(
@@ -30,9 +30,11 @@ data class GetCompanySummaryDTO(
             companyImageUrl = companyImageUrl,
             companyRate = companyRate,
             rateCount = rateCount.toInt(),
-            review = review.map {
-                it.toModel()
-            })
+            review =
+                review.map {
+                    it.toModel()
+                },
+        )
 }
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -42,7 +44,7 @@ data class ReviewDTO(
     val comment: String,
     val serviceName: String,
     val createdAt: String,
-    val rate: Integer
+    val rate: Integer,
 ) {
     fun toModel(): Review =
         Review(
@@ -50,6 +52,6 @@ data class ReviewDTO(
             comment = comment,
             rating = rate.toInt(),
             createdAt = Date.parse(createdAt),
-            serviceName = serviceName
+            serviceName = serviceName,
         )
 }

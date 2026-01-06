@@ -11,5 +11,5 @@ data class SellerSummary(
     val companyImageUrl: String?,
     val companyRate: Double,
     val rateCount: Int,
-    val review: List<Review>
+    val review: List<Review>,
 )

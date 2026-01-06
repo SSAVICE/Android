@@ -23,5 +23,5 @@ data class ServiceDetail(
     val liked: Boolean,
     val status: String,
     val createdAt: Date,
-    val regionInfo: RegionInfo
+    val regionInfo: RegionInfo,
 )

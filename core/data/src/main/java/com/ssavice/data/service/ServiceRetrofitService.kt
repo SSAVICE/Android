@@ -24,6 +24,6 @@ interface ServiceRetrofitService {
 
     @GET("/api/service/{id}")
     suspend fun getService(
-        @Path(value = "id") id: Long
+        @Path(value = "id") id: Long,
     ): Response<GetServiceDetailDTO>
 }

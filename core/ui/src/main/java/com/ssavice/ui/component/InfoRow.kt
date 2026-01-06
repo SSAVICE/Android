@@ -21,14 +21,17 @@ fun InfoRow(
     icon: Painter,
     iconContentDescription: String?,
     title: String,
-    content: String
+    content: String,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically) {
-        Icon(painter = icon,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            painter = icon,
             contentDescription = iconContentDescription,
-            tint = MaterialTheme.colorScheme.primary)
+            tint = MaterialTheme.colorScheme.primary,
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(title, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
@@ -43,13 +46,13 @@ fun InfoRow(
     icon: ImageVector,
     iconContentDescription: String?,
     title: String,
-    content: String
+    content: String,
 ) {
     InfoRow(
         modifier = modifier,
         icon = rememberVectorPainter(icon),
         iconContentDescription = iconContentDescription,
         title = title,
-        content = content
+        content = content,
     )
 }

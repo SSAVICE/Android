@@ -30,7 +30,7 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             },
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
-            }
+            },
         )
         searchFormScreen(
             onSearch = { searchForm ->
@@ -76,8 +76,6 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             },
         )
 
-        serviceDetailScreen(
-
-        )
+        serviceDetailScreen()
     }
 }

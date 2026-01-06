@@ -36,11 +36,15 @@ fun NavController.navigateToSearchResult(
     }
 }
 
-fun NavGraphBuilder.searchResultScreen(onSearchBarClicked: (SearchQuery) -> Unit = {},
-                                       onServiceClicked: (Long) -> Unit = {}) {
+fun NavGraphBuilder.searchResultScreen(
+    onSearchBarClicked: (SearchQuery) -> Unit = {},
+    onServiceClicked: (Long) -> Unit = {},
+) {
     composable<SearchResultRoute> {
-        SearchResultScreen(onSearchBarClicked = onSearchBarClicked,
-            onServiceClicked = onServiceClicked)
+        SearchResultScreen(
+            onSearchBarClicked = onSearchBarClicked,
+            onServiceClicked = onServiceClicked,
+        )
     }
 }
 

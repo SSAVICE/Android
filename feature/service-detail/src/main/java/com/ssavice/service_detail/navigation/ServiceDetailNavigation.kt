@@ -9,12 +9,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServiceDetailRoute(
-    val serviceId: Long
+    val serviceId: Long,
 )
 
 fun NavController.navigateToServiceDetail(
     navOptions: NavOptionsBuilder.() -> Unit = {},
-    serviceId: Long
+    serviceId: Long,
 ) {
     navigate(ServiceDetailRoute(serviceId)) {
         navOptions()
@@ -36,7 +36,6 @@ fun NavGraphBuilder.serviceDetailScreen(
         )
     }
 }
-
 
 object ServiceDetailRouteContract {
     const val ID = "serviceId"
