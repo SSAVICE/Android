@@ -22,13 +22,9 @@ fun SearchResultScreen(
     viewModel: SearchResultViewModel = hiltViewModel(),
     onSearchBarClicked: (searchQuery: SearchQuery) -> Unit = {},
     onBackClicked: () -> Unit = {},
-    onServiceClicked: (Long) -> Unit = {},
-    onScreenResolved: () -> Unit
+    onServiceClicked: (Long) -> Unit = {}
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        onScreenResolved()
-    }
     SearchResultScreen(
         modifier = modifier,
         state = state.value,

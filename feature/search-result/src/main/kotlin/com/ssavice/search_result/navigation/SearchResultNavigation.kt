@@ -1,6 +1,7 @@
 package com.ssavice.search_result.navigation
 
-import androidx.navigation.NavBackStackEntry
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -43,11 +44,18 @@ fun NavGraphBuilder.searchResultScreen(
     onServiceClicked: (Long) -> Unit = {},
     onScreenResolved: () -> Unit
 ) {
-    composable<SearchResultRoute> {
+    composable<SearchResultRoute>(
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(),
+            )
+        },
+    ) {
+        onScreenResolved()
         SearchResultScreen(
             onSearchBarClicked = onSearchBarClicked,
-            onServiceClicked = onServiceClicked,
-            onScreenResolved = onScreenResolved
+            onServiceClicked = onServiceClicked
         )
     }
 }
