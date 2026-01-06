@@ -5,6 +5,7 @@ import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
+import com.ssavice.model.service.ServiceDetail
 import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.model.SearchServiceDTO
 import com.ssavice.network.processResponseOnResponseData
@@ -59,4 +60,9 @@ class RemoteServiceRepository
             ).map {
                 it.toModel()
             }
+
+        override suspend fun getService(id: Long): Result<ServiceDetail> =
+            processResponseOnResponseData(
+                serviceRetrofitService.getService(id),
+            ).map { it.toModel() }
     }
