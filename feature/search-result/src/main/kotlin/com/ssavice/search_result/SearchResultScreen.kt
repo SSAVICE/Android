@@ -21,12 +21,14 @@ fun SearchResultScreen(
     viewModel: SearchResultViewModel = hiltViewModel(),
     onSearchBarClicked: (searchQuery: SearchQuery) -> Unit = {},
     onBackClicked: () -> Unit = {},
+    onServiceClicked: (Long) -> Unit = {},
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     SearchResultScreen(
         modifier = modifier,
         state = state.value,
         onSearchBarClicked = onSearchBarClicked,
+        onServiceClicked = onServiceClicked,
     )
 }
 
@@ -35,6 +37,7 @@ fun SearchResultScreen(
     modifier: Modifier = Modifier,
     state: SearchResultUiState,
     onSearchBarClicked: (searchQuery: SearchQuery) -> Unit = {},
+    onServiceClicked: (Long) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         OutlinedTextFieldButton(
@@ -55,6 +58,7 @@ fun SearchResultScreen(
         SearchResultScreen(
             modifier = Modifier.weight(1f),
             query = state.searchQuery,
+            onServiceClick = onServiceClicked,
         )
     }
 }

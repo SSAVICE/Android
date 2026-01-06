@@ -4,6 +4,7 @@ import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.service.CompanyRetrofitService
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerSummary
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
@@ -33,4 +34,9 @@ internal class RemoteSellerInfoRepository
                     },
                 )
             }
+
+        override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanySummary(id),
+            ).map { it.toModel() }
     }
