@@ -39,10 +39,10 @@ fun NavGraphBuilder.addServiceScreen(
         },
     )
     {
+        onScreenResolved()
         AddServiceRoute(
             onSubmit = onSubmit,
             onDismiss = onDismiss,
-            onScreenResolved = {onScreenResolved()}
         )
     }
 }

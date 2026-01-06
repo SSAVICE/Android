@@ -23,6 +23,7 @@ fun NavGraphBuilder.registerScreen(onSubmit: () -> Unit,
                                    onScreenResolved: () -> Unit) {
     composable<RegisterRoute>
     {
+        onScreenResolved()
         RegisterScreen(
             onSubmit = onSubmit,
         )

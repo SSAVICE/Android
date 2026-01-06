@@ -1,4 +1,4 @@
-package com.ssavice.ssavice.ui
+package com.ssavice.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold

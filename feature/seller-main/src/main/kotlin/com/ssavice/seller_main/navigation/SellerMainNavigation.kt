@@ -1,8 +1,5 @@
 package com.ssavice.seller_main.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -25,6 +22,7 @@ fun NavGraphBuilder.mainScreen(onAddClick: () -> Unit = {},
                                onScreenResolved: () -> Unit) {
     composable<MainRoute>
     {
+        onScreenResolved()
         SellerMainScreen(
             onAddClick = onAddClick,
         )

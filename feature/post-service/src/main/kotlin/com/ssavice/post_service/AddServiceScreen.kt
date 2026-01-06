@@ -64,11 +64,7 @@ fun AddServiceRoute(
     viewModel: AddServiceViewModel = hiltViewModel(),
     onSubmit: (Long) -> Unit = {},
     onDismiss: () -> Unit = {},
-    onScreenResolved: () -> Unit
 ) {
-    LaunchedEffect(Unit){
-        onScreenResolved()
-    }
     Column(
         modifier =
             modifier

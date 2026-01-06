@@ -1,4 +1,4 @@
-package com.ssavice.ssavice.ui
+package com.ssavice.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
