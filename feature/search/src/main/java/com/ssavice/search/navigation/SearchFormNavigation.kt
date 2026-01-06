@@ -2,7 +2,6 @@ package com.ssavice.search.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -65,7 +64,7 @@ fun NavGraphBuilder.searchFormScreen(
     ) {
         onScreenResolved()
         SearchFormScreen(
-            onSearch = onSearch
+            onSearch = onSearch,
         )
     }
 }

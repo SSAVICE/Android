@@ -27,7 +27,7 @@ fun ServiceImagesWithButtons(
     urls: List<String>,
     onLikeClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
-    onImageClick: (String) -> Unit = {}
+    onImageClick: (String) -> Unit = {},
 ) {
     Box {
         AsyncImageScrollList(
@@ -52,8 +52,7 @@ fun ServiceImagesWithButtons(
                             shape = CircleShape,
                             spotColor = DefaultShadowColor.copy(alpha = 0.4f),
                             ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        )
-                        .clip(CircleShape),
+                        ).clip(CircleShape),
                 onClick = onLikeClick,
                 colors =
                     IconButtonDefaults.filledIconButtonColors(
@@ -74,8 +73,7 @@ fun ServiceImagesWithButtons(
                             shape = CircleShape,
                             spotColor = DefaultShadowColor.copy(alpha = 0.4f),
                             ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        )
-                        .clip(CircleShape),
+                        ).clip(CircleShape),
                 onClick = onShareClick,
                 colors =
                     IconButtonDefaults.filledIconButtonColors(

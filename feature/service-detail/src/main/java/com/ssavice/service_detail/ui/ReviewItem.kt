@@ -63,7 +63,7 @@ fun ReviewItem(
             Text(
                 date,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
             )
             Spacer(modifier = Modifier.Companion.height(6.dp))
             Text(review)

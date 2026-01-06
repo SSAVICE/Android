@@ -42,7 +42,7 @@ fun NavController.navigateToSearchResult(
 fun NavGraphBuilder.searchResultScreen(
     onSearchBarClicked: (SearchQuery) -> Unit = {},
     onServiceClicked: (Long) -> Unit = {},
-    onScreenResolved: () -> Unit
+    onScreenResolved: () -> Unit,
 ) {
     composable<SearchResultRoute>(
         popExitTransition = {
@@ -55,7 +55,7 @@ fun NavGraphBuilder.searchResultScreen(
         onScreenResolved()
         SearchResultScreen(
             onSearchBarClicked = onSearchBarClicked,
-            onServiceClicked = onServiceClicked
+            onServiceClicked = onServiceClicked,
         )
     }
 }

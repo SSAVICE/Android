@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 fun SsaviceBaseApp(
     navController: NavHostController,
     defaultBottomBar: @Composable (navController: NavHostController, currentRoute: String?) -> Unit,
-    content: @Composable (PaddingValues, (ScaffoldConfig) -> Unit) -> Unit
+    content: @Composable (PaddingValues, (ScaffoldConfig) -> Unit) -> Unit,
 ) {
     var scaffoldConfig by remember<MutableState<ScaffoldConfig>> {
         mutableStateOf(ScaffoldConfig.Default) // 초기값
@@ -65,13 +65,16 @@ fun SsaviceBaseApp(
             topBar = {
                 SsaviceTitle(
                     title = config.title,
-                    onBackButtonClick = if (config.onBackButtonClick != null) {
-                        {
-                            keyboardController?.hide()
-                            config.onBackButtonClick()
-                        }
-                    } else null,
-                    action = {}
+                    onBackButtonClick =
+                        if (config.onBackButtonClick != null) {
+                            {
+                                keyboardController?.hide()
+                                config.onBackButtonClick()
+                            }
+                        } else {
+                            null
+                        },
+                    action = {},
                 )
             }
         }
@@ -81,13 +84,16 @@ fun SsaviceBaseApp(
             topBar = {
                 SsaviceTitle(
                     title = config.title,
-                    onBackButtonClick = if (config.onBackButtonClick != null) {
-                        {
-                            keyboardController?.hide()
-                            config.onBackButtonClick()
-                        }
-                    } else null,
-                    action = {}
+                    onBackButtonClick =
+                        if (config.onBackButtonClick != null) {
+                            {
+                                keyboardController?.hide()
+                                config.onBackButtonClick()
+                            }
+                        } else {
+                            null
+                        },
+                    action = {},
                 )
             }
         }
@@ -95,7 +101,7 @@ fun SsaviceBaseApp(
 
     SsaviceScaffold(
         bottomBar = bottomBar,
-        topBar = topBar
+        topBar = topBar,
     ) { innerPadding ->
         content(innerPadding, onScaffoldConfigResolved)
     }

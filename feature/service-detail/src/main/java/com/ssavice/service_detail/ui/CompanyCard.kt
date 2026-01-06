@@ -28,9 +28,7 @@ import coil.request.ImageRequest
 import com.ssavice.service_detail.SellerSummary
 
 @Composable
-fun CompanyCard(
-    seller: SellerSummary?
-) {
+fun CompanyCard(seller: SellerSummary?) {
     ElevatedCard(
         modifier =
             Modifier

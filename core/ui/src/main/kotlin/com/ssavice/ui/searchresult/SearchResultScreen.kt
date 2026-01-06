@@ -33,7 +33,7 @@ fun SearchResultScreen(
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(query) {
-        if(query != state.value.searchQuery) {
+        if (query != state.value.searchQuery) {
             viewModel.newSearch(query)
         }
     }

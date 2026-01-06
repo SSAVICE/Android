@@ -18,8 +18,10 @@ fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.mainScreen(onAddClick: () -> Unit = {},
-                               onScreenResolved: () -> Unit) {
+fun NavGraphBuilder.mainScreen(
+    onAddClick: () -> Unit = {},
+    onScreenResolved: () -> Unit,
+) {
     composable<MainRoute>
     {
         onScreenResolved()

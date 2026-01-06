@@ -32,22 +32,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SsaviceApp(
-    navController: NavHostController
-) {
+fun SsaviceApp(navController: NavHostController) {
     SsaviceBaseApp(
         navController = navController,
         defaultBottomBar = { navController, route ->
-            SsaviceBottomBar(navController, route) }
-    ) {
-        innerPadding, config ->
+            SsaviceBottomBar(navController, route)
+        },
+    ) { innerPadding, config ->
         SsaviceNavHost(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
             navController = navController,
             startDestination = MainRoute,
-            onScaffoldConfigResolved = config
+            onScaffoldConfigResolved = config,
         )
     }
 }

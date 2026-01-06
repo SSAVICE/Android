@@ -19,33 +19,35 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserMainTopBar(
-    viewModel: UserMainViewModel
-) {
+fun UserMainTopBar(viewModel: UserMainViewModel) {
     TopAppBar(
         title = {
-            TextButton (
-                onClick =  viewModel::onSetLocationClick,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            TextButton(
+                onClick = viewModel::onSetLocationClick,
+                colors =
+                    ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             ) {
                 Text(
                     text = "달서구 송현1동",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
                 Icon(
                     modifier = Modifier.size(32.dp),
                     imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "위치 선택")
+                    contentDescription = "위치 선택",
+                )
             }
         },
         actions = {
             IconButton(onClick = viewModel::onNotificationButtonClick) {
-                Icon(Icons.Default.Notifications,
-                    contentDescription = "알림")
+                Icon(
+                    Icons.Default.Notifications,
+                    contentDescription = "알림",
+                )
             }
-        }
+        },
     )
 }

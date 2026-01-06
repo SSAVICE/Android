@@ -4,10 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
-import com.ssavice.seller_main.navigation.MainRoute
 import com.ssavice.seller_main.navigation.mainScreen
 import com.ssavice.seller_main.navigation.navigateToMain
 import com.ssavice.seller_register.navigation.registerScreen
@@ -15,10 +13,12 @@ import com.ssavice.ui.navigation.ScaffoldConfig
 import kotlinx.serialization.Serializable
 
 @Composable
-fun SsaviceNavHost(modifier: Modifier = Modifier,
-                   navController: NavHostController,
-                   startDestination: @Serializable Any,
-                   onScaffoldConfigResolved: (ScaffoldConfig) -> Unit) {
+fun SsaviceNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    startDestination: @Serializable Any,
+    onScaffoldConfigResolved: (ScaffoldConfig) -> Unit,
+) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -31,10 +31,10 @@ fun SsaviceNavHost(modifier: Modifier = Modifier,
             onScreenResolved = {
                 onScaffoldConfigResolved(
                     ScaffoldConfig.TitleAndDefaultBottom(
-                        title = "대시보드"
-                    )
+                        title = "대시보드",
+                    ),
                 )
-            }
+            },
         )
         registerScreen(
             onSubmit = {
@@ -43,10 +43,10 @@ fun SsaviceNavHost(modifier: Modifier = Modifier,
             onScreenResolved = {
                 onScaffoldConfigResolved(
                     ScaffoldConfig.TitleWithCustomBottom(
-                        title = "판매자 회원가입"
-                    )
+                        title = "판매자 회원가입",
+                    ),
                 )
-            }
+            },
         )
 
         addServiceScreen(
@@ -62,10 +62,10 @@ fun SsaviceNavHost(modifier: Modifier = Modifier,
                         title = "서비스 등록",
                         onBackButtonClick = {
                             navController.navigateUp()
-                        }
+                        },
                     ),
                 )
-            }
+            },
         )
     }
 }

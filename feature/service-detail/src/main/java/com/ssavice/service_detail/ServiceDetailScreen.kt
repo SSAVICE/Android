@@ -1,7 +1,6 @@
 package com.ssavice.service_detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,24 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,9 +32,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +44,6 @@ import com.ssavice.model.Date
 import com.ssavice.service_detail.ui.CompanyCard
 import com.ssavice.service_detail.ui.ReviewItem
 import com.ssavice.service_detail.ui.ServiceImagesWithButtons
-import com.ssavice.ui.AsyncImageScrollList
 import com.ssavice.ui.InfoRow
 
 @Composable
@@ -65,7 +53,7 @@ fun ServiceDetailScreen(
     onBackClick: () -> Unit = {},
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
-    onLikeClick: (Long) -> Unit = {}
+    onLikeClick: (Long) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
@@ -86,8 +74,9 @@ fun ServiceDetailScreen(
     val enabled =
         uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
     ServiceDetailScreen(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.background),
+        modifier =
+            modifier
+                .background(MaterialTheme.colorScheme.background),
         uiState.service,
         uiState.seller,
         onLikeClick = onLikeClick,
@@ -105,9 +94,10 @@ fun ServiceDetailScreen(
     enabled: Boolean = true,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(state = rememberScrollState()),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .verticalScroll(state = rememberScrollState()),
     ) {
         if (service != null) {
             ServiceImagesWithButtons(
@@ -214,7 +204,7 @@ fun ServiceDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if(seller != null) {
+            if (seller != null) {
                 CompanyCard(seller = seller)
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -242,16 +232,13 @@ fun ServiceDetailScreen(
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 Loading(400.dp)
             }
             Spacer(modifier = Modifier.height(10.dp))
-        }
-        else {
+        } else {
             Loading(400.dp)
         }
-
     }
 }
 
@@ -273,8 +260,8 @@ fun ServiceDetailScreenPreview() {
             imageUrls =
                 listOf(
                     "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2120" +
-                            "&auto=format&fit=crop&ixlib=rb-4.0.3" +
-                            "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        "&auto=format&fit=crop&ixlib=rb-4.0.3" +
+                        "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ),
             deadLine = "Date(2026,2,15)",
             id = 123123L,
@@ -312,7 +299,7 @@ fun ServiceDetailScreenPreview() {
                         content = "별로임",
                         serviceName = "요가 클래스",
                         createdAt = Date.now().toSimpleString(),
-                        rating = 2
+                        rating = 2,
                     ),
                 ),
         )
@@ -333,8 +320,8 @@ fun ServiceDetailScreenPreview() {
 fun Loading(height: Dp) {
     Box(
         modifier = Modifier.height(height).fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+    ) {
         CircularProgressIndicator()
     }
 }

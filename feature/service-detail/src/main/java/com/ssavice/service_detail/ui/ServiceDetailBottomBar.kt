@@ -17,7 +17,7 @@ import com.ssavice.service_detail.ServiceDetailViewModel
 @Composable
 fun ServiceDetailBottomBar(
     modifier: Modifier = Modifier,
-    viewModel: ServiceDetailViewModel
+    viewModel: ServiceDetailViewModel,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     Row(
@@ -27,14 +27,14 @@ fun ServiceDetailBottomBar(
         OutlinedButton(
             onClick = viewModel::onChatButtonClick,
             modifier = Modifier.weight(1f),
-            enabled = state.sellerInfoState is InfoState.Done
+            enabled = state.sellerInfoState is InfoState.Done,
         ) {
             Text("채팅하기")
         }
         Button(
             onClick = viewModel::onParticipateButtonClick,
             modifier = Modifier.weight(1f),
-            enabled = state.serviceInfoState is InfoState.Done
+            enabled = state.serviceInfoState is InfoState.Done,
         ) {
             Text("참여하기")
         }

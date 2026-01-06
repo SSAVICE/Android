@@ -2,7 +2,6 @@ package com.ssavice.post_service.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -22,7 +21,7 @@ fun NavController.navigateToAddService(navOptions: NavOptionsBuilder.() -> Unit 
 fun NavGraphBuilder.addServiceScreen(
     onDismiss: () -> Unit = {},
     onSubmit: (Long) -> Unit = {},
-    onScreenResolved: () -> Unit
+    onScreenResolved: () -> Unit,
 ) {
     composable<AddServiceRoute>(
         enterTransition = {

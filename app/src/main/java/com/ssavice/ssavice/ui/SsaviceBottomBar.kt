@@ -14,11 +14,12 @@ fun SsaviceBottomBar(
     navController: NavController,
     currentRoute: String?,
 ) {
-    val destinations = listOf(
-        TopLevelDestination.USER_MAIN,
-        TopLevelDestination.CHATTING,
-        TopLevelDestination.MY_PAGE
-    )
+    val destinations =
+        listOf(
+            TopLevelDestination.USER_MAIN,
+            TopLevelDestination.CHATTING,
+            TopLevelDestination.MY_PAGE,
+        )
 
     NavigationBar {
         destinations.forEach { destination ->
@@ -31,10 +32,10 @@ fun SsaviceBottomBar(
                 icon = {
                     Icon(
                         imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
-                        contentDescription = destination.iconText
+                        contentDescription = destination.iconText,
                     )
                 },
-                label = { Text(destination.iconText) }
+                label = { Text(destination.iconText) },
             )
         }
     }

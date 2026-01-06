@@ -30,7 +30,7 @@ fun SsaviceNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: @Serializable Any,
-    onScaffoldConfigResolved: (ScaffoldConfig) -> Unit
+    onScaffoldConfigResolved: (ScaffoldConfig) -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -50,9 +50,9 @@ fun SsaviceNavHost(
                         topBar = {
                             UserMainTopBar(viewModel)
                         },
-                    )
+                    ),
                 )
-            }
+            },
         )
         searchFormScreen(
             onSearch = { searchForm ->
@@ -84,9 +84,10 @@ fun SsaviceNavHost(
                         title = "검색",
                         onBackButtonClick = {
                             navController.navigateUp()
-                        }
-                    ))
-            }
+                        },
+                    ),
+                )
+            },
         )
 
         searchResultScreen(
@@ -112,9 +113,10 @@ fun SsaviceNavHost(
                         title = "검색 결과",
                         onBackButtonClick = {
                             navController.popBackStack()
-                        }
-                    ))
-            }
+                        },
+                    ),
+                )
+            },
         )
 
         serviceDetailScreen(
@@ -127,12 +129,12 @@ fun SsaviceNavHost(
                         },
                         bottomBar = {
                             ServiceDetailBottomBar(
-                                viewModel = viewModel
+                                viewModel = viewModel,
                             )
-                        }
-                    )
+                        },
+                    ),
                 )
-            }
+            },
         )
     }
 }

@@ -22,25 +22,25 @@ enum class TopLevelDestination(
         route = MainRoute,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
-        iconText = "홈"
+        iconText = "홈",
     ),
     CHATTING(
         route = MainRoute,
         selectedIcon = Icons.Filled.ChatBubble,
         unselectedIcon = Icons.Outlined.ChatBubbleOutline,
-        iconText = "채팅"
+        iconText = "채팅",
     ),
     MY_PAGE(
         route = MainRoute,
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.PersonOutline,
-        iconText = "마이"
-    )
+        iconText = "마이",
+    ),
 }
 
 fun NavController.navigateToTop(route: @Serializable Any) =
     navigate(route) {
-        graph.startDestinationRoute?.let {popUpTo(it)}
+        graph.startDestinationRoute?.let { popUpTo(it) }
         launchSingleTop = true
         restoreState = true
     }

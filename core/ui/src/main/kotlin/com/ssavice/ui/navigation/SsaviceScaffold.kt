@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 fun SsaviceScaffold(
     bottomBar: @Composable () -> Unit = {},
     topBar: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         topBar = topBar,
         bottomBar = bottomBar,
-        content = content
+        content = content,
     )
 }

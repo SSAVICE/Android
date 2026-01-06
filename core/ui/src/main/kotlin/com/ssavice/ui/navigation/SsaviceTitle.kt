@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 fun SsaviceTitle(
     title: String,
     onBackButtonClick: (() -> Unit)?,
-    action: @Composable () -> Unit = {}
+    action: @Composable () -> Unit = {},
 ) {
     TopAppBar(
         title = {
@@ -27,15 +27,17 @@ fun SsaviceTitle(
         navigationIcon = {
             if (onBackButtonClick != null) {
                 IconButton(
-                    onClick = onBackButtonClick
+                    onClick = onBackButtonClick,
                 ) {
                     Icon(
                         Icons.Filled.ArrowBackIosNew,
-                        contentDescription = "뒤로"
+                        contentDescription = "뒤로",
                     )
                 }
-            } else null
+            } else {
+                null
+            }
         },
-        actions = { action() }
+        actions = { action() },
     )
 }

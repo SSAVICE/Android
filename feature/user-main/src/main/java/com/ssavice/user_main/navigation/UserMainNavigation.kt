@@ -22,10 +22,9 @@ fun NavGraphBuilder.mainScreen(
     onSearch: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
     onScreenResolved: (
-        viewModel: UserMainViewModel
+        viewModel: UserMainViewModel,
     ) -> Unit,
 ) {
-
     composable<MainRoute> {
         val viewModel: UserMainViewModel = hiltViewModel()
         onScreenResolved(viewModel)
