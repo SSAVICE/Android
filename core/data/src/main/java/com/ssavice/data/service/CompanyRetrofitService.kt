@@ -9,7 +9,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface CompanyRetrofitService {
     @POST("/api/company")
@@ -25,8 +25,8 @@ interface CompanyRetrofitService {
     @GET("/api/company")
     suspend fun getCompanyInfo(): Response<GetCompanyInfoDTO>
 
-    @GET("/api/company/{id}/summary}")
+    @GET("/api/company/{id}/summary")
     suspend fun getCompanySummary(
-        @Query(value = "id") id: Long
+        @Path(value = "id") id: Long
     ): Response<GetCompanySummaryDTO>
 }

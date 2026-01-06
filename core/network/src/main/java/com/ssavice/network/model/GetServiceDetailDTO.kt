@@ -17,8 +17,8 @@ data class GetServiceDetailDTO(
     val description: String,
     val latitude: Double,
     val longitude: Double,
-    val region1: String,
-    val region2: String,
+    val region1: String?,
+    val region2: String?,
     val currentMember: Long,
     val minimumMember: Long,
     val maximumMember: Long,
@@ -26,10 +26,10 @@ data class GetServiceDetailDTO(
     val discountRatio: Double,
     val discountedPrice: Long,
     val deadline: String,
-    val tag: List<String>,
+    val tag: String,
     val startDate: String,
     val endDate: String,
-    val liked: Boolean,
+    val isLiked: Boolean,
     val status: String,
     val createdAt: String
 ) {
@@ -41,7 +41,7 @@ data class GetServiceDetailDTO(
             companyId = companyId,
             name = title,
             description = description,
-            tag = tag.joinToString(","),
+            tag = tag,
             basePrice = basePrice.toInt(),
             discountRatio = discountRatio.toInt(),
             discountedPrice = discountedPrice.toInt(),
@@ -51,14 +51,14 @@ data class GetServiceDetailDTO(
             deadLine = Date.parse(deadline),
             startDate = Date.parse(startDate),
             endDate = Date.parse(endDate),
-            liked = liked,
+            liked = isLiked,
             status = status,
             createdAt = Date.parse(createdAt),
             regionInfo = RegionInfo(
                 latitude = latitude,
                 longitude = longitude,
-                address = region1,
-                detailAddress = region2,
+                address = region1?:"",
+                detailAddress = region2?:"",
                 postCode = ""
             )
         )

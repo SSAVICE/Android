@@ -8,7 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 interface ServiceRetrofitService {
@@ -24,6 +24,6 @@ interface ServiceRetrofitService {
 
     @GET("/api/service/{id}")
     suspend fun getService(
-        @Query(value = "id") id: Long
+        @Path(value = "id") id: Long
     ): Response<GetServiceDetailDTO>
 }
