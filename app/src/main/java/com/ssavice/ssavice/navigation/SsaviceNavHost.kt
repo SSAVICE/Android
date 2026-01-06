@@ -13,6 +13,7 @@ import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.serviceDetailScreen
+import com.ssavice.service_detail.ui.ServiceDetailBottomBar
 import com.ssavice.user_main.UserMainTopBar
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
@@ -79,11 +80,11 @@ fun SsaviceNavHost(
             onScreenResolved = {
                 onScaffoldConfigResolved(
                     ScaffoldConfig.TitleWithCustomBottom(
-                    title = "검색",
-                    onBackButtonClick = {
-                        navController.navigateUp()
-                    }
-                ))
+                        title = "검색",
+                        onBackButtonClick = {
+                            navController.navigateUp()
+                        }
+                    ))
             }
         )
 
@@ -107,23 +108,29 @@ fun SsaviceNavHost(
             onScreenResolved = {
                 onScaffoldConfigResolved(
                     ScaffoldConfig.TitleWithCustomBottom(
-                    title = "검색 결과",
-                    onBackButtonClick = {
-                        navController.popBackStack()
-                    }
-                ))
+                        title = "검색 결과",
+                        onBackButtonClick = {
+                            navController.popBackStack()
+                        }
+                    ))
             }
         )
 
         serviceDetailScreen(
-            onScreenResolved = {
+            onScreenResolved = { viewModel ->
                 onScaffoldConfigResolved(
                     ScaffoldConfig.TitleWithCustomBottom(
-                    title = "상세 정보",
-                    onBackButtonClick = {
-                        navController.popBackStack()
-                    }
-                ))
+                        title = "상세 정보",
+                        onBackButtonClick = {
+                            navController.popBackStack()
+                        },
+                        bottomBar = {
+                            ServiceDetailBottomBar(
+                                viewModel = viewModel
+                            )
+                        }
+                    )
+                )
             }
         )
     }

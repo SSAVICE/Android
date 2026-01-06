@@ -21,7 +21,7 @@ internal class DemoSellerInfoRepository
     @Inject
     constructor() : SellerInfoRepository {
         override suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm): Result<Unit> {
-            sleep(500)
+            delay(500)
             return Result.success(Unit)
         }
 
@@ -72,7 +72,7 @@ internal class DemoSellerInfoRepository
         }
 
         override suspend fun getSellerSummary(id: Long): Result<SellerSummary> {
-            delay(500)
+            delay((3..15).random() * 100L)
             return Result.success(
                 SellerSummary(
                     companyId = id,

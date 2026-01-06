@@ -2,12 +2,14 @@ package com.ssavice.service_detail.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.service_detail.ServiceDetailScreen
+import com.ssavice.service_detail.ServiceDetailViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,7 +31,7 @@ fun NavGraphBuilder.serviceDetailScreen(
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
     onLikeClick: (Long) -> Unit = {},
-    onScreenResolved: () -> Unit
+    onScreenResolved: (ServiceDetailViewModel) -> Unit
 ) {
     composable<ServiceDetailRoute>(
         enterTransition = {
@@ -45,8 +47,10 @@ fun NavGraphBuilder.serviceDetailScreen(
             )
         },
     ) {
-        onScreenResolved()
+        val viewModel: ServiceDetailViewModel = hiltViewModel()
+        onScreenResolved(viewModel)
         ServiceDetailScreen(
+            viewModel = viewModel,
             onBackClick = onBackClick,
             onChatClick = onChatClick,
             onParticipateClick = onParticipateClick,
