@@ -1,5 +1,6 @@
 package com.ssavice.seller_register.navigation
 
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -18,7 +19,8 @@ fun NavController.navigateToRegister(navOptions: NavOptionsBuilder.() -> Unit = 
     }
 }
 
-fun NavGraphBuilder.registerScreen(onSubmit: () -> Unit) {
+fun NavGraphBuilder.registerScreen(onSubmit: () -> Unit,
+                                   onScreenResolved: () -> Unit) {
     composable<RegisterRoute>
     {
         RegisterScreen(

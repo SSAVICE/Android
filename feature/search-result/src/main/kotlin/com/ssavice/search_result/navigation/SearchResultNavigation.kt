@@ -1,5 +1,6 @@
 package com.ssavice.search_result.navigation
 
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -32,6 +33,7 @@ fun NavController.navigateToSearchResult(
             sortBy = searchQuery.sortBy.value,
         ),
     ) {
+        launchSingleTop = true
         navOptions()
     }
 }
@@ -39,11 +41,13 @@ fun NavController.navigateToSearchResult(
 fun NavGraphBuilder.searchResultScreen(
     onSearchBarClicked: (SearchQuery) -> Unit = {},
     onServiceClicked: (Long) -> Unit = {},
+    onScreenResolved: () -> Unit
 ) {
     composable<SearchResultRoute> {
         SearchResultScreen(
             onSearchBarClicked = onSearchBarClicked,
             onServiceClicked = onServiceClicked,
+            onScreenResolved = onScreenResolved
         )
     }
 }

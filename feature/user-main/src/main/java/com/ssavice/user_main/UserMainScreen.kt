@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
@@ -34,7 +36,7 @@ fun UserMainScreen(
     modifier: Modifier = Modifier,
     viewModel: UserMainViewModel = hiltViewModel(),
     onSearchBarClicked: () -> Unit = {},
-    onServiceClick: (Long) -> Unit = {},
+    onServiceClick: (Long) -> Unit = {}
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     UserMainScreen(
@@ -135,18 +137,6 @@ fun CategoryPickerPreview() {
                 selection = selection,
                 onSelectionChanged = { selection = it },
             )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun UserMainScreenPreview() {
-    SsaviceTheme {
-        SsaviceBackground(
-            modifier = Modifier.size(540.dp, 833.dp),
-        ) {
-            UserMainScreen()
         }
     }
 }

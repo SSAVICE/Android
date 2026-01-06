@@ -2,6 +2,7 @@ package com.ssavice.search.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -44,7 +45,10 @@ fun NavController.navigateToSearchForm(navOptions: NavOptionsBuilder.() -> Unit 
     }
 }
 
-fun NavGraphBuilder.searchFormScreen(onSearch: (SearchForm) -> Unit = {}) {
+fun NavGraphBuilder.searchFormScreen(
+    onSearch: (SearchForm) -> Unit = {},
+    onScreenResolved: () -> Unit,
+) {
     composable<SearchFormRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -59,7 +63,10 @@ fun NavGraphBuilder.searchFormScreen(onSearch: (SearchForm) -> Unit = {}) {
             )
         },
     ) {
-        SearchFormScreen(onSearch = onSearch)
+        onScreenResolved()
+        SearchFormScreen(
+            onSearch = onSearch
+        )
     }
 }
 

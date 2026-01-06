@@ -1,5 +1,6 @@
 package com.ssavice.user_main.navigation
 
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -19,11 +20,13 @@ fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) 
 fun NavGraphBuilder.mainScreen(
     onSearch: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
+    onScreenResolved: () -> Unit,
 ) {
     composable<MainRoute> {
+        onScreenResolved()
         UserMainScreen(
             onSearchBarClicked = onSearch,
-            onServiceClick = onServiceClick,
+            onServiceClick = onServiceClick
         )
     }
 }

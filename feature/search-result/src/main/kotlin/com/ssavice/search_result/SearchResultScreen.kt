@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,8 +23,12 @@ fun SearchResultScreen(
     onSearchBarClicked: (searchQuery: SearchQuery) -> Unit = {},
     onBackClicked: () -> Unit = {},
     onServiceClicked: (Long) -> Unit = {},
+    onScreenResolved: () -> Unit
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        onScreenResolved()
+    }
     SearchResultScreen(
         modifier = modifier,
         state = state.value,

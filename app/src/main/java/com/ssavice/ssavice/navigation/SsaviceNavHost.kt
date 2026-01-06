@@ -2,8 +2,10 @@ package com.ssavice.ssavice.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search.SearchForm
@@ -15,13 +17,23 @@ import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.serviceDetailScreen
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
+import kotlinx.serialization.Serializable
 
+/**
+ * 앱의 메인 NavHost.
+ *
+ * @param onScaffoldConfigResolved 현재 라우트에 맞는 Scaffold 구성을 상위로 전달하는 콜백.
+ */
 @Composable
-fun SsaviceNavHost(modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
+fun SsaviceNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    startDestination: @Serializable Any,
+    onScaffoldConfigResolved: (ScaffoldConfig) -> Unit
+) {
     NavHost(
         navController = navController,
-        startDestination = MainRoute,
+        startDestination = startDestination,
         modifier = modifier,
     ) {
         mainScreen(
@@ -31,6 +43,11 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
+            onScreenResolved = {
+                onScaffoldConfigResolved(ScaffoldConfig.TitleAndDefaultBottom(
+                    title = "메인",
+                ))
+            }
         )
         searchFormScreen(
             onSearch = { searchForm ->
@@ -39,6 +56,7 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
                         popUpTo(MainRoute) {
                             inclusive = false
                         }
+                        launchSingleTop = true
                     },
                     searchQuery =
                         SearchQuery(
@@ -55,6 +73,14 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
                         ),
                 )
             },
+            onScreenResolved = {
+                onScaffoldConfigResolved(ScaffoldConfig.TitleWithCustomBottom(
+                    title = "검색",
+                    onBackButtonClick = {
+                        navController.navigateUp()
+                    }
+                ))
+            }
         )
 
         searchResultScreen(
@@ -74,8 +100,56 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             onServiceClicked = { serviceId ->
                 navController.navigateToServiceDetail(serviceId = serviceId)
             },
+            onScreenResolved = {
+                onScaffoldConfigResolved(ScaffoldConfig.TitleWithCustomBottom(
+                    title = "검색 결과",
+                    onBackButtonClick = {
+                        navController.popBackStack()
+                    }
+                ))
+            }
         )
 
-        serviceDetailScreen()
+        serviceDetailScreen(
+            onScreenResolved = {
+                onScaffoldConfigResolved(ScaffoldConfig.TitleWithCustomBottom(
+                    title = "상세 정보",
+                    onBackButtonClick = {
+                        navController.popBackStack()
+                    }
+                ))
+            }
+        )
     }
+}
+
+
+// Scaffold 구성을 위한 Sealed Class
+sealed interface ScaffoldConfig {
+    // 기본 BottomBar를 사용하는 경우
+    data object Default : ScaffoldConfig
+
+    // BottomBar/TopBar가 없는 경우
+    data object None : ScaffoldConfig
+
+    data class TitleAndDefaultBottom(
+        val title: String,
+        val onBackButtonClick: (() -> Unit)? = null,
+    ) : ScaffoldConfig
+
+    data class TitleWithCustomBottom(
+        val title: String,
+        val onBackButtonClick: (() -> Unit)? = null,
+        val bottomBar: (@Composable () -> Unit)? = null
+    ) : ScaffoldConfig
+
+    data class CustomTopWithDefaultBottom(
+        val topBar: (@Composable () -> Unit)? = null,
+    ) : ScaffoldConfig
+
+    // 완전히 커스텀 UI를 사용하는 경우
+    data class Custom(
+        val topBar: (@Composable () -> Unit)? = null,
+        val bottomBar: (@Composable () -> Unit)? = null
+    ) : ScaffoldConfig
 }
