@@ -29,7 +29,8 @@ import com.ssavice.service_detail.SellerSummary
 @Composable
 fun CompanyCard(
     seller: SellerSummary,
-    onSellerClick: () -> Unit = {}, ) {
+    onSellerClick: () -> Unit = {},
+) {
     SsaviceElevatedCard(
         modifier =
             Modifier

@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.dp
 fun SsaviceElevatedCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    content: @Composable (ColumnScope.() -> Unit)
+    content: @Composable (ColumnScope.() -> Unit),
 ) {
-    if(onClick != null) {
+    if (onClick != null) {
         ElevatedCard(
             modifier = modifier,
             onClick = onClick,
@@ -23,10 +23,9 @@ fun SsaviceElevatedCard(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            content = content
+            content = content,
         )
-    }
-    else {
+    } else {
         ElevatedCard(
             modifier = modifier,
             colors =
@@ -34,7 +33,7 @@ fun SsaviceElevatedCard(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            content = content
+            content = content,
         )
     }
 }

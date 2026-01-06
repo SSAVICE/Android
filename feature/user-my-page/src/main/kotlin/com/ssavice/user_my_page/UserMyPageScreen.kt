@@ -27,9 +27,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.user_my_page.ui.MyPageItem
+import com.ssavice.user_my_page.ui.MyPageSmallItem
 import com.ssavice.user_my_page.ui.ParticipationSummary
 import com.ssavice.user_my_page.ui.ProfileSummary
-import com.ssavice.user_my_page.ui.MyPageSmallItem
 
 @Composable
 fun MyPageRoute(
@@ -40,31 +40,32 @@ fun MyPageRoute(
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
-    onWithdrawButtonClick: () -> Unit = {}
+    onWithdrawButtonClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.profileState) {
-        if(state.profileState is MyPageState.Waiting) {
+        if (state.profileState is MyPageState.Waiting) {
             viewModel.loadProfile()
         }
     }
     LaunchedEffect(state.participationState) {
-        if(state.participationState is MyPageState.Waiting) {
+        if (state.participationState is MyPageState.Waiting) {
             viewModel.loadParticipationInfo()
         }
     }
 
     MyPageScreen(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.background),
+        modifier =
+            modifier
+                .background(MaterialTheme.colorScheme.background),
         myPageUiState = state,
         onEditProfileButtonClick = onEditProfileButtonClick,
         onParticipatedServiceButtonClick = onParticipatedServiceButtonClick,
         onLikedServiceButtonClick = onLikedServiceButtonClick,
         onHelpButtonClick = onHelpButtonClick,
         onLogoutButtonClick = onLogoutButtonClick,
-        onWithdrawButtonClick = onWithdrawButtonClick
+        onWithdrawButtonClick = onWithdrawButtonClick,
     )
 }
 
@@ -77,19 +78,19 @@ fun MyPageScreen(
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
-    onWithdrawButtonClick: () -> Unit = {}
+    onWithdrawButtonClick: () -> Unit = {},
 ) {
-
     Column(modifier = modifier) {
         ProfileSummary(
             modifier = Modifier.padding(8.dp),
             profileState = myPageUiState.profile,
-            onEditClick = onEditProfileButtonClick)
+            onEditClick = onEditProfileButtonClick,
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         Column(
             modifier = Modifier.padding(8.dp),
-            verticalArrangement = spacedBy(5.dp)
+            verticalArrangement = spacedBy(5.dp),
         ) {
             ParticipationSummary(myPageUiState.participation)
             Spacer(modifier = Modifier.height(8.dp))
@@ -97,32 +98,32 @@ fun MyPageScreen(
                 icon = Icons.Outlined.LibraryAddCheck,
                 title = "참여 서비스",
                 description = "진행 중인 서비스 & 예약",
-                onClick = onParticipatedServiceButtonClick
+                onClick = onParticipatedServiceButtonClick,
             )
             MyPageItem(
                 icon = Icons.Outlined.FavoriteBorder,
                 title = "관심 서비스",
                 description = "좋아요 누른 서비스 목록",
-                onClick = onLikedServiceButtonClick
+                onClick = onLikedServiceButtonClick,
             )
             MyPageItem(
                 icon = Icons.AutoMirrored.Outlined.HelpOutline,
                 title = "문의",
                 description = "고객지원",
-                onClick = onHelpButtonClick
+                onClick = onHelpButtonClick,
             )
             Spacer(modifier = Modifier.height(6.dp))
 
             MyPageSmallItem(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 title = "로그아웃",
-                onClick = onLogoutButtonClick
+                onClick = onLogoutButtonClick,
             )
             MyPageSmallItem(
                 icon = Icons.Outlined.PersonOff,
                 title = "회원 탈퇴",
                 onClick = onWithdrawButtonClick,
-                red = true
+                red = true,
             )
         }
     }
@@ -134,32 +135,35 @@ fun MyPagePreview() {
     val state by remember {
         mutableStateOf(
             MyPageUiState(
-                profile = ProfileState(
-                    "권성찬",
-                    locationInfo = "대구 달서구 송현1동",
-                    description = "설명창 입니다.\n두 번째 줄 입니다.",
-                    createdAt = "가입일: 2026-01-06",
-                    profileUrl = "https://picsum.photos/200",
-                ),
-                participation = ParticipationState(
-                    onProgress = 10,
-                    done = 21,
-                    total = 75
-                ),
+                profile =
+                    ProfileState(
+                        "권성찬",
+                        locationInfo = "대구 달서구 송현1동",
+                        description = "설명창 입니다.\n두 번째 줄 입니다.",
+                        createdAt = "가입일: 2026-01-06",
+                        profileUrl = "https://picsum.photos/200",
+                    ),
+                participation =
+                    ParticipationState(
+                        onProgress = 10,
+                        done = 21,
+                        total = 75,
+                    ),
                 profileState = MyPageState.Done,
-                participationState = MyPageState.Done
-            )
+                participationState = MyPageState.Done,
+            ),
         )
     }
 
     SsaviceTheme {
         Scaffold { innerPadding ->
             MyPageScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
-                myPageUiState = state
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
+                myPageUiState = state,
             )
         }
     }

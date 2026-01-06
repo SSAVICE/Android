@@ -26,28 +26,34 @@ fun MyPageSmallItem(
     icon: ImageVector,
     title: String,
     red: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     ElevatedCard(
-        modifier = Modifier.Companion
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(5.dp),
+        modifier =
+            Modifier.Companion
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(5.dp),
         onClick = onClick,
         colors =
-            if (!red) CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            ) else CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.error,
-                contentColor = MaterialTheme.colorScheme.onError,
-            ),
+            if (!red) {
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                )
+            } else {
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                )
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
-            modifier = Modifier.Companion
-                .padding(8.dp)
-                .fillMaxSize(),
+            modifier =
+                Modifier.Companion
+                    .padding(8.dp)
+                    .fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Companion.CenterVertically,
         ) {
@@ -55,15 +61,14 @@ fun MyPageSmallItem(
                 imageVector = icon,
                 modifier = Modifier.Companion.size(16.dp),
                 contentDescription = title,
-                tint = if (red) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.onSurface
+                tint = if (red) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.Companion.width(8.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Companion.Bold
+                fontWeight = FontWeight.Companion.Bold,
             )
         }
     }
-
 }

@@ -12,17 +12,17 @@ data class ProfileState(
     val locationInfo: String,
     val description: String,
     val createdAt: String,
-    val profileUrl: String
+    val profileUrl: String,
 )
 
 data class ParticipationState(
     val onProgress: Int,
     val done: Int,
-    val total: Int
+    val total: Int,
 )
 
 sealed interface MyPageState {
-    object Waiting: MyPageState
+    object Waiting : MyPageState
 
     object Loading : MyPageState
 

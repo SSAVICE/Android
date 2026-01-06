@@ -10,5 +10,5 @@ data class UserProfile(
     val phoneNumber: String,
     val postCode: Int,
     val address: String,
-    val detailAddress: String
+    val detailAddress: String,
 )

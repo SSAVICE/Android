@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,9 +19,7 @@ import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.user_my_page.ParticipationState
 
 @Composable
-fun ParticipationSummary(
-    participationState: ParticipationState?
-) {
+fun ParticipationSummary(participationState: ParticipationState?) {
     @Composable
     fun CardElement(
         modifier: Modifier,
@@ -30,33 +27,34 @@ fun ParticipationSummary(
         text: String,
     ) {
         SsaviceElevatedCard(
-            modifier = modifier
+            modifier = modifier,
         ) {
             Column(
                 modifier = Modifier.fillMaxSize().padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceAround
+                verticalArrangement = Arrangement.SpaceAround,
             ) {
                 Text(
                     text = value,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
                     text = text,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 )
             }
         }
     }
     Row(
-        modifier = Modifier
-            .padding(horizontal = 10.dp)
-            .height(90.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = spacedBy(16.dp)
+        modifier =
+            Modifier
+                .padding(horizontal = 10.dp)
+                .height(90.dp)
+                .fillMaxWidth(),
+        horizontalArrangement = spacedBy(16.dp),
     ) {
         if (participationState != null) {
             CardElement(Modifier.weight(1f), participationState.onProgress.toString(), "진행 중")

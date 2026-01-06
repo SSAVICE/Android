@@ -22,37 +22,39 @@ fun MyPageItem(
     icon: ImageVector,
     title: String,
     description: String,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     SsaviceElevatedCard(
-        modifier = Modifier.Companion
-            .fillMaxWidth()
-            .height(90.dp)
-            .padding(5.dp),
+        modifier =
+            Modifier.Companion
+                .fillMaxWidth()
+                .height(90.dp)
+                .padding(5.dp),
         onClick = onClick,
     ) {
         Column(
-            modifier = Modifier.Companion
-                .padding(8.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier.Companion
+                    .padding(8.dp)
+                    .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.Companion.CenterHorizontally
+            horizontalAlignment = Alignment.Companion.CenterHorizontally,
         ) {
             Icon(
                 imageVector = icon,
                 modifier = Modifier.Companion.size(20.dp),
                 contentDescription = title,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Companion.Bold
+                fontWeight = FontWeight.Companion.Bold,
             )
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
         }
     }

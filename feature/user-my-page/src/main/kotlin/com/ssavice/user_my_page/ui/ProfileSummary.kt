@@ -32,64 +32,69 @@ import com.ssavice.user_my_page.ProfileState
 fun ProfileSummary(
     modifier: Modifier = Modifier,
     profileState: ProfileState?,
-    onEditClick: () -> Unit = {}
+    onEditClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 10.dp)
+        modifier = modifier.padding(horizontal = 10.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(profileState?.profileUrl ?: "")
-                    .crossfade(true)
-                    .defaults(
-                        DefaultRequestOptions(
-                            placeholder = Color.Gray.value.toInt().toDrawable()
-                        )
-                    )
-                    .build(),
+                modifier =
+                    Modifier
+                        .size(48.dp)
+                        .clip(CircleShape),
+                model =
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(profileState?.profileUrl ?: "")
+                        .crossfade(true)
+                        .defaults(
+                            DefaultRequestOptions(
+                                placeholder =
+                                    Color.Gray.value
+                                        .toInt()
+                                        .toDrawable(),
+                            ),
+                        ).build(),
                 contentDescription = "프로필 사진",
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = profileState?.name ?: "",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = profileState?.locationInfo ?: "",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                 )
             }
             IconButton(
                 modifier = Modifier.padding(4.dp),
-                onClick = onEditClick
+                onClick = onEditClick,
             ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     imageVector = Icons.Outlined.Edit,
-                    contentDescription = "프로필 수정"
+                    contentDescription = "프로필 수정",
                 )
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = profileState?.description ?: "",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = profileState?.createdAt ?: "",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
         )
     }
 }

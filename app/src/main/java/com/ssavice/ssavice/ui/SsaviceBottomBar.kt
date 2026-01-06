@@ -1,6 +1,5 @@
 package com.ssavice.ssavice.ui
 
-import android.util.Log
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -11,9 +10,7 @@ import com.ssavice.ssavice.navigation.TopLevelDestination
 import com.ssavice.ssavice.navigation.navigateToTop
 
 @Composable
-fun SsaviceBottomBar(
-    navController: NavController
-) {
+fun SsaviceBottomBar(navController: NavController) {
     val destinations =
         listOf(
             TopLevelDestination.USER_MAIN,
@@ -27,7 +24,7 @@ fun SsaviceBottomBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    if(!selected) {
+                    if (!selected) {
                         navController.navigateToTop(destination.route)
                     }
                 },

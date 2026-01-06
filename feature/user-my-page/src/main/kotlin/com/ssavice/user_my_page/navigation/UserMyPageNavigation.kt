@@ -15,21 +15,19 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object UserMyPageRoute
 
-fun NavController.navigateToMyPage(
-    navOptions: NavOptionsBuilder.() -> Unit = {},
-) {
+fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(UserMyPageRoute) {
         navOptions()
     }
 }
 
 fun NavGraphBuilder.myPageScreen(
-    onEditProfileButtonClick:()->Unit = {},
-    onParticipatedServiceButtonClick:()->Unit = {},
-    onLikedServiceButtonClick:()->Unit = {},
-    onHelpButtonClick:()->Unit = {},
-    onLogoutButtonClick:()->Unit = {},
-    onWithdrawButtonClick:()->Unit = {},
+    onEditProfileButtonClick: () -> Unit = {},
+    onParticipatedServiceButtonClick: () -> Unit = {},
+    onLikedServiceButtonClick: () -> Unit = {},
+    onHelpButtonClick: () -> Unit = {},
+    onLogoutButtonClick: () -> Unit = {},
+    onWithdrawButtonClick: () -> Unit = {},
     onScreenResolved: () -> Unit,
 ) {
     composable<UserMyPageRoute>(
