@@ -33,7 +33,7 @@ import com.ssavice.user_my_page.ui.MyPageSmallItem
 
 @Composable
 fun MyPageRoute(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     viewModel: UserMyPageViewModel = hiltViewModel(),
     onEditProfileButtonClick: () -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
@@ -56,7 +56,8 @@ fun MyPageRoute(
     }
 
     MyPageScreen(
-        modifier = modifier,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background),
         myPageUiState = state,
         onEditProfileButtonClick = onEditProfileButtonClick,
         onParticipatedServiceButtonClick = onParticipatedServiceButtonClick,
