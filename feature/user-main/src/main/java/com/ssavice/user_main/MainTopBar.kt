@@ -20,13 +20,12 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMainTopBar(
-    onSelectLocationClicked: () -> Unit,
-    onNotificationClicked:() -> Unit
+    viewModel: UserMainViewModel
 ) {
     TopAppBar(
         title = {
             TextButton (
-                onClick = onSelectLocationClicked,
+                onClick =  viewModel::onSetLocationClick,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.onSurface
                 ),
@@ -43,7 +42,7 @@ fun UserMainTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onNotificationClicked) {
+            IconButton(onClick = viewModel::onNotificationButtonClick) {
                 Icon(Icons.Default.Notifications,
                     contentDescription = "알림")
             }

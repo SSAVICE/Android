@@ -42,14 +42,14 @@ fun SsaviceNavHost(
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
-            onScreenResolved = { onSelectLocation, onNotificationClick ->
-                onScaffoldConfigResolved(ScaffoldConfig.CustomTopWithDefaultBottom(
-                    topBar = {
-                        UserMainTopBar(
-                            onSelectLocation, onNotificationClick
-                        )
-                    },
-                ))
+            onScreenResolved = { viewModel ->
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.CustomTopWithDefaultBottom(
+                        topBar = {
+                            UserMainTopBar(viewModel)
+                        },
+                    )
+                )
             }
         )
         searchFormScreen(
@@ -77,7 +77,8 @@ fun SsaviceNavHost(
                 )
             },
             onScreenResolved = {
-                onScaffoldConfigResolved(ScaffoldConfig.TitleWithCustomBottom(
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
                     title = "검색",
                     onBackButtonClick = {
                         navController.navigateUp()
@@ -104,7 +105,8 @@ fun SsaviceNavHost(
                 navController.navigateToServiceDetail(serviceId = serviceId)
             },
             onScreenResolved = {
-                onScaffoldConfigResolved(ScaffoldConfig.TitleWithCustomBottom(
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
                     title = "검색 결과",
                     onBackButtonClick = {
                         navController.popBackStack()
@@ -115,7 +117,8 @@ fun SsaviceNavHost(
 
         serviceDetailScreen(
             onScreenResolved = {
-                onScaffoldConfigResolved(ScaffoldConfig.TitleWithCustomBottom(
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
                     title = "상세 정보",
                     onBackButtonClick = {
                         navController.popBackStack()
