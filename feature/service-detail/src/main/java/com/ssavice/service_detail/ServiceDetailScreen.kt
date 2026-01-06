@@ -21,7 +21,7 @@ import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -57,7 +57,7 @@ import coil.request.ImageRequest
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.Date
 import com.ssavice.ui.AsyncImageScrollList
-import com.ssavice.ui.component.InfoRow
+import com.ssavice.ui.InfoRow
 
 @Composable
 fun ServiceDetailScreen(
@@ -66,7 +66,7 @@ fun ServiceDetailScreen(
     onBackClick: () -> Unit = {},
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
-    onLikeClick: (Long) -> Unit = {},
+    onLikeClick: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
@@ -321,9 +321,10 @@ fun ServiceDetailScreen(
                                 contentDescription = "Company Logo",
                                 modifier =
                                     Modifier
-                                        .size(48.dp),
+                                        .size(48.dp)
+                                        .clip(CircleShape),
                             )
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     seller?.name ?: "",
@@ -332,7 +333,8 @@ fun ServiceDetailScreen(
                                 )
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
-                                        Icons.Default.Star,
+                                        modifier = Modifier.size(18.dp),
+                                        imageVector = Icons.Default.Star,
                                         contentDescription = "Rating",
                                         tint = MaterialTheme.colorScheme.primary,
                                     )
@@ -438,7 +440,8 @@ fun ReviewItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     repeat(5) { index ->
                         Icon(
-                            imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.Star,
+                            modifier = Modifier.size(18.dp),
+                            imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.StarBorder,
                             contentDescription = null,
                             tint = if (index < rating) MaterialTheme.colorScheme.primary else Color.Gray,
                         )
