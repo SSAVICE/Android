@@ -3,7 +3,9 @@ package com.ssavice.search_result
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SortingOrder
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SearchResultUiState(
     val searchQuery: SearchQuery =
         SearchQuery(

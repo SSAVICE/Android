@@ -33,7 +33,9 @@ fun SearchResultScreen(
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(query) {
-        viewModel.newSearch(query)
+        if (query != state.value.searchQuery) {
+            viewModel.newSearch(query)
+        }
     }
 
     LaunchedEffect(state.value.items.size) {

@@ -1,4 +1,4 @@
-package com.ssavice.ui.component
+package com.ssavice.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

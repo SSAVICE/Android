@@ -6,11 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ssavice.designsystem.component.SsaviceTopBar
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.seller_main.navigation.MainRoute
+import com.ssavice.ui.navigation.SsaviceBaseApp
 import com.ssavice_seller.navigation.SsaviceNavHost
+import com.ssavice_seller.ui.SsaviceBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,14 +23,30 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             SsaviceTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = { SsaviceTopBar("Ssavice") },
-                ) { innerPadding ->
-                    SsaviceNavHost(Modifier.padding(innerPadding))
-                }
+                SsaviceSellerApp(navController)
             }
         }
+    }
+}
+
+@Composable
+fun SsaviceSellerApp(navController: NavHostController) {
+    SsaviceBaseApp(
+        navController = navController,
+        defaultBottomBar = { navController, route ->
+            SsaviceBottomBar(navController, route)
+        },
+    ) { innerPadding, config ->
+        SsaviceNavHost(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+            navController = navController,
+            startDestination = MainRoute,
+            onScaffoldConfigResolved = config,
+        )
     }
 }

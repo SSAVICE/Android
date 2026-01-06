@@ -30,4 +30,10 @@ class UserMainViewModel
                         ),
                 )
         }
+
+        fun onNotificationButtonClick() {
+        }
+
+        fun onSetLocationClick() {
+        }
     }

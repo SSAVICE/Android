@@ -2,8 +2,8 @@ package com.ssavice.ssavice.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search.SearchForm
@@ -13,15 +13,28 @@ import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.serviceDetailScreen
+import com.ssavice.service_detail.ui.ServiceDetailBottomBar
+import com.ssavice.ui.navigation.ScaffoldConfig
+import com.ssavice.user_main.UserMainTopBar
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
+import kotlinx.serialization.Serializable
 
+/**
+ * 앱의 메인 NavHost.
+ *
+ * @param onScaffoldConfigResolved 현재 라우트에 맞는 Scaffold 구성을 상위로 전달하는 콜백.
+ */
 @Composable
-fun SsaviceNavHost(modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
+fun SsaviceNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    startDestination: @Serializable Any,
+    onScaffoldConfigResolved: (ScaffoldConfig) -> Unit,
+) {
     NavHost(
         navController = navController,
-        startDestination = MainRoute,
+        startDestination = startDestination,
         modifier = modifier,
     ) {
         mainScreen(
@@ -31,6 +44,15 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
+            onScreenResolved = { viewModel ->
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.CustomTopWithDefaultBottom(
+                        topBar = {
+                            UserMainTopBar(viewModel)
+                        },
+                    ),
+                )
+            },
         )
         searchFormScreen(
             onSearch = { searchForm ->
@@ -39,6 +61,7 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
                         popUpTo(MainRoute) {
                             inclusive = false
                         }
+                        launchSingleTop = true
                     },
                     searchQuery =
                         SearchQuery(
@@ -53,6 +76,16 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
                             searchRange = searchForm.searchRange,
                             sortBy = searchForm.sortBy,
                         ),
+                )
+            },
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
+                        title = "검색",
+                        onBackButtonClick = {
+                            navController.navigateUp()
+                        },
+                    ),
                 )
             },
         )
@@ -74,8 +107,34 @@ fun SsaviceNavHost(modifier: Modifier = Modifier) {
             onServiceClicked = { serviceId ->
                 navController.navigateToServiceDetail(serviceId = serviceId)
             },
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
+                        title = "검색 결과",
+                        onBackButtonClick = {
+                            navController.popBackStack()
+                        },
+                    ),
+                )
+            },
         )
 
-        serviceDetailScreen()
+        serviceDetailScreen(
+            onScreenResolved = { viewModel ->
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
+                        title = "상세 정보",
+                        onBackButtonClick = {
+                            navController.popBackStack()
+                        },
+                        bottomBar = {
+                            ServiceDetailBottomBar(
+                                viewModel = viewModel,
+                            )
+                        },
+                    ),
+                )
+            },
+        )
     }
 }

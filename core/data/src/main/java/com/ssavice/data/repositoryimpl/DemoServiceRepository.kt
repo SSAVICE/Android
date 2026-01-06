@@ -214,7 +214,7 @@ class DemoServiceRepository
             )
 
         override suspend fun getService(id: Long): Result<ServiceDetail> {
-            delay(300L)
+            delay((3..15).random() * 100L)
             val discount = (0..10).random() * 5
             val price = generateRandomPrice(10000, 100000)
             val discountedPrice = price - (price * discount / 100)
