@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ssavice.designsystem.component.SsaviceElevatedCard
 
 @Composable
 fun ReviewItem(
@@ -30,15 +31,10 @@ fun ReviewItem(
     date: String,
     serviceName: String,
 ) {
-    ElevatedCard(
+    SsaviceElevatedCard(
         modifier =
-            Modifier.Companion
+            Modifier
                 .fillMaxWidth(),
-        colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.Companion.padding(16.dp)) {
             Row(verticalAlignment = Alignment.Companion.Top) {

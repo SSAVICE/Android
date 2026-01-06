@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,21 +23,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.service_detail.SellerSummary
 
 @Composable
-fun CompanyCard(seller: SellerSummary?) {
-    ElevatedCard(
+fun CompanyCard(
+    seller: SellerSummary,
+    onSellerClick: () -> Unit = {}, ) {
+    SsaviceElevatedCard(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-        onClick = { /*TODO*/ },
-        colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        onClick = onSellerClick,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -50,7 +46,7 @@ fun CompanyCard(seller: SellerSummary?) {
                     model =
                         ImageRequest
                             .Builder(LocalContext.current)
-                            .data(seller?.imageUrl ?: "")
+                            .data(seller.imageUrl)
                             .crossfade(true)
                             .build(),
                     contentDescription = "Company Logo",
@@ -62,7 +58,7 @@ fun CompanyCard(seller: SellerSummary?) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        seller?.name ?: "",
+                        seller.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                     )
@@ -75,13 +71,13 @@ fun CompanyCard(seller: SellerSummary?) {
                         )
                         Spacer(Modifier.width(3.dp))
                         Text(
-                            "${seller?.rate ?: ""} (${seller?.rateCount}명)",
+                            "${seller.rate} (${seller.rateCount}명)",
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                     Text(
                         modifier = Modifier.padding(start = 3.dp),
-                        text = seller?.address ?: "",
+                        text = seller.address,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -89,7 +85,7 @@ fun CompanyCard(seller: SellerSummary?) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = seller?.description ?: "",
+                text = seller.description,
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
