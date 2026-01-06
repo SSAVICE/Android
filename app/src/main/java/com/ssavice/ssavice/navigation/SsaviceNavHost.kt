@@ -2,8 +2,6 @@ package com.ssavice.ssavice.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssavice.model.Category
@@ -15,6 +13,7 @@ import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.serviceDetailScreen
+import com.ssavice.user_main.UserMainTopBar
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
 import kotlinx.serialization.Serializable
@@ -43,9 +42,13 @@ fun SsaviceNavHost(
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
-            onScreenResolved = {
-                onScaffoldConfigResolved(ScaffoldConfig.TitleAndDefaultBottom(
-                    title = "메인",
+            onScreenResolved = { onSelectLocation, onNotificationClick ->
+                onScaffoldConfigResolved(ScaffoldConfig.CustomTopWithDefaultBottom(
+                    topBar = {
+                        UserMainTopBar(
+                            onSelectLocation, onNotificationClick
+                        )
+                    },
                 ))
             }
         )
