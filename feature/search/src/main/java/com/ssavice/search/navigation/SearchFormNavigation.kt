@@ -44,7 +44,10 @@ fun NavController.navigateToSearchForm(navOptions: NavOptionsBuilder.() -> Unit 
     }
 }
 
-fun NavGraphBuilder.searchFormScreen(onSearch: (SearchForm) -> Unit = {}) {
+fun NavGraphBuilder.searchFormScreen(
+    onSearch: (SearchForm) -> Unit = {},
+    onScreenResolved: () -> Unit,
+) {
     composable<SearchFormRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -59,7 +62,10 @@ fun NavGraphBuilder.searchFormScreen(onSearch: (SearchForm) -> Unit = {}) {
             )
         },
     ) {
-        SearchFormScreen(onSearch = onSearch)
+        onScreenResolved()
+        SearchFormScreen(
+            onSearch = onSearch,
+        )
     }
 }
 

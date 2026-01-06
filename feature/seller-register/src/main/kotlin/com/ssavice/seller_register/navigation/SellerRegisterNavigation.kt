@@ -18,9 +18,13 @@ fun NavController.navigateToRegister(navOptions: NavOptionsBuilder.() -> Unit = 
     }
 }
 
-fun NavGraphBuilder.registerScreen(onSubmit: () -> Unit) {
+fun NavGraphBuilder.registerScreen(
+    onSubmit: () -> Unit,
+    onScreenResolved: () -> Unit,
+) {
     composable<RegisterRoute>
     {
+        onScreenResolved()
         RegisterScreen(
             onSubmit = onSubmit,
         )

@@ -118,4 +118,16 @@ class ServiceDetailViewModel
                 )
             }
         }
+
+        fun onChatButtonClick() {
+        }
+
+        fun onParticipateButtonClick() {
+        }
+
+        fun onLikeButtonClick() {
+        }
+
+        fun onShareButtonClick() {
+        }
     }

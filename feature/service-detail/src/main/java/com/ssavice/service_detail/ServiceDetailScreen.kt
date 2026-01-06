@@ -10,28 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,23 +32,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.DefaultShadowColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.Date
-import com.ssavice.ui.AsyncImageScrollList
-import com.ssavice.ui.component.InfoRow
+import com.ssavice.service_detail.ui.CompanyCard
+import com.ssavice.service_detail.ui.ReviewItem
+import com.ssavice.service_detail.ui.ServiceImagesWithButtons
+import com.ssavice.ui.InfoRow
 
 @Composable
 fun ServiceDetailScreen(
@@ -84,14 +71,14 @@ fun ServiceDetailScreen(
         }
     }
 
-    val enabled = uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
+    val enabled =
+        uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
     ServiceDetailScreen(
-        modifier = modifier,
+        modifier =
+            modifier
+                .background(MaterialTheme.colorScheme.background),
         uiState.service,
         uiState.seller,
-        onBackClick = onBackClick,
-        onChatClick = onChatClick,
-        onParticipateClick = onParticipateClick,
         onLikeClick = onLikeClick,
         enabled = enabled,
     )
@@ -103,269 +90,129 @@ fun ServiceDetailScreen(
     modifier: Modifier = Modifier,
     service: ServiceDetail?,
     seller: SellerSummary?,
-    onBackClick: () -> Unit = {},
-    onChatClick: (Long) -> Unit = {},
-    onParticipateClick: (Long) -> Unit = {},
     onLikeClick: (Long) -> Unit = {},
     enabled: Boolean = true,
 ) {
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
-        LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-        ) {
-            item {
-                Box {
-                    AsyncImageScrollList(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(250.dp),
-                        imageUrls = service?.imageUrls ?: listOf(),
-                        onImageClick = { /* TODO */ },
-                    )
-                    Row(
-                        modifier =
-                            Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(8.dp),
-                    ) {
-                        IconButton(
-                            modifier =
-                                Modifier
-                                    .shadow(
-                                        elevation = 4.dp,
-                                        shape = CircleShape,
-                                        spotColor = DefaultShadowColor.copy(alpha = 0.4f),
-                                        ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                                    ).clip(CircleShape),
-                            onClick = { /* TODO */ },
-                            colors =
-                                IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                ),
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .verticalScroll(state = rememberScrollState()),
+    ) {
+        if (service != null) {
+            ServiceImagesWithButtons(
+                urls = service.imageUrls,
+                onLikeClick = { onLikeClick(service.id) },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text(
+                    service.name,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    service.tags.forEach { tag ->
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.primaryContainer,
                         ) {
-                            Icon(
-                                Icons.Default.FavoriteBorder,
-                                contentDescription = "Favorite",
-                                tint = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-                        IconButton(
-                            modifier =
-                                Modifier
-                                    .shadow(
-                                        elevation = 4.dp,
-                                        shape = CircleShape,
-                                        spotColor = DefaultShadowColor.copy(alpha = 0.4f),
-                                        ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                                    ).clip(CircleShape),
-                            onClick = { /* TODO */ },
-                            colors =
-                                IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                ),
-                        ) {
-                            Icon(
-                                Icons.Default.Share,
-                                contentDescription = "Share",
-                                tint = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-                    }
-                }
-            }
-
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-
-            item {
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Text(
-                        service?.name ?: "",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        service?.tags?.forEach { tag ->
-                            Surface(
-                                shape = MaterialTheme.shapes.small,
-                                color = MaterialTheme.colorScheme.primaryContainer,
-                            ) {
-                                Text(
-                                    text = tag,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                    style = MaterialTheme.typography.bodySmall,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-
-            item {
-                ElevatedCard(
-                    elevation =
-                        CardDefaults.cardElevation(
-                            defaultElevation = 2.dp,
-                        ),
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                    colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        ),
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        if (service != null) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    "₩%,d".format(service.discountedPrice),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.error,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    "₩%,d".format(service.basePrice),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    textDecoration = TextDecoration.LineThrough,
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                "${service.discountRatio}% 할인",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error.copy(alpha = 0.6f),
-                                fontWeight = FontWeight.Bold,
+                                text = tag,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
                     }
                 }
             }
-
-            item { Spacer(modifier = Modifier.height(24.dp)) }
-
-            item {
-                Column(
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    InfoRow(
-                        icon = Icons.Default.LocationOn,
-                        iconContentDescription = "Location",
-                        title = "위치",
-                        content = service?.address ?: "",
-                    )
-                    InfoRow(
-                        icon = Icons.Default.Group,
-                        iconContentDescription = "Participants",
-                        title = "참여 인원",
-                        content = service?.participantInfo ?: "",
-                    )
-                    InfoRow(
-                        icon = Icons.Default.CalendarToday,
-                        iconContentDescription = "Period",
-                        title = "기간",
-                        content = "${service?.startDate} ~ ${service?.endDate}",
-                    )
-                }
-            }
-
-            item { Spacer(modifier = Modifier.height(24.dp)) }
-
-            item { HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp)) }
-
-            item { Spacer(modifier = Modifier.height(24.dp)) }
-
-            item {
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Text(service?.description ?: "")
-                }
-            }
-
-            item { Spacer(modifier = Modifier.height(24.dp)) }
-
-            item {
-                ElevatedCard(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                    onClick = { /*TODO*/ },
-                    colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            // Company Logo
-                            AsyncImage(
-                                model =
-                                    ImageRequest
-                                        .Builder(LocalContext.current)
-                                        .data(seller?.imageUrl ?: "")
-                                        .crossfade(true)
-                                        .build(),
-                                contentDescription = "Company Logo",
-                                modifier =
-                                    Modifier
-                                        .size(48.dp),
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    seller?.name ?: "",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        Icons.Default.Star,
-                                        contentDescription = "Rating",
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                    Spacer(modifier.width(3.dp))
-                                    Text(
-                                        "${seller?.rate ?: ""} (${seller?.rateCount}명)",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                }
-                                Text(
-                                    modifier = Modifier.padding(start = 3.dp),
-                                    text = seller?.address ?: "",
-                                    style = MaterialTheme.typography.bodySmall,
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            ElevatedCard(
+                elevation =
+                    CardDefaults.cardElevation(
+                        defaultElevation = 2.dp,
+                    ),
+                modifier =
+                    Modifier.Companion
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ),
+            ) {
+                Column(modifier = Modifier.Companion.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                         Text(
-                            modifier = Modifier.padding(8.dp),
-                            text = seller?.description ?: "",
-                            style = MaterialTheme.typography.bodyMedium,
+                            "₩%,d".format(service.discountedPrice),
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Companion.Bold,
+                        )
+                        Spacer(modifier = Modifier.Companion.width(8.dp))
+                        Text(
+                            "₩%,d".format(service.basePrice),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            textDecoration = TextDecoration.Companion.LineThrough,
                         )
                     }
+                    Spacer(modifier = Modifier.Companion.height(4.dp))
+                    Text(
+                        "${service.discountRatio}% 할인",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.6f),
+                        fontWeight = FontWeight.Companion.Bold,
+                    )
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+            Column(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                InfoRow(
+                    icon = Icons.Default.LocationOn,
+                    iconContentDescription = "Location",
+                    title = "위치",
+                    content = service.address ?: "",
+                )
+                InfoRow(
+                    icon = Icons.Default.Group,
+                    iconContentDescription = "Participants",
+                    title = "참여 인원",
+                    content = service.participantInfo,
+                )
+                InfoRow(
+                    icon = Icons.Default.CalendarToday,
+                    iconContentDescription = "Period",
+                    title = "기간",
+                    content = "${service.startDate} ~ ${service.endDate}",
+                )
+            }
 
-            item { Spacer(modifier = Modifier.height(24.dp)) }
+            Spacer(modifier = Modifier.height(24.dp))
 
-            item {
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+
+            Spacer(modifier = Modifier.height(24.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text(service.description)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            if (seller != null) {
+                CompanyCard(seller = seller)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            "판매자 리뷰 (${seller?.rateCount})",
+                            "판매자 리뷰 (${seller.rateCount})",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                         )
@@ -374,7 +221,7 @@ fun ServiceDetailScreen(
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        seller?.reviews?.forEach { review ->
+                        seller.reviews.forEach { review ->
                             ReviewItem(
                                 review = review.content,
                                 rating = review.rating,
@@ -385,71 +232,12 @@ fun ServiceDetailScreen(
                         }
                     }
                 }
+            } else {
+                Loading(400.dp)
             }
-        }
-
-        Surface(shadowElevation = 8.dp) {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                OutlinedButton(
-                    onClick = { /* onChatClick() */ },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text("채팅하기")
-                }
-                Button(
-                    onClick = { /* onParticipateClick() */ },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text("참여하기")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ReviewItem(
-    review: String,
-    rating: Int,
-    userName: String,
-    date: String,
-    serviceName: String,
-) {
-    ElevatedCard(
-        modifier =
-            Modifier
-                .fillMaxWidth(),
-        colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.Top) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = userName,
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    repeat(5) { index ->
-                        Icon(
-                            imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.Star,
-                            contentDescription = null,
-                            tint = if (index < rating) MaterialTheme.colorScheme.primary else Color.Gray,
-                        )
-                    }
-                }
-            }
-            Text(serviceName, style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(date, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(review)
+            Spacer(modifier = Modifier.height(10.dp))
+        } else {
+            Loading(400.dp)
         }
     }
 }
@@ -506,7 +294,13 @@ fun ServiceDetailScreenPreview() {
                         createdAt = Date.now().toSimpleString(),
                         rating = 5,
                     ),
-                    Review(userName = "추*훈", content = "별로임", serviceName = "요가 클래스", createdAt = Date.now().toSimpleString(), rating = 2),
+                    Review(
+                        userName = "추*훈",
+                        content = "별로임",
+                        serviceName = "요가 클래스",
+                        createdAt = Date.now().toSimpleString(),
+                        rating = 2,
+                    ),
                 ),
         )
     SsaviceTheme {
@@ -519,5 +313,15 @@ fun ServiceDetailScreenPreview() {
                 seller = company,
             )
         }
+    }
+}
+
+@Composable
+fun Loading(height: Dp) {
+    Box(
+        modifier = Modifier.height(height).fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
     }
 }

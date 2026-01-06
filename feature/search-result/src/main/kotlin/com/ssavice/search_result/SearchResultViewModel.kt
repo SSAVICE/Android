@@ -30,21 +30,27 @@ class SearchResultViewModel
                     savedStateHandle.getStateFlow(START_PRICE, 0),
                     savedStateHandle.getStateFlow(END_PRICE, 10_000_000),
                     savedStateHandle.getStateFlow(SORT_BY, 0),
-                ) { category, searchRange, startPrice, endPrice, sortBy ->
-                    listOf(category, searchRange, startPrice, endPrice, sortBy)
-                }.combine(savedStateHandle.getStateFlow(QUERY, "")) { o1, query ->
+                    savedStateHandle.getStateFlow(QUERY, ""),
+                ) { params ->
+                    val category = params[0] as Int
+                    val searchRange = params[1] as Int
+                    val startPrice = params[2] as Int
+                    val endPrice = params[3] as Int
+                    val sortBy = params[4] as Int
+                    val query = params[5] as String
+
                     val q =
                         SearchQuery(
                             query = query,
                             region1 = "region1",
                             region2 = "region2",
-                            category = Category.entries.getOrElse(o1[0], { Category.entries[0] }),
-                            searchRange = o1[1],
-                            minPrice = o1[2],
-                            maxPrice = o1[3],
-                            sortBy = SortingOrder.entries.getOrElse(o1[4], { SortingOrder.POPULARITY }),
+                            category = Category.entries.getOrElse(category, { Category.entries[0] }),
+                            searchRange = searchRange,
+                            minPrice = startPrice,
+                            maxPrice = endPrice,
+                            sortBy = SortingOrder.entries.getOrElse(sortBy, { SortingOrder.POPULARITY }),
                         )
-                    Log.d("query", q.toString())
+                    Log.d("KSC", "query: $q")
                     q
                 }.stateIn(
                     scope = viewModelScope,
@@ -72,4 +78,8 @@ class SearchResultViewModel
                     started = SharingStarted.WhileSubscribed(5_000),
                     initialValue = SearchResultUiState(searchQuery = queryState.value),
                 )
+
+        override fun onCleared() {
+            Log.d("KSC", "Search Result Cleared")
+        }
     }
