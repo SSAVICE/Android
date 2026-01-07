@@ -77,25 +77,28 @@ fun MyService(
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                        Spacer(Modifier.height(2.dp))
+                        Spacer(Modifier.height(8.dp))
                         Text(
                             text = price,
                             style = MaterialTheme.typography.bodyMedium,
+                            overflow = TextOverflow.Ellipsis,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
                             text = sellerName,
                             style = MaterialTheme.typography.labelLarge,
+                            overflow = TextOverflow.Ellipsis,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
                             text = duration,
                             style = MaterialTheme.typography.labelLarge,
+                            overflow = TextOverflow.Clip,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(4.dp))
                     }
                 }
             }
