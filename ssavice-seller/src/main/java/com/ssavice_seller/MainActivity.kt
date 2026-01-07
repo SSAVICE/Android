@@ -35,8 +35,8 @@ class MainActivity : ComponentActivity() {
 fun SsaviceSellerApp(navController: NavHostController) {
     SsaviceBaseApp(
         navController = navController,
-        defaultBottomBar = { navController, route ->
-            SsaviceBottomBar(navController, route)
+        defaultBottomBar = { navController ->
+            SsaviceBottomBar(navController)
         },
     ) { innerPadding, config ->
         SsaviceNavHost(

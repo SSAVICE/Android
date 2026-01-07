@@ -3,7 +3,6 @@ package com.ssavice.ui.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,14 +13,11 @@ import androidx.navigation.NavHostController
 @Composable
 fun SsaviceBaseApp(
     navController: NavHostController,
-    defaultBottomBar: @Composable (navController: NavHostController, currentRoute: String?) -> Unit,
+    defaultBottomBar: @Composable (navController: NavHostController) -> Unit,
     content: @Composable (PaddingValues, (ScaffoldConfig) -> Unit) -> Unit,
 ) {
     var scaffoldConfig by remember<MutableState<ScaffoldConfig>> {
         mutableStateOf(ScaffoldConfig.Default) // 초기값
-    }
-    val currentDestination by remember {
-        derivedStateOf { navController.currentBackStackEntry?.destination }
     }
 
     val onScaffoldConfigResolved: (ScaffoldConfig) -> Unit = { config ->
@@ -36,7 +32,7 @@ fun SsaviceBaseApp(
     when (val config = scaffoldConfig) {
         is ScaffoldConfig.Default -> {
             bottomBar = {
-                defaultBottomBar(navController, currentDestination?.route)
+                defaultBottomBar(navController)
             }
             topBar = {}
         }
@@ -48,7 +44,7 @@ fun SsaviceBaseApp(
 
         is ScaffoldConfig.CustomTopWithDefaultBottom -> {
             bottomBar = {
-                defaultBottomBar(navController, currentDestination?.route)
+                defaultBottomBar(navController)
             }
             topBar = config.topBar ?: {}
         }
@@ -60,7 +56,7 @@ fun SsaviceBaseApp(
 
         is ScaffoldConfig.TitleAndDefaultBottom -> {
             bottomBar = {
-                defaultBottomBar(navController, currentDestination?.route)
+                defaultBottomBar(navController)
             }
             topBar = {
                 SsaviceTitle(

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import com.ssavice.user_main.navigation.MainRoute
+import com.ssavice.user_my_page.navigation.UserMyPageRoute
 import kotlinx.serialization.Serializable
 
 enum class TopLevelDestination(
@@ -31,7 +32,7 @@ enum class TopLevelDestination(
         iconText = "채팅",
     ),
     MY_PAGE(
-        route = MainRoute,
+        route = UserMyPageRoute,
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.PersonOutline,
         iconText = "마이",
