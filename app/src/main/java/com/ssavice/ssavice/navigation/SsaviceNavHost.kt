@@ -18,6 +18,7 @@ import com.ssavice.ui.navigation.ScaffoldConfig
 import com.ssavice.user_main.UserMainTopBar
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
+import com.ssavice.user_my_page.navigation.myPageScreen
 import kotlinx.serialization.Serializable
 
 /**
@@ -132,6 +133,16 @@ fun SsaviceNavHost(
                                 viewModel = viewModel,
                             )
                         },
+                    ),
+                )
+            },
+        )
+
+        myPageScreen(
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleAndDefaultBottom(
+                        title = "마이 페이지",
                     ),
                 )
             },

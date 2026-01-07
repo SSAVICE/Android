@@ -17,9 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.Date
 import com.ssavice.service_detail.ui.CompanyCard
@@ -129,19 +128,11 @@ fun ServiceDetailScreen(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            ElevatedCard(
-                elevation =
-                    CardDefaults.cardElevation(
-                        defaultElevation = 2.dp,
-                    ),
+            SsaviceElevatedCard(
                 modifier =
                     Modifier.Companion
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                colors =
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    ),
             ) {
                 Column(modifier = Modifier.Companion.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.Companion.CenterVertically) {

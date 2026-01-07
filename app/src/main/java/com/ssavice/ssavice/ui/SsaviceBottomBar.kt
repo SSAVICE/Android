@@ -10,10 +10,7 @@ import com.ssavice.ssavice.navigation.TopLevelDestination
 import com.ssavice.ssavice.navigation.navigateToTop
 
 @Composable
-fun SsaviceBottomBar(
-    navController: NavController,
-    currentRoute: String?,
-) {
+fun SsaviceBottomBar(navController: NavController) {
     val destinations =
         listOf(
             TopLevelDestination.USER_MAIN,
@@ -23,11 +20,13 @@ fun SsaviceBottomBar(
 
     NavigationBar {
         destinations.forEach { destination ->
-            val selected = currentRoute == destination.route::class.qualifiedName
+            val selected = navController.currentDestination?.route == destination.route::class.qualifiedName
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    navController.navigateToTop(destination.route)
+                    if (!selected) {
+                        navController.navigateToTop(destination.route)
+                    }
                 },
                 icon = {
                     Icon(
