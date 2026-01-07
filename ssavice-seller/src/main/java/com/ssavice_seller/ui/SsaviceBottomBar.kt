@@ -12,7 +12,6 @@ import com.ssavice_seller.navigation.navigateToTop
 @Composable
 fun SsaviceBottomBar(
     navController: NavController,
-    currentRoute: String?,
 ) {
     val destinations =
         listOf(
@@ -23,7 +22,7 @@ fun SsaviceBottomBar(
 
     NavigationBar {
         destinations.forEach { destination ->
-            val selected = currentRoute == destination.route::class.qualifiedName
+            val selected = navController.currentDestination?.route == destination.route::class.qualifiedName
             NavigationBarItem(
                 selected = selected,
                 onClick = {
