@@ -1,0 +1,165 @@
+package com.ssavice.user_my_service
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.ssavice.designsystem.component.InfiniteScrollContainer
+import com.ssavice.designsystem.component.SsaviceChip
+import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.ui.MyService
+
+@Composable
+fun MyServiceRoute() {
+
+}
+
+@Composable
+fun MyServiceScreen(
+    modifier: Modifier = Modifier,
+    onServiceClick: (Long) -> Unit = {},
+    onCancelClick: (Long) -> Unit = {},
+    onReviewClick: (Long) -> Unit = {},
+    searchRanges: List<String>,
+    selectedSearchRange: Int,
+    onSearchRangeSelected: (Int) -> Unit = {},
+    uiState: MyServiceUiState,
+) {
+    val isLoading = uiState.myServiceScreenStatus == MyServiceState.Loading
+    InfiniteScrollContainer(
+        modifier = modifier.padding(horizontal = 15.dp)
+            .padding(top = 10.dp),
+        isLoading = isLoading,
+        hasMoreData = uiState.hasNext,
+        onLoadMore = {},
+        topElement = {
+            item {
+                RangeFilter(
+                    modifier = Modifier.fillMaxWidth(),
+                    searchRange = searchRanges,
+                    selection = selectedSearchRange,
+                    onSelectionChanged = onSearchRangeSelected
+                )
+                Spacer(Modifier.height(10.dp))
+            }
+        }
+    ) {
+        items(
+            count = uiState.services.size,
+            key = {
+                uiState.services[it].index
+            }
+        ) {
+            MyService(
+                title = uiState.services[it].title,
+                sellerName = uiState.services[it].sellerName,
+                duration = uiState.services[it].duration,
+                cancellable = uiState.services[it].cancellable,
+                reviewable = uiState.services[it].reviewable,
+                price = uiState.services[it].price,
+                thumbnailUrl = uiState.services[it].thumbnailUrl,
+                onCancelButtonClick = { onCancelClick(uiState.services[it].id) },
+                onReviewButtonClick = { onReviewClick(uiState.services[it].id) },
+                onClick = { onServiceClick(uiState.services[it].id) },
+                thumbnail = { url ->
+                    AsyncImage(
+                        model =
+                            ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(url)
+                                .crossfade(true)
+                                .build(),
+                        contentDescription = "서비스 썸네일",
+                        modifier =
+                            Modifier
+                                .size(80.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                    )
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun RangeFilter(
+    modifier: Modifier,
+    searchRange: List<String>,
+    selection: Int,
+    spacing: Dp = 7.dp,
+    onSelectionChanged: (Int) -> Unit = {},
+) {
+    Row(
+        modifier =
+            modifier
+                .horizontalScroll(rememberScrollState()),
+        horizontalArrangement =
+            androidx.compose.foundation.layout.Arrangement
+                .spacedBy(spacing),
+    ) {
+        searchRange.forEachIndexed { i, range ->
+            SsaviceChip(
+                selected = i == selection,
+                onSelectedChange = { onSelectionChanged(i) },
+                text = range,
+            )
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun MyServiceScreenPreview() {
+    fun makeSampleData(i: Int): MyServiceItemUiState =
+        MyServiceItemUiState(
+            i,
+            i.toLong(),
+            "서비스 $i",
+            "₩%,d".format(100000 * i),
+            "https://picsum.photos/seed/item $i/200",
+            "판매자 $i",
+            "2026-01-16 - 2026-02-03",
+            true,
+            true
+        )
+
+    val state = MyServiceUiState(
+        services = (0..10).map { makeSampleData(it) },
+        myServiceScreenStatus = MyServiceState.Loaded,
+        hasNext = false,
+        nextId = 0,
+    )
+
+    SsaviceTheme {
+        Scaffold { innerPadding ->
+            MyServiceScreen(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize(),
+                uiState = state,
+                searchRanges = listOf("전체", "진행중", "완료"),
+                selectedSearchRange = 0
+            )
+        }
+    }
+}
