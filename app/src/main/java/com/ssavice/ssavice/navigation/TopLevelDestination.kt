@@ -43,7 +43,7 @@ fun NavController.navigateToTop(route: @Serializable Any) =
     navigate(route) {
         graph.startDestinationRoute?.let {
             popUpTo(it) {
-                inclusive = true
+                inclusive = false
             }
         }
         launchSingleTop = true

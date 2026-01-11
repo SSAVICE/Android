@@ -9,6 +9,7 @@ import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class DemoUserInfoRepository
@@ -59,7 +60,8 @@ constructor() : UserInfoRepository {
         sortingOrder: SortingOrder,
         serviceState: ServiceState,
     ): Result<UserServiceParticipation> {
-        val hasMore = (page?:0) >= 3
+        delay(1000)
+        val hasMore = (page?:0) < 3
         val cnt = if(hasMore) searchCount else searchCount / 2
 
         return Result.success(

@@ -19,6 +19,8 @@ import com.ssavice.user_main.UserMainTopBar
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
 import com.ssavice.user_my_page.navigation.myPageScreen
+import com.ssavice.user_my_service.navigation.myServiceScreen
+import com.ssavice.user_my_service.navigation.navigateToMyService
 import kotlinx.serialization.Serializable
 
 /**
@@ -146,6 +148,28 @@ fun SsaviceNavHost(
                     ),
                 )
             },
+            onParticipatedServiceButtonClick = {
+                navController.navigateToMyService()
+            }
+        )
+
+        myServiceScreen(
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
+                        title = "참여 서비스",
+                        onBackButtonClick = {
+                            navController.navigateUp()
+                        },
+                    )
+                )
+            },
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it)
+            },
+            onReviewClick = {
+                navController.navigateToServiceDetail(serviceId = it)
+            }
         )
     }
 }
