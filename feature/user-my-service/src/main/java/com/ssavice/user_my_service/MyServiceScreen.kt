@@ -14,12 +14,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.InfiniteScrollContainer
@@ -28,8 +32,28 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.ui.MyService
 
 @Composable
-fun MyServiceRoute() {
+fun MyServiceRoute(
+    modifier: Modifier = Modifier,
+    viewModel: MyServiceViewModel = hiltViewModel(),
+    onServiceClick: (Long) -> Unit = {},
+    onReviewClick: (Long) -> Unit = {},
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(state.myServiceScreenStatus) {
+        if (state.myServiceScreenStatus == MyServiceState.Initial) {
+            viewModel.loadService()
+        }
+    }
+
+    MyServiceScreen(
+        modifier = modifier,
+        uiState = state,
+        onLoadMore = viewModel::loadMoreService,
+        onReviewClick = onReviewClick,
+        onServiceClick = onServiceClick,
+        onSearchingStateChanged = viewModel::onSearchingStateChange
+    )
 }
 
 @Composable
@@ -38,9 +62,8 @@ fun MyServiceScreen(
     onServiceClick: (Long) -> Unit = {},
     onCancelClick: (Long) -> Unit = {},
     onReviewClick: (Long) -> Unit = {},
-    searchRanges: List<String>,
-    selectedSearchRange: Int,
-    onSearchRangeSelected: (Int) -> Unit = {},
+    onSearchingStateChanged: (Int) -> Unit = {},
+    onLoadMore: () -> Unit = {},
     uiState: MyServiceUiState,
 ) {
     val isLoading = uiState.myServiceScreenStatus == MyServiceState.Loading
@@ -49,14 +72,14 @@ fun MyServiceScreen(
             .padding(top = 10.dp),
         isLoading = isLoading,
         hasMoreData = uiState.hasNext,
-        onLoadMore = {},
+        onLoadMore = onLoadMore,
         topElement = {
             item {
-                RangeFilter(
+                ServiceStateFilter(
                     modifier = Modifier.fillMaxWidth(),
-                    searchRange = searchRanges,
-                    selection = selectedSearchRange,
-                    onSelectionChanged = onSearchRangeSelected
+                    searchRange = uiState.searchingState,
+                    selection = uiState.searchTypeSelection,
+                    onSelectionChanged = onSearchingStateChanged
                 )
                 Spacer(Modifier.height(10.dp))
             }
@@ -100,7 +123,7 @@ fun MyServiceScreen(
 }
 
 @Composable
-fun RangeFilter(
+fun ServiceStateFilter(
     modifier: Modifier,
     searchRange: List<String>,
     selection: Int,
@@ -146,7 +169,8 @@ fun MyServiceScreenPreview() {
         services = (0..10).map { makeSampleData(it) },
         myServiceScreenStatus = MyServiceState.Loaded,
         hasNext = false,
-        nextId = 0,
+        nextPage = 0,
+        searchTypeSelection = 0,
     )
 
     SsaviceTheme {
@@ -157,8 +181,9 @@ fun MyServiceScreenPreview() {
                     .background(MaterialTheme.colorScheme.background)
                     .fillMaxSize(),
                 uiState = state,
-                searchRanges = listOf("전체", "진행중", "완료"),
-                selectedSearchRange = 0
+                onSearchingStateChanged = {
+                    state.copy(searchTypeSelection = it)
+                }
             )
         }
     }

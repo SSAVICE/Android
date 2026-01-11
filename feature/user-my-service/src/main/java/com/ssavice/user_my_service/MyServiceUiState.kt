@@ -1,10 +1,14 @@
 package com.ssavice.user_my_service
 
+import com.ssavice.model.service.ServiceState
+
 data class MyServiceUiState(
     val services: List<MyServiceItemUiState> = listOf(),
     val myServiceScreenStatus: MyServiceState = MyServiceState.Loading,
     val hasNext: Boolean = false,
-    val nextId: Long,
+    val nextPage: Int = 0,
+    val searchTypeSelection: Int = 0,
+    val searchingState:List<String> = ServiceState.entries.map { it.value }
 )
 
 data class MyServiceItemUiState(
@@ -20,7 +24,8 @@ data class MyServiceItemUiState(
 )
 
 sealed interface MyServiceState {
+    object Initial : MyServiceState
     object Loading : MyServiceState
     object Loaded : MyServiceState
-    data class Error(val message: String) : MyServiceState
+    data class Error(val message: Throwable) : MyServiceState
 }
