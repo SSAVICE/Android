@@ -69,7 +69,7 @@ fun NavGraphBuilder.searchFormScreen(
         val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
 
         LaunchedEffect(lifecycleState) {
-            if(lifecycleState == Lifecycle.State.STARTED){
+            if (lifecycleState == Lifecycle.State.STARTED) {
                 onScreenResolved()
             }
         }

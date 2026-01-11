@@ -25,7 +25,6 @@ fun NavGraphBuilder.myServiceScreen(
     onServiceClick: (Long) -> Unit,
     onReviewClick: (Long) -> Unit,
     onScreenResolved: () -> Unit,
-
 ) {
     composable<UserMyServiceRoute>(
         popEnterTransition = null,

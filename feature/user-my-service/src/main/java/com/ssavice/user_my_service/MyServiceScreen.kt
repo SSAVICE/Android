@@ -52,7 +52,7 @@ fun MyServiceRoute(
         onLoadMore = viewModel::loadMoreService,
         onReviewClick = onReviewClick,
         onServiceClick = onServiceClick,
-        onSearchingStateChanged = viewModel::onSearchingStateChange
+        onSearchingStateChanged = viewModel::onSearchingStateChange,
     )
 }
 
@@ -68,8 +68,10 @@ fun MyServiceScreen(
 ) {
     val isLoading = uiState.myServiceScreenStatus == MyServiceState.Loading
     InfiniteScrollContainer(
-        modifier = modifier.padding(horizontal = 15.dp)
-            .padding(top = 10.dp),
+        modifier =
+            modifier
+                .padding(horizontal = 15.dp)
+                .padding(top = 10.dp),
         isLoading = isLoading,
         hasMoreData = uiState.hasNext,
         onLoadMore = onLoadMore,
@@ -79,17 +81,17 @@ fun MyServiceScreen(
                     modifier = Modifier.fillMaxWidth(),
                     searchRange = uiState.searchingState,
                     selection = uiState.searchTypeSelection,
-                    onSelectionChanged = onSearchingStateChanged
+                    onSelectionChanged = onSearchingStateChanged,
                 )
                 Spacer(Modifier.height(10.dp))
             }
-        }
+        },
     ) {
         items(
             count = uiState.services.size,
             key = {
                 uiState.services[it].index
-            }
+            },
         ) {
             MyService(
                 title = uiState.services[it].title,
@@ -116,7 +118,7 @@ fun MyServiceScreen(
                                 .size(80.dp)
                                 .clip(RoundedCornerShape(12.dp)),
                     )
-                }
+                },
             )
         }
     }
@@ -148,7 +150,6 @@ fun ServiceStateFilter(
     }
 }
 
-
 @Preview
 @Composable
 fun MyServiceScreenPreview() {
@@ -162,28 +163,30 @@ fun MyServiceScreenPreview() {
             "판매자 $i",
             "2026-01-16 - 2026-02-03",
             true,
-            true
+            true,
         )
 
-    val state = MyServiceUiState(
-        services = (0..10).map { makeSampleData(it) },
-        myServiceScreenStatus = MyServiceState.Loaded,
-        hasNext = false,
-        nextPage = 0,
-        searchTypeSelection = 0,
-    )
+    val state =
+        MyServiceUiState(
+            services = (0..10).map { makeSampleData(it) },
+            myServiceScreenStatus = MyServiceState.Loaded,
+            hasNext = false,
+            nextPage = 0,
+            searchTypeSelection = 0,
+        )
 
     SsaviceTheme {
         Scaffold { innerPadding ->
             MyServiceScreen(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxSize(),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .background(MaterialTheme.colorScheme.background)
+                        .fillMaxSize(),
                 uiState = state,
                 onSearchingStateChanged = {
                     state.copy(searchTypeSelection = it)
-                }
+                },
             )
         }
     }

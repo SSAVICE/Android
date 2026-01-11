@@ -8,7 +8,7 @@ data class MyServiceUiState(
     val hasNext: Boolean = false,
     val nextPage: Int = 0,
     val searchTypeSelection: Int = 0,
-    val searchingState:List<String> = ServiceState.entries.map { it.value }
+    val searchingState: List<String> = ServiceState.entries.map { it.value },
 )
 
 data class MyServiceItemUiState(
@@ -25,7 +25,12 @@ data class MyServiceItemUiState(
 
 sealed interface MyServiceState {
     object Initial : MyServiceState
+
     object Loading : MyServiceState
+
     object Loaded : MyServiceState
-    data class Error(val message: Throwable) : MyServiceState
+
+    data class Error(
+        val message: Throwable,
+    ) : MyServiceState
 }

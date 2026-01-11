@@ -16,5 +16,5 @@ interface UserInfoRepository {
         page: Int?,
         sortingOrder: SortingOrder,
         serviceState: ServiceState,
-        ): Result<UserServiceParticipation>
+    ): Result<UserServiceParticipation>
 }

@@ -5,13 +5,13 @@ data class GetUserServiceParticipationDTO(
     val currentPage: Int,
     val size: Int,
     val totalElements: Long,
-    val totalPages: Int
+    val totalPages: Int,
 )
 
 data class Content(
     val bookStatus: String,
     val isReviewed: Boolean,
-    val serviceInfo: ServiceInfo
+    val serviceInfo: ServiceInfo,
 )
 
 data class ServiceInfo(
@@ -33,5 +33,5 @@ data class ServiceInfo(
     val status: String,
     val tag: String,
     val thumbnailUrl: String,
-    val title: String
+    val title: String,
 )

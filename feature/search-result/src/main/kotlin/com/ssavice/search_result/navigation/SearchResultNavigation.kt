@@ -59,9 +59,8 @@ fun NavGraphBuilder.searchResultScreen(
     ) { backStackEntry ->
         val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
 
-        LaunchedEffect(lifecycleState){
-            if (lifecycleState == Lifecycle.State.STARTED
-            ) {
+        LaunchedEffect(lifecycleState) {
+            if (lifecycleState == Lifecycle.State.STARTED) {
                 onScreenResolved()
             }
         }

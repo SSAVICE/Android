@@ -37,37 +37,35 @@ fun NavGraphBuilder.myPageScreen(
     composable<UserMyPageRoute>(
         enterTransition = {
             val isBottomBarNavigation =
-                (targetState.destination.route?.contains("UserMyPageRoute") == true)
-                        && (initialState.destination.route?.contains("MainRoute") == true)
-            if(isBottomBarNavigation) {
+                (targetState.destination.route?.contains("UserMyPageRoute") == true) &&
+                    (initialState.destination.route?.contains("MainRoute") == true)
+            if (isBottomBarNavigation) {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(),
                 )
-            }
-            else {
+            } else {
                 null
             }
         },
         exitTransition = {
             val isBottomBarNavigation =
-                (initialState.destination.route?.contains("UserMyPageRoute") == true)
-                        && (targetState.destination.route?.contains("MainRoute") == true)
-            if(isBottomBarNavigation){
+                (initialState.destination.route?.contains("UserMyPageRoute") == true) &&
+                    (targetState.destination.route?.contains("MainRoute") == true)
+            if (isBottomBarNavigation) {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(),
                 )
-            }
-            else {
+            } else {
                 null
             }
         },
-    ) {backStackEntry ->
+    ) { backStackEntry ->
         val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
 
         LaunchedEffect(lifecycleState) {
-            if(lifecycleState == Lifecycle.State.STARTED){
+            if (lifecycleState == Lifecycle.State.STARTED) {
                 onScreenResolved()
             }
         }

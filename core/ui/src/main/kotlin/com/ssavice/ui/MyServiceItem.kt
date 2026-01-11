@@ -44,37 +44,40 @@ fun MyService(
     onCancelButtonClick: () -> Unit = {},
     onReviewButtonClick: () -> Unit = {},
     thumbnail: @Composable (String) -> Unit = {},
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
 ) {
     SsaviceElevatedCard(
-        modifier = modifier
-            .padding(3.dp),
+        modifier =
+            modifier
+                .padding(3.dp),
         onClick = onClick,
     )
     {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column (
-                modifier = Modifier
-                    .weight(1f)
+            Column(
+                modifier =
+                    Modifier
+                        .weight(1f),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     thumbnail(thumbnailUrl)
                     Spacer(Modifier.width(8.dp))
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 text = title,
                                 style = MaterialTheme.typography.bodyMedium,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         }
                         Spacer(Modifier.height(2.dp))
@@ -82,14 +85,14 @@ fun MyService(
                             text = sellerName,
                             style = MaterialTheme.typography.labelLarge,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
                             text = price,
                             style = MaterialTheme.typography.bodyMedium,
                             overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Spacer(Modifier.height(4.dp))
                     }
@@ -99,38 +102,38 @@ fun MyService(
                     text = duration,
                     style = MaterialTheme.typography.labelLarge,
                     overflow = TextOverflow.Clip,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 )
             }
 
             Column(
-                modifier = Modifier
-                    .padding(top = 8.dp),
-                horizontalAlignment = Alignment.End
+                modifier =
+                    Modifier
+                        .padding(top = 8.dp),
+                horizontalAlignment = Alignment.End,
             ) {
-                StatusChip(
-                    status = ServiceStatus.IN_PROGRESS)
+                StatusChip(status = ServiceStatus.IN_PROGRESS)
 
                 Spacer(Modifier.height(2.dp))
-                if(cancellable) {
+                if (cancellable) {
                     TextButton(
                         onClick = onCancelButtonClick,
                     ) {
                         Text(
                             text = "취소",
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
-                if(reviewable) {
+                if (reviewable) {
                     TextButton(
                         onClick = onReviewButtonClick,
                     ) {
                         Text(
                             text = "리뷰 작성",
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
@@ -195,11 +198,12 @@ private fun PreviewMyService() {
                             .size(80.dp)
                             .clip(RoundedCornerShape(12.dp)),
                 )
-            }
+            },
         ) {
         }
     }
 }
+
 @Preview
 @Composable
 private fun PreviewMyServiceLongTitle() {
@@ -226,7 +230,7 @@ private fun PreviewMyServiceLongTitle() {
                             .size(80.dp)
                             .clip(RoundedCornerShape(12.dp)),
                 )
-            }
+            },
         ) {
         }
     }

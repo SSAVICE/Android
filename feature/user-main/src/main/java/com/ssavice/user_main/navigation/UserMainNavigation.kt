@@ -35,8 +35,8 @@ fun NavGraphBuilder.mainScreen(
     composable<MainRoute>(
         enterTransition = {
             val isBottomBarNavigation =
-                (initialState.destination.route?.contains("UserMyPageRoute") == true)
-                        && (targetState.destination.route?.contains("MainRoute") == true)
+                (initialState.destination.route?.contains("UserMyPageRoute") == true) &&
+                    (targetState.destination.route?.contains("MainRoute") == true)
             if (isBottomBarNavigation) {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
@@ -48,8 +48,8 @@ fun NavGraphBuilder.mainScreen(
         },
         exitTransition = {
             val isBottomBarNavigation =
-                (targetState.destination.route?.contains("UserMyPageRoute") == true)
-                        && (initialState.destination.route?.contains("MainRoute") == true)
+                (targetState.destination.route?.contains("UserMyPageRoute") == true) &&
+                    (initialState.destination.route?.contains("MainRoute") == true)
             if (isBottomBarNavigation) {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
@@ -63,9 +63,9 @@ fun NavGraphBuilder.mainScreen(
         val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
         val viewModel: UserMainViewModel = hiltViewModel()
 
-        LaunchedEffect(lifecycleState){
-            if (lifecycleState == Lifecycle.State.STARTED
-                || lifecycleState == Lifecycle.State.RESUMED ||
+        LaunchedEffect(lifecycleState) {
+            if (lifecycleState == Lifecycle.State.STARTED ||
+                lifecycleState == Lifecycle.State.RESUMED ||
                 lifecycleState == Lifecycle.State.CREATED
             ) {
                 onScreenResolved(viewModel)
