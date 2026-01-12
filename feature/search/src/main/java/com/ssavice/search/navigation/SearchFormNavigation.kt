@@ -2,6 +2,10 @@ package com.ssavice.search.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -61,8 +65,14 @@ fun NavGraphBuilder.searchFormScreen(
                 animationSpec = tween(),
             )
         },
-    ) {
-        onScreenResolved()
+    ) { backStackEntry ->
+        val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
+
+        LaunchedEffect(lifecycleState) {
+            if (lifecycleState == Lifecycle.State.STARTED) {
+                onScreenResolved()
+            }
+        }
         SearchFormScreen(
             onSearch = onSearch,
         )

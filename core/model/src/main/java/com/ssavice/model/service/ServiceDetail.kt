@@ -21,7 +21,7 @@ data class ServiceDetail(
     val startDate: Date,
     val endDate: Date,
     val liked: Boolean,
-    val status: String,
+    val status: String, // TODO: ServiceState로 변경 이름 State로 변경
     val createdAt: Date,
     val regionInfo: RegionInfo,
 )

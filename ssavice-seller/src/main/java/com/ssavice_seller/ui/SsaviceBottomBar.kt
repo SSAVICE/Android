@@ -10,9 +10,7 @@ import com.ssavice_seller.navigation.TopLevelDestination
 import com.ssavice_seller.navigation.navigateToTop
 
 @Composable
-fun SsaviceBottomBar(
-    navController: NavController,
-) {
+fun SsaviceBottomBar(navController: NavController) {
     val destinations =
         listOf(
             TopLevelDestination.USER_MAIN,

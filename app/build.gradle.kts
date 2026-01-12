@@ -23,6 +23,7 @@ dependencies {
     implementation(projects.feature.searchResult)
     implementation(projects.feature.serviceDetail)
     implementation(projects.feature.userMyPage)
+    implementation(projects.feature.userMyService)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)

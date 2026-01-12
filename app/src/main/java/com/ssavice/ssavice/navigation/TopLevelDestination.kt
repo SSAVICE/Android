@@ -41,7 +41,11 @@ enum class TopLevelDestination(
 
 fun NavController.navigateToTop(route: @Serializable Any) =
     navigate(route) {
-        graph.startDestinationRoute?.let { popUpTo(it) }
+        graph.startDestinationRoute?.let {
+            popUpTo(it) {
+                inclusive = false
+            }
+        }
         launchSingleTop = true
         restoreState = true
     }
