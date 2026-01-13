@@ -35,7 +35,7 @@ import com.ssavice.user_my_page.ui.ProfileSummary
 fun MyPageRoute(
     modifier: Modifier = Modifier,
     viewModel: UserMyPageViewModel = hiltViewModel(),
-    onEditProfileButtonClick: () -> Unit = {},
+    onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
@@ -73,7 +73,7 @@ fun MyPageRoute(
 fun MyPageScreen(
     modifier: Modifier,
     myPageUiState: MyPageUiState,
-    onEditProfileButtonClick: () -> Unit = {},
+    onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
@@ -84,7 +84,7 @@ fun MyPageScreen(
         ProfileSummary(
             modifier = Modifier.padding(8.dp),
             profileState = myPageUiState.profile,
-            onEditClick = onEditProfileButtonClick,
+            onEditClick = { onEditProfileButtonClick(myPageUiState.profile) },
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -142,6 +142,8 @@ fun MyPagePreview() {
                         description = "설명창 입니다.\n두 번째 줄 입니다.",
                         createdAt = "가입일: 2026-01-06",
                         profileUrl = "https://picsum.photos/200",
+                        email = "ksc1008@naver.com",
+                        phoneNumber = "010-1234-1234",
                     ),
                 participation =
                     ParticipationState(

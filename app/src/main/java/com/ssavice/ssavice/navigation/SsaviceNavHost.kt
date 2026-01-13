@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.ssavice.edit_profile.navigation.editProfileScreen
+import com.ssavice.edit_profile.navigation.navigateToEditProfile
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search.SearchForm
@@ -151,6 +153,14 @@ fun SsaviceNavHost(
             onParticipatedServiceButtonClick = {
                 navController.navigateToMyService()
             },
+            onEditProfileButtonClick = {
+                navController.navigateToEditProfile(
+                    name = it?.name,
+                    email = it?.email,
+                    phoneNumber = it?.phoneNumber,
+                    profileImageUrl = it?.profileUrl,
+                )
+            },
         )
 
         myServiceScreen(
@@ -170,6 +180,23 @@ fun SsaviceNavHost(
             onReviewClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
+        )
+
+        editProfileScreen(
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
+                        title = "프로필 수정",
+                    ),
+                )
+            },
+            onSubmit = {
+                navController.navigateUp()
+            },
+            onBackClick = {
+                navController.navigateUp()
+            },
+            onProfileImageClick = { },
         )
     }
 }
