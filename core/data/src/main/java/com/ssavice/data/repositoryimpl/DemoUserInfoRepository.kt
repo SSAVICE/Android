@@ -33,7 +33,7 @@ constructor() : UserInfoRepository {
                 name = "권성찬",
                 createdAt = Date.now(),
                 email = "ksc1008@naver.com",
-                phoneNumber = "010-1234-5678",
+                phoneNumber = "01012345678",
                 postCode = 12354,
                 address = "대구 달서구 송현동",
                 detailAddress = "데모로 123",

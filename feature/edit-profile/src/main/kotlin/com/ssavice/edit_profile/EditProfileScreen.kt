@@ -110,20 +110,45 @@ fun EditProfileScreen(
     val emailState = rememberTextFieldState(state.form.email)
     val phoneNumberState = rememberTextFieldState(state.form.phoneNumber)
 
+    LaunchedEffect(state.form) {
+        if(state.form.name != nameState.text.toString()) {
+            nameState.edit {
+                replace(0, nameState.text.length, state.form.name)
+            }
+        }
+        if(state.form.email != emailState.text.toString()) {
+            emailState.edit {
+                replace(0, emailState.text.length, state.form.email)
+            }
+        }
+        if(state.form.phoneNumber != phoneNumberState.text.toString()) {
+            phoneNumberState.edit {
+                replace(0, phoneNumberState.text.length, state.form.phoneNumber)
+            }
+        }
+    }
+
     LaunchedEffect(nameState) {
-        snapshotFlow { nameState.text.toString() }
-            .collectLatest { onNameChange(it) }
+        if(isStateModifiable(state.profileUpdateState)) {
+            snapshotFlow { nameState.text.toString() }
+                .collectLatest { onNameChange(it) }
+        }
     }
 
     LaunchedEffect(emailState) {
-        snapshotFlow { emailState.text.toString() }
-            .collectLatest { onEmailChange(it) }
+        if(isStateModifiable(state.profileUpdateState)) {
+            snapshotFlow { emailState.text.toString() }
+                .collectLatest { onEmailChange(it) }
+        }
     }
 
     LaunchedEffect(phoneNumberState) {
-        snapshotFlow { phoneNumberState.text.toString() }
-            .collectLatest { onPhoneNumberChange(it) }
+        if(isStateModifiable(state.profileUpdateState)) {
+            snapshotFlow { phoneNumberState.text.toString() }
+                .collectLatest { onPhoneNumberChange(it) }
+        }
     }
+
 
     Column(
         modifier = modifier
