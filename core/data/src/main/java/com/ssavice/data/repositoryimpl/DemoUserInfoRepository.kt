@@ -7,6 +7,7 @@ import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
+import com.ssavice.model.user.UserProfileUpdateForm
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
 import kotlinx.coroutines.delay
@@ -24,19 +25,21 @@ class DemoUserInfoRepository
                 ),
             )
 
-        override suspend fun getUserProfile(): Result<UserProfile> =
-            Result.success(
+        override suspend fun getUserProfile(): Result<UserProfile> {
+            delay(500)
+            return Result.success(
                 UserProfile(
                     imageUrl = "https://picsum.photos/200",
                     name = "권성찬",
                     createdAt = Date.now(),
                     email = "ksc1008@naver.com",
-                    phoneNumber = "010-1234-5678",
+                    phoneNumber = "01012345678",
                     postCode = 12354,
                     address = "대구 달서구 송현동",
                     detailAddress = "데모로 123",
                 ),
             )
+        }
 
         private fun generateRandomService(
             id: Long,
@@ -75,5 +78,10 @@ class DemoUserInfoRepository
                     hasNext = hasMore,
                 ),
             )
+        }
+
+        override suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit> {
+            delay(100)
+            return Result.success(Unit)
         }
     }

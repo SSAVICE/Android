@@ -41,6 +41,8 @@ class UserMyPageViewModel
                                         description = "",
                                         createdAt = it.createdAt.toSimpleString(),
                                         profileUrl = it.imageUrl,
+                                        email = it.email,
+                                        phoneNumber = it.phoneNumber,
                                     ),
                                 profileState = MyPageState.Done,
                             )
