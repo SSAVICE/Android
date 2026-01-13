@@ -14,6 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.user_my_page.MyPageRoute
+import com.ssavice.user_my_page.ProfileState
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,7 +27,7 @@ fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}
 }
 
 fun NavGraphBuilder.myPageScreen(
-    onEditProfileButtonClick: () -> Unit = {},
+    onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
@@ -65,7 +66,10 @@ fun NavGraphBuilder.myPageScreen(
         val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
 
         LaunchedEffect(lifecycleState) {
-            if (lifecycleState == Lifecycle.State.STARTED) {
+            if (lifecycleState == Lifecycle.State.STARTED ||
+                lifecycleState == Lifecycle.State.RESUMED ||
+                lifecycleState == Lifecycle.State.CREATED
+            ) {
                 onScreenResolved()
             }
         }

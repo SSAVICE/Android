@@ -5,8 +5,8 @@ import android.graphics.Bitmap
 data class EditProfileState(
     val form: EditProfileForm,
     val profileImage: EditProfileImage,
-    val profileUpdateState: ProfileUpdateState = ProfileUpdateState.Idle,
-    val imageUpdateState: ImageUpdateState = ImageUpdateState.Idle
+    val profileUpdateState: ProfileState = ProfileState.Initial,
+    val imageUpdateState: ProfileState = ProfileState.Initial
 )
 
 data class EditProfileForm(
@@ -27,22 +27,17 @@ sealed interface EditProfileImage {
     ): EditProfileImage
 }
 
-sealed interface ProfileUpdateState {
-    object Idle: ProfileUpdateState
 
-    object Done: ProfileUpdateState
+sealed interface ProfileState {
+    object Initial: ProfileState
 
-    object Updating: ProfileUpdateState
+    object Fetching: ProfileState
 
-    data class Error(val message: String): ProfileUpdateState
-}
+    object Idle: ProfileState
 
-sealed interface ImageUpdateState {
-    object Idle: ImageUpdateState
+    object Done: ProfileState
 
-    object Done: ImageUpdateState
+    object Updating: ProfileState
 
-    object Updating: ImageUpdateState
-
-    data class Error(val message: String): ImageUpdateState
+    data class Error(val message: String): ProfileState
 }

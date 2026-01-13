@@ -140,9 +140,6 @@ fun SsaviceNavHost(
                     ),
                 )
             },
-            onEditProfileButtonClick = {
-                navController.navigateToEditProfile()
-            },
         )
 
         myPageScreen(
@@ -155,6 +152,14 @@ fun SsaviceNavHost(
             },
             onParticipatedServiceButtonClick = {
                 navController.navigateToMyService()
+            },
+            onEditProfileButtonClick = {
+                navController.navigateToEditProfile(
+                    name = it?.name,
+                    email = it?.email,
+                    phoneNumber = it?.phoneNumber,
+                    profileImageUrl = it?.profileUrl,
+                )
             },
         )
 

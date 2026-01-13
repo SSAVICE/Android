@@ -63,8 +63,19 @@ fun EditProfileRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.profileUpdateState) {
-        if(state.profileUpdateState is ProfileUpdateState.Done) {
-            onSubmit()
+        when (state.profileUpdateState) {
+            ProfileState.Done -> {
+                onSubmit()
+            }
+
+            is ProfileState.Error -> {}
+            ProfileState.Fetching -> {}
+            ProfileState.Idle -> {}
+            ProfileState.Initial -> {
+                viewModel.initUiState()
+            }
+
+            ProfileState.Updating -> {}
         }
     }
 
@@ -79,6 +90,9 @@ fun EditProfileRoute(
         onSubmitButtonClick = viewModel::onUpdateButtonClick
     )
 }
+
+private fun isStateModifiable(state: ProfileState): Boolean =
+    (state is ProfileState.Error || state is ProfileState.Idle)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,7 +137,7 @@ fun EditProfileScreen(
         // Profile Image Card
         SsaviceElevatedCard(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onProfileImageClick
+            onClick = if (isStateModifiable(state.imageUpdateState)) onProfileImageClick else null
         ) {
             Column(
                 modifier = Modifier
@@ -148,6 +162,7 @@ fun EditProfileScreen(
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
+
                         is EditProfileImage.BitmapImage -> {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
@@ -158,6 +173,7 @@ fun EditProfileScreen(
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
+
                         else -> {}
                     }
                 }
@@ -182,6 +198,8 @@ fun EditProfileScreen(
             }
         }
 
+        val enabled = isStateModifiable(state.profileUpdateState)
+
         // Basic Information Card
         SsaviceElevatedCard(
             modifier = Modifier.fillMaxWidth()
@@ -203,7 +221,8 @@ fun EditProfileScreen(
                     labelText = "이름",
                     placeholderText = "이름을 입력해주세요",
                     isError = state.form.nameErrorMessage != null,
-                    errorMessage = state.form.nameErrorMessage
+                    errorMessage = state.form.nameErrorMessage,
+                    enabled = enabled
                 )
 
                 SsaviceInputField(
@@ -212,7 +231,8 @@ fun EditProfileScreen(
                     placeholderText = "이메일을 입력해주세요",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     isError = state.form.emailErrorMessage != null,
-                    errorMessage = state.form.emailErrorMessage
+                    errorMessage = state.form.emailErrorMessage,
+                    enabled = enabled
                 )
 
                 SsaviceInputField(
@@ -223,7 +243,8 @@ fun EditProfileScreen(
                     inputTransformation = InputTransformations.digitOnlyInputTransformation,
                     outputTransformation = OutputTransformations.formatPhoneNumber,
                     isError = state.form.phoneNumberErrorMessage != null,
-                    errorMessage = state.form.phoneNumberErrorMessage
+                    errorMessage = state.form.phoneNumberErrorMessage,
+                    enabled = enabled
                 )
             }
         }
@@ -244,7 +265,8 @@ fun EditProfileScreen(
             SsaviceButton(
                 modifier = Modifier.weight(1f),
                 text = "저장",
-                onClick = onSubmitButtonClick
+                onClick = onSubmitButtonClick,
+                enabled = enabled && isStateModifiable(state.profileUpdateState)
             )
         }
     }
@@ -260,8 +282,8 @@ fun EditProfileScreenPreview() {
             phoneNumber = "01012341234",
         ),
         profileImage = EditProfileImage.UrlImage("https://picsum.photos/200"),
-        profileUpdateState = ProfileUpdateState.Done,
-        imageUpdateState = ImageUpdateState.Done
+        profileUpdateState = ProfileState.Idle,
+        imageUpdateState = ProfileState.Idle
     )
     SsaviceTheme {
         Scaffold { paddingValues ->

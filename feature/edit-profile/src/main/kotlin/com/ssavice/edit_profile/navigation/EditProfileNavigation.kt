@@ -17,10 +17,32 @@ import com.ssavice.edit_profile.EditProfileRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-object EditProfileRoute
+data class EditProfileRoute(
+    val name: String = "",
+    val email: String = "",
+    val phoneNumber: String = "",
+    val profileImageUrl: String = ""
+)
 
-fun NavController.navigateToEditProfile(navOptions: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(route = EditProfileRoute) {
+fun NavController.navigateToEditProfile(
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+    name: String? = null,
+    email: String? = null,
+    phoneNumber: String? = null,
+    profileImageUrl: String? = null
+) {
+    val route: EditProfileRoute =
+        if (name == null || email == null || phoneNumber == null || profileImageUrl == null) {
+        EditProfileRoute()
+    } else {
+        EditProfileRoute(
+            name = name,
+            email = email,
+            phoneNumber = phoneNumber,
+            profileImageUrl = profileImageUrl
+        )
+    }
+    navigate(route = route) {
         navOptions()
     }
 }
@@ -47,7 +69,7 @@ fun NavGraphBuilder.editProfileScreen(
     )
     { backStackEntry ->
         val lifecycleStateFlow by
-            backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
+        backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
         LaunchedEffect(
             lifecycleStateFlow
         ) {
@@ -63,4 +85,11 @@ fun NavGraphBuilder.editProfileScreen(
             onProfileImageClick = onProfileImageClick
         )
     }
+}
+
+object EditProfileRouteContract {
+    const val NAME = "name"
+    const val EMAIL = "email"
+    const val PHONE_NUMBER = "phoneNumber"
+    const val IMAGE_URL = "profileImageUrl"
 }
