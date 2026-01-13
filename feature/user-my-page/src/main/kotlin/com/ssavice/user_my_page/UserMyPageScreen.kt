@@ -143,7 +143,7 @@ fun MyPagePreview() {
                         createdAt = "가입일: 2026-01-06",
                         profileUrl = "https://picsum.photos/200",
                         email = "ksc1008@naver.com",
-                        phoneNumber = "010-1234-1234"
+                        phoneNumber = "010-1234-1234",
                     ),
                 participation =
                     ParticipationState(

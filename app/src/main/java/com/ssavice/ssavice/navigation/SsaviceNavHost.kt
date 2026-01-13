@@ -196,8 +196,7 @@ fun SsaviceNavHost(
             onBackClick = {
                 navController.navigateUp()
             },
-            onProfileImageClick = { }
+            onProfileImageClick = { },
         )
-
     }
 }

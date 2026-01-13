@@ -19,7 +19,5 @@ interface UserInfoRepository {
         serviceState: ServiceState,
     ): Result<UserServiceParticipation>
 
-    suspend fun updateUserProfile(
-        profile: UserProfileUpdateForm
-    ): Result<Unit>
+    suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit>
 }

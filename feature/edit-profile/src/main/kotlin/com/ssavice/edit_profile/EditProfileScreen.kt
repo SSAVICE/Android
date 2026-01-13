@@ -50,7 +50,6 @@ import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
 import kotlinx.coroutines.flow.collectLatest
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileRoute(
@@ -58,7 +57,7 @@ fun EditProfileRoute(
     viewModel: EditProfileViewModel,
     onBackClick: () -> Unit = {},
     onSubmit: () -> Unit = {},
-    onProfileImageClick: () -> Unit = {}
+    onProfileImageClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,8 +68,11 @@ fun EditProfileRoute(
             }
 
             is ProfileState.Error -> {}
+
             ProfileState.Fetching -> {}
+
             ProfileState.Idle -> {}
+
             ProfileState.Initial -> {
                 viewModel.initUiState()
             }
@@ -87,12 +89,11 @@ fun EditProfileRoute(
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
         onProfileImageClick = onProfileImageClick,
         onBackClick = onBackClick,
-        onSubmitButtonClick = viewModel::onUpdateButtonClick
+        onSubmitButtonClick = viewModel::onUpdateButtonClick,
     )
 }
 
-private fun isStateModifiable(state: ProfileState): Boolean =
-    (state is ProfileState.Error || state is ProfileState.Idle)
+private fun isStateModifiable(state: ProfileState): Boolean = (state is ProfileState.Error || state is ProfileState.Idle)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,17 +112,17 @@ fun EditProfileScreen(
     val phoneNumberState = rememberTextFieldState(state.form.phoneNumber)
 
     LaunchedEffect(state.form) {
-        if(state.form.name != nameState.text.toString()) {
+        if (state.form.name != nameState.text.toString()) {
             nameState.edit {
                 replace(0, nameState.text.length, state.form.name)
             }
         }
-        if(state.form.email != emailState.text.toString()) {
+        if (state.form.email != emailState.text.toString()) {
             emailState.edit {
                 replace(0, emailState.text.length, state.form.email)
             }
         }
-        if(state.form.phoneNumber != phoneNumberState.text.toString()) {
+        if (state.form.phoneNumber != phoneNumberState.text.toString()) {
             phoneNumberState.edit {
                 replace(0, phoneNumberState.text.length, state.form.phoneNumber)
             }
@@ -129,73 +130,79 @@ fun EditProfileScreen(
     }
 
     LaunchedEffect(nameState) {
-        if(isStateModifiable(state.profileUpdateState)) {
+        if (isStateModifiable(state.profileUpdateState)) {
             snapshotFlow { nameState.text.toString() }
                 .collectLatest { onNameChange(it) }
         }
     }
 
     LaunchedEffect(emailState) {
-        if(isStateModifiable(state.profileUpdateState)) {
+        if (isStateModifiable(state.profileUpdateState)) {
             snapshotFlow { emailState.text.toString() }
                 .collectLatest { onEmailChange(it) }
         }
     }
 
     LaunchedEffect(phoneNumberState) {
-        if(isStateModifiable(state.profileUpdateState)) {
+        if (isStateModifiable(state.profileUpdateState)) {
             snapshotFlow { phoneNumberState.text.toString() }
                 .collectLatest { onPhoneNumberChange(it) }
         }
     }
 
-
     Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-            .imePadding(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .imePadding(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
         // Profile Image Card
         SsaviceElevatedCard(
             modifier = Modifier.fillMaxWidth(),
-            onClick = if (isStateModifiable(state.imageUpdateState)) onProfileImageClick else null
+            onClick = if (isStateModifiable(state.imageUpdateState)) onProfileImageClick else null,
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .background(Color.LightGray)
+                    modifier =
+                        Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .background(Color.LightGray),
                 ) {
                     when (state.profileImage) {
                         is EditProfileImage.UrlImage -> {
                             AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(state.profileImage.url)
-                                    .crossfade(true)
-                                    .build(),
+                                model =
+                                    ImageRequest
+                                        .Builder(LocalContext.current)
+                                        .data(state.profileImage.url)
+                                        .crossfade(true)
+                                        .build(),
                                 contentDescription = "Profile Image",
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
                             )
                         }
 
                         is EditProfileImage.BitmapImage -> {
                             AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(state.profileImage.bitmap)
-                                    .crossfade(true)
-                                    .build(),
+                                model =
+                                    ImageRequest
+                                        .Builder(LocalContext.current)
+                                        .data(state.profileImage.bitmap)
+                                        .crossfade(true)
+                                        .build(),
                                 contentDescription = "Profile Image",
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
                             )
                         }
 
@@ -204,20 +211,21 @@ fun EditProfileScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = Icons.Default.FileUpload,
                         contentDescription = "Upload",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "사진 변경",
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                 }
             }
@@ -227,18 +235,19 @@ fun EditProfileScreen(
 
         // Basic Information Card
         SsaviceElevatedCard(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
                     text = "기본 정보",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 SsaviceInputField(
@@ -247,7 +256,7 @@ fun EditProfileScreen(
                     placeholderText = "이름을 입력해주세요",
                     isError = state.form.nameErrorMessage != null,
                     errorMessage = state.form.nameErrorMessage,
-                    enabled = enabled
+                    enabled = enabled,
                 )
 
                 SsaviceInputField(
@@ -257,7 +266,7 @@ fun EditProfileScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     isError = state.form.emailErrorMessage != null,
                     errorMessage = state.form.emailErrorMessage,
-                    enabled = enabled
+                    enabled = enabled,
                 )
 
                 SsaviceInputField(
@@ -269,7 +278,7 @@ fun EditProfileScreen(
                     outputTransformation = OutputTransformations.formatPhoneNumber,
                     isError = state.form.phoneNumberErrorMessage != null,
                     errorMessage = state.form.phoneNumberErrorMessage,
-                    enabled = enabled
+                    enabled = enabled,
                 )
             }
         }
@@ -277,21 +286,22 @@ fun EditProfileScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(40.dp),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
         ) {
             SsaviceButtonOutlined(
                 modifier = Modifier.weight(1f),
                 text = "취소",
-                onClick = onBackClick
+                onClick = onBackClick,
             )
             SsaviceButton(
                 modifier = Modifier.weight(1f),
                 text = "저장",
                 onClick = onSubmitButtonClick,
-                enabled = enabled && isStateModifiable(state.profileUpdateState)
+                enabled = enabled && isStateModifiable(state.profileUpdateState),
             )
         }
     }
@@ -300,16 +310,18 @@ fun EditProfileScreen(
 @Preview(showBackground = true)
 @Composable
 fun EditProfileScreenPreview() {
-    val state = EditProfileState(
-        form = EditProfileForm(
-            name = "김민준",
-            email = "mingjun.kim@example.com",
-            phoneNumber = "01012341234",
-        ),
-        profileImage = EditProfileImage.UrlImage("https://picsum.photos/200"),
-        profileUpdateState = ProfileState.Idle,
-        imageUpdateState = ProfileState.Idle
-    )
+    val state =
+        EditProfileState(
+            form =
+                EditProfileForm(
+                    name = "김민준",
+                    email = "mingjun.kim@example.com",
+                    phoneNumber = "01012341234",
+                ),
+            profileImage = EditProfileImage.UrlImage("https://picsum.photos/200"),
+            profileUpdateState = ProfileState.Idle,
+            imageUpdateState = ProfileState.Idle,
+        )
     SsaviceTheme {
         Scaffold { paddingValues ->
             EditProfileScreen(
@@ -320,7 +332,7 @@ fun EditProfileScreenPreview() {
                 onPhoneNumberChange = {},
                 onProfileImageClick = {},
                 onBackClick = {},
-                onSubmitButtonClick = {}
+                onSubmitButtonClick = {},
             )
         }
     }

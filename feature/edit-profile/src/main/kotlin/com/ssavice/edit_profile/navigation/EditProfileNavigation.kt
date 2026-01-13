@@ -21,7 +21,7 @@ data class EditProfileRoute(
     val name: String = "",
     val email: String = "",
     val phoneNumber: String = "",
-    val profileImageUrl: String = ""
+    val profileImageUrl: String = "",
 )
 
 fun NavController.navigateToEditProfile(
@@ -29,19 +29,19 @@ fun NavController.navigateToEditProfile(
     name: String? = null,
     email: String? = null,
     phoneNumber: String? = null,
-    profileImageUrl: String? = null
+    profileImageUrl: String? = null,
 ) {
     val route: EditProfileRoute =
         if (name == null || email == null || phoneNumber == null || profileImageUrl == null) {
-        EditProfileRoute()
-    } else {
-        EditProfileRoute(
-            name = name,
-            email = email,
-            phoneNumber = phoneNumber,
-            profileImageUrl = profileImageUrl
-        )
-    }
+            EditProfileRoute()
+        } else {
+            EditProfileRoute(
+                name = name,
+                email = email,
+                phoneNumber = phoneNumber,
+                profileImageUrl = profileImageUrl,
+            )
+        }
     navigate(route = route) {
         navOptions()
     }
@@ -65,13 +65,13 @@ fun NavGraphBuilder.editProfileScreen(
                 towards = AnimatedContentTransitionScope.SlideDirection.Down,
                 animationSpec = tween(),
             )
-        }
+        },
     )
     { backStackEntry ->
         val lifecycleStateFlow by
-        backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
+            backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
         LaunchedEffect(
-            lifecycleStateFlow
+            lifecycleStateFlow,
         ) {
             if (lifecycleStateFlow == androidx.lifecycle.Lifecycle.State.STARTED) {
                 onScreenResolved()
@@ -82,7 +82,7 @@ fun NavGraphBuilder.editProfileScreen(
             viewModel = hiltViewModel(),
             onSubmit = onSubmit,
             onBackClick = onBackClick,
-            onProfileImageClick = onProfileImageClick
+            onProfileImageClick = onProfileImageClick,
         )
     }
 }

@@ -6,7 +6,7 @@ data class EditProfileState(
     val form: EditProfileForm,
     val profileImage: EditProfileImage,
     val profileUpdateState: ProfileState = ProfileState.Initial,
-    val imageUpdateState: ProfileState = ProfileState.Initial
+    val imageUpdateState: ProfileState = ProfileState.Initial,
 )
 
 data class EditProfileForm(
@@ -15,29 +15,31 @@ data class EditProfileForm(
     val email: String = "",
     val emailErrorMessage: String? = null,
     val phoneNumber: String = "",
-    val phoneNumberErrorMessage: String? = null
+    val phoneNumberErrorMessage: String? = null,
 )
 
 sealed interface EditProfileImage {
     data class BitmapImage(
-        val bitmap: Bitmap
-    ): EditProfileImage
+        val bitmap: Bitmap,
+    ) : EditProfileImage
+
     data class UrlImage(
-        val url: String
-    ): EditProfileImage
+        val url: String,
+    ) : EditProfileImage
 }
 
-
 sealed interface ProfileState {
-    object Initial: ProfileState
+    object Initial : ProfileState
 
-    object Fetching: ProfileState
+    object Fetching : ProfileState
 
-    object Idle: ProfileState
+    object Idle : ProfileState
 
-    object Done: ProfileState
+    object Done : ProfileState
 
-    object Updating: ProfileState
+    object Updating : ProfileState
 
-    data class Error(val message: String): ProfileState
+    data class Error(
+        val message: String,
+    ) : ProfileState
 }
