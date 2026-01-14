@@ -15,6 +15,7 @@ data class Content(
 )
 
 data class ServiceInfo(
+    val serviceId: Long,
     val basePrice: Long,
     val category: String,
     val companyId: Long,
@@ -23,15 +24,11 @@ data class ServiceInfo(
     val deadline: String,
     val discountRate: Int,
     val discountedPrice: Long,
-    val latitude: Int,
-    val longitude: Int,
     val maximumMember: Long,
     val minimumMember: Long,
-    val region1: String,
-    val region2: String,
-    val serviceId: Long,
     val status: String,
     val tag: String,
     val thumbnailUrl: String,
     val title: String,
+    val region: RegionDTO
 )

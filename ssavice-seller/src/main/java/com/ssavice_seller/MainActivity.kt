@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.seller_main.navigation.MainRoute
+import com.ssavice.seller_register.navigation.RegisterRoute
 import com.ssavice.ui.navigation.SsaviceBaseApp
 import com.ssavice_seller.navigation.SsaviceNavHost
 import com.ssavice_seller.ui.SsaviceBottomBar
@@ -45,7 +46,7 @@ fun SsaviceSellerApp(navController: NavHostController) {
                     .fillMaxSize()
                     .padding(innerPadding),
             navController = navController,
-            startDestination = MainRoute,
+            startDestination = RegisterRoute,
             onScaffoldConfigResolved = config,
         )
     }

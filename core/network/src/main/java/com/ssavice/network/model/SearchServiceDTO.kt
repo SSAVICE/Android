@@ -26,8 +26,8 @@ data class SearchServiceDTO(
             mapOf(
                 "category" to category,
                 "query" to query,
-                "region1" to region1,
-                "region2" to region2,
+                "gugun" to region1,
+                "region" to region2,
                 "range" to range.toString(),
                 "minPrice" to minPrice.toString(),
                 "maxPrice" to maxPrice.toString(),
@@ -39,8 +39,8 @@ data class SearchServiceDTO(
             mapOf(
                 "category" to category,
                 "query" to query,
-                "region1" to region1,
-                "region2" to region2,
+                "gugun" to region1,
+                "region" to region2,
                 "range" to range.toString(),
                 "minPrice" to minPrice.toString(),
                 "maxPrice" to maxPrice.toString(),
@@ -96,10 +96,7 @@ data class SearchServiceItemDTO(
     val status: String,
     val companyId: Long,
     val companyName: String,
-    val latitude: Double,
-    val longitude: Double,
-    val region1: String?,
-    val region2: String?,
+    val region: RegionDTO,
     val currentMember: Long,
     val minimumMember: Long,
     val maximumMember: Long,
@@ -121,11 +118,8 @@ data class SearchServiceItemDTO(
             discountRatio = discountRatio.toInt(),
             discountedPrice = discountedPrice,
             deadLine = Date.parse(deadline),
-            latitude = latitude,
-            longitude = longitude,
-            region1 = region1 ?: "",
-            region2 = region2 ?: "",
             companyName = companyName,
             companyId = companyId,
+            region = region.toModel()
         )
 }

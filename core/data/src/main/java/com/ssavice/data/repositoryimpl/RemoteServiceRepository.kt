@@ -14,12 +14,12 @@ import javax.inject.Inject
 class RemoteServiceRepository
     @Inject
     constructor(
-        private val serviceRetrofitService: ServiceRetrofitService,
+        private val serviceRetrofitService: ServiceRetrofitService,  // TODO: 이미지 처리 추가 필요
     ) : ServiceRepository {
         override suspend fun postService(service: ServiceAddForm): Result<Long> =
             processResponseOnResponseData(
                 serviceRetrofitService
-                    .postService(AddServiceDTO.fromModel(service)),
+                    .postService(AddServiceDTO.fromModel(service, listOf())),
             ).map { it.serviceId }
 
         override suspend fun searchService(

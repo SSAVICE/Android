@@ -102,7 +102,7 @@ class ServiceDetailViewModel
                                         companyId = it.companyId,
                                         category = it.category,
                                         name = it.name,
-                                        address = it.regionInfo.address,
+                                        address = "${it.regionInfo.region1}, ${it.regionInfo.region2}",
                                         description = it.description,
                                         tags = it.tag.split(','),
                                     ),

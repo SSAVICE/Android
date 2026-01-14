@@ -135,7 +135,7 @@ class SearchResultViewModel
                                 index = i + lastIndex,
                                 imageUrl = item.image,
                                 companyName = item.companyName,
-                                address = item.region2,
+                                address = item.region.region2,
                                 distance = "0.5km",
                                 deadLine = getDeadlineMessage(item.deadLine),
                                 discountedPrice = item.discountedPrice.toInt(),

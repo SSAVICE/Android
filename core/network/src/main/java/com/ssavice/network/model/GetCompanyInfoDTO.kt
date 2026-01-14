@@ -55,6 +55,7 @@ data class GetCompanyInfoDTO(
                     address = address,
                     detailAddress = detailAddress,
                     postCode = postCode,
+                    regionCode = ""
                 ),
         )
 }
