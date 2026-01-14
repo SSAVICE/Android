@@ -1,4 +1,5 @@
 package com.ssavice.model
+
 /**
  * 주소 및 위치 정보를 포함하는 데이터 모델입니다.
  * 주로 관련 정보를 생성하거나 수정하는 **POST 요청** 시에 사용되는 모델입니다.
@@ -16,7 +17,7 @@ data class RegionInfo(
     val address: String,
     val detailAddress: String,
     val postCode: String,
-    val regionCode: String
+    val regionCode: String,
 ) {
     companion object {
         val demo =
@@ -26,7 +27,7 @@ data class RegionInfo(
                 address = "대구 달서구 데모로 321",
                 detailAddress = "데모아파트 101동 1005호",
                 postCode = "12345",
-                regionCode = "123456789"
+                regionCode = "123456789",
             )
     }
 }
@@ -44,5 +45,5 @@ data class Region(
     val latitude: Double,
     val longitude: Double,
     val region1: String,
-    val region2: String
+    val region2: String,
 )

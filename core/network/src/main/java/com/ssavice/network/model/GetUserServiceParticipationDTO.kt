@@ -30,5 +30,5 @@ data class ServiceInfo(
     val tag: String,
     val thumbnailUrl: String,
     val title: String,
-    val region: RegionDTO
+    val region: RegionDTO,
 )

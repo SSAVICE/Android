@@ -17,7 +17,7 @@ data class SearchResultItem(
     val deadLine: Date,
     val companyName: String,
     val companyId: Long,
-    val region: Region
+    val region: Region,
 )
 
 data class SearchResult(

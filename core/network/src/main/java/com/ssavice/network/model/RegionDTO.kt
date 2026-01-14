@@ -11,14 +11,14 @@ data class RegionDTO(
     val gugun: String,
     val region: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
 ) {
     fun toModel(): Region =
         Region(
             region1 = gugun,
             region2 = region,
             latitude = latitude,
-            longitude = longitude
+            longitude = longitude,
         )
 
     companion object {
@@ -27,11 +27,10 @@ data class RegionDTO(
                 gugun = model.region1,
                 region = model.region2,
                 latitude = model.latitude,
-                longitude = model.longitude
+                longitude = model.longitude,
             )
     }
 }
-
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
@@ -41,7 +40,7 @@ data class RegionPostDTO(
     val address: String,
     val detailAddress: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
 ) {
     fun toModel(): RegionInfo =
         RegionInfo(
@@ -50,7 +49,7 @@ data class RegionPostDTO(
             address = address,
             detailAddress = detailAddress,
             latitude = latitude,
-            longitude = longitude
+            longitude = longitude,
         )
 
     companion object {
@@ -61,7 +60,7 @@ data class RegionPostDTO(
                 address = model.address,
                 detailAddress = model.detailAddress,
                 latitude = model.latitude,
-                longitude = model.longitude
+                longitude = model.longitude,
             )
     }
 }

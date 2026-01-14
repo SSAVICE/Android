@@ -15,7 +15,7 @@ class AddCompanyDTO(
     val depositor: String,
     val accountNumber: String,
     val detail: String,
-    val region: RegionPostDTO
+    val region: RegionPostDTO,
 ) {
     companion object {
         fun fromModel(sellerInfo: SellerRegisterForm): AddCompanyDTO =

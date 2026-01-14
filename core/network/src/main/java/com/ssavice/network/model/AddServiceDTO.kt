@@ -21,10 +21,13 @@ data class AddServiceDTO(
     val startDate: String,
     val endDate: String,
     val region: RegionPostDTO,
-    val imageConfirms: List<ImageConfirmKeyDTO>
+    val imageConfirms: List<ImageConfirmKeyDTO>,
 ) {
     companion object {
-        fun fromModel(serviceInfo: ServiceAddForm, objectKeys: List<String>): AddServiceDTO =
+        fun fromModel(
+            serviceInfo: ServiceAddForm,
+            objectKeys: List<String>,
+        ): AddServiceDTO =
             with(serviceInfo) {
                 AddServiceDTO(
                     imageCnt = imageCount.toLong(),
@@ -41,7 +44,7 @@ data class AddServiceDTO(
                     endDate = endDate.toString(),
                     discountRate = discountRatio.toLong(),
                     region = RegionPostDTO.fromModel(region),
-                    imageConfirms = objectKeys.map { ImageConfirmKeyDTO(it) }
+                    imageConfirms = objectKeys.map { ImageConfirmKeyDTO(it) },
                 )
             }
     }
@@ -56,5 +59,5 @@ data class AddServiceResponseDTO(
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ImageConfirmKeyDTO(
-    val objectKey: String
+    val objectKey: String,
 )

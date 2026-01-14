@@ -28,7 +28,7 @@ data class GetServiceDetailDTO(
     val isLiked: Boolean,
     val status: String,
     val createdAt: String,
-    val region: RegionDTO
+    val region: RegionDTO,
 ) {
     fun toModel(): ServiceDetail =
         ServiceDetail(
@@ -52,6 +52,6 @@ data class GetServiceDetailDTO(
             status = status,
             createdAt = Date.parse(createdAt),
             regionInfo =
-                region.toModel()
+                region.toModel(),
         )
 }

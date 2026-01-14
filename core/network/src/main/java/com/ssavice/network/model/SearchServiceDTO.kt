@@ -120,6 +120,6 @@ data class SearchServiceItemDTO(
             deadLine = Date.parse(deadline),
             companyName = companyName,
             companyId = companyId,
-            region = region.toModel()
+            region = region.toModel(),
         )
 }

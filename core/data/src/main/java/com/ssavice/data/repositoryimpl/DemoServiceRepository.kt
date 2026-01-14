@@ -184,12 +184,13 @@ class DemoServiceRepository
                         discountRatio = discountRate,
                         discountedPrice = discountedPrice,
                         deadLine = Date.now().addDay((1..10).random()),
-                        region = Region(
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            region1 = generateRandomRegion1(),
-                            region2 = generateRandomRegion2(),
-                        ),
+                        region =
+                            Region(
+                                latitude = 0.0,
+                                longitude = 0.0,
+                                region1 = generateRandomRegion1(),
+                                region2 = generateRandomRegion2(),
+                            ),
                         companyName = generateRandomCompanyName(),
                         companyId = (0..100).random().toLong(),
                     )
