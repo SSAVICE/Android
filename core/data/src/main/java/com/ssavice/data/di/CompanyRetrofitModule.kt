@@ -30,5 +30,5 @@ object CompanyRetrofitModule {
 abstract class CompanyModule {
     @Binds
     @Singleton
-    internal abstract fun bindSellerInfoRepository(remoteSellerInfoRepository: DemoSellerInfoRepository): SellerInfoRepository
+    internal abstract fun bindSellerInfoRepository(remoteSellerInfoRepository: RemoteSellerInfoRepository): SellerInfoRepository
 }

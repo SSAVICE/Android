@@ -12,36 +12,11 @@ class AddCompanyDTO(
     val phoneNumber: String,
     val businessNumber: String,
     val description: String,
+    val depositor: String,
     val accountNumber: String,
     val detail: String,
-    val longitude: Double,
-    val latitude: Double,
-    val postCode: String,
-    val address: String,
-    val detailAddress: String,
-    // TODO: SHOULD BE CHANGED
-    val depositor: String,
+    val region: RegionPostDTO,
 ) {
-    fun toModel(): SellerRegisterForm =
-        SellerRegisterForm(
-            companyName = companyName,
-            businessOwnerName = ownerName,
-            phoneNumber = phoneNumber,
-            businessNumber = businessNumber,
-            accountNumber = accountNumber,
-            description = description,
-            detail = detail,
-            region =
-                com.ssavice.model.RegionInfo(
-                    longitude = longitude,
-                    latitude = latitude,
-                    postCode = postCode,
-                    address = address,
-                    detailAddress = detailAddress,
-                ),
-            accountDepositor = depositor,
-        )
-
     companion object {
         fun fromModel(sellerInfo: SellerRegisterForm): AddCompanyDTO =
             AddCompanyDTO(
@@ -52,12 +27,8 @@ class AddCompanyDTO(
                 accountNumber = sellerInfo.accountNumber,
                 description = sellerInfo.description,
                 detail = sellerInfo.detail,
-                longitude = sellerInfo.region.longitude,
-                latitude = sellerInfo.region.latitude,
-                postCode = sellerInfo.region.postCode,
-                address = sellerInfo.region.address,
-                detailAddress = sellerInfo.region.detailAddress,
                 depositor = sellerInfo.accountDepositor,
+                region = RegionPostDTO.fromModel(sellerInfo.region),
             )
     }
 }

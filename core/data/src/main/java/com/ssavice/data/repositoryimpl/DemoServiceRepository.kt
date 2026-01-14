@@ -2,6 +2,7 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.Date
+import com.ssavice.model.Region
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
@@ -183,10 +184,13 @@ class DemoServiceRepository
                         discountRatio = discountRate,
                         discountedPrice = discountedPrice,
                         deadLine = Date.now().addDay((1..10).random()),
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        region1 = generateRandomRegion1(),
-                        region2 = generateRandomRegion2(),
+                        region =
+                            Region(
+                                latitude = 0.0,
+                                longitude = 0.0,
+                                region1 = generateRandomRegion1(),
+                                region2 = generateRandomRegion2(),
+                            ),
                         companyName = generateRandomCompanyName(),
                         companyId = (0..100).random().toLong(),
                     )
@@ -242,12 +246,11 @@ class DemoServiceRepository
                     status = "STATUS",
                     createdAt = Date.now(),
                     regionInfo =
-                        RegionInfo(
+                        Region(
                             latitude = 0.0,
                             longitude = 0.0,
-                            address = "서울특별시 강남구 역삼동",
-                            detailAddress = "",
-                            postCode = "",
+                            region1 = "강남구 역삼동",
+                            region2 = "역삼동",
                         ),
                 ),
             )
