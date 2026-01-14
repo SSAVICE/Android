@@ -1,6 +1,7 @@
 package com.ssavice.model.service
 
 import com.ssavice.model.Date
+import com.ssavice.model.Region
 import com.ssavice.model.RegionInfo
 
 data class ServiceDetail(
@@ -23,5 +24,5 @@ data class ServiceDetail(
     val liked: Boolean,
     val status: String, // TODO: ServiceState로 변경 이름 State로 변경
     val createdAt: Date,
-    val regionInfo: RegionInfo,
+    val regionInfo: Region,
 )

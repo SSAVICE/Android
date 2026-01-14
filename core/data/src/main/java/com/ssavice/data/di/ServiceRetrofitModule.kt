@@ -30,5 +30,5 @@ object ServiceRetrofitModule {
 abstract class ServiceModule {
     @Binds
     @Singleton
-    internal abstract fun bindServiceRepository(remoteSellerInfoRepository: DemoServiceRepository): ServiceRepository
+    internal abstract fun bindServiceRepository(remoteSellerInfoRepository: RemoteServiceRepository): ServiceRepository
 }

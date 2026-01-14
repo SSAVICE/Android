@@ -1,6 +1,7 @@
 package com.ssavice.model.service
 
 import com.ssavice.model.Date
+import com.ssavice.model.Region
 
 data class SearchResultItem(
     val name: String,
@@ -14,12 +15,9 @@ data class SearchResultItem(
     val discountRatio: Int,
     val discountedPrice: Long,
     val deadLine: Date,
-    val latitude: Double,
-    val longitude: Double,
-    val region1: String,
-    val region2: String,
     val companyName: String,
     val companyId: Long,
+    val region: Region,
 )
 
 data class SearchResult(
