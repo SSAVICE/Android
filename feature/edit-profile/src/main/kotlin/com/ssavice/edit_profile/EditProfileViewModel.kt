@@ -1,13 +1,18 @@
 package com.ssavice.edit_profile
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.edit_profile.navigation.EditProfileRouteContract
+import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.user.UserProfileUpdateForm
+import com.ssavice.ui.model.AndroidResizableImage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,12 +31,13 @@ class EditProfileViewModel
     constructor(
         private val savedStateHandle: SavedStateHandle,
         private val userInfoRepository: UserInfoRepository,
+        @ApplicationContext private val context: Context,
     ) : ViewModel() {
         private val _uiState =
-            MutableStateFlow<EditProfileState>(
+            MutableStateFlow(
                 EditProfileState(
                     form = EditProfileForm(),
-                    profileImage = EditProfileImage.UrlImage(""),
+                    profileImage = "",
                     profileUpdateState = ProfileState.Initial,
                     imageUpdateState = ProfileState.Initial,
                 ),
@@ -55,7 +61,7 @@ class EditProfileViewModel
                 _uiState.update {
                     it.copy(
                         form = fetchedProfileData.form,
-                        profileImage = EditProfileImage.UrlImage(fetchedProfileData.profileImageUrl),
+                        profileImage = fetchedProfileData.profileImageUrl,
                         profileUpdateState = ProfileState.Idle,
                         imageUpdateState = ProfileState.Idle,
                     )
@@ -236,6 +242,52 @@ class EditProfileViewModel
             if (!isStateModifiable(_uiState.value.profileUpdateState)) return
             _uiState.update {
                 it.copy(form = it.form.copy(phoneNumber = phoneNumber))
+            }
+        }
+
+        fun onUserProfileImageSelected(uri: Uri) {
+            _uiState.update {
+                it.copy(
+                    imageSelectedUri = uri,
+                    imageUpdateState = ProfileState.Updating,
+                    imageUploadProgress = ImageUploadProgress.Preprocessing,
+                )
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val byteArray = inputStream?.readBytes()
+
+                if (byteArray == null) {
+                    return@launch
+                }
+                val image =
+                    AndroidResizableImage(byteArray, "").compressToTargetSize(
+                        1024 * 1024 * 3,
+                    )
+                userInfoRepository.updateUserProfileImage(image).collect { progress ->
+                    if (progress is ImageUploadProgress.Done) {
+                        _uiState.update {
+                            it.copy(
+                                imageUploadProgress = progress,
+                                imageUpdateState = ProfileState.Idle,
+                            )
+                        }
+                        Log.d(LOG, "onUserProfileImageSelected: ${_uiState.value}")
+                    }
+                    if (progress is ImageUploadProgress.Error) {
+                        _uiState.update {
+                            it.copy(
+                                imageUploadProgress = progress,
+                                imageUpdateState = ProfileState.Error("이미지 업로드에 실패했습니다"),
+                            )
+                        }
+                        Log.e(LOG, "onUserProfileImageSelected: ", progress.throwable)
+                    } else {
+                        _uiState.update {
+                            it.copy(imageUploadProgress = progress)
+                        }
+                    }
+                }
             }
         }
 

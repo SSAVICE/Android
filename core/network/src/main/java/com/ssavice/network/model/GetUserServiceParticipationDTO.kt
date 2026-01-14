@@ -1,5 +1,10 @@
 package com.ssavice.network.model
 
+import android.annotation.SuppressLint
+import kotlinx.serialization.Serializable
+
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
 data class GetUserServiceParticipationDTO(
     val content: List<Content>,
     val currentPage: Int,
@@ -8,12 +13,16 @@ data class GetUserServiceParticipationDTO(
     val totalPages: Int,
 )
 
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
 data class Content(
     val bookStatus: String,
     val isReviewed: Boolean,
     val serviceInfo: ServiceInfo,
 )
 
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
 data class ServiceInfo(
     val serviceId: Long,
     val basePrice: Long,

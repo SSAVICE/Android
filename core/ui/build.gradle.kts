@@ -23,4 +23,5 @@ dependencies {
 
     implementation(projects.core.data)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.exifinterface)
 }
