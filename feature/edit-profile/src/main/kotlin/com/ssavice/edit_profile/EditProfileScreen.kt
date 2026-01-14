@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -37,14 +36,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.ssavice.designsystem.component.InputTransformations
 import com.ssavice.designsystem.component.OutputTransformations
 import com.ssavice.designsystem.component.SsaviceButton
@@ -137,46 +133,39 @@ fun EditProfileScreen(
     onSubmitButtonClick: () -> Unit,
     imageUploading: Boolean = false
 ) {
+    val dataInitialized = (state.profileUpdateState != ProfileState.Initial && state.form.name.isNotEmpty() || isStateModifiable(state.profileUpdateState))
     val nameState = rememberTextFieldState(state.form.name)
     val emailState = rememberTextFieldState(state.form.email)
     val phoneNumberState = rememberTextFieldState(state.form.phoneNumber)
 
-    LaunchedEffect(state.form) {
-        if (state.form.name != nameState.text.toString()) {
+    LaunchedEffect(dataInitialized) {
+        if(dataInitialized) {
             nameState.edit {
                 replace(0, nameState.text.length, state.form.name)
             }
-        }
-        if (state.form.email != emailState.text.toString()) {
             emailState.edit {
                 replace(0, emailState.text.length, state.form.email)
             }
-        }
-        if (state.form.phoneNumber != phoneNumberState.text.toString()) {
             phoneNumberState.edit {
                 replace(0, phoneNumberState.text.length, state.form.phoneNumber)
             }
         }
     }
 
-    LaunchedEffect(nameState) {
-        if (isStateModifiable(state.profileUpdateState)) {
-            snapshotFlow { nameState.text.toString() }
-                .collectLatest { onNameChange(it) }
+    if(dataInitialized) {
+        LaunchedEffect(nameState) {
+            snapshotFlow { nameState.text }
+                .collectLatest { onNameChange(it.toString()) }
         }
-    }
 
-    LaunchedEffect(emailState) {
-        if (isStateModifiable(state.profileUpdateState)) {
-            snapshotFlow { emailState.text.toString() }
-                .collectLatest { onEmailChange(it) }
+        LaunchedEffect(emailState) {
+            snapshotFlow { emailState.text }
+                .collectLatest { onEmailChange(it.toString()) }
         }
-    }
 
-    LaunchedEffect(phoneNumberState) {
-        if (isStateModifiable(state.profileUpdateState)) {
-            snapshotFlow { phoneNumberState.text.toString() }
-                .collectLatest { onPhoneNumberChange(it) }
+        LaunchedEffect(phoneNumberState) {
+            snapshotFlow { phoneNumberState.text }
+                .collectLatest { onPhoneNumberChange(it.toString()) }
         }
     }
 
