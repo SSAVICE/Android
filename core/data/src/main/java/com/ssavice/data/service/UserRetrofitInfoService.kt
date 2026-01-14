@@ -18,7 +18,7 @@ interface UserRetrofitInfoService {
 
     @POST("/api/user/profile")
     suspend fun updateUserProfile(
-        @Body body: UpdateUserProfileDTO
+        @Body body: UpdateUserProfileDTO,
     ): Response<UpdateUserProfileResponseDTO>
 
     @GET("/api/user/book/summary")
@@ -26,11 +26,11 @@ interface UserRetrofitInfoService {
 
     @POST("/api/user/profile/image")
     suspend fun requestProfileUploadUrl(
-        @Body contentType: ContentTypeDTO
+        @Body contentType: ContentTypeDTO,
     ): Response<PresignedUrlDTO>
 
     @POST("/api/user/profile/image/confirm")
     suspend fun confirmProfileUpload(
-        @Body body: ConfirmImageDTO
+        @Body body: ConfirmImageDTO,
     ): Response<Unit>
 }

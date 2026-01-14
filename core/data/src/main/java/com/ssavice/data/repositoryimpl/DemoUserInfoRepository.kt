@@ -89,15 +89,14 @@ class DemoUserInfoRepository
             return Result.success(Unit)
         }
 
-    override fun updateUserProfileImage(image: ResizableImage): Flow<ImageUploadProgress> {
-        return flow {
-            emit(ImageUploadProgress.Preprocessing)
-            delay(100)
-            for(i in 0 until 10) {
-                emit(ImageUploadProgress.Progress(i * 10))
-                delay(200)
+        override fun updateUserProfileImage(image: ResizableImage): Flow<ImageUploadProgress> =
+            flow {
+                emit(ImageUploadProgress.Preprocessing)
+                delay(100)
+                for (i in 0 until 10) {
+                    emit(ImageUploadProgress.Progress(i * 10))
+                    delay(200)
+                }
+                emit(ImageUploadProgress.Done("objectKey"))
             }
-            emit(ImageUploadProgress.Done("objectKey"))
-        }
     }
-}

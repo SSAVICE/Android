@@ -9,14 +9,14 @@ import kotlinx.serialization.Serializable
 data class UpdateUserProfileDTO(
     val email: String,
     val name: String,
-    val phoneNumber: String
+    val phoneNumber: String,
 ) {
     companion object {
         fun fromModel(model: UserProfileUpdateForm): UpdateUserProfileDTO =
             UpdateUserProfileDTO(
                 email = model.email,
                 name = model.name,
-                phoneNumber = model.phoneNumber
+                phoneNumber = model.phoneNumber,
             )
     }
 }
@@ -29,5 +29,5 @@ data class UpdateUserProfileResponseDTO(
     val email: String,
     val name: String,
     val phoneNumber: String,
-    val postCode: String?
+    val postCode: String?,
 )

@@ -18,16 +18,22 @@ fun ImageWithUploadState(
     baseImageUrl: String? = null,
     uploadingImageUrl: String? = null,
     uploadState: ImageUploadProgress,
-    contentDescription: String
+    contentDescription: String,
 ) {
-    val url = if(baseImageUrl == null) uploadingImageUrl
-    else {
-        if(uploadingImageUrl == null) baseImageUrl
-        else {
-            if (uploadState is ImageUploadProgress.Waiting) baseImageUrl
-            else uploadingImageUrl
+    val url =
+        if (baseImageUrl == null) {
+            uploadingImageUrl
+        } else {
+            if (uploadingImageUrl == null) {
+                baseImageUrl
+            } else {
+                if (uploadState is ImageUploadProgress.Waiting) {
+                    baseImageUrl
+                } else {
+                    uploadingImageUrl
+                }
+            }
         }
-    }
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
             model =
@@ -41,28 +47,33 @@ fun ImageWithUploadState(
         )
         if (isProcessing(uploadState)) {
             Box(
-                modifier = Modifier.fillMaxSize()
-                    .background( Color.Black.copy(alpha = 0.5f)),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f)),
             ) {
-                val text = when (uploadState) {
-                    is ImageUploadProgress.Done -> {
-                        "완료"
-                    }
+                val text =
+                    when (uploadState) {
+                        is ImageUploadProgress.Done -> {
+                            "완료"
+                        }
 
-                    is ImageUploadProgress.Error -> {
-                        "${uploadState.throwable.message}"
-                    }
+                        is ImageUploadProgress.Error -> {
+                            "${uploadState.throwable.message}"
+                        }
 
-                    is ImageUploadProgress.Preprocessing -> {
-                        "전처리 중"
-                    }
+                        is ImageUploadProgress.Preprocessing -> {
+                            "전처리 중"
+                        }
 
-                    is ImageUploadProgress.Progress -> {
-                        "업로드 중 (${uploadState.progressPercentile}%)"
-                    }
+                        is ImageUploadProgress.Progress -> {
+                            "업로드 중 (${uploadState.progressPercentile}%)"
+                        }
 
-                    ImageUploadProgress.Waiting -> {""}
-                }
+                        ImageUploadProgress.Waiting -> {
+                            ""
+                        }
+                    }
 
                 Text(
                     text = text,
@@ -76,5 +87,7 @@ fun ImageWithUploadState(
 }
 
 private fun isProcessing(uploadState: ImageUploadProgress): Boolean =
-    (uploadState !is ImageUploadProgress.Waiting
-            && uploadState !is ImageUploadProgress.Done)
+    (
+        uploadState !is ImageUploadProgress.Waiting &&
+            uploadState !is ImageUploadProgress.Done
+    )

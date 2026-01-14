@@ -7,9 +7,10 @@ import okio.BufferedSink
 class ProgressRequestBody(
     private val contentType: MediaType?,
     private val data: ByteArray,
-    private val onProgress: (Float) -> Unit
+    private val onProgress: (Float) -> Unit,
 ) : RequestBody() {
     override fun contentType(): MediaType? = contentType
+
     override fun contentLength(): Long = data.size.toLong()
 
     override fun writeTo(sink: BufferedSink) {

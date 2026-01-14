@@ -20,6 +20,6 @@ interface ImageUploadService {
     suspend fun uploadImage(
         @Url url: String,
         @Header("Content-Type") contentType: String,
-        @Body body: RequestBody
+        @Body body: RequestBody,
     ): Response<Unit>
 }

@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ConfirmImageDTO(
-    val objectKey: String
+    val objectKey: String,
 )

@@ -9,7 +9,7 @@ data class EditProfileState(
     val profileUpdateState: ProfileState = ProfileState.Initial,
     val imageUpdateState: ProfileState = ProfileState.Initial,
     val imageUploadProgress: ImageUploadProgress = ImageUploadProgress.Waiting,
-    val imageSelectedUri: Uri? = null
+    val imageSelectedUri: Uri? = null,
 )
 
 data class EditProfileForm(

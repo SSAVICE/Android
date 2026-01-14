@@ -15,16 +15,17 @@ data class UserProfileDTO(
     val imageUrl: String,
     val name: String,
     val phoneNumber: String,
-    val postCode: String?
+    val postCode: String?,
 ) {
-    fun toModel(): UserProfile = UserProfile(
-        address = address?:"",
-        createdAt = Date.parse(createdAt),
-        detailAddress = detailAddress?:"",
-        email = email,
-        imageUrl = imageUrl,
-        name = name,
-        phoneNumber = phoneNumber,
-        postCode = postCode?.toIntOrNull() ?: 0
-    )
+    fun toModel(): UserProfile =
+        UserProfile(
+            address = address ?: "",
+            createdAt = Date.parse(createdAt),
+            detailAddress = detailAddress ?: "",
+            email = email,
+            imageUrl = imageUrl,
+            name = name,
+            phoneNumber = phoneNumber,
+            postCode = postCode?.toIntOrNull() ?: 0,
+        )
 }

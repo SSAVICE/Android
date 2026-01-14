@@ -2,22 +2,25 @@ package com.ssavice.ui.model
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import java.io.ByteArrayOutputStream
 import androidx.core.graphics.scale
 import com.ssavice.model.ResizableImage
+import java.io.ByteArrayOutputStream
 
 data class AndroidResizableImage(
     override val data: ByteArray,
     override val mimeType: String,
     val width: Int? = null,
-    val height: Int? = null
+    val height: Int? = null,
 ) : ResizableImage {
     /**
      * 이미지를 특정 크기로 줄이고 JPG로 재인코딩합니다.
      * @param targetWidth 목표 가로 크기
      * @param quality JPG 압축 품질 (0-100)
      */
-    fun compressAndResize(targetWidth: Int, quality: Int = 80): AndroidResizableImage {
+    fun compressAndResize(
+        targetWidth: Int,
+        quality: Int = 80,
+    ): AndroidResizableImage {
         // 1. ByteArray -> Bitmap 변환
         val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
 
@@ -36,11 +39,14 @@ data class AndroidResizableImage(
             data = outputStream.toByteArray(),
             mimeType = "image/jpeg", // 인코딩 결과 반영
             width = targetWidth,
-            height = targetHeight
+            height = targetHeight,
         )
     }
 
-    fun compressToTargetSize(targetSizeInBytes: Long, minQuality: Int = 70): AndroidResizableImage {
+    fun compressToTargetSize(
+        targetSizeInBytes: Long,
+        minQuality: Int = 70,
+    ): AndroidResizableImage {
         var currentBitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
         var currentQuality = 90
         var currentData = data
@@ -74,7 +80,7 @@ data class AndroidResizableImage(
             data = currentData,
             mimeType = "image/jpeg",
             width = currentBitmap.width,
-            height = currentBitmap.height
+            height = currentBitmap.height,
         )
     }
 

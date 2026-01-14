@@ -60,15 +60,15 @@ fun EditProfileRoute(
     onSubmit: () -> Unit = {},
     onProfileImageClick: () -> Unit = {},
 ) {
-
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) {
-                viewModel.onUserProfileImageSelected(uri)
-            }
-        }
-    )
+    val photoPickerLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri ->
+                if (uri != null) {
+                    viewModel.onUserProfileImageSelected(uri)
+                }
+            },
+        )
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -91,19 +91,19 @@ fun EditProfileRoute(
             ProfileState.Updating -> {}
         }
     }
-    val profileImageClick = if(isStateModifiable(state.imageUpdateState)) {
-        {
-            photoPickerLauncher
-                .launch(
-                PickVisualMediaRequest(
-                    ActivityResultContracts.PickVisualMedia.ImageOnly
-                )
-            )
+    val profileImageClick =
+        if (isStateModifiable(state.imageUpdateState)) {
+            {
+                photoPickerLauncher
+                    .launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly,
+                        ),
+                    )
+            }
+        } else {
+            {}
         }
-    }
-    else {
-        {}
-    }
 
     EditProfileScreen(
         modifier = modifier,
@@ -114,7 +114,7 @@ fun EditProfileRoute(
         onProfileImageClick = profileImageClick,
         onBackClick = onBackClick,
         onSubmitButtonClick = viewModel::onUpdateButtonClick,
-        imageUploading = state.imageUpdateState is ProfileState.Updating
+        imageUploading = state.imageUpdateState is ProfileState.Updating,
     )
 }
 
@@ -131,15 +131,18 @@ fun EditProfileScreen(
     onProfileImageClick: () -> Unit,
     onBackClick: () -> Unit,
     onSubmitButtonClick: () -> Unit,
-    imageUploading: Boolean = false
+    imageUploading: Boolean = false,
 ) {
-    val dataInitialized = (state.profileUpdateState != ProfileState.Initial && state.form.name.isNotEmpty() || isStateModifiable(state.profileUpdateState))
+    val dataInitialized = (
+        (state.profileUpdateState != ProfileState.Initial && state.form.name.isNotEmpty()) ||
+            isStateModifiable(state.profileUpdateState)
+    )
     val nameState = rememberTextFieldState(state.form.name)
     val emailState = rememberTextFieldState(state.form.email)
     val phoneNumberState = rememberTextFieldState(state.form.phoneNumber)
 
     LaunchedEffect(dataInitialized) {
-        if(dataInitialized) {
+        if (dataInitialized) {
             nameState.edit {
                 replace(0, nameState.text.length, state.form.name)
             }
@@ -152,7 +155,7 @@ fun EditProfileScreen(
         }
     }
 
-    if(dataInitialized) {
+    if (dataInitialized) {
         LaunchedEffect(nameState) {
             snapshotFlow { nameState.text }
                 .collectLatest { onNameChange(it.toString()) }
@@ -235,7 +238,6 @@ fun EditProfileScreen(
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Medium,
                         )
-
                     }
                 }
             }
