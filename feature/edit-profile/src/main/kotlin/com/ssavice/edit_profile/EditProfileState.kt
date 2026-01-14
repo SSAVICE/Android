@@ -1,12 +1,15 @@
 package com.ssavice.edit_profile
 
-import android.graphics.Bitmap
+import android.net.Uri
+import com.ssavice.model.ImageUploadProgress
 
 data class EditProfileState(
     val form: EditProfileForm,
-    val profileImage: EditProfileImage,
+    val profileImage: String,
     val profileUpdateState: ProfileState = ProfileState.Initial,
     val imageUpdateState: ProfileState = ProfileState.Initial,
+    val imageUploadProgress: ImageUploadProgress = ImageUploadProgress.Waiting,
+    val imageSelectedUri: Uri? = null
 )
 
 data class EditProfileForm(
@@ -17,16 +20,6 @@ data class EditProfileForm(
     val phoneNumber: String = "",
     val phoneNumberErrorMessage: String? = null,
 )
-
-sealed interface EditProfileImage {
-    data class BitmapImage(
-        val bitmap: Bitmap,
-    ) : EditProfileImage
-
-    data class UrlImage(
-        val url: String,
-    ) : EditProfileImage
-}
 
 sealed interface ProfileState {
     object Initial : ProfileState

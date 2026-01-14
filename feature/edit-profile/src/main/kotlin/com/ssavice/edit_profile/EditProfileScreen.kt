@@ -1,5 +1,8 @@
 package com.ssavice.edit_profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +23,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileUpload
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +52,7 @@ import com.ssavice.designsystem.component.SsaviceButtonOutlined
 import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.ui.uploadImage.ImageWithUploadState
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +64,16 @@ fun EditProfileRoute(
     onSubmit: () -> Unit = {},
     onProfileImageClick: () -> Unit = {},
 ) {
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                viewModel.onUserProfileImageSelected(uri)
+            }
+        }
+    )
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.profileUpdateState) {
@@ -80,6 +95,19 @@ fun EditProfileRoute(
             ProfileState.Updating -> {}
         }
     }
+    val profileImageClick = if(isStateModifiable(state.imageUpdateState)) {
+        {
+            photoPickerLauncher
+                .launch(
+                PickVisualMediaRequest(
+                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+            )
+        }
+    }
+    else {
+        {}
+    }
 
     EditProfileScreen(
         modifier = modifier,
@@ -87,9 +115,10 @@ fun EditProfileRoute(
         onNameChange = viewModel::onNameChange,
         onEmailChange = viewModel::onEmailChange,
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
-        onProfileImageClick = onProfileImageClick,
+        onProfileImageClick = profileImageClick,
         onBackClick = onBackClick,
         onSubmitButtonClick = viewModel::onUpdateButtonClick,
+        imageUploading = state.imageUpdateState is ProfileState.Updating
     )
 }
 
@@ -106,6 +135,7 @@ fun EditProfileScreen(
     onProfileImageClick: () -> Unit,
     onBackClick: () -> Unit,
     onSubmitButtonClick: () -> Unit,
+    imageUploading: Boolean = false
 ) {
     val nameState = rememberTextFieldState(state.form.name)
     val emailState = rememberTextFieldState(state.form.email)
@@ -179,35 +209,12 @@ fun EditProfileScreen(
                             .clip(CircleShape)
                             .background(Color.LightGray),
                 ) {
-                    when (state.profileImage) {
-                        is EditProfileImage.UrlImage -> {
-                            AsyncImage(
-                                model =
-                                    ImageRequest
-                                        .Builder(LocalContext.current)
-                                        .data(state.profileImage.url)
-                                        .crossfade(true)
-                                        .build(),
-                                contentDescription = "Profile Image",
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
-
-                        is EditProfileImage.BitmapImage -> {
-                            AsyncImage(
-                                model =
-                                    ImageRequest
-                                        .Builder(LocalContext.current)
-                                        .data(state.profileImage.bitmap)
-                                        .crossfade(true)
-                                        .build(),
-                                contentDescription = "Profile Image",
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
-
-                        else -> {}
-                    }
+                    ImageWithUploadState(
+                        baseImageUrl = state.profileImage,
+                        uploadingImageUrl = state.imageSelectedUri?.toString(),
+                        uploadState = state.imageUploadProgress,
+                        contentDescription = "Profile Image",
+                    )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
@@ -216,17 +223,31 @@ fun EditProfileScreen(
                             .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.FileUpload,
-                        contentDescription = "Upload",
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "사진 변경",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium,
-                    )
+                    if (!imageUploading) {
+                        Icon(
+                            imageVector = Icons.Default.FileUpload,
+                            contentDescription = "Upload",
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "사진 변경",
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    } else {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "업로드 중",
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Medium,
+                        )
+
+                    }
                 }
             }
         }
@@ -301,7 +322,7 @@ fun EditProfileScreen(
                 modifier = Modifier.weight(1f),
                 text = "저장",
                 onClick = onSubmitButtonClick,
-                enabled = enabled && isStateModifiable(state.profileUpdateState),
+                enabled = enabled && isStateModifiable(state.imageUpdateState),
             )
         }
     }
@@ -318,7 +339,7 @@ fun EditProfileScreenPreview() {
                     email = "mingjun.kim@example.com",
                     phoneNumber = "01012341234",
                 ),
-            profileImage = EditProfileImage.UrlImage("https://picsum.photos/200"),
+            profileImage = "https://picsum.photos/200",
             profileUpdateState = ProfileState.Idle,
             imageUpdateState = ProfileState.Idle,
         )
