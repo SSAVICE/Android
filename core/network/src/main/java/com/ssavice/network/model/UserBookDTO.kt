@@ -14,14 +14,14 @@ data class UserBookDTO(
     val currentPage: Int,
     val size: Int,
     val totalElements: Long,
-    val totalPages: Int
+    val totalPages: Int,
 ) {
     fun toModel(): UserServiceParticipation =
         UserServiceParticipation(
             items = content.map { it.toModel() },
             currentPage = currentPage.toLong(),
             searchCount = totalElements.toInt(),
-            hasNext = totalPages > currentPage
+            hasNext = totalPages > currentPage,
         )
 }
 
@@ -30,22 +30,23 @@ data class UserBookDTO(
 data class Content(
     val bookStatus: String,
     val isReviewed: Boolean,
-    val serviceInfo: ServiceInfoDTO
+    val serviceInfo: ServiceInfoDTO,
 ) {
-    fun toModel(): UserServiceParticipationItem = with(serviceInfo) {
-        UserServiceParticipationItem(
-            id = serviceId,
-            thumbnail = thumbnailUrl,
-            category = category,
-            price = discountedPrice.toInt(),
-            name = title,
-            sellerName = companyName,
-            startDate = Date.now(),
-            endDate = Date.now(),
-            state = ServiceState.valueOf(status),
-            isReviewed = isReviewed,
-        )
-    }
+    fun toModel(): UserServiceParticipationItem =
+        with(serviceInfo) {
+            UserServiceParticipationItem(
+                id = serviceId,
+                thumbnail = thumbnailUrl,
+                category = category,
+                price = discountedPrice.toInt(),
+                name = title,
+                sellerName = companyName,
+                startDate = Date.now(),
+                endDate = Date.now(),
+                state = ServiceState.valueOf(status),
+                isReviewed = isReviewed,
+            )
+        }
 }
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -66,5 +67,5 @@ data class ServiceInfoDTO(
     val status: String,
     val tag: String,
     val thumbnailUrl: String,
-    val title: String
+    val title: String,
 )

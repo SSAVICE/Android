@@ -22,9 +22,8 @@ interface UserRetrofitInfoService {
     suspend fun getUserBook(
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("status") status: String
+        @Query("status") status: String,
     ): Response<UserBookDTO>
-
 
     @POST("/api/user/profile")
     suspend fun updateUserProfile(

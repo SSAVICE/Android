@@ -15,10 +15,10 @@ data class RegionDTO(
 ) {
     fun toModel(): Region =
         Region(
-            region1 = gugun?:"",
-            region2 = region?:"",
-            latitude = latitude?:0.0,
-            longitude = longitude?:0.0,
+            region1 = gugun ?: "",
+            region2 = region ?: "",
+            latitude = latitude ?: 0.0,
+            longitude = longitude ?: 0.0,
         )
 
     companion object {

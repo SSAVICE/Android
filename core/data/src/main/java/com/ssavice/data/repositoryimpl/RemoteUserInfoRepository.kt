@@ -52,7 +52,7 @@ class RemoteUserInfoRepository
                     page = page ?: 0,
                     size = searchCount,
                     status = serviceState.name,
-                )
+                ),
             ).map {
                 it.toModel()
             }
