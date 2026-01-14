@@ -27,6 +27,10 @@ object RetrofitModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class ServiceAuthRetrofit
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class ImageRetrofit
+
     @Provides
     @Singleton
     @ServiceAuthRetrofit
@@ -46,6 +50,16 @@ object RetrofitModule {
             .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
+            .build()
+
+    @Provides
+    @Singleton
+    @ImageRetrofit
+    fun provideImageRetrofitBuilder(): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides

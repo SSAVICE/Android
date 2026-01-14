@@ -97,7 +97,7 @@ data class Date(
         fun parse(s: String): Date {
             val timeParsed =
                 try {
-                    LocalDateTime.parse(s)
+                    LocalDateTime.parse(s.split('+')[0])
                 } catch (e: Exception) {
                     LocalDateTime.MIN
                 }

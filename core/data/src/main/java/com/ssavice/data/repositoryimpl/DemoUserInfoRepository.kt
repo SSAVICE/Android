@@ -3,6 +3,8 @@ package com.ssavice.data.repositoryimpl
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Category
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
 import com.ssavice.model.user.ParticipationSummary
@@ -11,6 +13,8 @@ import com.ssavice.model.user.UserProfileUpdateForm
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class DemoUserInfoRepository
@@ -84,4 +88,15 @@ class DemoUserInfoRepository
             delay(100)
             return Result.success(Unit)
         }
+
+        override fun updateUserProfileImage(image: ResizableImage): Flow<ImageUploadProgress> =
+            flow {
+                emit(ImageUploadProgress.Preprocessing)
+                delay(100)
+                for (i in 0 until 10) {
+                    emit(ImageUploadProgress.Progress(i * 10))
+                    delay(200)
+                }
+                emit(ImageUploadProgress.Done("objectKey"))
+            }
     }
