@@ -5,16 +5,26 @@ import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.PresignedUrlDTO
 import com.ssavice.network.model.UpdateUserProfileDTO
 import com.ssavice.network.model.UpdateUserProfileResponseDTO
+import com.ssavice.network.model.UserBookDTO
 import com.ssavice.network.model.UserBookSummaryDTO
 import com.ssavice.network.model.UserProfileDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface UserRetrofitInfoService {
     @GET("/api/user/profile")
     suspend fun getUserProfile(): Response<UserProfileDTO>
+
+    @GET("/api/user/book")
+    suspend fun getUserBook(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("status") status: String
+    ): Response<UserBookDTO>
+
 
     @POST("/api/user/profile")
     suspend fun updateUserProfile(
