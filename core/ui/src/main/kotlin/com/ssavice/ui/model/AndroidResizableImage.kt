@@ -2,8 +2,11 @@ package com.ssavice.ui.model
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import androidx.core.graphics.scale
 import com.ssavice.model.ResizableImage
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 data class AndroidResizableImage(
@@ -17,37 +20,15 @@ data class AndroidResizableImage(
      * @param targetWidth 목표 가로 크기
      * @param quality JPG 압축 품질 (0-100)
      */
-    fun compressAndResize(
-        targetWidth: Int,
-        quality: Int = 80,
-    ): AndroidResizableImage {
-        // 1. ByteArray -> Bitmap 변환
-        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-
-        // 2. 리사이징 계산
-        val aspectRatio = bitmap.height.toFloat() / bitmap.width.toFloat()
-        val targetHeight = (targetWidth * aspectRatio).toInt()
-
-        val scaledBitmap = bitmap.scale(targetWidth, targetHeight)
-
-        // 3. JPG로 재인코딩 (PNG -> JPG 변환도 여기서 발생)
-        val outputStream =
-            ByteArrayOutputStream()
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-
-        return this.copy(
-            data = outputStream.toByteArray(),
-            mimeType = "image/jpeg", // 인코딩 결과 반영
-            width = targetWidth,
-            height = targetHeight,
-        )
-    }
 
     fun compressToTargetSize(
         targetSizeInBytes: Long,
         minQuality: Int = 70,
     ): AndroidResizableImage {
-        var currentBitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+        var currentBitmap =
+            BitmapFactory
+                .decodeByteArray(data, 0, data.size)
+                .rotateIfRequired(data)
         var currentQuality = 90
         var currentData = data
         var currentWidth = currentBitmap.width
@@ -82,6 +63,27 @@ data class AndroidResizableImage(
             width = currentBitmap.width,
             height = currentBitmap.height,
         )
+    }
+
+    private fun Bitmap.rotateIfRequired(data: ByteArray): Bitmap {
+        val inputStream = ByteArrayInputStream(data)
+        val exif = androidx.exifinterface.media.ExifInterface(inputStream)
+        val orientation =
+            exif.getAttributeInt(
+                androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
+                androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL,
+            )
+
+        val degree =
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+                ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+                ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+                else -> return this
+            }
+
+        val matrix = Matrix().apply { postRotate(degree) }
+        return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
     }
 
     override fun equals(other: Any?): Boolean {
