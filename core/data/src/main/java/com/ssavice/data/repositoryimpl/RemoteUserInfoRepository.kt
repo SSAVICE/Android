@@ -46,9 +46,16 @@ class RemoteUserInfoRepository
             page: Int?,
             sortingOrder: SortingOrder,
             serviceState: ServiceState,
-        ): Result<UserServiceParticipation> {
-            TODO("Not yet implemented")
-        }
+        ): Result<UserServiceParticipation> =
+            processResponseOnResponseData(
+                userRetrofitService.getUserBook(
+                    page = page ?: 0,
+                    size = searchCount,
+                    status = serviceState.name,
+                ),
+            ).map {
+                it.toModel()
+            }
 
         override suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit> =
             processResponseOnResponseData(

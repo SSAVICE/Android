@@ -3,8 +3,8 @@ package com.ssavice.ui.model
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.media.ExifInterface
 import androidx.core.graphics.scale
+import androidx.exifinterface.media.ExifInterface
 import com.ssavice.model.ResizableImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

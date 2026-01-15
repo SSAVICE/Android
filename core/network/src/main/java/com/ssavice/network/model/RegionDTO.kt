@@ -8,17 +8,17 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class RegionDTO(
-    val gugun: String,
-    val region: String,
-    val latitude: Double,
-    val longitude: Double,
+    val gugun: String?,
+    val region: String?,
+    val latitude: Double?,
+    val longitude: Double?,
 ) {
     fun toModel(): Region =
         Region(
-            region1 = gugun,
-            region2 = region,
-            latitude = latitude,
-            longitude = longitude,
+            region1 = gugun ?: "",
+            region2 = region ?: "",
+            latitude = latitude ?: 0.0,
+            longitude = longitude ?: 0.0,
         )
 
     companion object {

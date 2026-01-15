@@ -3,6 +3,7 @@ package com.ssavice.model.service
 enum class ServiceState(
     val value: String,
 ) {
+    ALL("전체"),
     APPLYING("모집 중"),
     MATCHED("모집 완료"),
     FAILED("실패"),
