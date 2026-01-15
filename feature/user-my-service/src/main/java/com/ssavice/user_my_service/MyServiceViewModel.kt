@@ -150,6 +150,7 @@ class MyServiceViewModel
                 ServiceState.FAILED -> false
                 ServiceState.CANCELED -> false
                 ServiceState.COMPLETED -> false
+                ServiceState.ALL -> false
             }
 
         private fun getIfStateReviewable(
@@ -162,5 +163,6 @@ class MyServiceViewModel
                 ServiceState.FAILED -> false
                 ServiceState.CANCELED -> false
                 ServiceState.COMPLETED -> !reviewed
+                ServiceState.ALL -> false
             }
     }
