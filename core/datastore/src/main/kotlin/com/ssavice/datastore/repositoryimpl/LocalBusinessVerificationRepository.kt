@@ -22,4 +22,10 @@ internal class LocalBusinessVerificationRepository @Inject constructor(
             it.copy(token = token)
         }
     }
+
+    override suspend fun clearToken() {
+        dataStore.updateData {
+            it.copy(token = CompanyVerifyToken("", 0))
+        }
+    }
 }

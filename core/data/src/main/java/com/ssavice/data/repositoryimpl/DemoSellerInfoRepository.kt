@@ -4,6 +4,7 @@ import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.Review
+import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerSummary
@@ -98,4 +99,12 @@ internal class DemoSellerInfoRepository
                 ),
             )
         }
+
+    override suspend fun verifyBusinessInfo(
+        name: String,
+        openDate: Date,
+        businessNumber: String
+    ): Result<CompanyVerifyToken> {
+        return Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
     }
+}

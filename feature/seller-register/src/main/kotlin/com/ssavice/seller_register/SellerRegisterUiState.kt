@@ -1,14 +1,20 @@
 package com.ssavice.seller_register
 
+import com.ssavice.model.TimeStamp
+
 data class SellerRegisterUiState(
     val form: Form,
     val submitState: SubmitState,
+    val showTestButton: Boolean,
+    val companyValidationState: ValidationState,
+    val tokenRemainingTime: Long,
 )
 
 data class Form(
     val registrationStep: Int,
     val sellerName: String,
     val businessOwnerName: String,
+    val companyOpenDate: TimeStamp,
     val businessRegistrationNumber: String,
     val tel: String,
     val address: String,
@@ -17,6 +23,7 @@ data class Form(
     val accountNumber: String,
     val sellerNameErrorState: FormError = FormError.None,
     val businessOwnerNameErrorState: FormError = FormError.None,
+    val companyOpenDateErrorState: FormError = FormError.None,
     val businessRegistrationNumberErrorState: FormError = FormError.None,
     val telErrorState: FormError = FormError.None,
     val addressErrorState: FormError = FormError.None,
@@ -35,6 +42,16 @@ sealed interface SubmitState {
     ) : SubmitState
 
     object Submit : SubmitState
+}
+
+sealed interface ValidationState {
+    object Validated : ValidationState
+
+    object NotValidated : ValidationState
+
+    object Validating : ValidationState
+
+    object Failed : ValidationState
 }
 
 enum class FormError { None, EmptyField, InsufficientField, InvalidField }

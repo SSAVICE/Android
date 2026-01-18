@@ -6,6 +6,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.model.TimeStamp
+import com.ssavice.seller_register.ValidationState
 import com.ssavice.seller_register.page.FirstPage
 import com.ssavice.seller_register.page.SecondPage
 import com.ssavice.seller_register.page.ThirdPage
@@ -78,42 +80,52 @@ fun NavController.navigateToThirdPage(
 
 fun NavGraphBuilder.firstPage(
     modifier: Modifier = Modifier,
-    sellerNameState: TextFieldState,
     businessOwnerState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
-    telState: TextFieldState,
-    sellerNameError: Boolean,
+    companyValidationState: ValidationState,
+    companyOpenDate: TimeStamp,
     businessOwnerError: Boolean,
     businessRegistrationNumberError: Boolean,
-    telError: Boolean,
+    onCompanyOpenDateChanged: (TimeStamp) -> Unit,
+    onValidateButtonClicked: () -> Unit,
+    tokenRemainingTime: Long,
 ) {
     composable<FirstPageRoute> {
         FirstPage(
             modifier = modifier,
-            sellerNameState = sellerNameState,
             businessOwnerState = businessOwnerState,
             businessRegistrationNumberState = businessRegistrationNumberState,
-            telState = telState,
-            sellerNameError = sellerNameError,
+            companyOpenDate = companyOpenDate,
+            companyValidationState = companyValidationState,
             businessOwnerError = businessOwnerError,
             businessRegistrationNumberError = businessRegistrationNumberError,
-            telError = telError,
+            onCompanyOpenDateChanged = onCompanyOpenDateChanged,
+            onValidateButtonClicked = onValidateButtonClicked,
+            tokenRemainingTime = tokenRemainingTime,
         )
     }
 }
 
 fun NavGraphBuilder.secondPage(
     modifier: Modifier = Modifier,
+    sellerNameState: TextFieldState,
     addressState: TextFieldState,
     descriptionState: TextFieldState,
+    telState: TextFieldState,
     addressError: Boolean,
+    sellerNameError: Boolean,
+    telError: Boolean,
 ) {
     composable<SecondPageRoute> {
         SecondPage(
             modifier = modifier,
             addressState = addressState,
             descriptionState = descriptionState,
+            sellerNameState = sellerNameState,
+            telState = telState,
             addressError = addressError,
+            sellerNameError = sellerNameError,
+            telError = telError,
         )
     }
 }

@@ -42,6 +42,7 @@ fun SsaviceDateSpinner(
     selectedTimestamp: Long?,
     onDateSelected: (timestamp: Long) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     text: String = "연도-월-일",
     labelText: String? = null,
     isError: Boolean = false,
@@ -79,7 +80,7 @@ fun SsaviceDateSpinner(
                     contentDescription = "Open Date Picker",
                 )
             },
-            onClick = { showDatePicker = true },
+            onClick = { if(!enabled); else showDatePicker = true },
         )
     }
 

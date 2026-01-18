@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CompanyVerifyToken(
     val token: String,
-    val createdAt: Long
+    val createdAt: Long = System.currentTimeMillis()
 ) {
     fun isExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -14,6 +14,6 @@ data class CompanyVerifyToken(
     }
 
     companion object {
-        private const val EXPIRATION_TIME = 1000 * 60 * 10
+        const val EXPIRATION_TIME = 1000 * 60 * 10
     }
 }

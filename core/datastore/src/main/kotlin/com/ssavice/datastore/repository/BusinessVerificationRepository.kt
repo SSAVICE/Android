@@ -7,4 +7,6 @@ interface BusinessVerificationRepository {
     fun getToken(): Flow<CompanyVerifyToken>
 
     suspend fun setToken(token: CompanyVerifyToken)
+
+    suspend fun clearToken()
 }
