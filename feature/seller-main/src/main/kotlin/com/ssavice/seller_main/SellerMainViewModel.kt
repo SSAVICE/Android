@@ -34,7 +34,7 @@ class SellerMainViewModel
                                         category = service.category,
                                         meta = "${service.currentMember}명",
                                         priceText = "₩${service.discountedPrice}",
-                                        isRecruiting = service.deadLine.isAfter(Date.now()),
+                                        isRecruiting = service.deadLine > Date.now(),
                                         imageUrl = service.image,
                                     )
                                 },
