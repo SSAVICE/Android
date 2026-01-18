@@ -102,7 +102,7 @@ constructor(
     }
 
     private fun getDiscountRate(discountedPrice: Int, basePrice: Int, formerRate: Int): Int {
-        if(basePrice == 0) return formerRate
+        if (basePrice == 0) return formerRate
         return 100 - ceil(discountedPrice.toLong() * 100.0 / basePrice).toInt()
     }
 
@@ -119,9 +119,10 @@ constructor(
     }
 
     fun onDiscountedPriceChanged(price: Int) {
-        val newRate = getDiscountRate(price
-            , uiState.value.form.price,
-            uiState.value.form.discountRatio)
+        val newRate = getDiscountRate(
+            price, uiState.value.form.price,
+            uiState.value.form.discountRatio
+        )
 
         uiState.value =
             uiState.value.copy(
@@ -191,6 +192,7 @@ constructor(
     }
 
     fun onSubmitButtonClicked() {
+        // 빈 필드 여부 확인
         val validateEmptyForm = checkEmptyField()
 
         uiState.value =
@@ -199,12 +201,15 @@ constructor(
                 submitState = uiState.value.submitState,
             )
 
+        // 모집 기간 유효성 검증
         val validateInvalidTime = checkInvalidDueTime()
         uiState.value =
             uiState.value.copy(
                 form = validateInvalidTime.first,
                 submitState = uiState.value.submitState,
             )
+
+        // 모집 인원 유효성 검증
         val validateInvalidateRecruit = checkInvalidateRecruit()
         uiState.value =
             uiState.value.copy(
@@ -233,7 +238,7 @@ constructor(
         }
 
         val image = AndroidResizableImage.fromUri(
-            uri = uri, targetSizeInBytes = 1024 * 1024 * 3, context = context
+            uri = uri, targetSizeInBytes = IMAGE_SIZE_BYTES, context = context
         )
         if (image == null) {
             return
@@ -353,21 +358,26 @@ constructor(
                     .toLong(),
                 "가격을 정해주세요",
             )
+        val deadLineMessage: String?
         val startDateMessage: String?
         val endDateMessage: String?
 
         // 태그는 필수가 아님
         val tagMessage = null
-        // 할인율은 아직 확인 X
-        val discountRatioMessage = null
         // 설몀란은 필수가 아님
         val descriptionMessage = null
 
-        if (uiState.value.form.startDate == TimeStamp(0L)) {
+        if (uiState.value.form.deadline == TimeStamp(0L)) {
             hasError = true
             startDateMessage = "시작일을 선택해주세요"
         } else {
             startDateMessage = null
+        }
+        if (uiState.value.form.startDate == TimeStamp(0L)) {
+            hasError = true
+            deadLineMessage = "마감일 선택해주세요"
+        } else {
+            deadLineMessage = null
         }
         if (uiState.value.form.endDate == TimeStamp(0L)) {
             hasError = true
@@ -384,8 +394,8 @@ constructor(
                 minRecruitErrorMessage = minRecruitMessage,
                 maxRecruitErrorMessage = maxRecruitMessage,
                 priceErrorMessage = priceMessage,
-                discountRatioErrorMessage = discountRatioMessage,
                 descriptionErrorMessage = descriptionMessage,
+                deadlineErrorMessage = deadLineMessage,
                 startDateErrorMessage = startDateMessage,
                 endDateErrorMessage = endDateMessage,
             )
@@ -396,17 +406,31 @@ constructor(
     private fun checkInvalidDueTime(): Pair<Form, Boolean> {
         var form = uiState.value.form
         var hasError = false
-        if ((uiState.value.form.startDate != TimeStamp(0L)) &&
-            (uiState.value.form.startDate.timeInMillis <= Date.now().toTimeStamp().timeInMillis)
+        val deadline = Date.parse(uiState.value.form.deadline)
+        val startDate = Date.parse(uiState.value.form.startDate)
+        val endDate = Date.parse(uiState.value.form.endDate)
+
+
+        if ((uiState.value.form.deadline != TimeStamp(0L)) &&
+            (deadline <= Date.now())
         ) {
             form =
                 form.copy(
-                    startDateErrorMessage = "시작일은 현재 날짜 이후여야 합니다",
+                    deadlineErrorMessage = "마감일은 현재 날짜 이후여야 합니다",
+                )
+            hasError = true
+        }
+        if ((uiState.value.form.startDate != TimeStamp(0L)) &&
+            (startDate < deadline)
+        ) {
+            form =
+                form.copy(
+                    startDateErrorMessage = "시작일은 마감일 이후여야 합니다",
                 )
             hasError = true
         }
         if ((uiState.value.form.endDate != TimeStamp(0L)) &&
-            (uiState.value.form.endDate.timeInMillis <= uiState.value.form.startDate.timeInMillis)
+            (endDate <= startDate)
         ) {
             form =
                 form.copy(
@@ -444,12 +468,8 @@ constructor(
 
     companion object {
         private const val TAG = "AddServiceViewModel"
-        private const val MIN_RECRUIT_DEFAULT = 1
-        private const val MAX_RECRUIT_DEFAULT = 100
-        private const val PRICE_DEFAULT = 0
-        private const val DISCOUNT_RATIO_DEFAULT = 0
         private const val DESCRIPTION_DEFAULT = ""
 
-        private const val NO_FIELD_ERROR_MESSAGE = "해당 필드는 필수입니다"
+        const val IMAGE_SIZE_BYTES = 1024 * 1024 * 3L
     }
 }
