@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.InputTransformations
@@ -261,6 +262,11 @@ fun AddServiceScreen(
         }
     }
 
+    val enabled = state.imageState.pictureList.fastAll{
+        it.progress is ImageUploadProgress.Done
+                || it.progress is ImageUploadProgress.Error
+    }
+
     Column(
         modifier =
             modifier
@@ -314,6 +320,7 @@ fun AddServiceScreen(
             onCategoryChanged = { category = it },
             onSubmitClicked = onSubmitButtonClicked,
             onDismissClicked = onBackButtonClicked,
+            enabled = enabled,
             serviceNameTextStateErrorMessage = state.form.nameErrorMessage,
             categoryErrorMessage = state.form.categoryErrorMessage,
             tagTextStateErrorMessage = state.form.tagErrorMessage,
@@ -465,6 +472,7 @@ fun AddServiceForm(
     deadline: TimeStamp,
     startDate: TimeStamp,
     endDate: TimeStamp,
+    enabled: Boolean = true,
     serviceNameTextStateErrorMessage: String? = null,
     categoryErrorMessage: String? = null,
     tagTextStateErrorMessage: String? = null,
@@ -684,6 +692,7 @@ fun AddServiceForm(
                 modifier = Modifier.weight(1f),
                 text = "등록",
                 onClick = onSubmitClicked,
+                enabled = enabled
             )
         }
     }

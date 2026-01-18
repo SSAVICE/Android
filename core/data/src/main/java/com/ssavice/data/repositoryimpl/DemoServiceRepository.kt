@@ -1,5 +1,6 @@
 package com.ssavice.data.repositoryimpl
 
+import android.util.Log
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
@@ -15,12 +16,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.math.min
+import kotlin.random.Random
+import kotlin.random.nextUInt
 
 class DemoServiceRepository
 @Inject
 constructor() : ServiceRepository {
     override suspend fun postService(service: ServiceAddForm): Result<Long> {
         delay(300L)
+        Log.d("KSC", "Uploaded Service Images: ${service.imageObjectKeys}")
         return Result.success(1L)
     }
 
@@ -269,7 +273,7 @@ constructor() : ServiceRepository {
                 delay(200L)
             }
             emit(
-                ImageUploadProgress.Done(("123"))
+                ImageUploadProgress.Done((Random.Default.nextUInt().toString()))
             )
         }
     }
