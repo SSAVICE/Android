@@ -1,7 +1,6 @@
 package com.ssavice.post_service
 
 import android.net.Uri
-import androidx.compose.ui.util.fastAny
 import com.ssavice.model.Category
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.TimeStamp
@@ -10,34 +9,32 @@ import java.net.URI
 data class AddServiceUiState(
     val form: Form,
     val submitState: SubmitState,
-    val imageState: ImageState
+    val imageState: ImageState,
 )
 
 data class ImageState(
-    val pictureList: List<UploadingImage>
+    val pictureList: List<UploadingImage>,
 ) {
-    fun add(image: UploadingImage): ImageState {
-        return this.let {
-            val i = it.pictureList.indexOfLast { item ->
-                item.uri == image.uri
-            }
+    fun add(image: UploadingImage): ImageState =
+        this.let {
+            val i =
+                it.pictureList.indexOfLast { item ->
+                    item.uri == image.uri
+                }
 
-            if(i == -1){
+            if (i == -1) {
                 ImageState(it.pictureList + image)
-            }
-            else {
+            } else {
                 val l = pictureList.toMutableList()
                 l[i] = image
                 ImageState(l)
             }
         }
-    }
 
-    fun removeAt(index: Int): ImageState {
-        return this.let {
+    fun removeAt(index: Int): ImageState =
+        this.let {
             ImageState(it.pictureList - it.pictureList[index])
         }
-    }
 }
 
 data class UploadingImage(
@@ -73,9 +70,11 @@ data class Form(
 )
 
 sealed interface ServiceImage {
-    object Loading: ServiceImage
+    object Loading : ServiceImage
 
-    data class Preprocessing(val uri: URI): ServiceImage
+    data class Preprocessing(
+        val uri: URI,
+    ) : ServiceImage
 }
 
 sealed interface SubmitState {

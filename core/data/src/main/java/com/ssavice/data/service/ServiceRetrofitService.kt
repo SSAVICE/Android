@@ -31,6 +31,6 @@ interface ServiceRetrofitService {
 
     @POST("api/service/image")
     suspend fun requestServiceImageUploadUrl(
-        @Body contentTypes: ImageUploadDTO
+        @Body contentTypes: ImageUploadDTO,
     ): Response<PresignedUrlResponseDTO>
 }

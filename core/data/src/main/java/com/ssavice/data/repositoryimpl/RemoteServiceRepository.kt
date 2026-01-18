@@ -12,9 +12,7 @@ import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.model.service.ServiceDetail
 import com.ssavice.network.ProgressRequestBody
 import com.ssavice.network.exception.ServerInternalErrorException
-import com.ssavice.network.exception.SsaviceException
 import com.ssavice.network.model.AddServiceDTO
-import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.ImageUploadDTO
 import com.ssavice.network.model.SearchServiceDTO
@@ -26,109 +24,109 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import javax.inject.Inject
 
 class RemoteServiceRepository
-@Inject
-constructor(
-    private val serviceRetrofitService: ServiceRetrofitService,
-    private val imageUploadService: ImageUploadService
-) : ServiceRepository {
-    override suspend fun postService(service: ServiceAddForm): Result<Long> =
-        processResponseOnResponseData(
-            serviceRetrofitService
-                .postService(AddServiceDTO.fromModel(service, listOf())),
-        ).map { it.serviceId }
+    @Inject
+    constructor(
+        private val serviceRetrofitService: ServiceRetrofitService,
+        private val imageUploadService: ImageUploadService,
+    ) : ServiceRepository {
+        override suspend fun postService(service: ServiceAddForm): Result<Long> =
+            processResponseOnResponseData(
+                serviceRetrofitService
+                    .postService(AddServiceDTO.fromModel(service, listOf())),
+            ).map { it.serviceId }
 
-    override suspend fun searchService(
-        query: SearchQuery,
-        nextId: Long,
-        searchCount: Int,
-        startIndex: Int,
-    ): Result<SearchResult> =
-        processResponseOnResponseData(
-            serviceRetrofitService
-                .searchService(
-                    SearchServiceDTO
-                        .fromModel(
-                            query = query,
-                            nextId = nextId,
-                            searchCount = searchCount,
-                        ).toMap(),
-                ),
-        ).map {
-            it.toModel()
-        }
-
-    override suspend fun searchService(
-        query: SearchQuery,
-        searchCount: Int,
-        startIndex: Int,
-    ): Result<SearchResult> =
-        processResponseOnResponseData(
-            serviceRetrofitService
-                .searchService(
-                    SearchServiceDTO
-                        .fromModel(
-                            query = query,
-                            nextId = null,
-                            searchCount = searchCount,
-                        ).toMap(),
-                ),
-        ).map {
-            it.toModel()
-        }
-
-    override suspend fun getService(id: Long): Result<ServiceDetail> =
-        processResponseOnResponseData(
-            serviceRetrofitService.getService(id),
-        ).map { it.toModel() }
-
-    override fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress> =
-        channelFlow {
-            Log.d("KSC", "updateUserProfileImage: ${image.mimeType}")
-            send(
-                ImageUploadProgress.Preprocessing,
-            )
-
-            val fetchUrlRequest =
-                processResponseOnResponseData(
-                    serviceRetrofitService.requestServiceImageUploadUrl(
-                        ImageUploadDTO(
-                            add = listOf(ContentTypeDTO(contentType = image.mimeType)),
-                        ),
+        override suspend fun searchService(
+            query: SearchQuery,
+            nextId: Long,
+            searchCount: Int,
+            startIndex: Int,
+        ): Result<SearchResult> =
+            processResponseOnResponseData(
+                serviceRetrofitService
+                    .searchService(
+                        SearchServiceDTO
+                            .fromModel(
+                                query = query,
+                                nextId = nextId,
+                                searchCount = searchCount,
+                            ).toMap(),
                     ),
+            ).map {
+                it.toModel()
+            }
+
+        override suspend fun searchService(
+            query: SearchQuery,
+            searchCount: Int,
+            startIndex: Int,
+        ): Result<SearchResult> =
+            processResponseOnResponseData(
+                serviceRetrofitService
+                    .searchService(
+                        SearchServiceDTO
+                            .fromModel(
+                                query = query,
+                                nextId = null,
+                                searchCount = searchCount,
+                            ).toMap(),
+                    ),
+            ).map {
+                it.toModel()
+            }
+
+        override suspend fun getService(id: Long): Result<ServiceDetail> =
+            processResponseOnResponseData(
+                serviceRetrofitService.getService(id),
+            ).map { it.toModel() }
+
+        override fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress> =
+            channelFlow {
+                Log.d("KSC", "updateUserProfileImage: ${image.mimeType}")
+                send(
+                    ImageUploadProgress.Preprocessing,
                 )
 
-            val body =
-                ProgressRequestBody(
-                    contentType = image.mimeType.toMediaTypeOrNull(),
-                    data = image.data,
-                    onProgress = { progress ->
-                        trySend(ImageUploadProgress.Progress((progress * 100).toInt()))
-                    },
-                )
+                val fetchUrlRequest =
+                    processResponseOnResponseData(
+                        serviceRetrofitService.requestServiceImageUploadUrl(
+                            ImageUploadDTO(
+                                add = listOf(ContentTypeDTO(contentType = image.mimeType)),
+                            ),
+                        ),
+                    )
 
+                val body =
+                    ProgressRequestBody(
+                        contentType = image.mimeType.toMediaTypeOrNull(),
+                        data = image.data,
+                        onProgress = { progress ->
+                            trySend(ImageUploadProgress.Progress((progress * 100).toInt()))
+                        },
+                    )
 
-            fetchUrlRequest
-                .onFailure {
-                    send(ImageUploadProgress.Error(it))
-                }.onSuccess { url ->
-                    if(url.list.isEmpty()) {
-                        send(ImageUploadProgress.Error(
-                            ServerInternalErrorException("잘못된 반환 형식입니다")))
-                        return@onSuccess
-                    }
-                    val imageResponse =
-                        imageUploadService.uploadImage(
-                            url = url.list[0].uploadUrl,
-                            contentType = image.mimeType,
-                            body = body,
-                        )
-                    send(ImageUploadProgress.Progress(0))
-                    processResponse(imageResponse)
-                        .onSuccess { key ->
-                            send(ImageUploadProgress.Done(url.list[0].objectKey))
-                        }.onFailure { e ->
-                            send(ImageUploadProgress.Error(e))
+                fetchUrlRequest
+                    .onFailure {
+                        send(ImageUploadProgress.Error(it))
+                    }.onSuccess { url ->
+                        if (url.list.isEmpty()) {
+                            send(
+                                ImageUploadProgress.Error(ServerInternalErrorException("잘못된 반환 형식입니다")),
+                            )
+                            return@onSuccess
                         }
-                }
-        }
-}
+                        val imageResponse =
+                            imageUploadService.uploadImage(
+                                url = url.list[0].uploadUrl,
+                                contentType = image.mimeType,
+                                body = body,
+                            )
+                        send(ImageUploadProgress.Progress(0))
+                        processResponse(imageResponse)
+                            .onSuccess { key ->
+                                send(ImageUploadProgress.Done(url.list[0].objectKey))
+                            }.onFailure { e ->
+                                send(ImageUploadProgress.Error(e))
+                            }
+                    }
+            }
+    }

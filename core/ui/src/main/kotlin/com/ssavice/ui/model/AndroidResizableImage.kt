@@ -102,9 +102,10 @@ data class AndroidResizableImage(
     }
 
     companion object {
-        fun fromUri(uri: Uri,
-                    context: Context,
-                    targetSizeInBytes: Long = Long.MAX_VALUE,
+        fun fromUri(
+            uri: Uri,
+            context: Context,
+            targetSizeInBytes: Long = Long.MAX_VALUE,
         ): AndroidResizableImage? {
             val inputStream = context.contentResolver.openInputStream(uri)
             val byteArray = inputStream?.readBytes()

@@ -19,7 +19,7 @@ data class Date(
     val year: Int,
     val month: Int,
     val day: Int,
-):Comparable<Date> {
+) : Comparable<Date> {
     init {
         require(year > 0)
         require(month > 0)
@@ -70,7 +70,7 @@ data class Date(
         return Date(
             year = calendar.get(Calendar.YEAR),
             month = calendar.get(Calendar.MONTH) + 1,
-            day = calendar.get(Calendar.DAY_OF_MONTH)
+            day = calendar.get(Calendar.DAY_OF_MONTH),
         )
     }
 
@@ -78,8 +78,8 @@ data class Date(
         val day = this.year * 10000 + this.month * 100 + this.day
         val otherDay = other.year * 10000 + other.month * 100 + other.day
 
-        if(day > otherDay) return 1
-        if(day < otherDay) return -1
+        if (day > otherDay) return 1
+        if (day < otherDay) return -1
         return 0
     }
 
@@ -114,8 +114,7 @@ data class Date(
             return parse(timeParsed)
         }
 
-        fun parse(d: LocalDateTime): Date
-        = Date(d.year, d.monthValue, d.dayOfMonth)
+        fun parse(d: LocalDateTime): Date = Date(d.year, d.monthValue, d.dayOfMonth)
 
         fun now(): Date = parse(LocalDateTime.now())
     }

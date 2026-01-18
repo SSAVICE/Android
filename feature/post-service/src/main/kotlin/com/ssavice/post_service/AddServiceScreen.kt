@@ -105,7 +105,7 @@ fun AddServiceRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(
-        state.submitState
+        state.submitState,
     ) {
         if (state.submitState is SubmitState.Success) {
             (state.submitState as? SubmitState.Success)?.run {
@@ -256,16 +256,18 @@ fun AddServiceScreen(
     LaunchedEffect(state.form.discountedPrice) {
         discountedPriceTextState.edit {
             replace(
-                0, discountedPriceTextState.text.length,
-                state.form.discountedPrice.toString()
+                0,
+                discountedPriceTextState.text.length,
+                state.form.discountedPrice.toString(),
             )
         }
     }
 
-    val enabled = state.imageState.pictureList.fastAll{
-        it.progress is ImageUploadProgress.Done
-                || it.progress is ImageUploadProgress.Error
-    }
+    val enabled =
+        state.imageState.pictureList.fastAll {
+            it.progress is ImageUploadProgress.Done ||
+                it.progress is ImageUploadProgress.Error
+        }
 
     Column(
         modifier =
@@ -273,10 +275,14 @@ fun AddServiceScreen(
                 .padding(horizontal = 6.dp),
     ) {
         Spacer(Modifier.height(10.dp))
-        Text(style = MaterialTheme.typography.titleMedium, text = ADD_IMAGE_TEXT,
-            modifier = Modifier.padding(
-                horizontal = 14.dp
-            ))
+        Text(
+            style = MaterialTheme.typography.titleMedium,
+            text = ADD_IMAGE_TEXT,
+            modifier =
+                Modifier.padding(
+                    horizontal = 14.dp,
+                ),
+        )
         // 이미지 선택기
         ImageSelector(
             imageState = state.imageState,
@@ -288,7 +294,7 @@ fun AddServiceScreen(
                         ),
                     )
             },
-            onRemoveImageClicked = onImageRemoveClicked
+            onRemoveImageClicked = onImageRemoveClicked,
         )
         HorizontalDivider(Modifier.padding(10.dp))
 
@@ -331,7 +337,7 @@ fun AddServiceScreen(
             descriptionTextStateErrorMessage = state.form.descriptionErrorMessage,
             startDateErrorMessage = state.form.startDateErrorMessage,
             endDateErrorMessage = state.form.endDateErrorMessage,
-            deadlineErrorMessage = state.form.deadlineErrorMessage
+            deadlineErrorMessage = state.form.deadlineErrorMessage,
         )
     }
 }
@@ -355,99 +361,106 @@ fun ImageSelector(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
     ) {
         item(key = "add_button") {
             Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clickable { onAddClicked() }
-                    .padding(10.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                ,
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(80.dp)
+                        .clickable { onAddClicked() }
+                        .padding(10.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Default.AddPhotoAlternate,
                         contentDescription = "Add Image",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
                         text = "${imageState.pictureList.size}/10", // 최대 개수 예시
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
         }
         items(
             imageState.pictureList.size,
-            key = { i -> imageState.pictureList[i].uri }) { i ->
+            key = { i -> imageState.pictureList[i].uri },
+        ) { i ->
             val picture = imageState.pictureList[i]
             val selected = selectedImage == i
             Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .animateItem()) {
+                modifier =
+                    Modifier
+                        .size(80.dp)
+                        .animateItem(),
+            ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp)),
                 ) {
                     ImageWithUploadState(
                         baseImageUrl = null,
                         uploadingImageUrl = picture.uri.toString(),
                         uploadState = picture.progress,
-                        contentDescription = "Service Picture $i"
+                        contentDescription = "Service Picture $i",
                     )
                     AnimatedVisibility(
                         visible = selected,
                         enter = fadeIn(animationSpec = tween(200)),
-                        exit = fadeOut(animationSpec = tween(200))
+                        exit = fadeOut(animationSpec = tween(200)),
                     ) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black.copy(alpha = 0.5f))
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Black.copy(alpha = 0.5f)),
                         )
                     }
 
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clickable(
-                                enabled = picture.progress is ImageUploadProgress.Done,
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }) {
-                                selectedImage = if (selected) -1 else i
-                            },
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .clickable(
+                                    enabled = picture.progress is ImageUploadProgress.Done,
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                ) {
+                                    selectedImage = if (selected) -1 else i
+                                },
                     )
                 }
 
-                if(selected) {
+                if (selected) {
                     IconButton(
                         onClick = {
                             selectedImage = -1
                             onRemoveImageClicked(i)
-                                  },
-                        modifier = Modifier
-                            .size(32.dp)
-                            .align(Alignment.TopEnd)
-                            .offset(x = 6.dp, y = (-6).dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.error,
-                                shape = CircleShape
-                            )
-                            .graphicsLayer(clip = false)
-                            .padding(2.dp)
+                        },
+                        modifier =
+                            Modifier
+                                .size(32.dp)
+                                .align(Alignment.TopEnd)
+                                .offset(x = 6.dp, y = (-6).dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.error,
+                                    shape = CircleShape,
+                                ).graphicsLayer(clip = false)
+                                .padding(2.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Remove,
                             contentDescription = "Remove Image",
                             tint = MaterialTheme.colorScheme.onError,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
                     }
                 }
@@ -561,11 +574,11 @@ fun AddServiceForm(
                 Modifier.fillMaxWidth(),
                 labelText = DISCOUNT_RATIO_TEXT,
                 isError = discountRatioStateErrorMessage != null,
-                errorMessage = null
+                errorMessage = null,
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Slider(
                         modifier = Modifier.weight(1f),
@@ -595,14 +608,13 @@ fun AddServiceForm(
                     InputTransformations.numberFormatInputTransformation.then(
                         InputTransformations
                             .minMaxInputTransformation
-                                (0, priceTextState.text.toString().toLongOrNull() ?: 0L),
+                            (0, priceTextState.text.toString().toLongOrNull() ?: 0L),
                     ),
                 ),
             outputTransformation = OutputTransformations.formatNumberWithCommas,
             isError = discountRatioStateErrorMessage != null,
             errorMessage = discountRatioStateErrorMessage,
         )
-
 
         Spacer(Modifier.height(10.dp))
         Text(style = MaterialTheme.typography.titleMedium, text = SCHEDULE_INFORMATION_TEXT)
@@ -692,7 +704,7 @@ fun AddServiceForm(
                 modifier = Modifier.weight(1f),
                 text = "등록",
                 onClick = onSubmitClicked,
-                enabled = enabled
+                enabled = enabled,
             )
         }
     }
@@ -705,22 +717,24 @@ private fun AddServiceScreenPreview() {
     val state by remember {
         mutableStateOf(
             AddServiceUiState(
-                form = Form(
-                    name = "요가 레슨",
-                    category = categories.first(),
-                    tag = "요가, 필라테스, 운동",
-                    minRecruit = 0,
-                    maxRecruit = 0,
-                    price = 0,
-                    discountRatio = 0,
-                    description = "",
-                    startDate = TimeStamp(0L),
-                    endDate = TimeStamp(0L),
-                    deadline = TimeStamp(0L),
-                ),
-                imageState = ImageState(
-                    pictureList = listOf(),
-                ),
+                form =
+                    Form(
+                        name = "요가 레슨",
+                        category = categories.first(),
+                        tag = "요가, 필라테스, 운동",
+                        minRecruit = 0,
+                        maxRecruit = 0,
+                        price = 0,
+                        discountRatio = 0,
+                        description = "",
+                        startDate = TimeStamp(0L),
+                        endDate = TimeStamp(0L),
+                        deadline = TimeStamp(0L),
+                    ),
+                imageState =
+                    ImageState(
+                        pictureList = listOf(),
+                    ),
                 submitState = SubmitState.Idle,
             ),
         )
@@ -740,7 +754,6 @@ private fun AddServiceScreenPreview() {
                     state = state,
                 )
             }
-
         }
     }
 }
@@ -750,8 +763,6 @@ internal object AddServiceScreenDefaults {
     const val BASIC_INFORMATION_TEXT = "기본 정보"
     const val PRICE_INFORMATION_TEXT = "비용 정보"
     const val SCHEDULE_INFORMATION_TEXT = "모집 정보"
-
-    const val HEADER_TEXT = "새 서비스 등록"
 
     const val SERVICE_NAME_TEXT = "서비스명"
     const val CATEGORY_TEXT = "카테고리"

@@ -18,5 +18,5 @@ data class ServiceAddForm(
     val endDate: Date,
     val tag: String,
     val region: RegionInfo,
-    val imageObjectKeys: List<String>
+    val imageObjectKeys: List<String>,
 )
