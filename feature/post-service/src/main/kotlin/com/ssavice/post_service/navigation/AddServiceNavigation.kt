@@ -2,6 +2,9 @@ package com.ssavice.post_service.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -40,6 +43,7 @@ fun NavGraphBuilder.addServiceScreen(
     {
         onScreenResolved()
         AddServiceRoute(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
             onSubmit = onSubmit,
             onDismiss = onDismiss,
         )

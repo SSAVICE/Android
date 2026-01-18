@@ -1,9 +1,12 @@
 package com.ssavice.data.repository
 
+import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.model.service.ServiceDetail
+import kotlinx.coroutines.flow.Flow
 
 interface ServiceRepository {
     suspend fun postService(service: ServiceAddForm): Result<Long>
@@ -22,4 +25,6 @@ interface ServiceRepository {
     ): Result<SearchResult>
 
     suspend fun getService(id: Long): Result<ServiceDetail>
+
+    fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress>
 }
