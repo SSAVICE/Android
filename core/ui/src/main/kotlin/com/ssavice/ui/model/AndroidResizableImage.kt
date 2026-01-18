@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
@@ -70,11 +69,11 @@ data class AndroidResizableImage(
 
     private fun Bitmap.rotateIfRequired(data: ByteArray): Bitmap {
         val inputStream = ByteArrayInputStream(data)
-        val exif = androidx.exifinterface.media.ExifInterface(inputStream)
+        val exif = ExifInterface(inputStream)
         val orientation =
             exif.getAttributeInt(
-                androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
-                androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL,
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL,
             )
 
         val degree =
