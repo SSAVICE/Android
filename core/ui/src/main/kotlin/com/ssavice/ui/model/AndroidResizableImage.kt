@@ -1,9 +1,11 @@
 package com.ssavice.ui.model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
+import android.net.Uri
 import androidx.core.graphics.scale
 import com.ssavice.model.ResizableImage
 import java.io.ByteArrayInputStream
@@ -97,5 +99,22 @@ data class AndroidResizableImage(
         var result = data.contentHashCode()
         result = 31 * result + mimeType.hashCode()
         return result
+    }
+
+    companion object {
+        fun fromUri(uri: Uri,
+                    context: Context,
+                    targetSizeInBytes: Long = Long.MAX_VALUE,
+        ): AndroidResizableImage? {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val byteArray = inputStream?.readBytes()
+
+            if (byteArray == null) {
+                return null
+            }
+
+            return AndroidResizableImage(byteArray, "", null, null)
+                .compressToTargetSize(targetSizeInBytes)
+        }
     }
 }

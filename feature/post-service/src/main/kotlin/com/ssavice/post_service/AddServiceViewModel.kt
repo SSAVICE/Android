@@ -1,24 +1,36 @@
 package com.ssavice.post_service
 
+import android.content.Context
+import android.net.Uri
+import androidx.compose.runtime.snapshots.toInt
+import androidx.compose.ui.util.fastLastOrNull
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.TimeStamp
 import com.ssavice.model.service.ServiceAddForm
+import com.ssavice.ui.model.AndroidResizableImage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.apply
+import kotlin.math.ceil
 
 @HiltViewModel
 class AddServiceViewModel
 @Inject
 constructor(
     private val serviceRepository: ServiceRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     val uiState =
         MutableStateFlow(
@@ -33,6 +45,9 @@ constructor(
                         description = DESCRIPTION_DEFAULT,
                     ),
                 submitState = SubmitState.Idle,
+                imageState = ImageState(
+                    pictureList = listOf(),
+                ),
             ),
         )
 
@@ -86,28 +101,51 @@ constructor(
             )
     }
 
+    private fun getDiscountRate(discountedPrice: Int, basePrice: Int, formerRate: Int): Int {
+        if(basePrice == 0) return formerRate
+        return 100 - ceil(discountedPrice.toLong() * 100.0 / basePrice).toInt()
+    }
+
     fun onPriceChanged(price: Int) {
+        val newDiscounted = price - price.toLong() * uiState.value.form.discountRatio / 100
         uiState.value =
             uiState.value.copy(
                 form =
                     uiState.value.form.copy(
                         price = price,
+                        discountedPrice = newDiscounted.toInt()
                     ),
             )
     }
 
     fun onDiscountedPriceChanged(price: Int) {
-        val newRate: Int = if (uiState.value.form.price != 0 && uiState.value.form.price >= price) {
-            100 - (price * 100 / uiState.value.form.price)
-        } else {
-            uiState.value.form.discountRatio
-        }
+        val newRate = getDiscountRate(price
+            , uiState.value.form.price,
+            uiState.value.form.discountRatio)
+
         uiState.value =
             uiState.value.copy(
                 form =
                     uiState.value.form.copy(
                         discountedPrice = price,
                         discountRatio = newRate,
+                    ),
+            )
+    }
+
+    fun onDiscountRatioChanged(discount: Int) {
+        val newDiscountedPrice: Int = if (discount != uiState.value.form.discountRatio) {
+            (uiState.value.form.price - uiState.value.form.price.toLong() * discount / 100).toInt()
+        } else {
+            uiState.value.form.discountedPrice
+        }
+
+        uiState.value =
+            uiState.value.copy(
+                form =
+                    uiState.value.form.copy(
+                        discountRatio = discount,
+                        discountedPrice = newDiscountedPrice
                     ),
             )
     }
@@ -152,23 +190,6 @@ constructor(
             )
     }
 
-    fun onDiscountRatioChanged(discount: Int) {
-        val newDiscountedPrice: Int = if(discount != uiState.value.form.discountRatio) {
-            uiState.value.form.price - uiState.value.form.price * discount / 100
-        } else {
-            uiState.value.form.discountedPrice
-        }
-
-        uiState.value =
-            uiState.value.copy(
-                form =
-                    uiState.value.form.copy(
-                        discountRatio = discount,
-                        discountedPrice = newDiscountedPrice
-                    ),
-            )
-    }
-
     fun onSubmitButtonClicked() {
         val validateEmptyForm = checkEmptyField()
 
@@ -203,6 +224,47 @@ constructor(
             )
     }
 
+    fun onImageSelected(uri: Uri) {
+        // 이미 업로드 된 이미지는 추가 안함. 업로드 실패 한정 재업로드
+        if (uiState.value.imageState.pictureList.any {
+                it.uri == uri && it.progress !is ImageUploadProgress.Error
+            }) {
+            return
+        }
+
+        val image = AndroidResizableImage.fromUri(
+            uri = uri, targetSizeInBytes = 1024 * 1024 * 3, context = context
+        )
+        if (image == null) {
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            serviceRepository.addServiceImage(
+                image
+            ).collect { progress ->
+                uiState.update {
+                    it.copy(
+                        imageState = it.imageState.add(
+                            UploadingImage(
+                                uri = uri,
+                                progress = progress
+                            )
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun onImageRemoveButtonClicked(i: Int) {
+        uiState.update {
+            it.copy(
+                imageState = it.imageState.removeAt(i)
+            )
+        }
+    }
+
     private fun submit() {
         uiState.value = uiState.value.copy(submitState = SubmitState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
@@ -224,6 +286,9 @@ constructor(
                         discountedPrice =
                             uiState.value.form.discountedPrice,
                         deadLine = Date.parse(uiState.value.form.deadline),
+                        imageObjectKeys = uiState.value.imageState.pictureList.mapNotNull {
+                            (it.progress as? ImageUploadProgress.Done)?.objectKey
+                        },
                     ),
                 ).fold(
                     onSuccess = {

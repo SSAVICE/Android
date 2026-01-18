@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssavice.model.ImageUploadProgress
@@ -81,6 +82,7 @@ fun ImageWithUploadState(
                     text = text,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center),
+                    textAlign = TextAlign.Center,
                     maxLines = 3,
                 )
             }

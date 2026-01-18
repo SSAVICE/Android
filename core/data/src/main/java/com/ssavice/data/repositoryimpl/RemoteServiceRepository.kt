@@ -2,6 +2,8 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.service.ServiceRetrofitService
+import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
@@ -9,6 +11,7 @@ import com.ssavice.model.service.ServiceDetail
 import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.model.SearchServiceDTO
 import com.ssavice.network.processResponseOnResponseData
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RemoteServiceRepository
@@ -65,4 +68,8 @@ class RemoteServiceRepository
             processResponseOnResponseData(
                 serviceRetrofitService.getService(id),
             ).map { it.toModel() }
+
+    override fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress> {
+        TODO("Not yet implemented")
     }
+}
