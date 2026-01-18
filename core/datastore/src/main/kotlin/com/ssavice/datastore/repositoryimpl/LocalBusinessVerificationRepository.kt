@@ -1,28 +1,24 @@
 package com.ssavice.datastore.repositoryimpl
 
-import android.content.Context
+import androidx.datastore.core.DataStore
 import com.ssavice.datastore.preferences.BusinessVerificationPreferences
 import com.ssavice.datastore.repository.BusinessVerificationRepository
-import com.ssavice.datastore.securestorage.SecureStorage
 import com.ssavice.model.auth.CompanyVerifyToken
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class LocalBusinessVerificationRepository @Inject constructor(
-    @ApplicationContext private val context: Context
-): BusinessVerificationRepository, SecureStorage<BusinessVerificationPreferences>(
-    context = context,
-    serializer = BusinessVerificationPreferences.serializer(),
-    defaultValue = BusinessVerificationPreferences(CompanyVerifyToken("", 0)),
-    key = "business_verification") {
+    private val dataStore: DataStore<BusinessVerificationPreferences>
+): BusinessVerificationRepository{
     override fun getToken(): Flow<CompanyVerifyToken> =
-        get().map { it.token }
+        dataStore.data.map {
+            it.token
+        }
 
 
     override suspend fun setToken(token: CompanyVerifyToken) {
-        update {
+        dataStore.updateData {
             it.copy(token = token)
         }
     }
