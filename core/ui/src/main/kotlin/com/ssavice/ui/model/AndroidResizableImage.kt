@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import androidx.core.graphics.scale
+import androidx.exifinterface.media.ExifInterface
 import com.ssavice.model.ResizableImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
