@@ -270,6 +270,14 @@ constructor(
                         )
                     }
                 }
+                if(remainingTime <= 0 && uiState.value.form.registrationStep > 1) {
+                    clearToken()
+                    _uiState.update {
+                        it.copy(
+                            form = it.form.copy(registrationStep = 1)
+                        )
+                    }
+                }
             }
         }
     }
@@ -329,6 +337,7 @@ constructor(
                         accountDepositor = _uiState.value.form.accountDepositor,
                         region = RegionInfo.demo,
                     ),
+                    tokenState.first()
                 ).fold(
                     onSuccess = {
                         _uiState.value =

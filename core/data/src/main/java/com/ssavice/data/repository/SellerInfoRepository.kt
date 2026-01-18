@@ -8,7 +8,7 @@ import com.ssavice.model.seller.SellerSummary
 import kotlinx.coroutines.flow.Flow
 
 interface SellerInfoRepository {
-    suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm): Result<Unit>
+    suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm, token: CompanyVerifyToken): Result<Unit>
 
     fun getMySellerInformation(): Flow<Result<SellerMainInfo>>
 

@@ -20,10 +20,10 @@ internal class RemoteSellerInfoRepository
 constructor(
     private val companyRetrofitService: CompanyRetrofitService,
 ) : SellerInfoRepository {
-    override suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm): Result<Unit> =
+    override suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm, token: CompanyVerifyToken): Result<Unit> =
         processResponse(
             companyRetrofitService.registerSeller(
-                AddCompanyDTO.fromModel(sellerInfo),
+                AddCompanyDTO.fromModel(sellerInfo, token.token),
             ),
         )
 
