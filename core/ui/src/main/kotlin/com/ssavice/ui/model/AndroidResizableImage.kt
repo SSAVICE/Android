@@ -1,8 +1,10 @@
 package com.ssavice.ui.model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.net.Uri
 import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
 import com.ssavice.model.ResizableImage
@@ -67,11 +69,11 @@ data class AndroidResizableImage(
 
     private fun Bitmap.rotateIfRequired(data: ByteArray): Bitmap {
         val inputStream = ByteArrayInputStream(data)
-        val exif = androidx.exifinterface.media.ExifInterface(inputStream)
+        val exif = ExifInterface(inputStream)
         val orientation =
             exif.getAttributeInt(
-                androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
-                androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL,
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL,
             )
 
         val degree =
@@ -97,5 +99,23 @@ data class AndroidResizableImage(
         var result = data.contentHashCode()
         result = 31 * result + mimeType.hashCode()
         return result
+    }
+
+    companion object {
+        fun fromUri(
+            uri: Uri,
+            context: Context,
+            targetSizeInBytes: Long = Long.MAX_VALUE,
+        ): AndroidResizableImage? {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val byteArray = inputStream?.readBytes()
+
+            if (byteArray == null) {
+                return null
+            }
+
+            return AndroidResizableImage(byteArray, "", null, null)
+                .compressToTargetSize(targetSizeInBytes)
+        }
     }
 }

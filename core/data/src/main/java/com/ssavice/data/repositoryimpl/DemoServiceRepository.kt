@@ -1,23 +1,30 @@
 package com.ssavice.data.repositoryimpl
 
+import android.util.Log
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
-import com.ssavice.model.RegionInfo
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
 import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.model.service.ServiceDetail
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.math.min
+import kotlin.random.Random
+import kotlin.random.nextUInt
 
 class DemoServiceRepository
     @Inject
     constructor() : ServiceRepository {
         override suspend fun postService(service: ServiceAddForm): Result<Long> {
             delay(300L)
+            Log.d("KSC", "Uploaded Service Images: ${service.imageObjectKeys}")
             return Result.success(1L)
         }
 
@@ -255,4 +262,18 @@ class DemoServiceRepository
                 ),
             )
         }
+
+        override fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress> =
+            flow {
+                emit(ImageUploadProgress.Preprocessing)
+
+                delay(200L)
+                for (i in 0..10) {
+                    emit(ImageUploadProgress.Progress(i * 10))
+                    delay(200L)
+                }
+                emit(
+                    ImageUploadProgress.Done((Random.Default.nextUInt().toString())),
+                )
+            }
     }

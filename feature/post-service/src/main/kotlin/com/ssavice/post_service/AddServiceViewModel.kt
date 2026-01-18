@@ -1,24 +1,32 @@
 package com.ssavice.post_service
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.TimeStamp
 import com.ssavice.model.service.ServiceAddForm
+import com.ssavice.ui.model.AndroidResizableImage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.math.ceil
 
 @HiltViewModel
 class AddServiceViewModel
     @Inject
     constructor(
         private val serviceRepository: ServiceRepository,
+        @ApplicationContext private val context: Context,
     ) : ViewModel() {
         val uiState =
             MutableStateFlow(
@@ -29,8 +37,14 @@ class AddServiceViewModel
                             maxRecruit = 10,
                             startDate = TimeStamp(Calendar.getInstance().timeInMillis),
                             endDate = TimeStamp(Calendar.getInstance().timeInMillis),
+                            deadline = TimeStamp(Calendar.getInstance().timeInMillis),
+                            description = DESCRIPTION_DEFAULT,
                         ),
                     submitState = SubmitState.Idle,
+                    imageState =
+                        ImageState(
+                            pictureList = listOf(),
+                        ),
                 ),
             )
 
@@ -84,12 +98,62 @@ class AddServiceViewModel
                 )
         }
 
+        private fun getDiscountRate(
+            discountedPrice: Int,
+            basePrice: Int,
+            formerRate: Int,
+        ): Int {
+            if (basePrice == 0) return formerRate
+            return 100 - ceil(discountedPrice.toLong() * 100.0 / basePrice).toInt()
+        }
+
         fun onPriceChanged(price: Int) {
+            val newDiscounted = price - price.toLong() * uiState.value.form.discountRatio / 100
             uiState.value =
                 uiState.value.copy(
                     form =
                         uiState.value.form.copy(
                             price = price,
+                            discountedPrice = newDiscounted.toInt(),
+                        ),
+                )
+        }
+
+        fun onDiscountedPriceChanged(price: Int) {
+            val newRate =
+                getDiscountRate(
+                    price,
+                    uiState.value.form.price,
+                    uiState.value.form.discountRatio,
+                )
+
+            uiState.value =
+                uiState.value.copy(
+                    form =
+                        uiState.value.form.copy(
+                            discountedPrice = price,
+                            discountRatio = newRate,
+                        ),
+                )
+        }
+
+        fun onDiscountRatioChanged(discount: Int) {
+            val newDiscountedPrice: Int =
+                if (discount != uiState.value.form.discountRatio) {
+                    (
+                        uiState.value.form.price - uiState.value.form.price
+                            .toLong() * discount / 100
+                    ).toInt()
+                } else {
+                    uiState.value.form.discountedPrice
+                }
+
+            uiState.value =
+                uiState.value.copy(
+                    form =
+                        uiState.value.form.copy(
+                            discountRatio = discount,
+                            discountedPrice = newDiscountedPrice,
                         ),
                 )
         }
@@ -124,17 +188,18 @@ class AddServiceViewModel
                 )
         }
 
-        fun onDiscountRatioChanged(discount: Int) {
+        fun onDeadlineChanged(deadline: TimeStamp) {
             uiState.value =
                 uiState.value.copy(
                     form =
                         uiState.value.form.copy(
-                            discountRatio = discount,
+                            deadline = deadline,
                         ),
                 )
         }
 
         fun onSubmitButtonClicked() {
+            // 빈 필드 여부 확인
             val validateEmptyForm = checkEmptyField()
 
             uiState.value =
@@ -143,12 +208,15 @@ class AddServiceViewModel
                     submitState = uiState.value.submitState,
                 )
 
+            // 모집 기간 유효성 검증
             val validateInvalidTime = checkInvalidDueTime()
             uiState.value =
                 uiState.value.copy(
                     form = validateInvalidTime.first,
                     submitState = uiState.value.submitState,
                 )
+
+            // 모집 인원 유효성 검증
             val validateInvalidateRecruit = checkInvalidateRecruit()
             uiState.value =
                 uiState.value.copy(
@@ -166,6 +234,53 @@ class AddServiceViewModel
                 uiState.value.copy(
                     submitState = SubmitState.Dismiss,
                 )
+        }
+
+        fun onImageSelected(uri: Uri) {
+            // 이미 업로드 된 이미지는 추가 안함. 업로드 실패 한정 재업로드
+            if (uiState.value.imageState.pictureList.any {
+                    it.uri == uri && it.progress !is ImageUploadProgress.Error
+                }
+            ) {
+                return
+            }
+
+            val image =
+                AndroidResizableImage.fromUri(
+                    uri = uri,
+                    targetSizeInBytes = IMAGE_SIZE_BYTES,
+                    context = context,
+                )
+            if (image == null) {
+                return
+            }
+
+            viewModelScope.launch(Dispatchers.IO) {
+                serviceRepository
+                    .addServiceImage(
+                        image,
+                    ).collect { progress ->
+                        uiState.update {
+                            it.copy(
+                                imageState =
+                                    it.imageState.add(
+                                        UploadingImage(
+                                            uri = uri,
+                                            progress = progress,
+                                        ),
+                                    ),
+                            )
+                        }
+                    }
+            }
+        }
+
+        fun onImageRemoveButtonClicked(i: Int) {
+            uiState.update {
+                it.copy(
+                    imageState = it.imageState.removeAt(i),
+                )
+            }
         }
 
         private fun submit() {
@@ -187,8 +302,12 @@ class AddServiceViewModel
                             description = uiState.value.form.description,
                             region = RegionInfo.demo,
                             discountedPrice =
-                                (uiState.value.form.price * (100 - uiState.value.form.discountRatio) / 100),
-                            deadLine = Date.parse(uiState.value.form.startDate),
+                                uiState.value.form.discountedPrice,
+                            deadLine = Date.parse(uiState.value.form.deadline),
+                            imageObjectKeys =
+                                uiState.value.imageState.pictureList.mapNotNull {
+                                    (it.progress as? ImageUploadProgress.Done)?.objectKey
+                                },
                         ),
                     ).fold(
                         onSuccess = {
@@ -253,21 +372,26 @@ class AddServiceViewModel
                         .toLong(),
                     "가격을 정해주세요",
                 )
+            val deadLineMessage: String?
             val startDateMessage: String?
             val endDateMessage: String?
 
             // 태그는 필수가 아님
             val tagMessage = null
-            // 할인율은 아직 확인 X
-            val discountRatioMessage = null
             // 설몀란은 필수가 아님
             val descriptionMessage = null
 
-            if (uiState.value.form.startDate == TimeStamp(0L)) {
+            if (uiState.value.form.deadline == TimeStamp(0L)) {
                 hasError = true
                 startDateMessage = "시작일을 선택해주세요"
             } else {
                 startDateMessage = null
+            }
+            if (uiState.value.form.startDate == TimeStamp(0L)) {
+                hasError = true
+                deadLineMessage = "마감일 선택해주세요"
+            } else {
+                deadLineMessage = null
             }
             if (uiState.value.form.endDate == TimeStamp(0L)) {
                 hasError = true
@@ -284,8 +408,8 @@ class AddServiceViewModel
                     minRecruitErrorMessage = minRecruitMessage,
                     maxRecruitErrorMessage = maxRecruitMessage,
                     priceErrorMessage = priceMessage,
-                    discountRatioErrorMessage = discountRatioMessage,
                     descriptionErrorMessage = descriptionMessage,
+                    deadlineErrorMessage = deadLineMessage,
                     startDateErrorMessage = startDateMessage,
                     endDateErrorMessage = endDateMessage,
                 )
@@ -296,17 +420,30 @@ class AddServiceViewModel
         private fun checkInvalidDueTime(): Pair<Form, Boolean> {
             var form = uiState.value.form
             var hasError = false
-            if ((uiState.value.form.startDate != TimeStamp(0L)) &&
-                (uiState.value.form.startDate.timeInMillis <= Date.now().toTimeStamp().timeInMillis)
+            val deadline = Date.parse(uiState.value.form.deadline)
+            val startDate = Date.parse(uiState.value.form.startDate)
+            val endDate = Date.parse(uiState.value.form.endDate)
+
+            if ((uiState.value.form.deadline != TimeStamp(0L)) &&
+                (deadline <= Date.now())
             ) {
                 form =
                     form.copy(
-                        startDateErrorMessage = "시작일은 현재 날짜 이후여야 합니다",
+                        deadlineErrorMessage = "마감일은 현재 날짜 이후여야 합니다",
+                    )
+                hasError = true
+            }
+            if ((uiState.value.form.startDate != TimeStamp(0L)) &&
+                (startDate < deadline)
+            ) {
+                form =
+                    form.copy(
+                        startDateErrorMessage = "시작일은 마감일 이후여야 합니다",
                     )
                 hasError = true
             }
             if ((uiState.value.form.endDate != TimeStamp(0L)) &&
-                (uiState.value.form.endDate.timeInMillis <= uiState.value.form.startDate.timeInMillis)
+                (endDate <= startDate)
             ) {
                 form =
                     form.copy(
@@ -344,12 +481,8 @@ class AddServiceViewModel
 
         companion object {
             private const val TAG = "AddServiceViewModel"
-            private const val MIN_RECRUIT_DEFAULT = 1
-            private const val MAX_RECRUIT_DEFAULT = 100
-            private const val PRICE_DEFAULT = 0
-            private const val DISCOUNT_RATIO_DEFAULT = 0
             private const val DESCRIPTION_DEFAULT = ""
 
-            private const val NO_FIELD_ERROR_MESSAGE = "해당 필드는 필수입니다"
+            const val IMAGE_SIZE_BYTES = 1024 * 1024 * 3L
         }
     }
