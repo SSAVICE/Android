@@ -18,18 +18,19 @@ fun AddressPickerDialog(
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        ),
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+            ),
     ) {
         Card(
             modifier = Modifier.height(400.dp),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
         ) {
             AddressPickerWebView(
                 modifier = Modifier.fillMaxSize(),
-                onResult = onSelect
+                onResult = onSelect,
             )
         }
     }

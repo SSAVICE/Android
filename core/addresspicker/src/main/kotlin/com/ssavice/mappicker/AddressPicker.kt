@@ -19,7 +19,7 @@ import com.ssavice.mappicker.model.AddressPickResult
 @Composable
 fun AddressPickerWebView(
     modifier: Modifier = Modifier,
-    onResult: (AddressPickResult) -> Unit
+    onResult: (AddressPickResult) -> Unit,
 ) {
     val context = LocalContext.current
     AndroidView(
@@ -32,25 +32,30 @@ fun AddressPickerWebView(
                 allowContentAccess = false
             }
             webView.addJavascriptInterface(
-                JavascriptInterface(onResult), WebviewConstants.JS_BRIDGE
+                JavascriptInterface(onResult),
+                WebviewConstants.JS_BRIDGE,
             )
 
-            val assetLoader = WebViewAssetLoader.Builder()
-                .addPathHandler("/${PATH}/",
-                    WebViewAssetLoader.AssetsPathHandler(context))
-                .setDomain(DOMAIN)
-                .build()
+            val assetLoader =
+                WebViewAssetLoader
+                    .Builder()
+                    .addPathHandler(
+                        "/$PATH/",
+                        WebViewAssetLoader.AssetsPathHandler(context),
+                    ).setDomain(DOMAIN)
+                    .build()
 
             webView.webViewClient = FileWebViewClient(assetLoader)
 
             webView
-        }, update = {
-            it.loadUrl("https://${DOMAIN}/${PATH}/html/addressPicker.html")
-        }
+        },
+        update = {
+            it.loadUrl("https://$DOMAIN/$PATH/html/addressPicker.html")
+        },
     )
 }
 
-object WebviewConstants{
+object WebviewConstants {
     internal const val JS_BRIDGE = "address_finder" // Javascript 와 통신하기 위한 브릿지 프로토콜
     internal const val DOMAIN = "address.finder.net" // 로컬 가상 도메인
     internal const val PATH = "assets"
