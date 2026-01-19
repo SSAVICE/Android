@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,11 +38,18 @@ constructor(
                         businessOwnerName = "",
                         businessRegistrationNumber = "",
                         tel = "",
-                        address = "",
+                        detailAddress = "",
                         description = "",
                         accountDepositor = "",
                         accountNumber = "",
                         companyOpenDate = TimeStamp(0L),
+                        address = AddressForm(
+                            address = "",
+                            regionCode = "",
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            zipCode = ""
+                        ),
                     ),
                 submitState = SubmitState.Shown,
                 showTestButton = false,
@@ -127,10 +133,7 @@ constructor(
                         businessVerificationRepository.setToken(
                             token
                         )
-                        Log.d(TAG, "requestValidationAndProceed (1): $token")
                         val token = tokenState.first()
-                        Log.d(TAG, "requestValidationAndProceed (2): $token")
-                        Log.d(TAG, "now (2): ${System.currentTimeMillis()}")
                         _uiState.update {
                             it.copy(
                                 companyValidationState = ValidationState.Validated
@@ -190,7 +193,7 @@ constructor(
             }
 
         val addressState =
-            if (_uiState.value.form.address
+            if (_uiState.value.form.detailAddress
                     .isEmpty()
             ) {
                 hasError = true
@@ -245,6 +248,16 @@ constructor(
 
         if (!hasError) {
             submit()
+        }
+    }
+
+    fun onAddressSelected(address: AddressForm) {
+        _uiState.update {
+            it.copy(
+                form = it.form.copy(
+                    address = address
+                )
+            )
         }
     }
 
@@ -331,11 +344,18 @@ constructor(
                         businessNumber = _uiState.value.form.businessRegistrationNumber,
                         phoneNumber = _uiState.value.form.tel,
                         description = _uiState.value.form.description,
-                        detail = "",
+                        detail = _uiState.value.form.description,
                         businessOwnerName = _uiState.value.form.businessOwnerName,
                         accountNumber = _uiState.value.form.accountNumber,
                         accountDepositor = _uiState.value.form.accountDepositor,
-                        region = RegionInfo.demo,
+                        region = RegionInfo(
+                            address = _uiState.value.form.address.address,
+                            detailAddress = _uiState.value.form.detailAddress,
+                            postCode = _uiState.value.form.address.zipCode,
+                            latitude = _uiState.value.form.address.latitude,
+                            longitude = _uiState.value.form.address.longitude,
+                            regionCode = _uiState.value.form.address.regionCode,
+                        ),
                     ),
                     tokenState.first()
                 ).fold(
@@ -390,7 +410,7 @@ constructor(
             _uiState.value.copy(
                 form =
                     _uiState.value.form.copy(
-                        address = address,
+                        detailAddress = address,
                         description = description,
                     ),
             )

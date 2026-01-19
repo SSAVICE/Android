@@ -49,7 +49,7 @@ fun RegisterScreen(
     val businessRegistrationNumberState =
         rememberTextFieldState(state.form.businessRegistrationNumber)
     val telState = rememberTextFieldState(state.form.tel)
-    val addressState = rememberTextFieldState(state.form.address)
+    val addressState = rememberTextFieldState(state.form.detailAddress)
     val descriptionState = rememberTextFieldState(state.form.description)
     val accountOwnerState = rememberTextFieldState(state.form.accountDepositor)
     val accountNumberState = rememberTextFieldState(state.form.accountNumber)
@@ -128,7 +128,9 @@ fun RegisterScreen(
         onCompanyOpenDateChanged = viewModel::onCompanyOpenDateChanged,
         onValidateButtonClicked = viewModel::onValidateButtonClick,
         telState = telState,
-        addressState = addressState,
+        detailAddressState = addressState,
+        addressState = state.form.address,
+        onAddressSelected = viewModel::onAddressSelected,
         descriptionState = descriptionState,
         accountOwnerState = accountOwnerState,
         accountNumberState = accountNumberState,
@@ -158,8 +160,10 @@ fun RegisterScreen(
     companyOpenDate: TimeStamp,
     onCompanyOpenDateChanged: (TimeStamp) -> Unit,
     onValidateButtonClicked: () -> Unit,
+    onAddressSelected: (AddressForm) -> Unit,
     telState: TextFieldState,
-    addressState: TextFieldState,
+    addressState: AddressForm,
+    detailAddressState: TextFieldState,
     descriptionState: TextFieldState,
     accountOwnerState: TextFieldState,
     accountNumberState: TextFieldState,
@@ -205,6 +209,7 @@ fun RegisterScreen(
             businessOwnerError = businessOwnerErrorState != FormError.None,
             businessRegistrationNumberError = businessRegistrationNumberErrorState != FormError.None,
             telError = telErrorState != FormError.None,
+            detailAddressState = detailAddressState,
             addressState = addressState,
             descriptionState = descriptionState,
             addressError = addressErrorState != FormError.None,
@@ -216,7 +221,8 @@ fun RegisterScreen(
             onValidateButtonClicked = onValidateButtonClicked,
             companyOpenDate = companyOpenDate,
             companyOpenDateError = companyOpenDateErrorState != FormError.None,
-            tokenRemainingTime = tokenRemainingTime
+            tokenRemainingTime = tokenRemainingTime,
+            onAddressSelected = onAddressSelected
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -267,6 +273,7 @@ internal object RegisterScreenDefaults {
     const val LABEL_SECOND_PAGE = "기본 정보"
     const val SELLER_NAME_TEXT = "업체명"
     const val ADDRESS_TEXT = "주소"
+    const val DETAIL_ADDRESS_TEXT = "상세 주소"
     const val SELLER_TEL_TEXT = "전화번호"
     const val DESCRIPTION_TEXT = "소개글"
 
@@ -278,7 +285,8 @@ internal object RegisterScreenDefaults {
     const val BUSINESS_OWNER_PLACEHOLDER = "예: 권성찬"
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_PLACEHOLDER = "123-45-67890"
     const val SELLER_TEL_PLACEHOLDER = "010-1234-5678"
-    const val ADDRESS_PLACEHOLDER = "서울특별시 강남구 ..."
+    const val ADDRESS_PLACEHOLDER = "주소를 입력하세요"
+    const val ADDRESS_DETAIL_PLACEHOLDER = "101동 1001호"
     const val DESCRIPTION_PLACEHOLDER = "업체에 대해 소개해주세요"
     const val ACCOUNT_NAME_PLACEHOLDER = "홍길동"
     const val ACCOUNT_NUMBER_PLACEHOLDER = "123-456-789012"

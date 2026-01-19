@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.model.TimeStamp
+import com.ssavice.seller_register.AddressForm
 import com.ssavice.seller_register.ValidationState
 import com.ssavice.seller_register.page.FirstPage
 import com.ssavice.seller_register.page.SecondPage
@@ -109,23 +110,27 @@ fun NavGraphBuilder.firstPage(
 fun NavGraphBuilder.secondPage(
     modifier: Modifier = Modifier,
     sellerNameState: TextFieldState,
-    addressState: TextFieldState,
+    detailAddressState: TextFieldState,
     descriptionState: TextFieldState,
     telState: TextFieldState,
     addressError: Boolean,
     sellerNameError: Boolean,
     telError: Boolean,
+    onAddressSelected: (AddressForm) -> Unit,
+    addressState: AddressForm
 ) {
     composable<SecondPageRoute> {
         SecondPage(
             modifier = modifier,
-            addressState = addressState,
+            detailAddressState = detailAddressState,
             descriptionState = descriptionState,
             sellerNameState = sellerNameState,
             telState = telState,
             addressError = addressError,
             sellerNameError = sellerNameError,
             telError = telError,
+            onAddressSelected = onAddressSelected,
+            addressState = addressState
         )
     }
 }

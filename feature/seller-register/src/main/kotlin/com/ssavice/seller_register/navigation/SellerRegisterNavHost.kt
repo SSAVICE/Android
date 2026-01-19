@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.ssavice.model.TimeStamp
+import com.ssavice.seller_register.AddressForm
 import com.ssavice.seller_register.ValidationState
 
 @Composable
@@ -23,13 +24,15 @@ fun SellerRegisterNavHost(
     companyOpenDate: TimeStamp,
     onCompanyOpenDateChanged: (TimeStamp) -> Unit,
     onValidateButtonClicked: () -> Unit,
+    onAddressSelected: (AddressForm) -> Unit,
     telState: TextFieldState,
     companyValidationState: ValidationState,
     sellerNameError: Boolean,
     businessOwnerError: Boolean,
     businessRegistrationNumberError: Boolean,
     telError: Boolean,
-    addressState: TextFieldState,
+    addressState: AddressForm,
+    detailAddressState: TextFieldState,
     descriptionState: TextFieldState,
     addressError: Boolean,
     accountDepositorState: TextFieldState,
@@ -92,6 +95,7 @@ fun SellerRegisterNavHost(
         )
         secondPage(
             modifier = Modifier.padding(horizontal = 5.dp),
+            detailAddressState = detailAddressState,
             addressState = addressState,
             descriptionState = descriptionState,
             sellerNameState = sellerNameState,
@@ -99,6 +103,7 @@ fun SellerRegisterNavHost(
             sellerNameError = sellerNameError,
             addressError = addressError,
             telError = telError,
+            onAddressSelected = onAddressSelected
         )
         thirdPage(
             modifier = Modifier.padding(horizontal = 5.dp),

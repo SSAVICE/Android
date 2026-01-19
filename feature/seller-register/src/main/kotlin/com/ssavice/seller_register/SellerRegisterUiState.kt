@@ -10,6 +10,14 @@ data class SellerRegisterUiState(
     val tokenRemainingTime: Long,
 )
 
+data class AddressForm(
+    val address: String,
+    val regionCode: String,
+    val latitude: Double,
+    val longitude: Double,
+    val zipCode: String
+)
+
 data class Form(
     val registrationStep: Int,
     val sellerName: String,
@@ -17,7 +25,8 @@ data class Form(
     val companyOpenDate: TimeStamp,
     val businessRegistrationNumber: String,
     val tel: String,
-    val address: String,
+    val detailAddress: String,
+    val address: AddressForm,
     val description: String,
     val accountDepositor: String,
     val accountNumber: String,
