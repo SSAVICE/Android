@@ -24,8 +24,10 @@ import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.component.SsaviceButtonOutlined
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.TimeStamp
 import com.ssavice.seller_register.navigation.SellerRegisterNavHost
 import com.ssavice.ui.ProgressBar
+import kotlinx.coroutines.delay
 
 @Composable
 fun RegisterScreen(
@@ -34,14 +36,22 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val clickable = state.submitState !is SubmitState.Loading
+    val clickable: Boolean =
+        if (state.form.registrationStep == 1) {
+            (
+                (state.submitState !is SubmitState.Loading) &&
+                    (state.companyValidationState == ValidationState.Validated)
+            )
+        } else {
+            state.submitState !is SubmitState.Loading
+        }
 
     val sellerNameState = rememberTextFieldState(state.form.sellerName)
     val businessOwnerState = rememberTextFieldState(state.form.businessOwnerName)
     val businessRegistrationNumberState =
         rememberTextFieldState(state.form.businessRegistrationNumber)
     val telState = rememberTextFieldState(state.form.tel)
-    val addressState = rememberTextFieldState(state.form.address)
+    val addressState = rememberTextFieldState(state.form.detailAddress)
     val descriptionState = rememberTextFieldState(state.form.description)
     val accountOwnerState = rememberTextFieldState(state.form.accountDepositor)
     val accountNumberState = rememberTextFieldState(state.form.accountNumber)
@@ -98,6 +108,14 @@ fun RegisterScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        while (true) {
+            viewModel.updateTokenInfo()
+
+            delay(500L)
+        }
+    }
+
     RegisterScreen(
         modifier = modifier,
         onNextButtonClick = viewModel::clickNextButton,
@@ -107,19 +125,27 @@ fun RegisterScreen(
         sellerNameState = sellerNameState,
         businessOwnerState = businessOwnerState,
         businessRegistrationNumberState = businessRegistrationNumberState,
+        companyOpenDate = state.form.companyOpenDate,
+        companyValidationState = state.companyValidationState,
+        onCompanyOpenDateChanged = viewModel::onCompanyOpenDateChanged,
+        onValidateButtonClicked = viewModel::onValidateButtonClick,
         telState = telState,
-        addressState = addressState,
+        detailAddressState = addressState,
+        addressState = state.form.address,
+        onAddressSelected = viewModel::onAddressSelected,
         descriptionState = descriptionState,
         accountOwnerState = accountOwnerState,
         accountNumberState = accountNumberState,
         sellerNameErrorState = state.form.sellerNameErrorState,
         businessOwnerErrorState = state.form.businessOwnerNameErrorState,
         businessRegistrationNumberErrorState = state.form.businessRegistrationNumberErrorState,
+        companyOpenDateErrorState = state.form.companyOpenDateErrorState,
         telErrorState = state.form.telErrorState,
         addressErrorState = state.form.addressErrorState,
         accountOwnerErrorState = state.form.accountDepositorErrorState,
         accountNumberErrorState = state.form.accountNumberErrorState,
-        submitButtonForTest = viewModel::submit,
+        submitButtonForTest = if (state.showTestButton) viewModel::submit else null,
+        tokenRemainingTime = state.tokenRemainingTime,
     )
 }
 
@@ -133,19 +159,27 @@ fun RegisterScreen(
     sellerNameState: TextFieldState,
     businessOwnerState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
+    companyOpenDate: TimeStamp,
+    onCompanyOpenDateChanged: (TimeStamp) -> Unit,
+    onValidateButtonClicked: () -> Unit,
+    onAddressSelected: (AddressForm) -> Unit,
     telState: TextFieldState,
-    addressState: TextFieldState,
+    addressState: AddressForm,
+    detailAddressState: TextFieldState,
     descriptionState: TextFieldState,
     accountOwnerState: TextFieldState,
     accountNumberState: TextFieldState,
+    companyValidationState: ValidationState,
     sellerNameErrorState: FormError,
+    companyOpenDateErrorState: FormError,
     businessOwnerErrorState: FormError,
     businessRegistrationNumberErrorState: FormError,
     telErrorState: FormError,
     addressErrorState: FormError,
     accountOwnerErrorState: FormError,
     accountNumberErrorState: FormError,
-    submitButtonForTest: () -> Unit = {},
+    submitButtonForTest: (() -> Unit)? = null,
+    tokenRemainingTime: Long,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
@@ -172,10 +206,12 @@ fun RegisterScreen(
             businessOwnerState = businessOwnerState,
             businessRegistrationNumberState = businessRegistrationNumberState,
             telState = telState,
+            companyValidationState = companyValidationState,
             sellerNameError = sellerNameErrorState != FormError.None,
             businessOwnerError = businessOwnerErrorState != FormError.None,
             businessRegistrationNumberError = businessRegistrationNumberErrorState != FormError.None,
             telError = telErrorState != FormError.None,
+            detailAddressState = detailAddressState,
             addressState = addressState,
             descriptionState = descriptionState,
             addressError = addressErrorState != FormError.None,
@@ -183,30 +219,36 @@ fun RegisterScreen(
             accountNumberState = accountNumberState,
             accountDepositorError = accountOwnerErrorState != FormError.None,
             accountNumberError = accountNumberErrorState != FormError.None,
+            onCompanyOpenDateChanged = onCompanyOpenDateChanged,
+            onValidateButtonClicked = onValidateButtonClicked,
+            companyOpenDate = companyOpenDate,
+            companyOpenDateError = companyOpenDateErrorState != FormError.None,
+            tokenRemainingTime = tokenRemainingTime,
+            onAddressSelected = onAddressSelected,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            if (showPrevButton) {
-                SsaviceButtonOutlined(
-                    onClick = onPrevButtonClick,
-                    text = RegisterScreenDefaults.BUTTON_PREV_TEXT,
-                    modifier = Modifier.weight(1f),
-                    enabled = active,
-                )
-            }
+            SsaviceButtonOutlined(
+                onClick = onPrevButtonClick,
+                text = if (page == 1) RegisterScreenDefaults.BUTTON_RESET else RegisterScreenDefaults.BUTTON_PREV_TEXT,
+                modifier = Modifier.weight(1f),
+                enabled = active,
+            )
             SsaviceButton(
                 onClick = onNextButtonClick,
                 text = nextButtonText,
                 modifier = Modifier.weight(1f),
                 enabled = active,
             )
-            SsaviceButton(
-                onClick = submitButtonForTest,
-                text = "TEST",
-                modifier = Modifier.weight(1f),
-            )
+            if (submitButtonForTest != null) {
+                SsaviceButton(
+                    onClick = submitButtonForTest,
+                    text = "TEST",
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
     }
 }
@@ -225,14 +267,16 @@ private fun RegisterScreenPreview() {
 }
 
 internal object RegisterScreenDefaults {
-    const val LABEL_FIRST_PAGE = "기본 정보"
-    const val SELLER_NAME_TEXT = "업체명"
+    const val LABEL_FIRST_PAGE = "사업자 정보"
     const val BUSINESS_OWNER_TEXT = "대표자명"
+    const val OPEN_DATE_TEXT = "개업 일자"
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_TEXT = "사업자번호"
-    const val SELLER_TEL_TEXT = "전화번호"
 
-    const val LABEL_SECOND_PAGE = "위치 정보"
+    const val LABEL_SECOND_PAGE = "기본 정보"
+    const val SELLER_NAME_TEXT = "업체명"
     const val ADDRESS_TEXT = "주소"
+    const val DETAIL_ADDRESS_TEXT = "상세 주소"
+    const val SELLER_TEL_TEXT = "전화번호"
     const val DESCRIPTION_TEXT = "소개글"
 
     const val LABEL_THIRD_PAGE = "정산 정보"
@@ -243,14 +287,18 @@ internal object RegisterScreenDefaults {
     const val BUSINESS_OWNER_PLACEHOLDER = "예: 권성찬"
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_PLACEHOLDER = "123-45-67890"
     const val SELLER_TEL_PLACEHOLDER = "010-1234-5678"
-    const val ADDRESS_PLACEHOLDER = "서울특별시 강남구 ..."
+    const val ADDRESS_PLACEHOLDER = "주소를 입력하세요"
+    const val ADDRESS_DETAIL_PLACEHOLDER = "101동 1001호"
     const val DESCRIPTION_PLACEHOLDER = "업체에 대해 소개해주세요"
     const val ACCOUNT_NAME_PLACEHOLDER = "홍길동"
     const val ACCOUNT_NUMBER_PLACEHOLDER = "123-456-789012"
 
     const val FIELD_ERROR_MESSAGE = "해당 필드는 필수입니다."
 
+    const val VALIDATE_BUTTON = "사업자 정보 검증"
+    const val VALIDATE_BUTTON_COMPLETE = "검증 완료"
     const val BUTTON_NEXT_TEXT = "다음"
     const val BUTTON_PREV_TEXT = "이전"
+    const val BUTTON_RESET = "초기화"
     const val BUTTON_COMPLETE_TEXT = "완료"
 }

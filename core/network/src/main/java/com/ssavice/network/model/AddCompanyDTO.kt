@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 class AddCompanyDTO(
+    val verifyToken: String,
     val companyName: String,
     val ownerName: String,
     val phoneNumber: String,
@@ -18,8 +19,12 @@ class AddCompanyDTO(
     val region: RegionPostDTO,
 ) {
     companion object {
-        fun fromModel(sellerInfo: SellerRegisterForm): AddCompanyDTO =
+        fun fromModel(
+            sellerInfo: SellerRegisterForm,
+            verifyToken: String,
+        ): AddCompanyDTO =
             AddCompanyDTO(
+                verifyToken = verifyToken,
                 companyName = sellerInfo.companyName,
                 ownerName = sellerInfo.businessOwnerName,
                 phoneNumber = sellerInfo.phoneNumber,

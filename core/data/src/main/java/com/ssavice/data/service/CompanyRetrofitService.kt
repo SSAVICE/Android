@@ -5,6 +5,8 @@ import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.model.GetCompanySummaryDTO
 import com.ssavice.network.model.JWT
 import com.ssavice.network.model.LoginDTO
+import com.ssavice.network.model.ValidateBusinessDTO
+import com.ssavice.network.model.ValidateBusinessResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -29,4 +31,9 @@ interface CompanyRetrofitService {
     suspend fun getCompanySummary(
         @Path(value = "id") id: Long,
     ): Response<GetCompanySummaryDTO>
+
+    @POST("/api/company/validate")
+    suspend fun validateBusinessInfo(
+        @Body body: ValidateBusinessDTO,
+    ): Response<ValidateBusinessResponseDTO>
 }

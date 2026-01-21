@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.ssavice.model.TimeStamp
+import com.ssavice.seller_register.AddressForm
+import com.ssavice.seller_register.ValidationState
 
 @Composable
 fun SellerRegisterNavHost(
@@ -18,18 +21,26 @@ fun SellerRegisterNavHost(
     sellerNameState: TextFieldState,
     businessOwnerState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
+    companyOpenDate: TimeStamp,
+    onCompanyOpenDateChanged: (TimeStamp) -> Unit,
+    onValidateButtonClicked: () -> Unit,
+    onAddressSelected: (AddressForm) -> Unit,
     telState: TextFieldState,
+    companyValidationState: ValidationState,
     sellerNameError: Boolean,
     businessOwnerError: Boolean,
     businessRegistrationNumberError: Boolean,
     telError: Boolean,
-    addressState: TextFieldState,
+    addressState: AddressForm,
+    detailAddressState: TextFieldState,
     descriptionState: TextFieldState,
     addressError: Boolean,
     accountDepositorState: TextFieldState,
     accountNumberState: TextFieldState,
     accountDepositorError: Boolean,
     accountNumberError: Boolean,
+    companyOpenDateError: Boolean,
+    tokenRemainingTime: Long,
 ) {
     val navController = rememberNavController()
     val currentRoute = navController.currentDestination?.route
@@ -72,20 +83,27 @@ fun SellerRegisterNavHost(
     ) {
         firstPage(
             modifier = Modifier.padding(horizontal = 5.dp),
-            sellerNameState = sellerNameState,
             businessOwnerState = businessOwnerState,
             businessRegistrationNumberState = businessRegistrationNumberState,
-            telState = telState,
-            sellerNameError = sellerNameError,
+            companyOpenDate = companyOpenDate,
+            companyValidationState = companyValidationState,
             businessOwnerError = businessOwnerError,
             businessRegistrationNumberError = businessRegistrationNumberError,
-            telError = telError,
+            onCompanyOpenDateChanged = onCompanyOpenDateChanged,
+            onValidateButtonClicked = onValidateButtonClicked,
+            tokenRemainingTime = tokenRemainingTime,
         )
         secondPage(
             modifier = Modifier.padding(horizontal = 5.dp),
+            detailAddressState = detailAddressState,
             addressState = addressState,
             descriptionState = descriptionState,
+            sellerNameState = sellerNameState,
+            telState = telState,
+            sellerNameError = sellerNameError,
             addressError = addressError,
+            telError = telError,
+            onAddressSelected = onAddressSelected,
         )
         thirdPage(
             modifier = Modifier.padding(horizontal = 5.dp),
