@@ -36,6 +36,7 @@ import androidx.compose.foundation.text.input.then
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -65,6 +66,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.InputTransformations
 import com.ssavice.designsystem.component.LabeledComponent
+import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.designsystem.component.OutputTransformations
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.component.SsaviceButtonOutlined
@@ -72,14 +74,18 @@ import com.ssavice.designsystem.component.SsaviceDateSpinner
 import com.ssavice.designsystem.component.SsaviceDropdown
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.mappicker.AddressPickerDialog
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.TimeStamp
+import com.ssavice.post_service.AddServiceScreenDefaults.ADDRESS_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.ADD_IMAGE_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.BASIC_INFORMATION_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.CATEGORY_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.DEADLINE_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.DESCRIPTION_PLACEHOLDER
 import com.ssavice.post_service.AddServiceScreenDefaults.DESCRIPTION_TEXT
+import com.ssavice.post_service.AddServiceScreenDefaults.DETAIL_ADDRESS_PLACEHOLDER
+import com.ssavice.post_service.AddServiceScreenDefaults.DETAIL_ADDRESS_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.DISCOUNTED_PRICE_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.DISCOUNT_RATIO_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.END_DATE_TEXT
@@ -87,6 +93,7 @@ import com.ssavice.post_service.AddServiceScreenDefaults.MAX_RECRUIT_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.MIN_RECRUIT_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.PRICE_INFORMATION_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.PRICE_TEXT
+import com.ssavice.post_service.AddServiceScreenDefaults.REGION_INFORMATION_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.SCHEDULE_INFORMATION_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.SERVICE_NAME_PLACEHOLDER
 import com.ssavice.post_service.AddServiceScreenDefaults.SERVICE_NAME_TEXT
@@ -113,6 +120,8 @@ fun AddServiceRoute(
             }
         } else if (state.submitState is SubmitState.Dismiss) {
             onDismiss()
+        } else if (state.submitState is SubmitState.Idle) {
+            viewModel.getUserAddressAndApply()
         }
     }
 
@@ -137,6 +146,8 @@ fun AddServiceRoute(
         onDeadlineChanged = viewModel::onDeadlineChanged,
         onStartDateChanged = viewModel::onStartDateChanged,
         onEndDateChanged = viewModel::onEndDateChanged,
+        onAddressSelected = viewModel::onAddressSelected,
+        onDetailAddressChanged = viewModel::onDetailAddressChanged,
     )
 }
 
@@ -162,6 +173,8 @@ fun AddServiceScreen(
     onDeadlineChanged: (TimeStamp) -> Unit = {},
     onStartDateChanged: (TimeStamp) -> Unit = {},
     onEndDateChanged: (TimeStamp) -> Unit = {},
+    onDetailAddressChanged: (String) -> Unit = {},
+    onAddressSelected: (AddressForm) -> Unit = {},
 ) {
     val serviceNameTextState = rememberTextFieldState(state.form.name)
     var category by remember { mutableStateOf(state.form.category) }
@@ -197,6 +210,8 @@ fun AddServiceScreen(
                 }
             },
         )
+
+    val detailAddressTextState = rememberTextFieldState(state.form.detailAddress)
 
     LaunchedEffect(serviceNameTextState) {
         snapshotFlow { serviceNameTextState.text.toString() }
@@ -246,6 +261,14 @@ fun AddServiceScreen(
                 onDiscountedPriceChanged(it)
             }
     }
+
+    LaunchedEffect(detailAddressTextState) {
+        snapshotFlow { detailAddressTextState.text.toString() }
+            .collect {
+                onDetailAddressChanged(it)
+            }
+    }
+
     LaunchedEffect(state.submitState) {
         if (state.submitState is SubmitState.Success) {
             onSubmit(state.submitState.serviceId)
@@ -260,6 +283,18 @@ fun AddServiceScreen(
                 discountedPriceTextState.text.length,
                 state.form.discountedPrice.toString(),
             )
+        }
+    }
+
+    LaunchedEffect(state.form.detailAddress) {
+        if (state.form.detailAddress != detailAddressTextState.text.toString()) {
+            detailAddressTextState.edit {
+                replace(
+                    0,
+                    detailAddressTextState.text.length,
+                    state.form.detailAddress,
+                )
+            }
         }
     }
 
@@ -310,6 +345,8 @@ fun AddServiceScreen(
             category = category,
             categories = state.form.categoryList,
             tagTextState = tagTextState,
+            addressState = state.form.addressForm,
+            addressDetailTextState = detailAddressTextState,
             maxRecruitTextState = maxRecruitTextState,
             minRecruitTextState = minRecruitTextState,
             priceTextState = priceTextState,
@@ -326,6 +363,7 @@ fun AddServiceScreen(
             onCategoryChanged = { category = it },
             onSubmitClicked = onSubmitButtonClicked,
             onDismissClicked = onBackButtonClicked,
+            onAddressSelected = onAddressSelected,
             enabled = enabled,
             serviceNameTextStateErrorMessage = state.form.nameErrorMessage,
             categoryErrorMessage = state.form.categoryErrorMessage,
@@ -476,6 +514,8 @@ fun AddServiceForm(
     category: String,
     categories: List<String>,
     tagTextState: TextFieldState,
+    addressState: AddressForm,
+    addressDetailTextState: TextFieldState,
     maxRecruitTextState: TextFieldState,
     minRecruitTextState: TextFieldState,
     priceTextState: TextFieldState,
@@ -502,6 +542,7 @@ fun AddServiceForm(
     onStartDateChanged: (TimeStamp) -> Unit = {},
     onEndDateChanged: (TimeStamp) -> Unit = {},
     onCategoryChanged: (String) -> Unit = {},
+    onAddressSelected: (AddressForm) -> Unit = {},
     onSubmitClicked: () -> Unit = {},
     onDismissClicked: () -> Unit = {},
 ) {
@@ -547,6 +588,18 @@ fun AddServiceForm(
             multiLine = true,
             isError = descriptionTextStateErrorMessage != null,
             errorMessage = descriptionTextStateErrorMessage,
+        )
+
+        Spacer(Modifier.height(10.dp))
+        Text(style = MaterialTheme.typography.titleMedium, text = REGION_INFORMATION_TEXT)
+
+        InputAddressScreen(
+            modifier = Modifier.fillMaxWidth(),
+            isError = false,
+            errorMessage = null,
+            addressState = addressState,
+            onAddressSelected = onAddressSelected,
+            detailAddressState = addressDetailTextState,
         )
 
         Spacer(Modifier.height(10.dp))
@@ -710,6 +763,70 @@ fun AddServiceForm(
     }
 }
 
+@Composable
+private fun InputAddressScreen(
+    modifier: Modifier,
+    isError: Boolean,
+    errorMessage: String?,
+    addressState: AddressForm,
+    onAddressSelected: (AddressForm) -> Unit,
+    detailAddressState: TextFieldState,
+) {
+    var showAddressPicker by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        LabeledComponent(
+            Modifier,
+            ADDRESS_TEXT,
+            isError,
+            errorMessage,
+        ) {
+            OutlinedTextFieldButton(
+                placeHolder = "",
+                text = addressState.address,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = "Open Date Picker",
+                    )
+                },
+                onClick = { if (!showAddressPicker) showAddressPicker = true },
+            )
+        }
+
+        SsaviceInputField(
+            modifier = Modifier.fillMaxWidth(),
+            state = detailAddressState,
+            placeholderText = DETAIL_ADDRESS_PLACEHOLDER,
+            isError = false,
+            labelText = DETAIL_ADDRESS_TEXT,
+        )
+    }
+
+    if (showAddressPicker) {
+        AddressPickerDialog(
+            {
+                onAddressSelected(
+                    AddressForm(
+                        it.address,
+                        it.regionCode,
+                        it.latitude,
+                        it.longitude,
+                        it.zipCode,
+                    ),
+                )
+                showAddressPicker = false
+            },
+            onDismiss = {
+                showAddressPicker = false
+            },
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun AddServiceScreenPreview() {
@@ -730,6 +847,8 @@ private fun AddServiceScreenPreview() {
                         startDate = TimeStamp(0L),
                         endDate = TimeStamp(0L),
                         deadline = TimeStamp(0L),
+                        addressForm = AddressForm("", "", 0.0, 0.0, ""),
+                        detailAddress = "",
                     ),
                 imageState =
                     ImageState(
@@ -761,12 +880,15 @@ private fun AddServiceScreenPreview() {
 internal object AddServiceScreenDefaults {
     const val ADD_IMAGE_TEXT = "사진 등록"
     const val BASIC_INFORMATION_TEXT = "기본 정보"
+    const val REGION_INFORMATION_TEXT = "위치 정보"
     const val PRICE_INFORMATION_TEXT = "비용 정보"
     const val SCHEDULE_INFORMATION_TEXT = "모집 정보"
 
     const val SERVICE_NAME_TEXT = "서비스명"
     const val CATEGORY_TEXT = "카테고리"
     const val TAG_TEXT = "태그 (쉽표로 구분)"
+    const val ADDRESS_TEXT = "주소"
+    const val DETAIL_ADDRESS_TEXT = "상세 주소"
     const val MIN_RECRUIT_TEXT = "최소 모집 인원"
     const val MAX_RECRUIT_TEXT = "최대 모집 인원"
     const val PRICE_TEXT = "가격 (원)"
@@ -780,4 +902,5 @@ internal object AddServiceScreenDefaults {
     const val SERVICE_NAME_PLACEHOLDER = "예: 요가 레슨"
     const val TAG_PLACEHOLDER = "예: 요가, 필라테스, 운동"
     const val DESCRIPTION_PLACEHOLDER = "상세한 설명을 작성해주세요."
+    const val DETAIL_ADDRESS_PLACEHOLDER = "101동 1001호"
 }

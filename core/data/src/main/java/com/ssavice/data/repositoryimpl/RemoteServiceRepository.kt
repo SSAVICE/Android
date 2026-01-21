@@ -32,7 +32,7 @@ class RemoteServiceRepository
         override suspend fun postService(service: ServiceAddForm): Result<Long> =
             processResponseOnResponseData(
                 serviceRetrofitService
-                    .postService(AddServiceDTO.fromModel(service, listOf())),
+                    .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys)),
             ).map { it.serviceId }
 
         override suspend fun searchService(

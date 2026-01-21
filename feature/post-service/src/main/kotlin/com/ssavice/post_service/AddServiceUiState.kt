@@ -42,6 +42,14 @@ data class UploadingImage(
     val progress: ImageUploadProgress,
 )
 
+data class AddressForm(
+    val address: String,
+    val regionCode: String,
+    val latitude: Double,
+    val longitude: Double,
+    val zipCode: String,
+)
+
 data class Form(
     val name: String = "",
     val category: String = "",
@@ -49,6 +57,8 @@ data class Form(
     val minRecruit: Int,
     val maxRecruit: Int,
     val price: Int = 0,
+    val addressForm: AddressForm,
+    val detailAddress: String = "",
     val discountRatio: Int = 0,
     val discountedPrice: Int = 0,
     val deadline: TimeStamp,

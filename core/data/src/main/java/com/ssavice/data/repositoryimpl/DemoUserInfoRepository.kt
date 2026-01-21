@@ -4,6 +4,8 @@ import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Category
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.RegionDetail
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
@@ -99,4 +101,15 @@ class DemoUserInfoRepository
                 }
                 emit(ImageUploadProgress.Done("objectKey"))
             }
+
+        override suspend fun getUserAddress(): Result<RegionDetail> =
+            Result.success(
+                RegionDetail(
+                    regionInfo = RegionInfo.demo,
+                    region1 = "강남구",
+                    region2 = "신사동",
+                ),
+            )
+
+        override suspend fun updateUserAddress(region: RegionInfo): Result<Unit> = Result.success(Unit)
     }

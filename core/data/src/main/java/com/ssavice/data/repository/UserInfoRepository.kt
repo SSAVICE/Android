@@ -1,6 +1,8 @@
 package com.ssavice.data.repository
 
 import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.RegionDetail
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
@@ -25,4 +27,8 @@ interface UserInfoRepository {
     suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit>
 
     fun updateUserProfileImage(image: ResizableImage): Flow<ImageUploadProgress>
+
+    suspend fun getUserAddress(): Result<RegionDetail>
+
+    suspend fun updateUserAddress(region: RegionInfo): Result<Unit>
 }
