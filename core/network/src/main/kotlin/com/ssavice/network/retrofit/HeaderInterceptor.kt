@@ -1,7 +1,6 @@
 package com.ssavice.network.retrofit
 
 import com.ssavice.datastore.repository.JwtRepository
-import com.ssavice.network.authentication.TokenRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response

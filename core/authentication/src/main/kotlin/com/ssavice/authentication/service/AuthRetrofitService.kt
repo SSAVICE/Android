@@ -1,4 +1,4 @@
-package com.ssavice.network.retrofit
+package com.ssavice.authentication.service
 
 import com.ssavice.network.model.JwtDTO
 import com.ssavice.network.model.LoginDTO

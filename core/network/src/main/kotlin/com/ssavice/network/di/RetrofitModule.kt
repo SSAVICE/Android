@@ -1,8 +1,9 @@
-package com.ssavice.network.retrofit
+package com.ssavice.network.di
 
-import com.ssavice.core.network.BuildConfig
+import com.ssavice.datastore.repository.JwtRepository
 import com.ssavice.network.authentication.AuthenticationRepository
-import com.ssavice.network.authentication.TokenRepository
+import com.ssavice.network.retrofit.AuthInterceptor
+import com.ssavice.network.retrofit.HeaderInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +39,7 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides
@@ -48,7 +49,7 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
             .build()
 
@@ -59,17 +60,18 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides
     @Singleton
-    fun provideHeaderInterceptor(tokenRepository: TokenRepository) = HeaderInterceptor(tokenRepository)
+    fun provideHeaderInterceptor(tokenRepository: JwtRepository) =
+        HeaderInterceptor(tokenRepository)
 
     @Provides
     @Singleton
     fun provideAuthInterceptor(
-        tokenRepository: TokenRepository,
+        tokenRepository: JwtRepository,
         authRepository: AuthenticationRepository,
     ) = AuthInterceptor(tokenRepository, authRepository)
 

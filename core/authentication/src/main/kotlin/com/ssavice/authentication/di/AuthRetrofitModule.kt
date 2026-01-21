@@ -1,7 +1,7 @@
-package com.ssavice.network.di
+package com.ssavice.authentication.di
 
-import com.ssavice.network.retrofit.AuthRetrofitService
-import com.ssavice.network.retrofit.RetrofitModule
+import com.ssavice.authentication.service.AuthRetrofitService
+import com.ssavice.network.di.RetrofitModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

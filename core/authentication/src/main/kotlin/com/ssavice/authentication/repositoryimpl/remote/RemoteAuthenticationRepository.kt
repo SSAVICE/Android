@@ -1,10 +1,10 @@
-package com.ssavice.network.authentication.remote
+package com.ssavice.authentication.repositoryimpl.remote
 
 import com.ssavice.model.auth.Jwt
 import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.model.LoginDTO
 import com.ssavice.network.processResponseOnResponseData
-import com.ssavice.network.retrofit.AuthRetrofitService
+import com.ssavice.authentication.service.AuthRetrofitService
 import javax.inject.Inject
 
 class RemoteAuthenticationRepository @Inject constructor(
