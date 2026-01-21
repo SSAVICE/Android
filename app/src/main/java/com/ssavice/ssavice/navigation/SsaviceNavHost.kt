@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssavice.edit_profile.navigation.editProfileScreen
 import com.ssavice.edit_profile.navigation.navigateToEditProfile
+import com.ssavice.login.LoginRoute
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search.SearchForm
@@ -13,6 +14,8 @@ import com.ssavice.search.navigation.navigateToSearchForm
 import com.ssavice.search.navigation.searchFormScreen
 import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
+import com.ssavice.seller_main.navigation.LoginRoute
+import com.ssavice.seller_main.navigation.loginScreen
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.serviceDetailScreen
 import com.ssavice.service_detail.ui.ServiceDetailBottomBar
@@ -20,6 +23,7 @@ import com.ssavice.ui.navigation.ScaffoldConfig
 import com.ssavice.user_main.UserMainTopBar
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
+import com.ssavice.user_main.navigation.navigateToMain
 import com.ssavice.user_my_page.navigation.myPageScreen
 import com.ssavice.user_my_service.navigation.myServiceScreen
 import com.ssavice.user_my_service.navigation.navigateToMyService
@@ -42,6 +46,20 @@ fun SsaviceNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
+        loginScreen(
+            onLoginComplete = {
+                navController.navigateToMain {
+                    popUpTo(LoginRoute) { inclusive = true }
+                }
+            },
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.None,
+                )
+            },
+            isUser = true,
+        )
+
         mainScreen(
             onSearch = {
                 navController.navigateToSearchForm()

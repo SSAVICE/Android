@@ -12,9 +12,7 @@ object RegisterRoute
 
 fun NavController.navigateToRegister(navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(route = RegisterRoute) {
-        popUpTo(RegisterRoute) {
-            inclusive = true
-        }
+        popUpTo(graph.startDestinationId) { inclusive = true }
     }
 }
 
