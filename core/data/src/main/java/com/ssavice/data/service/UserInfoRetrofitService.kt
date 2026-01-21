@@ -14,7 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface UserRetrofitInfoService {
+interface UserInfoRetrofitService {
     @GET("/api/user/profile")
     suspend fun getUserProfile(): Response<UserProfileDTO>
 
