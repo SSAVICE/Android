@@ -27,4 +27,8 @@ interface ServiceRepository {
     suspend fun getService(id: Long): Result<ServiceDetail>
 
     fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress>
+
+    suspend fun applyService(id: Long): Result<Unit>
+
+    suspend fun cancelService(id: Long): Result<Unit>
 }

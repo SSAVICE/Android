@@ -129,4 +129,10 @@ class RemoteServiceRepository
                             }
                     }
             }
-    }
+
+    override suspend fun applyService(id: Long): Result<Unit> =
+        processResponseOnResponseData(serviceRetrofitService.applyService(id)).map {}
+
+    override suspend fun cancelService(id: Long): Result<Unit> =
+        processResponse(serviceRetrofitService.cancelService(id))
+}
