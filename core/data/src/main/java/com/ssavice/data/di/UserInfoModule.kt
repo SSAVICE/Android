@@ -3,7 +3,7 @@ package com.ssavice.data.di
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.data.repositoryimpl.RemoteUserInfoRepository
 import com.ssavice.data.service.UserRetrofitInfoService
-import com.ssavice.network.retrofit.RetrofitModule
+import com.ssavice.network.di.RetrofitModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

@@ -10,4 +10,8 @@ data class Jwt(
     val accessTokenExpiresAt: TimeStamp,
 ) {
     fun isExpired(): Boolean = System.currentTimeMillis() >= accessTokenExpiresAt.timeInMillis
+
+    companion object {
+        val EMPTY = Jwt("", "", TimeStamp(0L))
+    }
 }

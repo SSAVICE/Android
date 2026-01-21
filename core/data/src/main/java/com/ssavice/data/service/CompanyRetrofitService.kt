@@ -3,7 +3,7 @@ package com.ssavice.data.service
 import GetCompanyInfoDTO
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.model.GetCompanySummaryDTO
-import com.ssavice.network.model.JWT
+import com.ssavice.network.model.JwtDTO
 import com.ssavice.network.model.LoginDTO
 import com.ssavice.network.model.ValidateBusinessDTO
 import com.ssavice.network.model.ValidateBusinessResponseDTO
@@ -22,7 +22,7 @@ interface CompanyRetrofitService {
     @POST("/api/company/login")
     suspend fun loginSeller(
         @Body body: LoginDTO,
-    ): Response<JWT>
+    ): Response<JwtDTO>
 
     @GET("/api/company")
     suspend fun getCompanyInfo(): Response<GetCompanyInfoDTO>

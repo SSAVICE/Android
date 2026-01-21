@@ -25,6 +25,7 @@ dependencies {
     implementation(projects.feature.userMyPage)
     implementation(projects.feature.userMyService)
     implementation(projects.feature.editProfile)
+    implementation(projects.feature.login)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)
