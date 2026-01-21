@@ -2,7 +2,11 @@ package com.ssavice.network.retrofit
 
 import com.ssavice.datastore.repository.JwtRepository
 import com.ssavice.model.auth.Jwt
+import com.ssavice.network.AuthEvent
+import com.ssavice.network.AuthEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
+import com.ssavice.network.parseError
+import errorCodeMap
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -25,6 +29,7 @@ class AuthInterceptor
 constructor(
     private val tokenRepository: JwtRepository,
     private val authRepository: AuthenticationRepository,
+    private val authEventManager: AuthEventManager
 ) : Authenticator {
     override fun authenticate(
         route: Route?,
@@ -33,9 +38,12 @@ constructor(
         if (responseCount(response) >= 2) return null
         return synchronized(this) {
             runBlocking {
-                if (!tokenRepository.consumeRefreshFlag()
-                    && response.code != 401
+                val refreshFlag = tokenRepository.consumeRefreshFlag()
+                val errorResponse = response.parseError()
+                if (!refreshFlag
+                    && errorCodeMap[errorResponse?.errorCode] != ErrorCode.EXPIRED_TOKEN
                 ) {
+                    authEventManager.emit(AuthEvent.Unauthorized)
                     return@runBlocking null
                 }
 
@@ -49,6 +57,7 @@ constructor(
                         .addHeader(AUTH_HEADER_KEY, "Bearer ${newToken.accessToken}")
                         .build()
                 } else {
+                    authEventManager.emit(AuthEvent.Unauthorized)
                     null
                 }
             }
