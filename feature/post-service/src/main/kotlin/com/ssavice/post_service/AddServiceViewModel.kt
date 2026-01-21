@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionInfo
@@ -26,6 +27,7 @@ class AddServiceViewModel
     @Inject
     constructor(
         private val serviceRepository: ServiceRepository,
+        private val userRepository: UserInfoRepository,
         @ApplicationContext private val context: Context,
     ) : ViewModel() {
         val uiState =
@@ -39,6 +41,15 @@ class AddServiceViewModel
                             endDate = TimeStamp(Calendar.getInstance().timeInMillis),
                             deadline = TimeStamp(Calendar.getInstance().timeInMillis),
                             description = DESCRIPTION_DEFAULT,
+                            detailAddress = "",
+                            addressForm =
+                                AddressForm(
+                                    address = "",
+                                    regionCode = "",
+                                    latitude = 0.0,
+                                    longitude = 0.0,
+                                    zipCode = "",
+                                ),
                         ),
                     submitState = SubmitState.Idle,
                     imageState =
@@ -283,6 +294,49 @@ class AddServiceViewModel
             }
         }
 
+        fun getUserAddressAndApply() {
+            viewModelScope.launch(Dispatchers.IO) {
+                userRepository.getUserAddress().onSuccess { address ->
+                    uiState.update {
+                        it.copy(
+                            form =
+                                it.form.copy(
+                                    addressForm =
+                                        AddressForm(
+                                            address = address.regionInfo.address,
+                                            regionCode = address.regionInfo.regionCode,
+                                            latitude = address.regionInfo.latitude,
+                                            longitude = address.regionInfo.longitude,
+                                            zipCode = address.regionInfo.postCode,
+                                        ),
+                                    detailAddress = address.regionInfo.detailAddress,
+                                ),
+                        )
+                    }
+                }
+            }
+        }
+
+        fun onAddressSelected(addressForm: AddressForm) {
+            uiState.value =
+                uiState.value.copy(
+                    form =
+                        uiState.value.form.copy(
+                            addressForm = addressForm,
+                        ),
+                )
+        }
+
+        fun onDetailAddressChanged(detailAddress: String) {
+            uiState.value =
+                uiState.value.copy(
+                    form =
+                        uiState.value.form.copy(
+                            detailAddress = detailAddress,
+                        ),
+                )
+        }
+
         private fun submit() {
             uiState.value = uiState.value.copy(submitState = SubmitState.Loading)
             viewModelScope.launch(Dispatchers.IO) {
@@ -300,7 +354,15 @@ class AddServiceViewModel
                             endDate = Date.parse(uiState.value.form.endDate),
                             startDate = Date.parse(uiState.value.form.startDate),
                             description = uiState.value.form.description,
-                            region = RegionInfo.demo,
+                            region =
+                                RegionInfo(
+                                    address = uiState.value.form.addressForm.address,
+                                    regionCode = uiState.value.form.addressForm.regionCode,
+                                    latitude = uiState.value.form.addressForm.latitude,
+                                    longitude = uiState.value.form.addressForm.longitude,
+                                    postCode = uiState.value.form.addressForm.zipCode,
+                                    detailAddress = uiState.value.form.detailAddress,
+                                ),
                             discountedPrice =
                                 uiState.value.form.discountedPrice,
                             deadLine = Date.parse(uiState.value.form.deadline),

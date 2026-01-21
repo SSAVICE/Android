@@ -47,3 +47,9 @@ data class Region(
     val region1: String,
     val region2: String,
 )
+
+data class RegionDetail(
+    val regionInfo: RegionInfo,
+    val region1: String,
+    val region2: String,
+)

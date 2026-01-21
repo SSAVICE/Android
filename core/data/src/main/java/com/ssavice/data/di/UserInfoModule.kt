@@ -2,7 +2,7 @@ package com.ssavice.data.di
 
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.data.repositoryimpl.RemoteUserInfoRepository
-import com.ssavice.data.service.UserRetrofitInfoService
+import com.ssavice.data.service.UserInfoRetrofitService
 import com.ssavice.network.di.RetrofitModule
 import dagger.Binds
 import dagger.Module
@@ -19,9 +19,9 @@ object UserInfoRetrofitModule {
     @Singleton
     fun provideUserInfoRetrofitService(
         @RetrofitModule.ServiceRetrofit serviceRetrofit: Retrofit,
-    ): UserRetrofitInfoService =
+    ): UserInfoRetrofitService =
         serviceRetrofit
-            .create(UserRetrofitInfoService::class.java)
+            .create(UserInfoRetrofitService::class.java)
 }
 
 @Module
