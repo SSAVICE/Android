@@ -3,8 +3,10 @@ package com.ssavice.data.repositoryimpl
 import android.util.Log
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.data.service.ImageUploadService
-import com.ssavice.data.service.UserRetrofitInfoService
+import com.ssavice.data.service.UserInfoRetrofitService
 import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.RegionDetail
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
@@ -15,6 +17,7 @@ import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.network.ProgressRequestBody
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
+import com.ssavice.network.model.RegionPostDTO
 import com.ssavice.network.model.UpdateUserProfileDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
@@ -26,7 +29,7 @@ import javax.inject.Inject
 class RemoteUserInfoRepository
     @Inject
     constructor(
-        private val userRetrofitService: UserRetrofitInfoService,
+        private val userRetrofitService: UserInfoRetrofitService,
         private val imageUploadService: ImageUploadService,
     ) : UserInfoRepository {
         override suspend fun getUserParticipationSummary(): Result<ParticipationSummary> =
@@ -119,4 +122,31 @@ class RemoteUserInfoRepository
                             }
                     }
             }
+
+    override suspend fun getUserAddress(): Result<RegionDetail> {
+        return processResponseOnResponseData(
+            userRetrofitService.getUserAddress(),
+        ).map {
+            RegionDetail(
+                regionInfo = RegionInfo(
+                    latitude = it.latitude,
+                    longitude = it.longitude,
+                    address = it.address,
+                    detailAddress = it.detailAddress,
+                    postCode = it.postCode,
+                    regionCode = it.regionCode
+                ),
+                region1 = it.gugun,
+                region2 = it.region
+            )
+        }
     }
+
+    override suspend fun updateUserAddress(region: RegionInfo): Result<Unit> {
+        return processResponse(
+            userRetrofitService.updateUserAddress(
+                RegionPostDTO.fromModel(region)
+            )
+        )
+    }
+}
