@@ -23,6 +23,7 @@ import com.ssavice.seller_main.navigation.MainRoute
 import com.ssavice.seller_main.navigation.navigateToLogin
 import com.ssavice.seller_register.navigation.RegisterRoute
 import com.ssavice.seller_register.navigation.navigateToRegister
+import com.ssavice.ui.common.collectAsEffect
 import com.ssavice.ui.navigation.SsaviceBaseApp
 import com.ssavice_seller.navigation.SsaviceNavHost
 import com.ssavice_seller.ui.SsaviceBottomBar
@@ -36,15 +37,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-@Composable
-fun <T> Flow<T>.collectAsEffect(
-    context: CoroutineContext = EmptyCoroutineContext,
-    block: (T) -> Unit
-) {
-    LaunchedEffect(key1 = Unit) {
-        onEach(block).flowOn(context).launchIn(this)
-    }
-}
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
