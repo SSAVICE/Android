@@ -276,4 +276,8 @@ class DemoServiceRepository
                     ImageUploadProgress.Done((Random.Default.nextUInt().toString())),
                 )
             }
-    }
+
+    override suspend fun applyService(id: Long): Result<Unit> = Result.success(Unit)
+
+    override suspend fun cancelService(id: Long): Result<Unit> = Result.success(Unit)
+}

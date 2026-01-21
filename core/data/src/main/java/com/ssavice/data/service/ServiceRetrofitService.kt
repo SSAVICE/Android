@@ -35,5 +35,12 @@ interface ServiceRetrofitService {
     ): Response<PresignedUrlResponseDTO>
 
     @POST("/api/service/{id}/apply")
-    suspend fun applyService()
+    suspend fun applyService(
+        @Path(value = "id") id: Long,
+    ): Response<AddServiceResponseDTO>
+
+    @POST("/api/service/{id}/cancel")
+    suspend fun cancelService(
+        @Path(value = "id") id: Long,
+    ): Response<Unit>
 }
