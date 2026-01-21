@@ -1,6 +1,8 @@
 package com.ssavice.network.di
 
+import com.ssavice.core.network.BuildConfig
 import com.ssavice.datastore.repository.JwtRepository
+import com.ssavice.network.AuthEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.retrofit.AuthInterceptor
 import com.ssavice.network.retrofit.HeaderInterceptor
@@ -73,7 +75,8 @@ object RetrofitModule {
     fun provideAuthInterceptor(
         tokenRepository: JwtRepository,
         authRepository: AuthenticationRepository,
-    ) = AuthInterceptor(tokenRepository, authRepository)
+        authEventManager: AuthEventManager
+    ) = AuthInterceptor(tokenRepository, authRepository, authEventManager)
 
     @Provides
     @Singleton

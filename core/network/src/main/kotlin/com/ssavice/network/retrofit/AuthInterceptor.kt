@@ -47,14 +47,14 @@ constructor(
                     return@runBlocking null
                 }
 
-                val newToken = authRepository.refreshToken(tokenRepository.getJwt()) ?: Jwt.EMPTY
+                val refreshResult = authRepository.refreshToken(tokenRepository.getJwt())
 
-                if (newToken != Jwt.EMPTY) {
-                    tokenRepository.setJwt(newToken)
+                if (refreshResult.isSuccess) {
+                    val token = tokenRepository.getJwt()
                     response.request
                         .newBuilder()
                         .removeHeader(AUTH_HEADER_KEY)
-                        .addHeader(AUTH_HEADER_KEY, "Bearer ${newToken.accessToken}")
+                        .addHeader(AUTH_HEADER_KEY, "Bearer ${token.accessToken}")
                         .build()
                 } else {
                     authEventManager.emit(AuthEvent.Unauthorized)
