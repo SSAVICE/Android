@@ -24,6 +24,7 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)
+    implementation(projects.core.datastore)
     implementation(projects.core.model)
 
     implementation(libs.androidx.activity.compose)

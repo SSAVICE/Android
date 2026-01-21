@@ -1,11 +1,13 @@
 package com.ssavice.model
 
+import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
+@Serializable
 @JvmInline
 value class TimeStamp(
     val timeInMillis: Long,
