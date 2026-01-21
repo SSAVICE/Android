@@ -5,5 +5,5 @@ data class AddressPickResult(
     val zipCode: String,
     val regionCode: String,
     val latitude: Double = 0.0,
-    val longitude: Double = 0.0
+    val longitude: Double = 0.0,
 )

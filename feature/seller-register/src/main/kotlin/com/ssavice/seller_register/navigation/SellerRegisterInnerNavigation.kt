@@ -117,7 +117,7 @@ fun NavGraphBuilder.secondPage(
     sellerNameError: Boolean,
     telError: Boolean,
     onAddressSelected: (AddressForm) -> Unit,
-    addressState: AddressForm
+    addressState: AddressForm,
 ) {
     composable<SecondPageRoute> {
         SecondPage(
@@ -130,7 +130,7 @@ fun NavGraphBuilder.secondPage(
             sellerNameError = sellerNameError,
             telError = telError,
             onAddressSelected = onAddressSelected,
-            addressState = addressState
+            addressState = addressState,
         )
     }
 }

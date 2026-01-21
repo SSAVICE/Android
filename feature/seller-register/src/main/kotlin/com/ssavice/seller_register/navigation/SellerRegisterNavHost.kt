@@ -40,7 +40,7 @@ fun SellerRegisterNavHost(
     accountDepositorError: Boolean,
     accountNumberError: Boolean,
     companyOpenDateError: Boolean,
-    tokenRemainingTime: Long
+    tokenRemainingTime: Long,
 ) {
     val navController = rememberNavController()
     val currentRoute = navController.currentDestination?.route
@@ -91,7 +91,7 @@ fun SellerRegisterNavHost(
             businessRegistrationNumberError = businessRegistrationNumberError,
             onCompanyOpenDateChanged = onCompanyOpenDateChanged,
             onValidateButtonClicked = onValidateButtonClicked,
-            tokenRemainingTime = tokenRemainingTime
+            tokenRemainingTime = tokenRemainingTime,
         )
         secondPage(
             modifier = Modifier.padding(horizontal = 5.dp),
@@ -103,7 +103,7 @@ fun SellerRegisterNavHost(
             sellerNameError = sellerNameError,
             addressError = addressError,
             telError = telError,
-            onAddressSelected = onAddressSelected
+            onAddressSelected = onAddressSelected,
         )
         thirdPage(
             modifier = Modifier.padding(horizontal = 5.dp),

@@ -21,7 +21,10 @@ import kotlin.random.Random
 internal class DemoSellerInfoRepository
     @Inject
     constructor() : SellerInfoRepository {
-        override suspend fun registerSellerInformation(sellerInfo: SellerRegisterForm, token: CompanyVerifyToken): Result<Unit> {
+        override suspend fun registerSellerInformation(
+            sellerInfo: SellerRegisterForm,
+            token: CompanyVerifyToken,
+        ): Result<Unit> {
             delay(500)
             return Result.success(Unit)
         }
@@ -100,11 +103,9 @@ internal class DemoSellerInfoRepository
             )
         }
 
-    override suspend fun verifyBusinessInfo(
-        name: String,
-        openDate: Date,
-        businessNumber: String
-    ): Result<CompanyVerifyToken> {
-        return Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
+        override suspend fun verifyBusinessInfo(
+            name: String,
+            openDate: Date,
+            businessNumber: String,
+        ): Result<CompanyVerifyToken> = Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
     }
-}

@@ -9,7 +9,5 @@ data class Jwt(
     val refreshToken: String,
     val accessTokenExpiresAt: TimeStamp,
 ) {
-    fun isExpired(): Boolean {
-        return System.currentTimeMillis() >= accessTokenExpiresAt.timeInMillis
-    }
+    fun isExpired(): Boolean = System.currentTimeMillis() >= accessTokenExpiresAt.timeInMillis
 }

@@ -15,21 +15,25 @@ import jakarta.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SecurityModule {private const val KEYSET_NAME = "master_keyset"
+object SecurityModule {
+    private const val KEYSET_NAME = "master_keyset"
     private const val PREF_FILE_NAME = "my_pref"
     private const val MASTER_KEY_URI = "android-keystore://master_key"
 
     @Provides
     @Singleton
-    fun provideAead(@ApplicationContext context: Context): Aead {
+    fun provideAead(
+        @ApplicationContext context: Context,
+    ): Aead {
         AeadConfig.register()
 
-        return AndroidKeysetManager.Builder()
+        return AndroidKeysetManager
+            .Builder()
             .withSharedPref(context, KEYSET_NAME, PREF_FILE_NAME)
             .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
             .withMasterKeyUri(MASTER_KEY_URI)
             .build()
             .keysetHandle
-            .getPrimitive(RegistryConfiguration.get(),Aead::class.java)
+            .getPrimitive(RegistryConfiguration.get(), Aead::class.java)
     }
 }

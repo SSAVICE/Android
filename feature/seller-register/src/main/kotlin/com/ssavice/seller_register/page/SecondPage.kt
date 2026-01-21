@@ -140,26 +140,27 @@ private fun InputAddressScreen(
             state = detailAddressState,
             placeholderText = RegisterScreenDefaults.ADDRESS_DETAIL_PLACEHOLDER,
             isError = false,
-            labelText = RegisterScreenDefaults.DETAIL_ADDRESS_TEXT
+            labelText = RegisterScreenDefaults.DETAIL_ADDRESS_TEXT,
         )
     }
 
     if (showAddressPicker) {
         AddressPickerDialog(
-            { onAddressSelected(
-                AddressForm(
-                    it.address,
-                    it.regionCode,
-                    it.latitude,
-                    it.longitude,
-                    it.zipCode,
+            {
+                onAddressSelected(
+                    AddressForm(
+                        it.address,
+                        it.regionCode,
+                        it.latitude,
+                        it.longitude,
+                        it.zipCode,
+                    ),
                 )
-            )
-            showAddressPicker = false
+                showAddressPicker = false
             },
             onDismiss = {
                 showAddressPicker = false
-            }
+            },
         )
     }
 }

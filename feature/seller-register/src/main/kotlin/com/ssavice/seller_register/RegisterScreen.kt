@@ -38,8 +38,10 @@ fun RegisterScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val clickable: Boolean =
         if (state.form.registrationStep == 1) {
-            ((state.submitState !is SubmitState.Loading)
-                    && (state.companyValidationState == ValidationState.Validated))
+            (
+                (state.submitState !is SubmitState.Loading) &&
+                    (state.companyValidationState == ValidationState.Validated)
+            )
         } else {
             state.submitState !is SubmitState.Loading
         }
@@ -107,7 +109,7 @@ fun RegisterScreen(
     }
 
     LaunchedEffect(Unit) {
-        while(true) {
+        while (true) {
             viewModel.updateTokenInfo()
 
             delay(500L)
@@ -143,7 +145,7 @@ fun RegisterScreen(
         accountOwnerErrorState = state.form.accountDepositorErrorState,
         accountNumberErrorState = state.form.accountNumberErrorState,
         submitButtonForTest = if (state.showTestButton) viewModel::submit else null,
-        tokenRemainingTime = state.tokenRemainingTime
+        tokenRemainingTime = state.tokenRemainingTime,
     )
 }
 
@@ -177,7 +179,7 @@ fun RegisterScreen(
     accountOwnerErrorState: FormError,
     accountNumberErrorState: FormError,
     submitButtonForTest: (() -> Unit)? = null,
-    tokenRemainingTime: Long
+    tokenRemainingTime: Long,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 5.dp),
@@ -222,7 +224,7 @@ fun RegisterScreen(
             companyOpenDate = companyOpenDate,
             companyOpenDateError = companyOpenDateErrorState != FormError.None,
             tokenRemainingTime = tokenRemainingTime,
-            onAddressSelected = onAddressSelected
+            onAddressSelected = onAddressSelected,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -230,7 +232,7 @@ fun RegisterScreen(
         ) {
             SsaviceButtonOutlined(
                 onClick = onPrevButtonClick,
-                text = if(page == 1) RegisterScreenDefaults.BUTTON_RESET else RegisterScreenDefaults.BUTTON_PREV_TEXT,
+                text = if (page == 1) RegisterScreenDefaults.BUTTON_RESET else RegisterScreenDefaults.BUTTON_PREV_TEXT,
                 modifier = Modifier.weight(1f),
                 enabled = active,
             )

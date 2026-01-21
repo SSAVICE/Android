@@ -19,7 +19,10 @@ class AddCompanyDTO(
     val region: RegionPostDTO,
 ) {
     companion object {
-        fun fromModel(sellerInfo: SellerRegisterForm, verifyToken: String): AddCompanyDTO =
+        fun fromModel(
+            sellerInfo: SellerRegisterForm,
+            verifyToken: String,
+        ): AddCompanyDTO =
             AddCompanyDTO(
                 verifyToken = verifyToken,
                 companyName = sellerInfo.companyName,
@@ -30,7 +33,7 @@ class AddCompanyDTO(
                 description = sellerInfo.description,
                 detail = sellerInfo.detail,
                 depositor = sellerInfo.accountDepositor,
-                region = RegionPostDTO.fromModel(sellerInfo.region)
+                region = RegionPostDTO.fromModel(sellerInfo.region),
             )
     }
 }

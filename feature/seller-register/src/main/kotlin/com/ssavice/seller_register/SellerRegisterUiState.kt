@@ -15,7 +15,7 @@ data class AddressForm(
     val regionCode: String,
     val latitude: Double,
     val longitude: Double,
-    val zipCode: String
+    val zipCode: String,
 )
 
 data class Form(

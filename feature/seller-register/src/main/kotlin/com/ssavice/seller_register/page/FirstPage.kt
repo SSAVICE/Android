@@ -82,7 +82,7 @@ fun FirstPage(
         )
         SsaviceDateSpinner(
             modifier = Modifier.fillMaxWidth(),
-            selectedTimestamp = if(companyOpenDate.timeInMillis == 0L) null else companyOpenDate.timeInMillis,
+            selectedTimestamp = if (companyOpenDate.timeInMillis == 0L) null else companyOpenDate.timeInMillis,
             onDateSelected = { onCompanyOpenDateChanged(TimeStamp(it)) },
             labelText = RegisterScreenDefaults.OPEN_DATE_TEXT,
             enabled = needValidation,
@@ -96,9 +96,12 @@ fun FirstPage(
         ) {
             SsaviceButton(
                 onClick = onValidateButtonClicked,
-                text = if (companyValidationState == ValidationState.Validated)
-                    RegisterScreenDefaults.VALIDATE_BUTTON_COMPLETE + " (${tokenRemainingTime}s)"
-                else RegisterScreenDefaults.VALIDATE_BUTTON,
+                text =
+                    if (companyValidationState == ValidationState.Validated) {
+                        RegisterScreenDefaults.VALIDATE_BUTTON_COMPLETE + " (${tokenRemainingTime}s)"
+                    } else {
+                        RegisterScreenDefaults.VALIDATE_BUTTON
+                    },
                 modifier = Modifier.width(150.dp).padding(bottom = 15.dp),
                 enabled = needValidation,
             )

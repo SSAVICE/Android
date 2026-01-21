@@ -22,7 +22,9 @@ import javax.inject.Singleton
 abstract class CompanyModule {
     @Binds
     @Singleton
-    internal abstract fun bindBusinessVerificationRepository(localBusinessVerificationRepository: LocalBusinessVerificationRepository): BusinessVerificationRepository
+    internal abstract fun bindBusinessVerificationRepository(
+        localBusinessVerificationRepository: LocalBusinessVerificationRepository,
+    ): BusinessVerificationRepository
 }
 
 @Module
@@ -32,11 +34,10 @@ object CompanyPreferencesModule {
     @Singleton
     fun provideBusinessVerificationPreferencesDataStore(
         @ApplicationContext context: Context,
-        aead: Aead
-    ): DataStore<BusinessVerificationPreferences> {
-        return DataStoreFactory.create(
+        aead: Aead,
+    ): DataStore<BusinessVerificationPreferences> =
+        DataStoreFactory.create(
             serializer = BusinessVerificationPreferencesSerializer(aead),
-            produceFile = { context.dataStoreFile("business_verification_preferences.pb") }
+            produceFile = { context.dataStoreFile("business_verification_preferences.pb") },
         )
-    }
 }

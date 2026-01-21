@@ -15,29 +15,39 @@ import javax.inject.Inject
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class BusinessVerificationPreferences(
-    val token: CompanyVerifyToken
+    val token: CompanyVerifyToken,
 )
 
-class BusinessVerificationPreferencesSerializer @Inject constructor(
-    private val aead: Aead
-) : Serializer<BusinessVerificationPreferences> {
-    override val defaultValue: BusinessVerificationPreferences
-        get() = BusinessVerificationPreferences(CompanyVerifyToken("", 0))
+class BusinessVerificationPreferencesSerializer
+    @Inject
+    constructor(
+        private val aead: Aead,
+    ) : Serializer<BusinessVerificationPreferences> {
+        override val defaultValue: BusinessVerificationPreferences
+            get() = BusinessVerificationPreferences(CompanyVerifyToken("", 0))
 
-    override suspend fun readFrom(input: InputStream): BusinessVerificationPreferences =
-        try {
-            val encrypted = input.readBytes()
-            val decrypted = aead.decrypt(encrypted, null)
-            Json.decodeFromString<BusinessVerificationPreferences>(
-                decrypted.decodeToString()
-            )
-        } catch (serialization: SerializationException) {
-            throw CorruptionException("Unable to read Settings", serialization)
+        override suspend fun readFrom(input: InputStream): BusinessVerificationPreferences =
+            try {
+                val encrypted = input.readBytes()
+                val decrypted = aead.decrypt(encrypted, null)
+                Json.decodeFromString<BusinessVerificationPreferences>(
+                    decrypted.decodeToString(),
+                )
+            } catch (serialization: SerializationException) {
+                throw CorruptionException("Unable to read Settings", serialization)
+            }
+
+        override suspend fun writeTo(
+            t: BusinessVerificationPreferences,
+            output: OutputStream,
+        ) {
+            val encrypted =
+                aead.encrypt(
+                    Json
+                        .encodeToString(t)
+                        .encodeToByteArray(),
+                    null,
+                )
+            output.write(encrypted)
         }
-
-    override suspend fun writeTo(t: BusinessVerificationPreferences, output: OutputStream) {
-        val encrypted = aead.encrypt(Json.encodeToString(t)
-            .encodeToByteArray(), null)
-        output.write(encrypted)
     }
-}

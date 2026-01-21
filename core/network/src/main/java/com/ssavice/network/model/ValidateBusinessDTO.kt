@@ -5,14 +5,14 @@ import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class ValidateBusinessDTO (
+data class ValidateBusinessDTO(
     val name: String,
     val startDate: String,
-    val businessNumber: String
+    val businessNumber: String,
 )
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ValidateBusinessResponseDTO(
-    val verifyToken: String
+    val verifyToken: String,
 )
