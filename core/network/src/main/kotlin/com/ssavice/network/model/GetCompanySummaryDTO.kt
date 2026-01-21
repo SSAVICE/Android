@@ -1,13 +1,10 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
 import com.ssavice.model.Review
 import com.ssavice.model.seller.SellerSummary
 import kotlinx.serialization.Serializable
-import kotlin.collections.map
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class GetCompanySummaryDTO(
     val companyId: Long,
@@ -37,7 +34,6 @@ data class GetCompanySummaryDTO(
         )
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ReviewDTO(
     val userName: String,

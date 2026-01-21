@@ -7,7 +7,6 @@ import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class UserBookDTO(
     val content: List<Content>,
@@ -25,7 +24,6 @@ data class UserBookDTO(
         )
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class Content(
     val bookStatus: String,

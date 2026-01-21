@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class JwtPreferences(
     val jwt: Jwt,

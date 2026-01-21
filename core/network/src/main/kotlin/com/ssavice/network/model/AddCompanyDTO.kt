@@ -1,10 +1,8 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.seller.SellerRegisterForm
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 class AddCompanyDTO(
     val verifyToken: String,

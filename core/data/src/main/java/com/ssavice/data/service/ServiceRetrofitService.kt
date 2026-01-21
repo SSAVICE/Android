@@ -29,8 +29,11 @@ interface ServiceRetrofitService {
         @Path(value = "id") id: Long,
     ): Response<GetServiceDetailDTO>
 
-    @POST("api/service/image")
+    @POST("/api/service/image")
     suspend fun requestServiceImageUploadUrl(
         @Body contentTypes: ImageUploadDTO,
     ): Response<PresignedUrlResponseDTO>
+
+    @POST("/api/service/{id}/apply")
+    suspend fun applyService()
 }

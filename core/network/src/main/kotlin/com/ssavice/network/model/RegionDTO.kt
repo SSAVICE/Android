@@ -1,11 +1,9 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Region
 import com.ssavice.model.RegionInfo
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class RegionDTO(
     val gugun: String?,
@@ -32,7 +30,6 @@ data class RegionDTO(
     }
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class RegionPostDTO(
     val regionCode: String,
