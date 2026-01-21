@@ -120,8 +120,7 @@ fun AddServiceRoute(
             }
         } else if (state.submitState is SubmitState.Dismiss) {
             onDismiss()
-        }
-        else if(state.submitState is SubmitState.Idle) {
+        } else if (state.submitState is SubmitState.Idle) {
             viewModel.getUserAddressAndApply()
         }
     }
@@ -148,7 +147,7 @@ fun AddServiceRoute(
         onStartDateChanged = viewModel::onStartDateChanged,
         onEndDateChanged = viewModel::onEndDateChanged,
         onAddressSelected = viewModel::onAddressSelected,
-        onDetailAddressChanged = viewModel::onDetailAddressChanged
+        onDetailAddressChanged = viewModel::onDetailAddressChanged,
     )
 }
 
@@ -288,7 +287,7 @@ fun AddServiceScreen(
     }
 
     LaunchedEffect(state.form.detailAddress) {
-        if(state.form.detailAddress != detailAddressTextState.text.toString()) {
+        if (state.form.detailAddress != detailAddressTextState.text.toString()) {
             detailAddressTextState.edit {
                 replace(
                     0,
@@ -600,7 +599,7 @@ fun AddServiceForm(
             errorMessage = null,
             addressState = addressState,
             onAddressSelected = onAddressSelected,
-            detailAddressState = addressDetailTextState
+            detailAddressState = addressDetailTextState,
         )
 
         Spacer(Modifier.height(10.dp))
@@ -764,7 +763,6 @@ fun AddServiceForm(
     }
 }
 
-
 @Composable
 private fun InputAddressScreen(
     modifier: Modifier,
@@ -850,7 +848,7 @@ private fun AddServiceScreenPreview() {
                         endDate = TimeStamp(0L),
                         deadline = TimeStamp(0L),
                         addressForm = AddressForm("", "", 0.0, 0.0, ""),
-                        detailAddress = ""
+                        detailAddress = "",
                     ),
                 imageState =
                     ImageState(

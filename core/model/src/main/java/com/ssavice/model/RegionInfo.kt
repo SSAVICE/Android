@@ -51,5 +51,5 @@ data class Region(
 data class RegionDetail(
     val regionInfo: RegionInfo,
     val region1: String,
-    val region2: String
+    val region2: String,
 )

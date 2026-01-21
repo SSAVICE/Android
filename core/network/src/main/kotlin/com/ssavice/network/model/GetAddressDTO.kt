@@ -14,5 +14,5 @@ data class GetAddressDTO(
     val longitude: Double,
     val postCode: String,
     val region: String,
-    val regionCode: String
+    val regionCode: String,
 )

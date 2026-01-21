@@ -123,30 +123,29 @@ class RemoteUserInfoRepository
                     }
             }
 
-    override suspend fun getUserAddress(): Result<RegionDetail> {
-        return processResponseOnResponseData(
-            userRetrofitService.getUserAddress(),
-        ).map {
-            RegionDetail(
-                regionInfo = RegionInfo(
-                    latitude = it.latitude,
-                    longitude = it.longitude,
-                    address = it.address,
-                    detailAddress = it.detailAddress,
-                    postCode = it.postCode,
-                    regionCode = it.regionCode
-                ),
-                region1 = it.gugun,
-                region2 = it.region
-            )
-        }
-    }
+        override suspend fun getUserAddress(): Result<RegionDetail> =
+            processResponseOnResponseData(
+                userRetrofitService.getUserAddress(),
+            ).map {
+                RegionDetail(
+                    regionInfo =
+                        RegionInfo(
+                            latitude = it.latitude,
+                            longitude = it.longitude,
+                            address = it.address,
+                            detailAddress = it.detailAddress,
+                            postCode = it.postCode,
+                            regionCode = it.regionCode,
+                        ),
+                    region1 = it.gugun,
+                    region2 = it.region,
+                )
+            }
 
-    override suspend fun updateUserAddress(region: RegionInfo): Result<Unit> {
-        return processResponse(
-            userRetrofitService.updateUserAddress(
-                RegionPostDTO.fromModel(region)
+        override suspend fun updateUserAddress(region: RegionInfo): Result<Unit> =
+            processResponse(
+                userRetrofitService.updateUserAddress(
+                    RegionPostDTO.fromModel(region),
+                ),
             )
-        )
     }
-}
