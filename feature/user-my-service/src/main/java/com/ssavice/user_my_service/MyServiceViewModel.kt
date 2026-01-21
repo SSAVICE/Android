@@ -43,7 +43,7 @@ class MyServiceViewModel
                         page = null,
                         searchCount = 10,
                         sortingOrder = SortingOrder.POPULARITY,
-                        serviceState = ServiceState.entries.getOrElse(uiState.value.searchTypeSelection) { ServiceState.APPLYING },
+                        serviceState = ServiceState.entries.getOrElse(uiState.value.searchTypeSelection) { ServiceState.ALL },
                     ).fold(
                         onSuccess = {
                             _uiState.update { origin ->
@@ -96,7 +96,7 @@ class MyServiceViewModel
                         page = uiState.value.nextPage,
                         searchCount = 10,
                         sortingOrder = SortingOrder.POPULARITY,
-                        serviceState = ServiceState.APPLYING,
+                        serviceState = ServiceState.ALL,
                     ).fold(
                         onSuccess = {
                             _uiState.update { origin ->
@@ -145,9 +145,7 @@ class MyServiceViewModel
 
         private fun getIfStateCancellable(state: ServiceState): Boolean =
             when (state) {
-                ServiceState.APPLYING -> true
-                ServiceState.MATCHED -> true
-                ServiceState.FAILED -> false
+                ServiceState.RECRUITING -> true
                 ServiceState.CANCELED -> false
                 ServiceState.COMPLETED -> false
                 ServiceState.ALL -> false
@@ -158,9 +156,7 @@ class MyServiceViewModel
             reviewed: Boolean,
         ): Boolean =
             when (state) {
-                ServiceState.APPLYING -> false
-                ServiceState.MATCHED -> false
-                ServiceState.FAILED -> false
+                ServiceState.RECRUITING -> false
                 ServiceState.CANCELED -> false
                 ServiceState.COMPLETED -> !reviewed
                 ServiceState.ALL -> false
