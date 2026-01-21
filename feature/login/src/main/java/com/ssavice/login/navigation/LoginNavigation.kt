@@ -27,7 +27,7 @@ fun NavController.navigateToLogin(navOptions: NavOptionsBuilder.() -> Unit = {})
 fun NavGraphBuilder.loginScreen(
     onLoginComplete: () -> Unit = {},
     onScreenResolved: () -> Unit,
-    isUser: Boolean
+    isUser: Boolean,
 ) {
     composable<LoginRoute>
     { backStackEntry ->
@@ -43,7 +43,7 @@ fun NavGraphBuilder.loginScreen(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
             onLoginComplete = onLoginComplete,
             viewModel = hiltViewModel(),
-            isUser = isUser
+            isUser = isUser,
         )
     }
 }

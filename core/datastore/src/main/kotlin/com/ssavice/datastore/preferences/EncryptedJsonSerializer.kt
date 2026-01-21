@@ -8,10 +8,10 @@ import java.io.InputStream
 import java.io.OutputStream
 
 abstract class EncryptedJsonSerializer<T>(
-    private val aead: Aead
+    private val aead: Aead,
 ) : Serializer<T> {
-
     abstract fun encode(value: T): String
+
     abstract fun decode(value: String): T
 
     override suspend fun readFrom(input: InputStream): T =

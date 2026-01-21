@@ -39,7 +39,7 @@ fun SsaviceNavHost(
         )
         registerScreen(
             onSubmit = {
-                navController.navigateToMain{
+                navController.navigateToMain {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
             },
@@ -79,10 +79,10 @@ fun SsaviceNavHost(
             },
             onScreenResolved = {
                 onScaffoldConfigResolved(
-                    ScaffoldConfig.None
+                    ScaffoldConfig.None,
                 )
             },
-            isUser = false
+            isUser = false,
         )
     }
 }

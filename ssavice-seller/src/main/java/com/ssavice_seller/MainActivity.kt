@@ -37,8 +37,6 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject lateinit var authEventManager: AuthEventManager
@@ -50,10 +48,11 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             authEventManager.event.collectAsEffect {
-                when(it) {
+                when (it) {
                     is AuthEvent.Unauthorized -> {
                         navController.navigateToLogin()
                     }
+
                     is AuthEvent.Forbidden -> {
                         navController.navigateToRegister()
                     }

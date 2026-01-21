@@ -28,18 +28,18 @@ fun LoginRoute(
     modifier: Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
     isUser: Boolean,
-    onLoginComplete: () -> Unit
+    onLoginComplete: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.loginState) {
-        if(state.loginState is LoginState.Success) onLoginComplete()
+        if (state.loginState is LoginState.Success) onLoginComplete()
     }
 
     LoginPage(
         modifier = modifier,
         onLoginButtonClicked = { viewModel.onLoginButtonClicked(isUser) },
-        uiState = state
+        uiState = state,
     )
 }
 
@@ -47,14 +47,14 @@ fun LoginRoute(
 fun LoginPage(
     modifier: Modifier,
     onLoginButtonClicked: () -> Unit,
-    uiState: LoginUiState
+    uiState: LoginUiState,
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Button(
                 enabled = uiState.loginState !is LoginState.Loading,
@@ -62,21 +62,22 @@ fun LoginPage(
                 content = {
                     Text(
                         text = "로그인",
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
-                }
+                },
             )
             Spacer(
-                modifier = Modifier.height(10.dp)
+                modifier = Modifier.height(10.dp),
             )
-            if(uiState.loginState is LoginState.Error){
+            if (uiState.loginState is LoginState.Error) {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 15.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
                     text = uiState.loginState.message,
                     style = MaterialTheme.typography.labelSmall,
-                    softWrap = true
+                    softWrap = true,
                 )
             }
         }
@@ -86,16 +87,18 @@ fun LoginPage(
 @Preview
 @Composable
 fun LoginPagePreview() {
-    val state = LoginUiState(
-        loginState = LoginState.Idle
-    )
+    val state =
+        LoginUiState(
+            loginState = LoginState.Idle,
+        )
     SsaviceTheme {
         LoginPage(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
             onLoginButtonClicked = {},
-            uiState = state
+            uiState = state,
         )
     }
 }
@@ -103,22 +106,27 @@ fun LoginPagePreview() {
 @Preview
 @Composable
 fun LoginPageErrorPreview() {
-    val state = LoginUiState(
-        loginState = LoginState.Error("ErrorThisisLongErrorThisisVeryLongError\n" +
-                "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
-                "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
-                "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
-                "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
-                "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
-                "ongErrorErrorThisisLongErrorThisisVeryLongError")
-    )
+    val state =
+        LoginUiState(
+            loginState =
+                LoginState.Error(
+                    "ErrorThisisLongErrorThisisVeryLongError\n" +
+                        "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
+                        "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
+                        "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
+                        "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
+                        "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
+                        "ongErrorErrorThisisLongErrorThisisVeryLongError",
+                ),
+        )
     SsaviceTheme {
         LoginPage(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
             onLoginButtonClicked = {},
-            uiState = state
+            uiState = state,
         )
     }
 }

@@ -67,15 +67,14 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideHeaderInterceptor(tokenRepository: JwtRepository) =
-        HeaderInterceptor(tokenRepository)
+    fun provideHeaderInterceptor(tokenRepository: JwtRepository) = HeaderInterceptor(tokenRepository)
 
     @Provides
     @Singleton
     fun provideAuthInterceptor(
         tokenRepository: JwtRepository,
         authRepository: AuthenticationRepository,
-        authEventManager: AuthEventManager
+        authEventManager: AuthEventManager,
     ) = AuthInterceptor(tokenRepository, authRepository, authEventManager)
 
     @Provides

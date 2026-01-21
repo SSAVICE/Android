@@ -11,32 +11,37 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository,
-) : ViewModel() {
-    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState())
-    val uiState = _uiState.asStateFlow()
+class LoginViewModel
+    @Inject
+    constructor(
+        private val authenticationRepository: AuthenticationRepository,
+    ) : ViewModel() {
+        private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState())
+        val uiState = _uiState.asStateFlow()
 
-    fun onLoginButtonClicked(isUser: Boolean) {
-        val accessToken = "1234"        // TODO: NEED TO IMPLEMENT ACCESS TOKEN
-        _uiState.update {
-            it.copy(loginState = LoginState.Loading)
-        }
-        viewModelScope.launch {
-            val result = if (isUser)
-                authenticationRepository.userLoginWithAccessToken(accessToken)
-            else
-                authenticationRepository.companyLoginWithAccessToken(accessToken)
+        fun onLoginButtonClicked(isUser: Boolean) {
+            val accessToken = "1234" // TODO: NEED TO IMPLEMENT ACCESS TOKEN
+            _uiState.update {
+                it.copy(loginState = LoginState.Loading)
+            }
+            viewModelScope.launch {
+                val result =
+                    if (isUser) {
+                        authenticationRepository.userLoginWithAccessToken(accessToken)
+                    } else {
+                        authenticationRepository.companyLoginWithAccessToken(accessToken)
+                    }
 
-            result.onSuccess {
-                _uiState.update {
-                    it.copy(loginState = LoginState.Success)
-                }
-            }.onFailure { message ->
-                _uiState.update {
-                    it.copy(loginState = LoginState.Error(message.stackTraceToString()))
-                }
+                result
+                    .onSuccess {
+                        _uiState.update {
+                            it.copy(loginState = LoginState.Success)
+                        }
+                    }.onFailure { message ->
+                        _uiState.update {
+                            it.copy(loginState = LoginState.Error(message.stackTraceToString()))
+                        }
+                    }
             }
         }
     }
-}

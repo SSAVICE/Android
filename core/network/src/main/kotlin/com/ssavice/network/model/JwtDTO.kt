@@ -18,9 +18,10 @@ data class JwtDTO(
     val refreshToken: String,
     val accessToken: String,
 ) {
-    fun toJwt(): Jwt = Jwt(
-        accessTokenExpiresAt = TimeStamp(expirationSecond * 1000L + System.currentTimeMillis()),
-        refreshToken = refreshToken,
-        accessToken = accessToken
-    )
+    fun toJwt(): Jwt =
+        Jwt(
+            accessTokenExpiresAt = TimeStamp(expirationSecond * 1000L + System.currentTimeMillis()),
+            refreshToken = refreshToken,
+            accessToken = accessToken,
+        )
 }

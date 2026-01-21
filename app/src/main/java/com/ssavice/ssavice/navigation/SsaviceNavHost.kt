@@ -54,10 +54,10 @@ fun SsaviceNavHost(
             },
             onScreenResolved = {
                 onScaffoldConfigResolved(
-                    ScaffoldConfig.None
+                    ScaffoldConfig.None,
                 )
             },
-            isUser = true
+            isUser = true,
         )
 
         mainScreen(

@@ -22,9 +22,7 @@ import javax.inject.Singleton
 abstract class JwtModule {
     @Binds
     @Singleton
-    internal abstract fun bindJwtRepository(
-        localJwtRepository: LocalJwtRepository,
-    ): JwtRepository
+    internal abstract fun bindJwtRepository(localJwtRepository: LocalJwtRepository): JwtRepository
 }
 
 @Module

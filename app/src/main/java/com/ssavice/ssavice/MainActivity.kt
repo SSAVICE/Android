@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             authEventManager.event.collectAsEffect {
-                when(it) {
+                when (it) {
                     is AuthEvent.Unauthorized -> {
                         navController.navigateToLogin()
                     }

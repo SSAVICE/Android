@@ -12,10 +12,10 @@ class HeaderInterceptor
     constructor(
         private val tokenRepository: JwtRepository,
     ) : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            return runBlocking {
+        override fun intercept(chain: Interceptor.Chain): Response =
+            runBlocking {
                 val token = tokenRepository.getJwt()
-                if (token!= Jwt.EMPTY && token.isExpired()) {
+                if (token != Jwt.EMPTY && token.isExpired()) {
                     tokenRepository.markRefreshNeeded()
                 }
 
@@ -29,7 +29,6 @@ class HeaderInterceptor
 
                 chain.proceed(newRequest)
             }
-        }
 
         companion object {
             private const val AUTH_HEADER_KEY = "Authorization"

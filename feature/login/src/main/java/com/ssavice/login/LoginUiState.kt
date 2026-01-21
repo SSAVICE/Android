@@ -6,7 +6,12 @@ data class LoginUiState(
 
 sealed interface LoginState {
     object Loading : LoginState
-    data class Error(val message: String) : LoginState
+
+    data class Error(
+        val message: String,
+    ) : LoginState
+
     object Success : LoginState
+
     object Idle : LoginState
 }
