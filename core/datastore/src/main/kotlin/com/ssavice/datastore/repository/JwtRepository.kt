@@ -9,7 +9,7 @@ interface JwtRepository {
 
     suspend fun clearJwt()
 
-    suspend fun consumeRefreshFlag(): Boolean
+    fun consumeRefreshFlag(): Boolean
 
-    suspend fun markRefreshNeeded()
+    fun markRefreshNeeded()
 }

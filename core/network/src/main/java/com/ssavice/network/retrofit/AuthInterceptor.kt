@@ -1,7 +1,8 @@
 package com.ssavice.network.retrofit
 
+import com.ssavice.datastore.repository.JwtRepository
+import com.ssavice.model.auth.Jwt
 import com.ssavice.network.authentication.AuthenticationRepository
-import com.ssavice.network.authentication.TokenRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -20,38 +21,41 @@ private fun responseCount(response: Response): Int {
 }
 
 class AuthInterceptor
-    @Inject
-    constructor(
-        private val tokenRepository: TokenRepository,
-        private val authRepository: AuthenticationRepository,
-    ) : Authenticator {
-        override fun authenticate(
-            route: Route?,
-            response: Response,
-        ): Request? {
-            synchronized(this) {
-                if (!tokenRepository.consumeRefreshFlag() && responseCount(response) >= 2) {
-                    return null
+@Inject
+constructor(
+    private val tokenRepository: JwtRepository,
+    private val authRepository: AuthenticationRepository,
+) : Authenticator {
+    override fun authenticate(
+        route: Route?,
+        response: Response,
+    ): Request? {
+        if (responseCount(response) >= 2) return null
+        return synchronized(this) {
+            runBlocking {
+                if (!tokenRepository.consumeRefreshFlag()
+                    && response.code != 401
+                ) {
+                    return@runBlocking null
                 }
 
-                // 새로운 토큰을 저장
-                val newToken =
-                    authRepository.refreshToken(tokenRepository.getJWT())
-                        ?: return null
+                val newToken = authRepository.refreshToken(tokenRepository.getJwt()) ?: Jwt.EMPTY
 
-                runBlocking {
-                    tokenRepository.updateJwt(newToken)
+                if (newToken != Jwt.EMPTY) {
+                    tokenRepository.setJwt(newToken)
+                    response.request
+                        .newBuilder()
+                        .removeHeader(AUTH_HEADER_KEY)
+                        .addHeader(AUTH_HEADER_KEY, "Bearer ${newToken.accessToken}")
+                        .build()
+                } else {
+                    null
                 }
-
-                return response.request
-                    .newBuilder()
-                    .removeHeader(AUTH_HEADER_KEY)
-                    .addHeader(AUTH_HEADER_KEY, "Bearer ${newToken.accessToken}")
-                    .build()
             }
         }
-
-        companion object {
-            private const val AUTH_HEADER_KEY = "Authorization"
-        }
     }
+
+    companion object {
+        private const val AUTH_HEADER_KEY = "Authorization"
+    }
+}

@@ -6,8 +6,7 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 data class JwtPreferences(
-    val jwt: Jwt,
-    val needRefresh: Boolean = false
+    val jwt: Jwt
 )
 
 data class JwtPreferencesSerializer @Inject constructor(private val aead: Aead) :

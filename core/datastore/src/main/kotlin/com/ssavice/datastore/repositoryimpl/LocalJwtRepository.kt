@@ -7,10 +7,15 @@ import com.ssavice.model.auth.Jwt
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 class LocalJwtRepository @Inject constructor(
     private val dataStore: DataStore<JwtPreferences>
 ) : JwtRepository {
+    @OptIn(ExperimentalAtomicApi::class)
+    private val refreshNeeded = AtomicBoolean(false)
+
     override suspend fun getJwt(): Jwt =
         dataStore.data.map {
             it.jwt
@@ -28,19 +33,13 @@ class LocalJwtRepository @Inject constructor(
         }
     }
 
-    override suspend fun consumeRefreshFlag(): Boolean {
-        if(dataStore.data.first().needRefresh) {
-            dataStore.updateData {
-                it.copy(needRefresh = true)
-            }
-            return true
-        }
-        return false
+    @OptIn(ExperimentalAtomicApi::class)
+    override fun consumeRefreshFlag(): Boolean {
+        return refreshNeeded.compareAndSet(expectedValue = true, newValue = false)
     }
 
-    override suspend fun markRefreshNeeded() {
-        dataStore.updateData {
-            it.copy(needRefresh = true)
-        }
+    @OptIn(ExperimentalAtomicApi::class)
+    override fun markRefreshNeeded() {
+        refreshNeeded.store(true)
     }
 }
