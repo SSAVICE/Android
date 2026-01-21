@@ -65,7 +65,7 @@ data class Form(
     val startDate: TimeStamp,
     val endDate: TimeStamp,
     val description: String = "",
-    val categoryList: List<String> = Category.entries.map { it.value },
+    val categoryList: List<String> = Category.entries.filter { it.shownInSeller }.map { it.value },
     val nameErrorMessage: String? = null,
     val categoryErrorMessage: String? = null,
     val tagErrorMessage: String? = null,
