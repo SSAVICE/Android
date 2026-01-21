@@ -1,12 +1,9 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
-import com.ssavice.model.RegionInfo
 import com.ssavice.model.service.ServiceDetail
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class GetServiceDetailDTO(
     val imageUrl: List<String>,

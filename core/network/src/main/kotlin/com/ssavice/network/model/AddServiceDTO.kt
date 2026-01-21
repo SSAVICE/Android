@@ -1,10 +1,8 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.service.ServiceAddForm
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class AddServiceDTO(
     val imageCnt: Long,
@@ -50,13 +48,11 @@ data class AddServiceDTO(
     }
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class AddServiceResponseDTO(
     val serviceId: Long,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ImageConfirmKeyDTO(
     val objectKey: String,

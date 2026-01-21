@@ -1,4 +1,3 @@
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.seller.SellerMainInfo
@@ -7,7 +6,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URL
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class GetCompanyInfoDTO(
     val companyId: Long,
@@ -60,7 +58,6 @@ data class GetCompanyInfoDTO(
         )
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ServiceDTO(
     val serviceId: Long,
@@ -82,7 +79,6 @@ data class ServiceDTO(
     val tag: String,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ReviewDTO(
     val userName: String,
