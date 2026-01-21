@@ -8,9 +8,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthEventManager @Inject constructor(): AuthEventManager {
+class AuthEventManagerImpl @Inject constructor(): AuthEventManager {
     private val _events = MutableSharedFlow<AuthEvent>()
-    val event = _events.asSharedFlow()
+    override val event = _events.asSharedFlow()
 
     override suspend fun emit(event: AuthEvent) {
         _events.emit(event)

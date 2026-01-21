@@ -1,14 +1,25 @@
 
 import android.annotation.SuppressLint
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+
+@OptIn(ExperimentalSerializationApi::class)
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
+@JsonIgnoreUnknownKeys
+data class ErrorResponse(
+    @SerialName("status") val status: Int,
+    @SerialName("properties") val errorProperties: ErrorProperties,
+    @SerialName("detail") val detail: String
+)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class ErrorResponse(
-    @SerialName("status") val status: Int,
-    @SerialName("error_code") val errorCode: String,
-    @SerialName("detail") val detail: String
+data class ErrorProperties(
+    @SerialName("error_code")
+    val errorCode: String
 )
 
 enum class ErrorCode(val code: String, val status: Int) {

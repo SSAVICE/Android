@@ -1,5 +1,6 @@
 package com.ssavice.network.retrofit
 
+import android.util.Log
 import com.ssavice.datastore.repository.JwtRepository
 import com.ssavice.model.auth.Jwt
 import com.ssavice.network.AuthEvent
@@ -40,8 +41,9 @@ constructor(
             runBlocking {
                 val refreshFlag = tokenRepository.consumeRefreshFlag()
                 val errorResponse = response.parseError()
+                Log.d("AuthInterceptor", "refreshFlag: $refreshFlag, errorResponse: $errorResponse")
                 if (!refreshFlag
-                    && errorCodeMap[errorResponse?.errorCode] != ErrorCode.EXPIRED_TOKEN
+                    && errorCodeMap[errorResponse?.errorProperties?.errorCode] != ErrorCode.EXPIRED_TOKEN
                 ) {
                     authEventManager.emit(AuthEvent.Unauthorized)
                     return@runBlocking null

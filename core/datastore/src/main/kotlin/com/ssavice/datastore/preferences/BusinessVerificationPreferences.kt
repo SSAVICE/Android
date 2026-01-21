@@ -20,7 +20,7 @@ data class BusinessVerificationPreferences(
 )
 
 class BusinessVerificationPreferencesSerializer
-@Inject constructor(private val aead: Aead) :
+@Inject constructor(aead: Aead) :
     EncryptedJsonSerializer<BusinessVerificationPreferences>(aead) {
     override val defaultValue: BusinessVerificationPreferences
         get() = BusinessVerificationPreferences(CompanyVerifyToken("", 0))

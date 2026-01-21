@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
+import com.ssavice.seller_main.navigation.loginScreen
 import com.ssavice.seller_main.navigation.mainScreen
 import com.ssavice.seller_main.navigation.navigateToMain
 import com.ssavice.seller_register.navigation.registerScreen
@@ -38,7 +39,9 @@ fun SsaviceNavHost(
         )
         registerScreen(
             onSubmit = {
-                navController.navigateToMain()
+                navController.navigateToMain{
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
             },
             onScreenResolved = {
                 onScaffoldConfigResolved(
@@ -66,6 +69,20 @@ fun SsaviceNavHost(
                     ),
                 )
             },
+        )
+
+        loginScreen(
+            onLoginComplete = {
+                navController.navigateToMain {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
+            },
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.None
+                )
+            },
+            isUser = false
         )
     }
 }
