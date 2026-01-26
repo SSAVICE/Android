@@ -3,9 +3,9 @@ package com.ssavice.model
 enum class Category(
     val value: String,
     val index: Int,
-    val shownInSeller: Boolean = true
+    val shownInSeller: Boolean = true,
 ) {
-    ALL("전체",0, shownInSeller = false),
+    ALL("전체", 0, shownInSeller = false),
     HEALTH("건강", 1),
     SHOPPING("쇼핑", 2),
     HOBBY("취미", 3),
