@@ -2,6 +2,7 @@ package com.ssavice.data.service
 
 import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.model.AddServiceResponseDTO
+import com.ssavice.network.model.ApplyServiceResultDTO
 import com.ssavice.network.model.GetServiceDetailDTO
 import com.ssavice.network.model.ImageUploadDTO
 import com.ssavice.network.model.PresignedUrlResponseDTO
@@ -37,7 +38,7 @@ interface ServiceRetrofitService {
     @POST("/api/service/{id}/apply")
     suspend fun applyService(
         @Path(value = "id") id: Long,
-    ): Response<AddServiceResponseDTO>
+    ): Response<ApplyServiceResultDTO>
 
     @POST("/api/service/{id}/cancel")
     suspend fun cancelService(
