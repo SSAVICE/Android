@@ -34,9 +34,10 @@ fun ServiceDetailBottomBar(
         Button(
             onClick = viewModel::onParticipateButtonClick,
             modifier = Modifier.weight(1f),
-            enabled = state.serviceInfoState is InfoState.Done,
+            enabled = state.serviceInfoState is InfoState.Done &&
+                    (state.applyInfoState is InfoState.Waiting || state.applyInfoState is InfoState.Error),
         ) {
-            Text("참여하기")
+            Text(if(state.applyInfoState is InfoState.Done) "참여 중" else "참여하기")
         }
     }
 }

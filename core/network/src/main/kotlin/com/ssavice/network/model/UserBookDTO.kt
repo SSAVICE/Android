@@ -5,6 +5,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,7 +21,7 @@ data class UserBookDTO(
             items = content.map { it.toModel() },
             currentPage = currentPage.toLong(),
             searchCount = totalElements.toInt(),
-            hasNext = totalPages > currentPage,
+            hasNext = totalPages > currentPage + 1,
         )
 }
 
@@ -28,6 +29,7 @@ data class UserBookDTO(
 data class Content(
     val bookStatus: String,
     val isReviewed: Boolean,
+    @SerialName("service")
     val serviceInfo: ServiceInfoDTO,
 ) {
     fun toModel(): UserServiceParticipationItem =
@@ -41,13 +43,12 @@ data class Content(
                 sellerName = companyName,
                 startDate = Date.now(),
                 endDate = Date.now(),
-                state = ServiceState.valueOf(status),
+                state = ServiceState.valueOf(bookStatus),
                 isReviewed = isReviewed,
             )
         }
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ServiceInfoDTO(
     val basePrice: Long,
@@ -62,7 +63,6 @@ data class ServiceInfoDTO(
     val minimumMember: Long,
     val region: RegionDTO,
     val serviceId: Long,
-    val status: String,
     val tag: String,
     val thumbnailUrl: String,
     val title: String,
