@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.channelFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import javax.inject.Inject
 
-class RemoteServiceRepository
+internal class RemoteServiceRepository
     @Inject
     constructor(
         private val serviceRetrofitService: ServiceRetrofitService,
@@ -33,7 +33,7 @@ class RemoteServiceRepository
             processResponseOnResponseData(
                 serviceRetrofitService
                     .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys)),
-            ).map { it.serviceId }
+            ).map { it.bookId }
 
         override suspend fun searchService(
             query: SearchQuery,
