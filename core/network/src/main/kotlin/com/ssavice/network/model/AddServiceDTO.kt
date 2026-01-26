@@ -50,7 +50,7 @@ data class AddServiceDTO(
 
 @Serializable
 data class AddServiceResponseDTO(
-    val bookId: Long,
+    val serviceId: Long,
 )
 
 @Serializable
