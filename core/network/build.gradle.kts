@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.ssavice.android.library)
     alias(libs.plugins.ssavice.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -26,20 +27,6 @@ val backendURL =
         .map { it.getProperty("BACKEND_URL") }
         .orElse("http://example.com")
 
-val consumerTokens =
-    List(2) { i ->
-        localProps
-            .map { it.getProperty("TEST_CUSTOMER_KEY$i") }
-            .orElse("NOT_FOUND")
-    }
-
-val sellerTokens =
-    List(2) { i ->
-        localProps
-            .map { it.getProperty("TEST_CUSTOMER_KEY$i") }
-            .orElse("NOT_FOUND")
-    }
-
 dependencies {
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
@@ -57,23 +44,5 @@ androidComponents {
                 BuildConfigField(type = "String", value = """"$value"""", comment = null)
             },
         )
-
-        consumerTokens.forEachIndexed { i, token ->
-            it.buildConfigFields!!.put(
-                "CONSUMER_TOKEN$i",
-                token.map { value ->
-                    BuildConfigField(type = "String", value = """"$value"""", comment = null)
-                },
-            )
-        }
-
-        consumerTokens.forEachIndexed { i, token ->
-            it.buildConfigFields!!.put(
-                "SELLER_TOKEN$i",
-                token.map { value ->
-                    BuildConfigField(type = "String", value = """"$value"""", comment = null)
-                },
-            )
-        }
     }
 }

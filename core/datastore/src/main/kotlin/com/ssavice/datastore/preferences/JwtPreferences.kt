@@ -1,6 +1,5 @@
 package com.ssavice.datastore.preferences
 
-import android.annotation.SuppressLint
 import com.google.crypto.tink.Aead
 import com.ssavice.model.auth.Jwt
 import kotlinx.serialization.Serializable

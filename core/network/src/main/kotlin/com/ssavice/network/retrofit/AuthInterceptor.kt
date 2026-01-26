@@ -1,12 +1,12 @@
 package com.ssavice.network.retrofit
 
+import ErrorCode
 import android.util.Log
 import com.ssavice.datastore.repository.JwtRepository
-import com.ssavice.model.auth.Jwt
 import com.ssavice.network.AuthEvent
 import com.ssavice.network.AuthEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
-import com.ssavice.network.parseError
+import com.ssavice.network.parseAuthError
 import errorCodeMap
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -40,8 +40,8 @@ class AuthInterceptor
             return synchronized(this) {
                 runBlocking {
                     val refreshFlag = tokenRepository.consumeRefreshFlag()
-                    val errorResponse = response.parseError()
-                    Log.d("AuthInterceptor", "refreshFlag: $refreshFlag, errorResponse: $errorResponse")
+                    val errorResponse = response.parseAuthError()
+                    Log.d("AuthInterceptor", "authenticate: $errorResponse, refresh: $refreshFlag")
                     if (!refreshFlag &&
                         errorCodeMap[errorResponse?.errorProperties?.errorCode] != ErrorCode.EXPIRED_TOKEN
                     ) {

@@ -5,6 +5,7 @@ import com.ssavice.datastore.repository.JwtRepository
 import com.ssavice.network.AuthEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.retrofit.AuthInterceptor
+import com.ssavice.network.retrofit.ErrorInterceptor
 import com.ssavice.network.retrofit.HeaderInterceptor
 import dagger.Module
 import dagger.Provides
@@ -71,6 +72,10 @@ object RetrofitModule {
 
     @Provides
     @Singleton
+    fun provideErrorInterceptor(eventManager: AuthEventManager) = ErrorInterceptor(eventManager)
+
+    @Provides
+    @Singleton
     fun provideAuthInterceptor(
         tokenRepository: JwtRepository,
         authRepository: AuthenticationRepository,
@@ -83,10 +88,12 @@ object RetrofitModule {
         headerInterceptor: HeaderInterceptor,
         authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
+        errorInterceptor: ErrorInterceptor
     ): OkHttpClient =
         OkHttpClient
             .Builder()
             .addInterceptor(headerInterceptor)
+            .addInterceptor(errorInterceptor)
             .addInterceptor(loggingInterceptor)
             .authenticator(authInterceptor)
             .build()
@@ -102,4 +109,5 @@ object RetrofitModule {
                     HttpLoggingInterceptor.Level.NONE
                 },
             )
+
 }
