@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.ssavice.android.library)
     alias(libs.plugins.ssavice.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

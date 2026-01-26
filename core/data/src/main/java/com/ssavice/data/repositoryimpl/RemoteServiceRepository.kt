@@ -33,7 +33,7 @@ internal class RemoteServiceRepository
             processResponseOnResponseData(
                 serviceRetrofitService
                     .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys)),
-            ).map { it.serviceId }
+            ).map { it.bookId }
 
         override suspend fun searchService(
             query: SearchQuery,
