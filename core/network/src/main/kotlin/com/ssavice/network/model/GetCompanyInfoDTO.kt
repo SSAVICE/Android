@@ -78,7 +78,7 @@ data class ServiceDTO(
     val endDate: String,
     val deadline: String,
     val tag: String,
-    val region: RegionDTO
+    val region: RegionDTO,
 )
 
 @Serializable

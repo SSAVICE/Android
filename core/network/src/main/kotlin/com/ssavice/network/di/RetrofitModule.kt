@@ -88,7 +88,7 @@ object RetrofitModule {
         headerInterceptor: HeaderInterceptor,
         authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
-        errorInterceptor: ErrorInterceptor
+        errorInterceptor: ErrorInterceptor,
     ): OkHttpClient =
         OkHttpClient
             .Builder()
@@ -109,5 +109,4 @@ object RetrofitModule {
                     HttpLoggingInterceptor.Level.NONE
                 },
             )
-
 }

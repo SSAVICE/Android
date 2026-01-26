@@ -67,7 +67,7 @@ internal class DemoSellerInfoRepository
                                     createService("서비스1"),
                                     createService("요가 클래스", listOf("힐링", "건강")),
                                 ),
-                            region = Region(0.0, 0.0,"달서구","상인동"),
+                            region = Region(0.0, 0.0, "달서구", "상인동"),
                         ),
                     ),
                 )
