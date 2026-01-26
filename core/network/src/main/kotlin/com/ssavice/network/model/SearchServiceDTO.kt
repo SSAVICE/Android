@@ -72,7 +72,7 @@ data class SearchServiceDTO(
 data class SearchServiceResponseDTO(
     val content: List<SearchServiceItemDTO>,
     val hasNext: Boolean,
-    val nextCursor: Long?,
+    val nextCursor: Long? = null,
 ) {
     fun toModel(): SearchResult =
         SearchResult(

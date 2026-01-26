@@ -15,6 +15,7 @@ sealed interface InfoState {
 data class ServiceDetailUiState(
     val serviceInfoState: InfoState = InfoState.Waiting,
     val sellerInfoState: InfoState = InfoState.Waiting,
+    val applyInfoState: InfoState = InfoState.Waiting,
     val service: ServiceDetail? = null,
     val seller: SellerSummary? = null,
 )
