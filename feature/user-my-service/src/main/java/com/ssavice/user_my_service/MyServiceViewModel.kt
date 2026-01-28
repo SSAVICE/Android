@@ -2,11 +2,13 @@ package com.ssavice.user_my_service
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,7 +20,9 @@ class MyServiceViewModel
     @Inject
     constructor(
         private val userInfoRepository: UserInfoRepository,
+        private val serviceRepository: ServiceRepository,
     ) : ViewModel() {
+        private var searchingProcess: Job? = null
         private val _uiState =
             MutableStateFlow(
                 MyServiceUiState(
@@ -31,26 +35,30 @@ class MyServiceViewModel
         val uiState = _uiState.asStateFlow()
 
         fun loadService() {
+            if (searchingProcess != null && (searchingProcess?.isActive == true)) {
+                searchingProcess?.cancel()
+            }
+
             _uiState.update {
                 it.copy(
                     myServiceScreenStatus = MyServiceState.Loading,
                 )
             }
 
-            viewModelScope.launch(Dispatchers.IO) {
-                userInfoRepository
-                    .getMyService(
-                        page = null,
-                        searchCount = 10,
-                        sortingOrder = SortingOrder.POPULARITY,
-                        serviceState = ServiceState.entries.getOrElse(uiState.value.searchTypeSelection) { ServiceState.APPLYING },
-                    ).fold(
-                        onSuccess = {
-                            _uiState.update { origin ->
-                                val nextId = origin.services.size
-                                origin.copy(
-                                    services =
-                                        origin.services +
+            searchingProcess =
+                viewModelScope.launch(Dispatchers.IO) {
+                    userInfoRepository
+                        .getMyService(
+                            page = null,
+                            searchCount = 10,
+                            sortingOrder = SortingOrder.POPULARITY,
+                            serviceState = ServiceState.entries.getOrElse(uiState.value.searchTypeSelection) { ServiceState.ALL },
+                        ).fold(
+                            onSuccess = {
+                                _uiState.update { origin ->
+                                    val nextId = origin.services.size
+                                    origin.copy(
+                                        services =
                                             it.items.mapIndexed { i, item ->
                                                 MyServiceItemUiState(
                                                     index = i + nextId,
@@ -61,24 +69,28 @@ class MyServiceViewModel
                                                     sellerName = item.sellerName,
                                                     duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
                                                     cancellable = getIfStateCancellable(item.state),
-                                                    reviewable = getIfStateReviewable(item.state, item.isReviewed),
+                                                    reviewable =
+                                                        getIfStateReviewable(
+                                                            item.state,
+                                                            item.isReviewed,
+                                                        ),
                                                 )
                                             },
-                                    myServiceScreenStatus = MyServiceState.Loaded,
-                                    hasNext = it.hasNext,
-                                    nextPage = it.currentPage.toInt() + 1,
-                                )
-                            }
-                        },
-                        onFailure = {
-                            _uiState.update { origin ->
-                                origin.copy(
-                                    myServiceScreenStatus = MyServiceState.Error(it),
-                                )
-                            }
-                        },
-                    )
-            }
+                                        myServiceScreenStatus = MyServiceState.Loaded,
+                                        hasNext = it.hasNext,
+                                        nextPage = it.currentPage.toInt() + 1,
+                                    )
+                                }
+                            },
+                            onFailure = {
+                                _uiState.update { origin ->
+                                    origin.copy(
+                                        myServiceScreenStatus = MyServiceState.Error(it),
+                                    )
+                                }
+                            },
+                        )
+                }
         }
 
         fun loadMoreService() {
@@ -96,7 +108,7 @@ class MyServiceViewModel
                         page = uiState.value.nextPage,
                         searchCount = 10,
                         sortingOrder = SortingOrder.POPULARITY,
-                        serviceState = ServiceState.APPLYING,
+                        serviceState = ServiceState.ALL,
                     ).fold(
                         onSuccess = {
                             _uiState.update { origin ->
@@ -114,7 +126,11 @@ class MyServiceViewModel
                                                     sellerName = item.sellerName,
                                                     duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
                                                     cancellable = getIfStateCancellable(item.state),
-                                                    reviewable = getIfStateReviewable(item.state, item.isReviewed),
+                                                    reviewable =
+                                                        getIfStateReviewable(
+                                                            item.state,
+                                                            item.isReviewed,
+                                                        ),
                                                 )
                                             },
                                     myServiceScreenStatus = MyServiceState.Loaded,
@@ -143,12 +159,29 @@ class MyServiceViewModel
             loadService()
         }
 
+        fun onCancelClick(id: Long) {
+            _uiState.update {
+                it.copy(
+                    myServiceScreenStatus = MyServiceState.Loading,
+                )
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                serviceRepository.cancelService(id).fold(
+                    onSuccess = {
+                        loadService()
+                    },
+                    onFailure = {
+                    },
+                )
+            }
+        }
+
         private fun getIfStateCancellable(state: ServiceState): Boolean =
             when (state) {
-                ServiceState.APPLYING -> true
-                ServiceState.MATCHED -> true
-                ServiceState.FAILED -> false
+                ServiceState.RECRUITING -> true
+                ServiceState.SUCCEEDED -> false
                 ServiceState.CANCELED -> false
+                ServiceState.USER_CANCELED -> false
                 ServiceState.COMPLETED -> false
                 ServiceState.ALL -> false
             }
@@ -158,10 +191,10 @@ class MyServiceViewModel
             reviewed: Boolean,
         ): Boolean =
             when (state) {
-                ServiceState.APPLYING -> false
-                ServiceState.MATCHED -> false
-                ServiceState.FAILED -> false
+                ServiceState.RECRUITING -> false
+                ServiceState.SUCCEEDED -> false
                 ServiceState.CANCELED -> false
+                ServiceState.USER_CANCELED -> false
                 ServiceState.COMPLETED -> !reviewed
                 ServiceState.ALL -> false
             }

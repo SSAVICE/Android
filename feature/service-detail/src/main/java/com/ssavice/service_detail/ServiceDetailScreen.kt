@@ -44,6 +44,8 @@ import com.ssavice.service_detail.ui.CompanyCard
 import com.ssavice.service_detail.ui.ReviewItem
 import com.ssavice.service_detail.ui.ServiceImagesWithButtons
 import com.ssavice.ui.InfoRow
+import com.ssavice.ui.common.Constant
+import kotlinx.coroutines.delay
 
 @Composable
 fun ServiceDetailScreen(
@@ -60,6 +62,7 @@ fun ServiceDetailScreen(
 
     LaunchedEffect(serviceIdState) {
         if (serviceIdState != -1L) {
+            delay(Constant.ANIMATION_DELAY)
             viewModel.loadService(viewModel.serviceId.value)
         }
     }

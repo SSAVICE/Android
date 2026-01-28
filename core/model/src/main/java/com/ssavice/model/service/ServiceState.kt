@@ -4,9 +4,9 @@ enum class ServiceState(
     val value: String,
 ) {
     ALL("전체"),
-    APPLYING("모집 중"),
-    MATCHED("모집 완료"),
-    FAILED("실패"),
+    RECRUITING("모집 중"),
+    SUCCEEDED("모집 완료"),
+    COMPLETED("이용 완료"),
     CANCELED("취소됨"),
-    COMPLETED("완료됨"),
+    USER_CANCELED("취소함"),
 }

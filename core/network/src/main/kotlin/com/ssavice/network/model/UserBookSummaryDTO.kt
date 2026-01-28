@@ -1,10 +1,8 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.user.ParticipationSummary
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class UserBookSummaryDTO(
     val applying: Long,

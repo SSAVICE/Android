@@ -3,12 +3,10 @@ package com.ssavice.network.model
 import android.annotation.SuppressLint
 import com.ssavice.model.TimeStamp
 import com.ssavice.model.auth.Jwt
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
-@OptIn(ExperimentalSerializationApi::class)
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 @JsonIgnoreUnknownKeys

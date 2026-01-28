@@ -1,8 +1,9 @@
 import android.annotation.SuppressLint
 import com.ssavice.model.Date
-import com.ssavice.model.RegionInfo
+import com.ssavice.model.Region
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.service.ServiceSummary
+import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URL
@@ -49,18 +50,15 @@ data class GetCompanyInfoDTO(
                     )
                 },
             region =
-                RegionInfo(
+                Region(
+                    region1 = "",
+                    region2 = "",
                     latitude = latitude,
                     longitude = longitude,
-                    address = address,
-                    detailAddress = detailAddress,
-                    postCode = postCode,
-                    regionCode = "",
                 ),
         )
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ServiceDTO(
     val serviceId: Long,
@@ -80,9 +78,9 @@ data class ServiceDTO(
     val endDate: String,
     val deadline: String,
     val tag: String,
+    val region: RegionDTO,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ReviewDTO(
     val userName: String,

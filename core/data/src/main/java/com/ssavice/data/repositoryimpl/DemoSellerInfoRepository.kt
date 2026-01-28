@@ -2,7 +2,7 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
-import com.ssavice.model.RegionInfo
+import com.ssavice.model.Region
 import com.ssavice.model.Review
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.seller.SellerMainInfo
@@ -12,7 +12,6 @@ import com.ssavice.model.service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Thread.sleep
 import java.net.URL
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -68,7 +67,7 @@ internal class DemoSellerInfoRepository
                                     createService("서비스1"),
                                     createService("요가 클래스", listOf("힐링", "건강")),
                                 ),
-                            region = RegionInfo.demo,
+                            region = Region(0.0, 0.0, "달서구", "상인동"),
                         ),
                     ),
                 )

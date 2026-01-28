@@ -1,6 +1,6 @@
 package com.ssavice.model.seller
 
-import com.ssavice.model.RegionInfo
+import com.ssavice.model.Region
 import com.ssavice.model.service.ServiceSummary
 
 data class SellerMainInfo(
@@ -9,5 +9,5 @@ data class SellerMainInfo(
     val businessNumber: String,
     val description: String,
     val services: List<ServiceSummary>,
-    val region: RegionInfo,
+    val region: Region,
 )

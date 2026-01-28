@@ -1,5 +1,6 @@
 package com.ssavice.service_detail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.ssavice.service_detail.navigation.ServiceDetailRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -123,11 +125,33 @@ class ServiceDetailViewModel
         }
 
         fun onParticipateButtonClick() {
-        }
+            _uiState.update { it.copy(applyInfoState = InfoState.Loading) }
+            _uiState.value.service?.run {
+                viewModelScope.launch(Dispatchers.IO) {
+                    serviceRepository
+                        .applyService(id)
+                        .onSuccess {
+                            _uiState.update {
+                                it.copy(
+                                    applyInfoState = InfoState.Done,
+                                )
+                            }
+                        }.onFailure { e ->
+                            _uiState.update {
+                                it.copy(
+                                    applyInfoState = InfoState.Error(e),
+                                )
+                            }
+                        }
+                }
+            } ?: run {
+                Log.d("KSC", "service is null")
+            }
 
-        fun onLikeButtonClick() {
-        }
+            fun onLikeButtonClick() {
+            }
 
-        fun onShareButtonClick() {
+            fun onShareButtonClick() {
+            }
         }
     }

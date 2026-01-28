@@ -1,13 +1,11 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SearchServiceDTO(
     val category: String,
@@ -70,12 +68,11 @@ data class SearchServiceDTO(
     }
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SearchServiceResponseDTO(
     val content: List<SearchServiceItemDTO>,
     val hasNext: Boolean,
-    val nextCursor: Long?,
+    val nextCursor: Long? = null,
 ) {
     fun toModel(): SearchResult =
         SearchResult(
@@ -85,7 +82,6 @@ data class SearchServiceResponseDTO(
         )
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SearchServiceItemDTO(
     val serviceId: Long,

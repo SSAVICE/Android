@@ -1,13 +1,11 @@
 package com.ssavice.datastore.preferences
 
-import android.annotation.SuppressLint
 import com.google.crypto.tink.Aead
 import com.ssavice.model.auth.Jwt
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class JwtPreferences(
     val jwt: Jwt,

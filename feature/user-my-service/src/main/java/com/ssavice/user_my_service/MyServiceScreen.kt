@@ -53,6 +53,7 @@ fun MyServiceRoute(
         onReviewClick = onReviewClick,
         onServiceClick = onServiceClick,
         onSearchingStateChanged = viewModel::onSearchingStateChange,
+        onCancelClick = viewModel::onCancelClick,
     )
 }
 
@@ -73,7 +74,7 @@ fun MyServiceScreen(
                 .padding(horizontal = 15.dp)
                 .padding(top = 10.dp),
         isLoading = isLoading,
-        hasMoreData = uiState.hasNext,
+        hasMoreData = uiState.hasNext && uiState.myServiceScreenStatus == MyServiceState.Loaded,
         onLoadMore = onLoadMore,
         topElement = {
             item {

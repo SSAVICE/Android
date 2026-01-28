@@ -1,11 +1,9 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
 import com.ssavice.model.user.UserProfile
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class UserProfileDTO(
     val address: String?,

@@ -1,10 +1,8 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.user.UserProfileUpdateForm
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class UpdateUserProfileDTO(
     val email: String,
@@ -21,7 +19,6 @@ data class UpdateUserProfileDTO(
     }
 }
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class UpdateUserProfileResponseDTO(
     val address: String?,
