@@ -26,6 +26,7 @@ dependencies {
     implementation(projects.feature.userMyService)
     implementation(projects.feature.editProfile)
     implementation(projects.feature.login)
+    implementation(projects.feature.postReview)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)

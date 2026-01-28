@@ -23,7 +23,7 @@ fun NavController.navigateToMyService(navOptions: NavOptionsBuilder.() -> Unit =
 
 fun NavGraphBuilder.myServiceScreen(
     onServiceClick: (Long) -> Unit,
-    onReviewClick: (Long) -> Unit,
+    onReviewClick: (id:Long, name: String, thumbnailUrl: String) -> Unit,
     onScreenResolved: () -> Unit,
 ) {
     composable<UserMyServiceRoute>(

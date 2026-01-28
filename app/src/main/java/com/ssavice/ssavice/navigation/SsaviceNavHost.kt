@@ -16,7 +16,9 @@ import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
 import com.ssavice.seller_main.navigation.LoginRoute
 import com.ssavice.seller_main.navigation.loginScreen
+import com.ssavice.service_detail.navigation.navigateToPostReview
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
+import com.ssavice.service_detail.navigation.postReviewScreen
 import com.ssavice.service_detail.navigation.serviceDetailScreen
 import com.ssavice.service_detail.ui.ServiceDetailBottomBar
 import com.ssavice.ui.navigation.ScaffoldConfig
@@ -195,8 +197,12 @@ fun SsaviceNavHost(
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
-            onReviewClick = {
-                navController.navigateToServiceDetail(serviceId = it)
+            onReviewClick = { id, name, thumbnailUrl ->
+                navController.navigateToPostReview(
+                    serviceId = id,
+                    serviceName = name,
+                    serviceThumbnailUrl = thumbnailUrl,
+                )
             },
         )
 
@@ -215,6 +221,22 @@ fun SsaviceNavHost(
                 navController.navigateUp()
             },
             onProfileImageClick = { },
+        )
+
+        postReviewScreen(
+            onBack = {
+                navController.navigateUp()
+            },
+            onScreenResolved = {
+                onScaffoldConfigResolved(
+                    ScaffoldConfig.TitleWithCustomBottom(
+                        title = "리뷰 작성",
+                        onBackButtonClick = {
+                            navController.navigateUp()
+                        }
+                    )
+                )
+            }
         )
     }
 }

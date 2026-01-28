@@ -36,7 +36,7 @@ fun MyServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: MyServiceViewModel = hiltViewModel(),
     onServiceClick: (Long) -> Unit = {},
-    onReviewClick: (Long) -> Unit = {},
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String) -> Unit = { _, _, _ -> },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,7 +62,7 @@ fun MyServiceScreen(
     modifier: Modifier = Modifier,
     onServiceClick: (Long) -> Unit = {},
     onCancelClick: (Long) -> Unit = {},
-    onReviewClick: (Long) -> Unit = {},
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String) -> Unit = {_, _, _ ->},
     onSearchingStateChanged: (Int) -> Unit = {},
     onLoadMore: () -> Unit = {},
     uiState: MyServiceUiState,
@@ -94,16 +94,23 @@ fun MyServiceScreen(
                 uiState.services[it].index
             },
         ) {
+            val service = uiState.services[it]
             MyService(
-                title = uiState.services[it].title,
-                sellerName = uiState.services[it].sellerName,
-                duration = uiState.services[it].duration,
-                cancellable = uiState.services[it].cancellable,
-                reviewable = uiState.services[it].reviewable,
-                price = uiState.services[it].price,
-                thumbnailUrl = uiState.services[it].thumbnailUrl,
-                onCancelButtonClick = { onCancelClick(uiState.services[it].id) },
-                onReviewButtonClick = { onReviewClick(uiState.services[it].id) },
+                title = service.title,
+                sellerName = service.sellerName,
+                duration = service.duration,
+                cancellable = service.cancellable,
+                reviewable = service.reviewable,
+                price = service.price,
+                thumbnailUrl = service.thumbnailUrl,
+                onCancelButtonClick = { onCancelClick(service.id) },
+                onReviewButtonClick = {
+                    onReviewClick(
+                        service.id,
+                        service.title,
+                        service.thumbnailUrl
+                    )
+                },
                 onClick = { onServiceClick(uiState.services[it].id) },
                 thumbnail = { url ->
                     AsyncImage(
