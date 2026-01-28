@@ -32,5 +32,9 @@ interface ServiceRepository {
 
     suspend fun cancelService(id: Long): Result<Unit>
 
-    suspend fun reviewService(id: Long, content: String, rating: Int): Result<Unit>
+    suspend fun reviewService(
+        id: Long,
+        content: String,
+        rating: Int,
+    ): Result<Unit>
 }

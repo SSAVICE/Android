@@ -57,7 +57,7 @@ fun NavGraphBuilder.postReviewScreen(
             }
         }
         PostReviewRoute(
-            onBack = onBack
+            onBack = onBack,
         )
     }
 }

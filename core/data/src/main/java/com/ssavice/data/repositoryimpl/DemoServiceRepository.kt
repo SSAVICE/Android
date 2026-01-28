@@ -280,11 +280,10 @@ class DemoServiceRepository
         override suspend fun applyService(id: Long): Result<Unit> = Result.success(Unit)
 
         override suspend fun cancelService(id: Long): Result<Unit> = Result.success(Unit)
-    override suspend fun reviewService(
-        id: Long,
-        content: String,
-        rating: Int
-    ): Result<Unit> {
-        return Result.success(Unit)
+
+        override suspend fun reviewService(
+            id: Long,
+            content: String,
+            rating: Int,
+        ): Result<Unit> = Result.success(Unit)
     }
-}

@@ -233,10 +233,10 @@ fun SsaviceNavHost(
                         title = "리뷰 작성",
                         onBackButtonClick = {
                             navController.navigateUp()
-                        }
-                    )
+                        },
+                    ),
                 )
-            }
+            },
         )
     }
 }

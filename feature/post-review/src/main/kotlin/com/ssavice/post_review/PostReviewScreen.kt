@@ -47,12 +47,12 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 fun PostReviewRoute(
     modifier: Modifier = Modifier,
     viewModel: PostReviewViewModel = hiltViewModel(),
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(
-        state.reviewPostState
+        state.reviewPostState,
     ) {
         when (state.reviewPostState) {
             is ReviewPostState.Failure -> {
@@ -77,7 +77,7 @@ fun PostReviewRoute(
         onReviewSubmit = { rating, review ->
             viewModel.postReview(state.serviceId, rating, review)
         },
-        canSubmit = state.reviewPostState is ReviewPostState.Idle
+        canSubmit = state.reviewPostState is ReviewPostState.Idle,
     )
 }
 
@@ -87,17 +87,18 @@ fun PostReviewScreen(
     productImageUrl: String,
     canSubmit: Boolean,
     onReviewSubmit: (Int, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val reviewText = rememberTextFieldState()
     var rating by remember { mutableIntStateOf(0) }
     val submittable = (reviewText.text.isNotBlank() && rating > 0 && canSubmit)
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .imePadding()
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .imePadding(),
     ) {
         ProductItem(productName, productImageUrl)
 
@@ -106,13 +107,13 @@ fun PostReviewScreen(
             text = "상품은 어떠셨나요?",
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
 
         StarRatingBar(
             rating = rating,
             onRatingChange = { rating = it },
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -122,7 +123,7 @@ fun PostReviewScreen(
             state = reviewText,
             placeholderText = "상품에 대한 솔직한 리뷰를 남겨주세요.",
             multiLine = true,
-            labelText = "내용"
+            labelText = "내용",
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -130,16 +131,17 @@ fun PostReviewScreen(
         // 4. 하단 작성 완료 버튼
         Button(
             onClick = { onReviewSubmit(rating, reviewText.text.toString()) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
             shape = MaterialTheme.shapes.medium,
-            enabled = submittable
+            enabled = submittable,
         ) {
             Text(
                 text = "리뷰 작성 완료",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -149,19 +151,20 @@ fun PostReviewScreen(
 private fun ProductItem(
     productName: String,
     productImageUrl: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SsaviceElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-
-        ) {
-        Row(
-            modifier = Modifier
+        modifier =
+            Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(vertical = 8.dp),
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             ReviewProductThumbnail(imageUrl = productImageUrl)
 
@@ -171,19 +174,17 @@ private fun ProductItem(
                 Text(
                     text = "상품명",
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
                 Text(
                     text = productName,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 2
+                    maxLines = 2,
                 )
             }
         }
-
     }
-
 }
 
 @Composable
@@ -191,13 +192,13 @@ fun ReviewProductThumbnail(imageUrl: String) {
     Surface(
         shape = MaterialTheme.shapes.small,
         modifier = Modifier.size(60.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
         AsyncImage(
             model = imageUrl,
             contentDescription = "Product Thumbnail",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
@@ -206,7 +207,7 @@ fun ReviewProductThumbnail(imageUrl: String) {
 private fun StarRatingBar(
     rating: Int,
     onRatingChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -217,13 +218,14 @@ private fun StarRatingBar(
                 imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.StarOutline,
                 contentDescription = "$starIndex Stars",
                 tint = if (starIndex <= rating) MaterialTheme.colorScheme.primary else Color.LightGray,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null, // Ripple 효과 제거
-                        onClick = { onRatingChange(starIndex) }
-                    )
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null, // Ripple 효과 제거
+                            onClick = { onRatingChange(starIndex) },
+                        ),
             )
         }
     }
@@ -239,9 +241,8 @@ fun PostReviewScreenPreview() {
                 productName = "맛있는 사과 1kg",
                 productImageUrl = "",
                 onReviewSubmit = { _, _ -> },
-                canSubmit = true
+                canSubmit = true,
             )
-
         }
     }
 }

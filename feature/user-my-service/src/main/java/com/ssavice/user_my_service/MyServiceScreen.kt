@@ -62,7 +62,7 @@ fun MyServiceScreen(
     modifier: Modifier = Modifier,
     onServiceClick: (Long) -> Unit = {},
     onCancelClick: (Long) -> Unit = {},
-    onReviewClick: (id: Long, name: String, thumbnailUrl: String) -> Unit = {_, _, _ ->},
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String) -> Unit = { _, _, _ -> },
     onSearchingStateChanged: (Int) -> Unit = {},
     onLoadMore: () -> Unit = {},
     uiState: MyServiceUiState,
@@ -108,7 +108,7 @@ fun MyServiceScreen(
                     onReviewClick(
                         service.id,
                         service.title,
-                        service.thumbnailUrl
+                        service.thumbnailUrl,
                     )
                 },
                 onClick = { onServiceClick(uiState.services[it].id) },
