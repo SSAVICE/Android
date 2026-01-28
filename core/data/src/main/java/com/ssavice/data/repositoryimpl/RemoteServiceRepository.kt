@@ -134,4 +134,11 @@ internal class RemoteServiceRepository
             processResponseOnResponseData(serviceRetrofitService.applyService(id)).map {}
 
         override suspend fun cancelService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.cancelService(id))
+    override suspend fun reviewService(
+        id: Long,
+        content: String,
+        rating: Int
+    ): Result<Unit> {
+        TODO()
     }
+}

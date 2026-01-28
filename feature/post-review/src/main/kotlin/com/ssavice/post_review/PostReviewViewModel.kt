@@ -2,15 +2,20 @@ package com.ssavice.post_review
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.service_detail.navigation.PostReviewRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostReviewViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val serviceRepository: ServiceRepository
 ) : ViewModel() {
     val state = MutableStateFlow(
         PostReviewUiState(
@@ -54,14 +59,33 @@ class PostReviewViewModel @Inject constructor(
             )
         }
 
-        // TODO: Update 로직 구현
+        viewModelScope.launch(Dispatchers.IO) {
+            serviceRepository.reviewService(
+                serviceId,
+                review, rating
+            ).fold(
+                onSuccess = {
+                    state.update {
+                        it.copy(
+                            reviewPostState = ReviewPostState.Success
+                        )
+                    }
+                },
+                onFailure = { e ->
+                    state.update {
+                        it.copy(
+                            reviewPostState = ReviewPostState.Failure(e)
+                        )
+                    }
+                }
+            )
+        }
 
         state.update {
             it.copy(
                 reviewPostState = ReviewPostState.Success
             )
         }
-
     }
 
 }
