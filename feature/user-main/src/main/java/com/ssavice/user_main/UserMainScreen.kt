@@ -40,7 +40,7 @@ fun UserMainScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(state.addressState) {
-        if(state.addressState is RegionState.Initial) {
+        if (state.addressState is RegionState.Initial) {
             viewModel.initUserAddress()
         }
     }
@@ -100,20 +100,21 @@ fun UserMainScreen(
                 )
             }
         }
-        if(state.showAddressPicker) {
+        if (state.showAddressPicker) {
             ModalBottomSheet(
-                onDismissRequest = onAddressDismiss
+                onDismissRequest = onAddressDismiss,
             ) {
                 AddressSelectForm(
                     onConfirmChange = onAddressUpdate,
-                    initialState = (state.addressState as? RegionState.Showing)?: RegionState.Showing(
-                        address = "",
-                        detailAddress = "",
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        postCode = "",
-                        regionCode = ""
-                    )
+                    initialState =
+                        (state.addressState as? RegionState.Showing) ?: RegionState.Showing(
+                            address = "",
+                            detailAddress = "",
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            postCode = "",
+                            regionCode = "",
+                        ),
                 )
             }
         }

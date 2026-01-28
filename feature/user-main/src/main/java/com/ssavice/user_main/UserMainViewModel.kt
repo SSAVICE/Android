@@ -15,119 +15,119 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserMainViewModel
-@Inject
-constructor(
-    private val userRepository: UserInfoRepository,
-) : ViewModel() {
-    private val _uiState =
-        MutableStateFlow(
-            UserMainUiState(
-                categories = Category.entries
-            ),
-        )
-    val uiState: StateFlow<UserMainUiState> = _uiState
-
-    fun onCategorySelect(index: Int) {
-        if ((index !in 0 until _uiState.value.categories.size) || index == _uiState.value.selected) return
-        _uiState.value =
-            _uiState.value.copy(
-                selected = index,
-                defaultSearchQuery =
-                    _uiState.value.defaultSearchQuery.copy(
-                        category = _uiState.value.categories[index],
-                    ),
+    @Inject
+    constructor(
+        private val userRepository: UserInfoRepository,
+    ) : ViewModel() {
+        private val _uiState =
+            MutableStateFlow(
+                UserMainUiState(
+                    categories = Category.entries,
+                ),
             )
-    }
+        val uiState: StateFlow<UserMainUiState> = _uiState
 
-    fun onNotificationButtonClick() {
-    }
-
-    fun onSetLocationClick() {
-        showAddressSelector()
-    }
-
-    fun initUserAddress() {
-        if (_uiState.value.addressState is RegionState.Loading) return
-
-        _uiState.update {
-            it.copy(
-                addressState = RegionState.Loading
-            )
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.getUserAddress().fold(
-                onSuccess = { address ->
-                    _uiState.update {
-                        it.copy(
-                            addressState = RegionState.Showing(
-                                address = address.regionInfo.address,
-                                detailAddress = address.regionInfo.detailAddress,
-                                latitude = address.regionInfo.latitude,
-                                longitude = address.regionInfo.longitude,
-                                postCode = address.regionInfo.postCode,
-                                regionCode = address.regionInfo.regionCode
-                            )
-                        )
-                    }
-                },
-                onFailure = { e ->
-                    _uiState.update {
-                        it.copy(
-                            addressState = RegionState.Error(e)
-                        )
-                    }
-                }
-            )
-        }
-    }
-
-    fun updateUserAddress(
-        address: RegionState.Showing
-    ) {
-        _uiState.update {
-            it.copy(
-                addressState = RegionState.Loading,
-                showAddressPicker = false
-            )
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.updateUserAddress(
-                RegionInfo(
-                    address = address.address,
-                    detailAddress = address.detailAddress,
-                    latitude = address.latitude,
-                    longitude = address.longitude,
-                    postCode = address.postCode,
-                    regionCode = address.regionCode
+        fun onCategorySelect(index: Int) {
+            if ((index !in 0 until _uiState.value.categories.size) || index == _uiState.value.selected) return
+            _uiState.value =
+                _uiState.value.copy(
+                    selected = index,
+                    defaultSearchQuery =
+                        _uiState.value.defaultSearchQuery.copy(
+                            category = _uiState.value.categories[index],
+                        ),
                 )
-            ).fold(
-                onSuccess = {
-                    initUserAddress()
-                },
-                onFailure = { e ->
-                    _uiState.update {
-                        it.copy(
-                            addressState = RegionState.Error(e)
-                        )
-                    }
-                }
-            )
         }
-    }
 
-    private fun showAddressSelector() {
-        _uiState.update {
-            it.copy(
-                showAddressPicker = true
-            )
+        fun onNotificationButtonClick() {
         }
-    }
 
-    fun onAddressSelectorDismiss() {
-        _uiState.update {
-            it.copy(
-                showAddressPicker = false
-            )
+        fun onSetLocationClick() {
+            showAddressSelector()
+        }
+
+        fun initUserAddress() {
+            if (_uiState.value.addressState is RegionState.Loading) return
+
+            _uiState.update {
+                it.copy(
+                    addressState = RegionState.Loading,
+                )
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                userRepository.getUserAddress().fold(
+                    onSuccess = { address ->
+                        _uiState.update {
+                            it.copy(
+                                addressState =
+                                    RegionState.Showing(
+                                        address = address.regionInfo.address,
+                                        detailAddress = address.regionInfo.detailAddress,
+                                        latitude = address.regionInfo.latitude,
+                                        longitude = address.regionInfo.longitude,
+                                        postCode = address.regionInfo.postCode,
+                                        regionCode = address.regionInfo.regionCode,
+                                    ),
+                            )
+                        }
+                    },
+                    onFailure = { e ->
+                        _uiState.update {
+                            it.copy(
+                                addressState = RegionState.Error(e),
+                            )
+                        }
+                    },
+                )
+            }
+        }
+
+        fun updateUserAddress(address: RegionState.Showing) {
+            _uiState.update {
+                it.copy(
+                    addressState = RegionState.Loading,
+                    showAddressPicker = false,
+                )
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                userRepository
+                    .updateUserAddress(
+                        RegionInfo(
+                            address = address.address,
+                            detailAddress = address.detailAddress,
+                            latitude = address.latitude,
+                            longitude = address.longitude,
+                            postCode = address.postCode,
+                            regionCode = address.regionCode,
+                        ),
+                    ).fold(
+                        onSuccess = {
+                            initUserAddress()
+                        },
+                        onFailure = { e ->
+                            _uiState.update {
+                                it.copy(
+                                    addressState = RegionState.Error(e),
+                                )
+                            }
+                        },
+                    )
+            }
+        }
+
+        private fun showAddressSelector() {
+            _uiState.update {
+                it.copy(
+                    showAddressPicker = true,
+                )
+            }
+        }
+
+        fun onAddressSelectorDismiss() {
+            _uiState.update {
+                it.copy(
+                    showAddressPicker = false,
+                )
+            }
         }
     }
-}

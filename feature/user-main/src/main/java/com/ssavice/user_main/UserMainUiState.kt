@@ -21,7 +21,7 @@ data class UserMainUiState(
             sortBy = SortingOrder.POPULARITY,
         ),
     val showAddressPicker: Boolean = false,
-    val addressState: RegionState = RegionState.Initial
+    val addressState: RegionState = RegionState.Initial,
 )
 
 sealed interface RegionState {
@@ -31,12 +31,14 @@ sealed interface RegionState {
         val longitude: Double,
         val latitude: Double,
         val regionCode: String,
-        val postCode: String
-    ): RegionState
+        val postCode: String,
+    ) : RegionState
 
-    object Initial: RegionState
+    object Initial : RegionState
 
-    object Loading: RegionState
+    object Loading : RegionState
 
-    data class Error(val message: Throwable): RegionState
+    data class Error(
+        val message: Throwable,
+    ) : RegionState
 }

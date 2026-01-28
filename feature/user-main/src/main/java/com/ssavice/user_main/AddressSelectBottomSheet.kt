@@ -34,7 +34,7 @@ import com.ssavice.user_main.AddressBottomSheetConstants.DETAIL_ADDRESS_TEXT
 fun AddressSelectForm(
     modifier: Modifier = Modifier,
     onConfirmChange: (RegionState.Showing) -> Unit,
-    initialState: RegionState.Showing
+    initialState: RegionState.Showing,
 ) {
     var showAddressPicker by remember { mutableStateOf(false) }
     val detailAddressState = rememberTextFieldState(initialState.detailAddress)
@@ -47,7 +47,7 @@ fun AddressSelectForm(
     ) {
         LabeledComponent(
             Modifier,
-            ADDRESS_TEXT
+            ADDRESS_TEXT,
         ) {
             OutlinedTextFieldButton(
                 placeHolder = "",
@@ -72,29 +72,34 @@ fun AddressSelectForm(
 
         Spacer(Modifier.height(10.dp))
         SsaviceButton(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 5.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp),
             text = APPLY_TEXT,
             enabled = savable,
             onClick = {
-                onConfirmChange(modifiedAddress.copy(
-                    detailAddress = detailAddressState.text.toString()
-                ))
-            }
+                onConfirmChange(
+                    modifiedAddress.copy(
+                        detailAddress = detailAddressState.text.toString(),
+                    ),
+                )
+            },
         )
     }
 
     if (showAddressPicker) {
         AddressPickerDialog(
             {
-                modifiedAddress = RegionState.Showing(
-                    address = it.address,
-                    latitude = it.latitude,
-                    longitude = it.longitude,
-                    postCode = it.zipCode,
-                    regionCode = it.regionCode,
-                    detailAddress = ""
-                )
+                modifiedAddress =
+                    RegionState.Showing(
+                        address = it.address,
+                        latitude = it.latitude,
+                        longitude = it.longitude,
+                        postCode = it.zipCode,
+                        regionCode = it.regionCode,
+                        detailAddress = "",
+                    )
                 showAddressPicker = false
             },
             onDismiss = {
@@ -107,22 +112,22 @@ fun AddressSelectForm(
 @Preview
 @Composable
 fun PreviewAddressSelectForm() {
-    val state = RegionState.Showing(
-        address = "서울특별시 강남구 역삼동 123-45",
-        latitude = 37.5123456,
-        longitude = 127.0,
-        postCode = "1234",
-        regionCode = "12345",
-        detailAddress = "101동 1001호"
-    )
+    val state =
+        RegionState.Showing(
+            address = "서울특별시 강남구 역삼동 123-45",
+            latitude = 37.5123456,
+            longitude = 127.0,
+            postCode = "1234",
+            regionCode = "12345",
+            detailAddress = "101동 1001호",
+        )
 
     SsaviceTheme {
-
         Scaffold { innerPadding ->
             AddressSelectForm(
                 modifier = Modifier.padding(innerPadding),
                 onConfirmChange = {},
-                initialState = state
+                initialState = state,
             )
         }
     }
