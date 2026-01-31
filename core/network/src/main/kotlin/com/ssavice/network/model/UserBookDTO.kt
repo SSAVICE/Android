@@ -1,6 +1,5 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.user.UserServiceParticipation
@@ -41,6 +40,7 @@ data class Content(
                 price = discountedPrice.toInt(),
                 name = title,
                 sellerName = companyName,
+                sellerId = companyId,
                 startDate = Date.now(),
                 endDate = Date.now(),
                 state = ServiceState.valueOf(bookStatus),

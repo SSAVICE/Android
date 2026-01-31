@@ -29,6 +29,7 @@ import coil.request.ImageRequest
 import com.ssavice.designsystem.component.InfiniteScrollContainer
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.service.ServiceState
 import com.ssavice.ui.MyService
 
 @Composable
@@ -36,7 +37,7 @@ fun MyServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: MyServiceViewModel = hiltViewModel(),
     onServiceClick: (Long) -> Unit = {},
-    onReviewClick: (id: Long, name: String, thumbnailUrl: String) -> Unit = { _, _, _ -> },
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _-> },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,7 +63,7 @@ fun MyServiceScreen(
     modifier: Modifier = Modifier,
     onServiceClick: (Long) -> Unit = {},
     onCancelClick: (Long) -> Unit = {},
-    onReviewClick: (id: Long, name: String, thumbnailUrl: String) -> Unit = { _, _, _ -> },
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _ -> },
     onSearchingStateChanged: (Int) -> Unit = {},
     onLoadMore: () -> Unit = {},
     uiState: MyServiceUiState,
@@ -109,9 +110,11 @@ fun MyServiceScreen(
                         service.id,
                         service.title,
                         service.thumbnailUrl,
+                        service.sellerId
                     )
                 },
                 onClick = { onServiceClick(uiState.services[it].id) },
+                state = service.state,
                 thumbnail = { url ->
                     AsyncImage(
                         model =
@@ -172,6 +175,8 @@ fun MyServiceScreenPreview() {
             "2026-01-16 - 2026-02-03",
             true,
             true,
+            sellerId = 0,
+            state = ServiceState.RECRUITING
         )
 
     val state =

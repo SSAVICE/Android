@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class ServiceSummary(
     val name: String,
     val id: Long,
-    val image: URL,
+    val image: String,
     val category: String,
     val minimumMember: Int,
     val currentMember: Int,

@@ -63,7 +63,7 @@ fun SellerMainScreen(
         AsyncImage(
             model =
                 request
-                    .data(state.imageUrl.toString())
+                    .data(state.imageUrl)
                     .build(),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
@@ -159,7 +159,7 @@ fun SellerMainScreenPreview() {
                     "15명",
                     "₩400,000",
                     true,
-                    URL(YOGA_PREVIEW),
+                    YOGA_PREVIEW,
                 ),
                 SellerItemUiState(
                     1,
@@ -168,7 +168,7 @@ fun SellerMainScreenPreview() {
                     "12명",
                     "₩400,000",
                     true,
-                    URL(YOGA_PREVIEW),
+                    YOGA_PREVIEW,
                 ),
                 SellerItemUiState(
                     2,
@@ -177,7 +177,7 @@ fun SellerMainScreenPreview() {
                     "45명",
                     "₩750,000",
                     false,
-                    URL(YOGA_PREVIEW),
+                    YOGA_PREVIEW,
                 ),
             )
         }

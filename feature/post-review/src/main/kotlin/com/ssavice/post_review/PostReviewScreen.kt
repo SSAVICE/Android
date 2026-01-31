@@ -75,7 +75,10 @@ fun PostReviewRoute(
         productName = state.serviceName,
         productImageUrl = state.serviceThumbnailUrl,
         onReviewSubmit = { rating, review ->
-            viewModel.postReview(state.serviceId, rating, review)
+            viewModel.postReview(state.serviceId,
+                rating,
+                review,
+                state.sellerId)
         },
         canSubmit = state.reviewPostState is ReviewPostState.Idle,
     )

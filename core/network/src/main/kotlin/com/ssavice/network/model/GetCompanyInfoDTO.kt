@@ -8,7 +8,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URL
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class GetCompanyInfoDTO(
     val companyId: Long,
@@ -22,7 +21,7 @@ data class GetCompanyInfoDTO(
     val address: String,
     val detailAddress: String,
     val description: String,
-    val detail: String,
+    val detail: String?,
     val service: List<ServiceDTO>,
 ) {
     fun toSellerMainInfoModel(): SellerMainInfo =
@@ -36,7 +35,7 @@ data class GetCompanyInfoDTO(
                     ServiceSummary(
                         name = it.title,
                         id = it.serviceId,
-                        image = URL(it.serviceImageUrl),
+                        image = it.serviceImageUrl?:"",
                         currentMember = it.currentMember.toInt(),
                         minimumMember = it.minimumMember.toInt(),
                         basePrice = it.basePrice,

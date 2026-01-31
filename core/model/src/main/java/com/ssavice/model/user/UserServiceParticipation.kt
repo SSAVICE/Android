@@ -10,6 +10,7 @@ data class UserServiceParticipationItem(
     val price: Int,
     val name: String,
     val sellerName: String,
+    val sellerId: Long,
     val startDate: Date,
     val endDate: Date,
     val state: ServiceState,

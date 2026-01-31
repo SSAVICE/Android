@@ -18,6 +18,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 testOptions.targetSdk = 36
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 testOptions.animationsDisabled = true
+                lint.disable += "UnsafeOptInUsageError"
             }
             dependencies {
                 "androidTestImplementation"(libs.findLibrary("kotlin.test").get())

@@ -21,5 +21,5 @@ data class SellerItemUiState(
     val meta: String,
     val priceText: String,
     val isRecruiting: Boolean,
-    val imageUrl: URL,
+    val imageUrl: String,
 )

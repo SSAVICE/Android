@@ -63,6 +63,7 @@ class DemoUserInfoRepository
                 endDate = Date.now().addDay((0..6).random() + startDayOffset),
                 state = state,
                 isReviewed = (0..2).random() == 0,
+                sellerId = (0..100).random().toLong(),
             )
         }
 

@@ -1,13 +1,11 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.TimeStamp
 import com.ssavice.model.auth.Jwt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 @JsonIgnoreUnknownKeys
 data class JwtDTO(

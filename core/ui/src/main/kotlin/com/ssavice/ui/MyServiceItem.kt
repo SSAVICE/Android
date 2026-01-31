@@ -30,10 +30,12 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.service.ServiceState
 
 @Composable
 fun MyService(
     modifier: Modifier = Modifier,
+    state: ServiceState,
     title: String,
     sellerName: String,
     duration: String,
@@ -112,7 +114,7 @@ fun MyService(
                         .padding(top = 8.dp),
                 horizontalAlignment = Alignment.End,
             ) {
-                StatusChip(status = ServiceStatus.IN_PROGRESS)
+                StatusChip(status = state)
 
                 Spacer(Modifier.height(2.dp))
                 if (cancellable) {
@@ -144,15 +146,17 @@ fun MyService(
 
 @Composable
 private fun StatusChip(
-    status: ServiceStatus,
+    status: ServiceState,
     modifier: Modifier = Modifier,
 ) {
     val (bg, fg) =
         when (status) {
-            ServiceStatus.IN_PROGRESS -> Color(0xFFE9F7EF) to Color(0xFF1E8E3E)
-
-            // 진행중(연녹/진녹)
-            ServiceStatus.RECRUITING -> Color(0xFFEFF1F3) to Color(0xFF6B7280) // 모집완료(회색)
+            ServiceState.RECRUITING -> Color(0xFFFFF3E0) to Color(0xFFE65100)
+            ServiceState.SUCCEEDED,
+            ServiceState.COMPLETED,
+            ServiceState.ALL -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
+            ServiceState.CANCELED,
+            ServiceState.USER_CANCELED -> Color(0xFFF5F5F5) to Color(0xFF757575)
         }
 
     Box(
@@ -164,7 +168,7 @@ private fun StatusChip(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = status.label,
+            text = status.value,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             color = fg,
@@ -184,6 +188,7 @@ private fun PreviewMyService() {
             reviewable = true,
             price = "₩400,000",
             thumbnailUrl = YOGA_IMAGE,
+            state = ServiceState.RECRUITING,
             thumbnail = { url ->
                 AsyncImage(
                     model =
@@ -216,6 +221,7 @@ private fun PreviewMyServiceLongTitle() {
             reviewable = false,
             price = "₩400,000",
             thumbnailUrl = YOGA_IMAGE,
+            state = ServiceState.RECRUITING,
             thumbnail = { url ->
                 AsyncImage(
                     model =

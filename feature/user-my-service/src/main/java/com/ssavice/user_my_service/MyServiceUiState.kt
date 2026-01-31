@@ -21,6 +21,8 @@ data class MyServiceItemUiState(
     val duration: String,
     val cancellable: Boolean,
     val reviewable: Boolean,
+    val sellerId: Long,
+    val state: ServiceState
 )
 
 sealed interface MyServiceState {

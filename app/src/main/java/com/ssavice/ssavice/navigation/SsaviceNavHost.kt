@@ -197,11 +197,12 @@ fun SsaviceNavHost(
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
-            onReviewClick = { id, name, thumbnailUrl ->
+            onReviewClick = { id, name, thumbnailUrl, sellerId ->
                 navController.navigateToPostReview(
                     serviceId = id,
                     serviceName = name,
                     serviceThumbnailUrl = thumbnailUrl,
+                    sellerId = sellerId,
                 )
             },
         )

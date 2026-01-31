@@ -6,6 +6,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
 import com.ssavice.model.ResizableImage
+import com.ssavice.model.service.ReviewForm
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
@@ -282,8 +283,6 @@ class DemoServiceRepository
         override suspend fun cancelService(id: Long): Result<Unit> = Result.success(Unit)
 
         override suspend fun reviewService(
-            id: Long,
-            content: String,
-            rating: Int,
+            review: ReviewForm
         ): Result<Unit> = Result.success(Unit)
     }

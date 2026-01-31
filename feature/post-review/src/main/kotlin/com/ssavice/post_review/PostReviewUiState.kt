@@ -5,6 +5,7 @@ data class PostReviewUiState(
     val serviceId: Long,
     val serviceThumbnailUrl: String,
     val reviewPostState: ReviewPostState = ReviewPostState.Idle,
+    val sellerId: Long
 )
 
 sealed interface ReviewPostState {

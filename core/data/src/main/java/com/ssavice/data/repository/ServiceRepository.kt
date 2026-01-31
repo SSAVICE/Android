@@ -2,6 +2,7 @@ package com.ssavice.data.repository
 
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.ResizableImage
+import com.ssavice.model.service.ReviewForm
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
@@ -33,8 +34,6 @@ interface ServiceRepository {
     suspend fun cancelService(id: Long): Result<Unit>
 
     suspend fun reviewService(
-        id: Long,
-        content: String,
-        rating: Int,
+        review: ReviewForm
     ): Result<Unit>
 }

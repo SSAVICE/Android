@@ -5,6 +5,7 @@ import com.ssavice.network.model.AddServiceResponseDTO
 import com.ssavice.network.model.ApplyServiceResultDTO
 import com.ssavice.network.model.GetServiceDetailDTO
 import com.ssavice.network.model.ImageUploadDTO
+import com.ssavice.network.model.PostReviewDTO
 import com.ssavice.network.model.PresignedUrlResponseDTO
 import com.ssavice.network.model.SearchServiceResponseDTO
 import retrofit2.Response
@@ -43,5 +44,10 @@ interface ServiceRetrofitService {
     @POST("/api/service/{id}/cancel")
     suspend fun cancelService(
         @Path(value = "id") id: Long,
+    ): Response<Unit>
+
+    @POST("/api/review")
+    suspend fun postReview(
+        @Body body: PostReviewDTO
     ): Response<Unit>
 }

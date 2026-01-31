@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.model.service.ReviewForm
 import com.ssavice.service_detail.navigation.PostReviewRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ class PostReviewViewModel
                 PostReviewUiState(
                     serviceName = "",
                     serviceId = -1,
+                    sellerId = -1,
                     serviceThumbnailUrl = "",
                 ),
             )
@@ -32,8 +34,10 @@ class PostReviewViewModel
             val id = savedStateHandle.get<Long>(PostReviewRouteContract.ID)
             val name = savedStateHandle.get<String>(PostReviewRouteContract.NAME)
             val thumbnailUrl = savedStateHandle.get<String>(PostReviewRouteContract.THUMBNAIL_URL)
+            val sellerId = savedStateHandle.get<Long>(PostReviewRouteContract.SELLER_ID)
 
-            if (id == null) {
+
+            if (id == null || sellerId == null) {
                 state.update {
                     it.copy(
                         reviewPostState = ReviewPostState.Failure(IllegalStateException("serviceId is null")),
@@ -45,6 +49,7 @@ class PostReviewViewModel
                         serviceId = id,
                         serviceName = name ?: "",
                         serviceThumbnailUrl = thumbnailUrl ?: "",
+                        sellerId = sellerId
                     )
                 }
             }
@@ -58,6 +63,7 @@ class PostReviewViewModel
             serviceId: Long,
             rating: Int,
             review: String,
+            sellerId: Long
         ) {
             state.update {
                 it.copy(
@@ -68,9 +74,12 @@ class PostReviewViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 serviceRepository
                     .reviewService(
-                        serviceId,
-                        review,
-                        rating,
+                        ReviewForm(
+                            serviceId = serviceId,
+                            rating = rating,
+                            content = review,
+                            sellerId = sellerId
+                        )
                     ).fold(
                         onSuccess = {
                             state.update {

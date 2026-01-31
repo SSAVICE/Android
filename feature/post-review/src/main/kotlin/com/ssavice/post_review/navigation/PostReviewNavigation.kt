@@ -18,6 +18,7 @@ data class PostReviewRoute(
     val serviceId: Long,
     val serviceName: String,
     val serviceThumbnailUrl: String,
+    val sellerId: Long
 )
 
 fun NavController.navigateToPostReview(
@@ -25,8 +26,12 @@ fun NavController.navigateToPostReview(
     serviceId: Long,
     serviceName: String,
     serviceThumbnailUrl: String,
+    sellerId: Long
 ) {
-    navigate(PostReviewRoute(serviceId, serviceName, serviceThumbnailUrl)) {
+    navigate(PostReviewRoute(serviceId,
+        serviceName,
+        serviceThumbnailUrl,
+        sellerId)) {
         navOptions()
     }
 }
@@ -66,4 +71,5 @@ object PostReviewRouteContract {
     const val ID = "serviceId"
     const val NAME = "serviceName"
     const val THUMBNAIL_URL = "serviceThumbnailUrl"
+    const val SELLER_ID = "sellerId"
 }
