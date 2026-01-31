@@ -45,8 +45,8 @@ class SearchResultViewModel
                     val q =
                         SearchQuery(
                             query = query,
-                            region1 = region?.regionInfo?.regionCode?:"",
-                            region2 = region?.regionInfo?.regionCode?:"",
+                            region1 = region?.regionInfo?.regionCode ?: "",
+                            region2 = region?.regionInfo?.regionCode ?: "",
                             category = Category.entries.getOrElse(category, { Category.entries[0] }),
                             searchRange = searchRange,
                             minPrice = startPrice,

@@ -1,6 +1,5 @@
 package com.ssavice.user_main.navigation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
