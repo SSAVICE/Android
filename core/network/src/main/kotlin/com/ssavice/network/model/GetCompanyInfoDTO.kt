@@ -49,7 +49,7 @@ data class GetCompanyInfoDTO(
                         endDate = Date.parse(it.endDate),
                         serviceTag = it.tag,
                         category = it.category,
-                        state = ServiceState.mapState(it.status)
+                        state = ServiceState.mapState(it.status),
                     )
                 },
             region =

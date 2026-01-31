@@ -142,8 +142,8 @@ private fun StatusChip(
             ServiceState.USER_CANCELED,
             -> Color(0xFFF5F5F5) to Color(0xFF757575)
 
-            ServiceState.UNKNOWN
-                -> Color(0xFFFF8B8B) to Color(0xFFFF3434)
+            ServiceState.UNKNOWN,
+            -> Color(0xFFFF8B8B) to Color(0xFFFF3434)
         }
 
     Box(
