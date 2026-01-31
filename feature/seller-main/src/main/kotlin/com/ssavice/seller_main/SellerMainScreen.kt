@@ -36,6 +36,7 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.service.ServiceState
 import com.ssavice.ui.SellerServiceListItem
 
 @Composable
@@ -153,6 +154,7 @@ fun SellerMainScreenPreview() {
                     "₩400,000",
                     true,
                     YOGA_PREVIEW,
+                    state = ServiceState.RECRUITING,
                 ),
                 SellerItemUiState(
                     1,
@@ -162,6 +164,7 @@ fun SellerMainScreenPreview() {
                     "₩400,000",
                     true,
                     YOGA_PREVIEW,
+                    state = ServiceState.RECRUITING,
                 ),
                 SellerItemUiState(
                     2,
@@ -171,6 +174,7 @@ fun SellerMainScreenPreview() {
                     "₩750,000",
                     false,
                     YOGA_PREVIEW,
+                    state = ServiceState.RECRUITING,
                 ),
             )
         }
