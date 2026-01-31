@@ -1,6 +1,8 @@
 package com.ssavice.user_main
 
 import com.ssavice.model.Category
+import com.ssavice.model.Region
+import com.ssavice.model.RegionDetail
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SortingOrder
 
@@ -18,4 +20,25 @@ data class UserMainUiState(
             maxPrice = Int.MAX_VALUE,
             sortBy = SortingOrder.POPULARITY,
         ),
+    val showAddressPicker: Boolean = false,
+    val addressState: RegionState = RegionState.Initial,
 )
+
+sealed interface RegionState {
+    data class Showing(
+        val address: String,
+        val detailAddress: String,
+        val longitude: Double,
+        val latitude: Double,
+        val regionCode: String,
+        val postCode: String,
+    ) : RegionState
+
+    object Initial : RegionState
+
+    object Loading : RegionState
+
+    data class Error(
+        val message: Throwable,
+    ) : RegionState
+}

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SortingOrder
@@ -21,6 +22,7 @@ class SearchResultViewModel
     @Inject
     constructor(
         private val savedStateHandle: SavedStateHandle,
+        private val userRepository: UserInfoRepository,
     ) : ViewModel() {
         val queryState: StateFlow<SearchQuery> =
             with(SearchResultRouteContract) {
@@ -39,18 +41,18 @@ class SearchResultViewModel
                     val sortBy = params[4] as Int
                     val query = params[5] as String
 
+                    val region = userRepository.getUserAddress().getOrNull()
                     val q =
                         SearchQuery(
                             query = query,
-                            region1 = "region1",
-                            region2 = "region2",
+                            region1 = region?.regionInfo?.regionCode ?: "",
+                            region2 = region?.regionInfo?.regionCode ?: "",
                             category = Category.entries.getOrElse(category, { Category.entries[0] }),
                             searchRange = searchRange,
                             minPrice = startPrice,
                             maxPrice = endPrice,
                             sortBy = SortingOrder.entries.getOrElse(sortBy, { SortingOrder.POPULARITY }),
                         )
-                    Log.d("KSC", "query: $q")
                     q
                 }.stateIn(
                     scope = viewModelScope,

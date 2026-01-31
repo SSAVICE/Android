@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,16 +38,25 @@ fun UserMainScreen(
     onSearchBarClicked: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
 ) {
-    val state = viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(state.addressState) {
+        if (state.addressState is RegionState.Initial) {
+            viewModel.initUserAddress()
+        }
+    }
+
     UserMainScreen(
         modifier = modifier,
-        state = state.value,
+        state = state,
         onCategoryClicked = viewModel::onCategorySelect,
         onSearchBarClicked = onSearchBarClicked,
         onServiceClick = onServiceClick,
+        onAddressUpdate = viewModel::updateUserAddress,
+        onAddressDismiss = viewModel::onAddressSelectorDismiss,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMainScreen(
     modifier: Modifier = Modifier,
@@ -52,6 +64,8 @@ fun UserMainScreen(
     onSearchBarClicked: () -> Unit = {},
     onCategoryClicked: (Int) -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
+    onAddressUpdate: (RegionState.Showing) -> Unit = {},
+    onAddressDismiss: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
         OutlinedTextFieldButton(
@@ -83,6 +97,24 @@ fun UserMainScreen(
                     categories = state.categories.map { it.value },
                     selection = state.selected,
                     onSelectionChanged = onCategoryClicked,
+                )
+            }
+        }
+        if (state.showAddressPicker) {
+            ModalBottomSheet(
+                onDismissRequest = onAddressDismiss,
+            ) {
+                AddressSelectForm(
+                    onConfirmChange = onAddressUpdate,
+                    initialState =
+                        (state.addressState as? RegionState.Showing) ?: RegionState.Showing(
+                            address = "",
+                            detailAddress = "",
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            postCode = "",
+                            regionCode = "",
+                        ),
                 )
             }
         }
