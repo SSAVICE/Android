@@ -179,7 +179,7 @@ class MyServiceViewModel
                 ServiceState.CANCELED -> false
                 ServiceState.USER_CANCELED -> false
                 ServiceState.COMPLETED -> false
-                ServiceState.ALL -> false
+                else -> false
             }
 
         private fun getIfStateReviewable(
@@ -187,11 +187,11 @@ class MyServiceViewModel
             reviewed: Boolean,
         ): Boolean =
             when (state) {
-                ServiceState.RECRUITING -> false
+                ServiceState.RECRUITING -> true
                 ServiceState.SUCCEEDED -> false
                 ServiceState.CANCELED -> false
                 ServiceState.USER_CANCELED -> false
                 ServiceState.COMPLETED -> !reviewed
-                ServiceState.ALL -> false
+                else -> false
             }
     }

@@ -8,11 +8,11 @@ import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerSummary
+import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.net.URL
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.random.Random
@@ -48,6 +48,7 @@ internal class DemoSellerInfoRepository
                 startDate = Date.parse(LocalDateTime.now()),
                 endDate = Date.parse(LocalDateTime.now()),
                 category = "카테고리",
+                state = ServiceState.RECRUITING,
             )
 
             return flow {

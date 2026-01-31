@@ -18,4 +18,5 @@ data class ServiceSummary(
     val startDate: Date,
     val endDate: Date,
     val serviceTag: String,
+    val state: ServiceState
 )

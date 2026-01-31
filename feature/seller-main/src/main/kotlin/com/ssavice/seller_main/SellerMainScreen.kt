@@ -37,8 +37,6 @@ import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.ui.SellerServiceListItem
-import com.ssavice.ui.ServiceStatus
-import java.net.URL
 
 @Composable
 fun SellerMainScreen(
@@ -126,12 +124,7 @@ fun SellerMainScreen(
                     category = item.category,
                     meta = item.meta,
                     priceText = item.priceText,
-                    status =
-                        if (item.isRecruiting) {
-                            ServiceStatus.IN_PROGRESS
-                        } else {
-                            ServiceStatus.RECRUITING
-                        },
+                    status = item.state,
                     thumbnail = { thumbnail(item, imageRequest) },
                     modifier =
                         Modifier
