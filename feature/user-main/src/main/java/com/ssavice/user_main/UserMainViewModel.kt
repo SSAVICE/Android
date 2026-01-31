@@ -102,6 +102,11 @@ constructor(
                 )
             ).fold(
                 onSuccess = {
+                    _uiState.update {
+                        it.copy(
+                            addressState = RegionState.Initial
+                        )
+                    }
                     initUserAddress()
                 },
                 onFailure = { e ->
