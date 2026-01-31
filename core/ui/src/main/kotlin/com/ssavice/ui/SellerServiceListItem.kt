@@ -132,11 +132,15 @@ private fun StatusChip(
     val (bg, fg) =
         when (status) {
             ServiceState.RECRUITING -> Color(0xFFFFF3E0) to Color(0xFFE65100)
+
             ServiceState.SUCCEEDED,
             ServiceState.COMPLETED,
-            ServiceState.ALL -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
+            ServiceState.ALL,
+            -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
+
             ServiceState.CANCELED,
-            ServiceState.USER_CANCELED -> Color(0xFFF5F5F5) to Color(0xFF757575)
+            ServiceState.USER_CANCELED,
+            -> Color(0xFFF5F5F5) to Color(0xFF757575)
         }
 
     Box(

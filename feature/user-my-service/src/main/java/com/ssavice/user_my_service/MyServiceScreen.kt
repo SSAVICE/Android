@@ -37,7 +37,7 @@ fun MyServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: MyServiceViewModel = hiltViewModel(),
     onServiceClick: (Long) -> Unit = {},
-    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _-> },
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _ -> },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -110,7 +110,7 @@ fun MyServiceScreen(
                         service.id,
                         service.title,
                         service.thumbnailUrl,
-                        service.sellerId
+                        service.sellerId,
                     )
                 },
                 onClick = { onServiceClick(uiState.services[it].id) },
@@ -176,7 +176,7 @@ fun MyServiceScreenPreview() {
             true,
             true,
             sellerId = 0,
-            state = ServiceState.RECRUITING
+            state = ServiceState.RECRUITING,
         )
 
     val state =

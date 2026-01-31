@@ -48,6 +48,6 @@ interface ServiceRetrofitService {
 
     @POST("/api/review")
     suspend fun postReview(
-        @Body body: PostReviewDTO
+        @Body body: PostReviewDTO,
     ): Response<Unit>
 }

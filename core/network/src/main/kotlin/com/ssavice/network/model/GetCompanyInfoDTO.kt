@@ -35,7 +35,7 @@ data class GetCompanyInfoDTO(
                     ServiceSummary(
                         name = it.title,
                         id = it.serviceId,
-                        image = it.serviceImageUrl?:"",
+                        image = it.serviceImageUrl ?: "",
                         currentMember = it.currentMember.toInt(),
                         minimumMember = it.minimumMember.toInt(),
                         basePrice = it.basePrice,

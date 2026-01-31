@@ -8,16 +8,15 @@ data class PostReviewDTO(
     val companyId: Long,
     val serviceId: Long,
     val rating: Int,
-    val comment: String
+    val comment: String,
 ) {
     companion object {
-        fun fromModel(review: ReviewForm): PostReviewDTO {
-            return PostReviewDTO(
+        fun fromModel(review: ReviewForm): PostReviewDTO =
+            PostReviewDTO(
                 companyId = review.sellerId,
                 serviceId = review.serviceId,
                 rating = review.rating,
-                comment = review.content
+                comment = review.content,
             )
-        }
     }
 }

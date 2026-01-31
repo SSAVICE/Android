@@ -36,7 +36,6 @@ class PostReviewViewModel
             val thumbnailUrl = savedStateHandle.get<String>(PostReviewRouteContract.THUMBNAIL_URL)
             val sellerId = savedStateHandle.get<Long>(PostReviewRouteContract.SELLER_ID)
 
-
             if (id == null || sellerId == null) {
                 state.update {
                     it.copy(
@@ -49,7 +48,7 @@ class PostReviewViewModel
                         serviceId = id,
                         serviceName = name ?: "",
                         serviceThumbnailUrl = thumbnailUrl ?: "",
-                        sellerId = sellerId
+                        sellerId = sellerId,
                     )
                 }
             }
@@ -63,7 +62,7 @@ class PostReviewViewModel
             serviceId: Long,
             rating: Int,
             review: String,
-            sellerId: Long
+            sellerId: Long,
         ) {
             state.update {
                 it.copy(
@@ -78,8 +77,8 @@ class PostReviewViewModel
                             serviceId = serviceId,
                             rating = rating,
                             content = review,
-                            sellerId = sellerId
-                        )
+                            sellerId = sellerId,
+                        ),
                     ).fold(
                         onSuccess = {
                             state.update {
