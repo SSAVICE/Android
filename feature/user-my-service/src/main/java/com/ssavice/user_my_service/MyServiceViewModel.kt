@@ -6,6 +6,7 @@ import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.user.UserServiceParticipationItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -34,6 +35,29 @@ class MyServiceViewModel
 
         val uiState = _uiState.asStateFlow()
 
+        private fun mapItemToUiState(
+            i: Int,
+            nextId: Int,
+            item: UserServiceParticipationItem,
+        ): MyServiceItemUiState =
+            MyServiceItemUiState(
+                index = i + nextId,
+                id = item.id,
+                title = item.name,
+                price = "%,d".format(item.price),
+                thumbnailUrl = item.thumbnail,
+                sellerName = item.sellerName,
+                duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
+                cancellable = getIfStateCancellable(item.state),
+                reviewable =
+                    getIfStateReviewable(
+                        item.state,
+                        item.isReviewed,
+                    ),
+                sellerId = item.sellerId,
+                state = item.state,
+            )
+
         fun loadService() {
             if (searchingProcess != null && (searchingProcess?.isActive == true)) {
                 searchingProcess?.cancel()
@@ -60,21 +84,7 @@ class MyServiceViewModel
                                     origin.copy(
                                         services =
                                             it.items.mapIndexed { i, item ->
-                                                MyServiceItemUiState(
-                                                    index = i + nextId,
-                                                    id = item.id,
-                                                    title = item.name,
-                                                    price = "%,d".format(item.price),
-                                                    thumbnailUrl = item.thumbnail,
-                                                    sellerName = item.sellerName,
-                                                    duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
-                                                    cancellable = getIfStateCancellable(item.state),
-                                                    reviewable =
-                                                        getIfStateReviewable(
-                                                            item.state,
-                                                            item.isReviewed,
-                                                        ),
-                                                )
+                                                mapItemToUiState(i, nextId, item)
                                             },
                                         myServiceScreenStatus = MyServiceState.Loaded,
                                         hasNext = it.hasNext,
@@ -117,21 +127,7 @@ class MyServiceViewModel
                                     services =
                                         origin.services +
                                             it.items.mapIndexed { i, item ->
-                                                MyServiceItemUiState(
-                                                    index = i + nextId,
-                                                    id = item.id,
-                                                    title = item.name,
-                                                    price = "%,d원".format(item.price),
-                                                    thumbnailUrl = item.thumbnail,
-                                                    sellerName = item.sellerName,
-                                                    duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
-                                                    cancellable = getIfStateCancellable(item.state),
-                                                    reviewable =
-                                                        getIfStateReviewable(
-                                                            item.state,
-                                                            item.isReviewed,
-                                                        ),
-                                                )
+                                                mapItemToUiState(i, nextId, item)
                                             },
                                     myServiceScreenStatus = MyServiceState.Loaded,
                                     hasNext = it.hasNext,
@@ -183,7 +179,7 @@ class MyServiceViewModel
                 ServiceState.CANCELED -> false
                 ServiceState.USER_CANCELED -> false
                 ServiceState.COMPLETED -> false
-                ServiceState.ALL -> false
+                else -> false
             }
 
         private fun getIfStateReviewable(
@@ -191,11 +187,11 @@ class MyServiceViewModel
             reviewed: Boolean,
         ): Boolean =
             when (state) {
-                ServiceState.RECRUITING -> false
+                ServiceState.RECRUITING -> true
                 ServiceState.SUCCEEDED -> false
                 ServiceState.CANCELED -> false
                 ServiceState.USER_CANCELED -> false
                 ServiceState.COMPLETED -> !reviewed
-                ServiceState.ALL -> false
+                else -> false
             }
     }

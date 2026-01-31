@@ -36,6 +36,7 @@ class SellerMainViewModel
                                         priceText = "₩${service.discountedPrice}",
                                         isRecruiting = service.deadLine > Date.now(),
                                         imageUrl = service.image,
+                                        state = service.state,
                                     )
                                 },
                             )

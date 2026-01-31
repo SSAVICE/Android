@@ -29,13 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-
-enum class ServiceStatus(
-    val label: String,
-) {
-    IN_PROGRESS("진행중"),
-    RECRUITING("모집완료"),
-}
+import com.ssavice.model.service.ServiceState
 
 @Composable
 fun SellerServiceListItem(
@@ -43,7 +37,7 @@ fun SellerServiceListItem(
     category: String,
     meta: String, // 예: "8/12명" 또는 "10/15명"
     priceText: String, // 예: "₩400,000"
-    status: ServiceStatus,
+    status: ServiceState,
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 14.dp,
     elevation: Dp = 8.dp,
@@ -132,15 +126,24 @@ fun SellerServiceListItem(
 
 @Composable
 private fun StatusChip(
-    status: ServiceStatus,
+    status: ServiceState,
     modifier: Modifier = Modifier,
 ) {
     val (bg, fg) =
         when (status) {
-            ServiceStatus.IN_PROGRESS -> Color(0xFFE9F7EF) to Color(0xFF1E8E3E)
+            ServiceState.RECRUITING -> Color(0xFFFFF3E0) to Color(0xFFE65100)
 
-            // 진행중(연녹/진녹)
-            ServiceStatus.RECRUITING -> Color(0xFFEFF1F3) to Color(0xFF6B7280) // 모집완료(회색)
+            ServiceState.SUCCEEDED,
+            ServiceState.COMPLETED,
+            ServiceState.ALL,
+            -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
+
+            ServiceState.CANCELED,
+            ServiceState.USER_CANCELED,
+            -> Color(0xFFF5F5F5) to Color(0xFF757575)
+
+            ServiceState.UNKNOWN,
+            -> Color(0xFFFF8B8B) to Color(0xFFFF3434)
         }
 
     Box(
@@ -152,7 +155,7 @@ private fun StatusChip(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = status.label,
+            text = status.value,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = fg,
@@ -169,7 +172,7 @@ fun PreviewLikeItem() {
         category = "운동/피트니스",
         meta = "8/12명",
         priceText = "₩400,000",
-        status = ServiceStatus.IN_PROGRESS,
+        status = ServiceState.RECRUITING,
         thumbnail = {
             AsyncImage(
                 model = YOGA_IMAGE_URL,

@@ -1,8 +1,8 @@
 package com.ssavice.network.model
 
-import android.annotation.SuppressLint
 import com.ssavice.model.Date
 import com.ssavice.model.service.ServiceState
+import com.ssavice.model.service.mapState
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
 import kotlinx.serialization.SerialName
@@ -41,9 +41,10 @@ data class Content(
                 price = discountedPrice.toInt(),
                 name = title,
                 sellerName = companyName,
+                sellerId = companyId,
                 startDate = Date.now(),
                 endDate = Date.now(),
-                state = ServiceState.valueOf(bookStatus),
+                state = ServiceState.mapState(bookStatus),
                 isReviewed = isReviewed,
             )
         }

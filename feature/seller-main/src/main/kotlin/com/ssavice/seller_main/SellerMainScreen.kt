@@ -36,9 +36,8 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.service.ServiceState
 import com.ssavice.ui.SellerServiceListItem
-import com.ssavice.ui.ServiceStatus
-import java.net.URL
 
 @Composable
 fun SellerMainScreen(
@@ -63,7 +62,7 @@ fun SellerMainScreen(
         AsyncImage(
             model =
                 request
-                    .data(state.imageUrl.toString())
+                    .data(state.imageUrl)
                     .build(),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
@@ -126,12 +125,7 @@ fun SellerMainScreen(
                     category = item.category,
                     meta = item.meta,
                     priceText = item.priceText,
-                    status =
-                        if (item.isRecruiting) {
-                            ServiceStatus.IN_PROGRESS
-                        } else {
-                            ServiceStatus.RECRUITING
-                        },
+                    status = item.state,
                     thumbnail = { thumbnail(item, imageRequest) },
                     modifier =
                         Modifier
@@ -159,7 +153,8 @@ fun SellerMainScreenPreview() {
                     "15명",
                     "₩400,000",
                     true,
-                    URL(YOGA_PREVIEW),
+                    YOGA_PREVIEW,
+                    state = ServiceState.RECRUITING,
                 ),
                 SellerItemUiState(
                     1,
@@ -168,7 +163,8 @@ fun SellerMainScreenPreview() {
                     "12명",
                     "₩400,000",
                     true,
-                    URL(YOGA_PREVIEW),
+                    YOGA_PREVIEW,
+                    state = ServiceState.RECRUITING,
                 ),
                 SellerItemUiState(
                     2,
@@ -177,7 +173,8 @@ fun SellerMainScreenPreview() {
                     "45명",
                     "₩750,000",
                     false,
-                    URL(YOGA_PREVIEW),
+                    YOGA_PREVIEW,
+                    state = ServiceState.RECRUITING,
                 ),
             )
         }

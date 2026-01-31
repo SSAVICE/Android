@@ -29,6 +29,7 @@ import coil.request.ImageRequest
 import com.ssavice.designsystem.component.InfiniteScrollContainer
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.service.ServiceState
 import com.ssavice.ui.MyService
 
 @Composable
@@ -36,7 +37,7 @@ fun MyServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: MyServiceViewModel = hiltViewModel(),
     onServiceClick: (Long) -> Unit = {},
-    onReviewClick: (Long) -> Unit = {},
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _ -> },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,7 +63,7 @@ fun MyServiceScreen(
     modifier: Modifier = Modifier,
     onServiceClick: (Long) -> Unit = {},
     onCancelClick: (Long) -> Unit = {},
-    onReviewClick: (Long) -> Unit = {},
+    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _ -> },
     onSearchingStateChanged: (Int) -> Unit = {},
     onLoadMore: () -> Unit = {},
     uiState: MyServiceUiState,
@@ -94,17 +95,26 @@ fun MyServiceScreen(
                 uiState.services[it].index
             },
         ) {
+            val service = uiState.services[it]
             MyService(
-                title = uiState.services[it].title,
-                sellerName = uiState.services[it].sellerName,
-                duration = uiState.services[it].duration,
-                cancellable = uiState.services[it].cancellable,
-                reviewable = uiState.services[it].reviewable,
-                price = uiState.services[it].price,
-                thumbnailUrl = uiState.services[it].thumbnailUrl,
-                onCancelButtonClick = { onCancelClick(uiState.services[it].id) },
-                onReviewButtonClick = { onReviewClick(uiState.services[it].id) },
+                title = service.title,
+                sellerName = service.sellerName,
+                duration = service.duration,
+                cancellable = service.cancellable,
+                reviewable = service.reviewable,
+                price = service.price,
+                thumbnailUrl = service.thumbnailUrl,
+                onCancelButtonClick = { onCancelClick(service.id) },
+                onReviewButtonClick = {
+                    onReviewClick(
+                        service.id,
+                        service.title,
+                        service.thumbnailUrl,
+                        service.sellerId,
+                    )
+                },
                 onClick = { onServiceClick(uiState.services[it].id) },
+                state = service.state,
                 thumbnail = { url ->
                     AsyncImage(
                         model =
@@ -165,6 +175,8 @@ fun MyServiceScreenPreview() {
             "2026-01-16 - 2026-02-03",
             true,
             true,
+            sellerId = 0,
+            state = ServiceState.RECRUITING,
         )
 
     val state =

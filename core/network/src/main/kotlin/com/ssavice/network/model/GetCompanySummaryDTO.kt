@@ -3,6 +3,7 @@ package com.ssavice.network.model
 import com.ssavice.model.Date
 import com.ssavice.model.Review
 import com.ssavice.model.seller.SellerSummary
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -40,6 +41,7 @@ data class ReviewDTO(
     val comment: String,
     val serviceName: String,
     val createdAt: String,
+    @SerialName("rating")
     val rate: Integer,
 ) {
     fun toModel(): Review =

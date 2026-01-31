@@ -8,11 +8,11 @@ import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerSummary
+import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.ServiceSummary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.net.URL
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.random.Random
@@ -37,10 +37,7 @@ internal class DemoSellerInfoRepository
             ) = ServiceSummary(
                 id = rand.nextLong(),
                 name = name,
-                image =
-                    URL(
-                        "https://images.unsplash.com/photo-1766047125728-ebff5afcf314?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    ),
+                image = "https://picsum.photos/id/400",
                 minimumMember = 20,
                 currentMember = 10,
                 basePrice = 50000,
@@ -51,6 +48,7 @@ internal class DemoSellerInfoRepository
                 startDate = Date.parse(LocalDateTime.now()),
                 endDate = Date.parse(LocalDateTime.now()),
                 category = "카테고리",
+                state = ServiceState.RECRUITING,
             )
 
             return flow {

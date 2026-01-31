@@ -1,5 +1,6 @@
 package com.ssavice.seller_main
 
+import com.ssavice.model.service.ServiceState
 import java.net.URL
 
 sealed interface SellerMainUiState {
@@ -21,5 +22,6 @@ data class SellerItemUiState(
     val meta: String,
     val priceText: String,
     val isRecruiting: Boolean,
-    val imageUrl: URL,
+    val imageUrl: String,
+    val state: ServiceState,
 )

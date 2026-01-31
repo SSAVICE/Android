@@ -6,6 +6,7 @@ import com.ssavice.data.service.ImageUploadService
 import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.ResizableImage
+import com.ssavice.model.service.ReviewForm
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
@@ -15,6 +16,7 @@ import com.ssavice.network.exception.ServerInternalErrorException
 import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.ImageUploadDTO
+import com.ssavice.network.model.PostReviewDTO
 import com.ssavice.network.model.SearchServiceDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
@@ -134,4 +136,11 @@ internal class RemoteServiceRepository
             processResponseOnResponseData(serviceRetrofitService.applyService(id)).map {}
 
         override suspend fun cancelService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.cancelService(id))
+
+        override suspend fun reviewService(review: ReviewForm): Result<Unit> =
+            processResponse(
+                serviceRetrofitService.postReview(
+                    PostReviewDTO.fromModel(review),
+                ),
+            )
     }

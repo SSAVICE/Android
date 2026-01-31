@@ -1,14 +1,16 @@
 import android.annotation.SuppressLint
+import android.app.Service
 import com.ssavice.model.Date
 import com.ssavice.model.Region
 import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.service.ServiceState
 import com.ssavice.model.service.ServiceSummary
+import com.ssavice.model.service.mapState
 import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URL
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class GetCompanyInfoDTO(
     val companyId: Long,
@@ -22,7 +24,7 @@ data class GetCompanyInfoDTO(
     val address: String,
     val detailAddress: String,
     val description: String,
-    val detail: String,
+    val detail: String?,
     val service: List<ServiceDTO>,
 ) {
     fun toSellerMainInfoModel(): SellerMainInfo =
@@ -36,7 +38,7 @@ data class GetCompanyInfoDTO(
                     ServiceSummary(
                         name = it.title,
                         id = it.serviceId,
-                        image = URL(it.serviceImageUrl),
+                        image = it.serviceImageUrl ?: "",
                         currentMember = it.currentMember.toInt(),
                         minimumMember = it.minimumMember.toInt(),
                         basePrice = it.basePrice,
@@ -47,6 +49,7 @@ data class GetCompanyInfoDTO(
                         endDate = Date.parse(it.endDate),
                         serviceTag = it.tag,
                         category = it.category,
+                        state = ServiceState.mapState(it.status),
                     )
                 },
             region =
