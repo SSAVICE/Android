@@ -1,4 +1,4 @@
-package com.ssavice.user_home.navigation
+package com.ssavice.seller_home.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -6,23 +6,22 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import com.ssavice.user_home.UserHomeScreen
-import com.ssavice.user_home.UserHomeViewModel
+import com.ssavice.seller_home.SellerHomeRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 object HomeRoute
 
 fun NavController.navigateToHome(navOptions: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(HomeRoute) {
-        navOptions()
+    navigate(route = HomeRoute) {
+        popUpTo(graph.id) {
+            inclusive = true
+        }
     }
 }
 
 fun NavGraphBuilder.home(
-    viewModel: UserHomeViewModel,
-    onSearch: () -> Unit = {},
-    onServiceClick: (Long) -> Unit = {},
+    onAddClick: () -> Unit = {},
 ) {
     composable<HomeRoute>(
         enterTransition = {
@@ -37,11 +36,10 @@ fun NavGraphBuilder.home(
                 animationSpec = tween(),
             )
         }
-    ) {
-        UserHomeScreen(
-            viewModel = viewModel,
-            onSearchBarClicked = onSearch,
-            onServiceClick = onServiceClick,
+    )
+    {
+        SellerHomeRoute(
+            onAddClick = onAddClick,
         )
     }
 }

@@ -1,17 +1,17 @@
-package com.ssavice.seller_main
+package com.ssavice.seller_home
 
 import com.ssavice.model.enums.ServiceState
 
-sealed interface SellerMainUiState {
-    data object Loading : SellerMainUiState
+sealed interface SellerHomeUiState {
+    data object Loading : SellerHomeUiState
 
     data class Error(
         val message: String,
-    ) : SellerMainUiState
+    ) : SellerHomeUiState
 
     data class Shown(
         val items: List<SellerItemUiState>,
-    ) : SellerMainUiState
+    ) : SellerHomeUiState
 }
 
 data class SellerItemUiState(

@@ -2,14 +2,20 @@ package com.ssavice.post_service.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.post_service.AddServiceRoute
+import com.ssavice.ui.navigation.SsaviceTitle
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,7 +30,6 @@ fun NavController.navigateToAddService(navOptions: NavOptionsBuilder.() -> Unit 
 fun NavGraphBuilder.addServiceScreen(
     onDismiss: () -> Unit = {},
     onSubmit: (Long) -> Unit = {},
-    onScreenResolved: () -> Unit,
 ) {
     composable<AddServiceRoute>(
         enterTransition = {
@@ -41,11 +46,22 @@ fun NavGraphBuilder.addServiceScreen(
         },
     )
     {
-        onScreenResolved()
-        AddServiceRoute(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
-            onSubmit = onSubmit,
-            onDismiss = onDismiss,
-        )
+        Scaffold(
+            topBar = {
+                SsavicePopUpTopBar(
+                    "서비스 추가",
+                    onBackClicked = onDismiss
+                )
+            }
+        ) { innerPadding ->
+            AddServiceRoute(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
+                onSubmit = onSubmit,
+                onDismiss = onDismiss,
+            )
+        }
     }
 }

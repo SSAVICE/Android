@@ -12,10 +12,9 @@ import androidx.navigation.compose.rememberNavController
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.network.AuthEvent
 import com.ssavice.network.AuthEventManager
-import com.ssavice.seller_main.navigation.navigateToLogin
+import com.ssavice.seller_home.navigation.navigateToLogin
 import com.ssavice.ssavice.navigation.SsaviceNavHost
 import com.ssavice.ui.common.collectAsEffect
-import com.ssavice.user_home.navigation.HomeRoute
 import com.ssavice.user_main.navigation.MainRoute
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

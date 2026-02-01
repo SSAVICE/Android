@@ -1,6 +1,5 @@
-package com.ssavice.seller_main
+package com.ssavice.seller_home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
@@ -9,24 +8,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerMainViewModel
+class SellerHomeViewModel
     @Inject
     constructor(
         private val repository: SellerInfoRepository,
     ) : ViewModel() {
-        val uiState: StateFlow<SellerMainUiState> =
+        val uiState: StateFlow<SellerHomeUiState> =
             repository
                 .getMySellerInformation()
                 .map {
                     it.fold(
                         onSuccess = { info ->
-                            SellerMainUiState.Shown(
+                            SellerHomeUiState.Shown(
                                 info.services.map { service ->
                                     SellerItemUiState(
                                         id = service.id,
@@ -42,11 +39,11 @@ class SellerMainViewModel
                             )
                         },
                     ) { e ->
-                        SellerMainUiState.Error(e.message ?: "")
+                        SellerHomeUiState.Error(e.message ?: "")
                     }
                 }.stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5_000),
-                    initialValue = SellerMainUiState.Loading,
+                    initialValue = SellerHomeUiState.Loading,
                 )
     }

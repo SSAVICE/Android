@@ -1,4 +1,4 @@
-package com.ssavice.seller_main
+package com.ssavice.seller_home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,13 +40,13 @@ import com.ssavice.model.enums.ServiceState
 import com.ssavice.ui.SellerServiceListItem
 
 @Composable
-fun SellerMainScreen(
+fun SellerHomeRoute(
     modifier: Modifier = Modifier,
-    viewModel: SellerMainViewModel = hiltViewModel(),
+    viewModel: SellerHomeViewModel = hiltViewModel(),
     onAddClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    SellerMainScreen(
+    SellerHomeScreen(
         state = state,
         modifier = modifier,
         onAddClick = onAddClick,
@@ -54,8 +54,8 @@ fun SellerMainScreen(
 }
 
 @Composable
-fun SellerMainScreen(
-    state: SellerMainUiState,
+fun SellerHomeScreen(
+    state: SellerHomeUiState,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
     thumbnail: @Composable (SellerItemUiState, ImageRequest.Builder) -> Unit = { state, request ->
@@ -116,7 +116,7 @@ fun SellerMainScreen(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             items(
-                items = if (state is SellerMainUiState.Shown) state.items else emptyList(),
+                items = if (state is SellerHomeUiState.Shown) state.items else emptyList(),
                 key = { it.id },
             ) { item ->
                 // 클릭이 필요하면 카드에 clickable 추가하면 됨 (여기선 레이아웃 위주로 유지)
@@ -142,7 +142,7 @@ fun SellerMainScreen(
 
 @Preview
 @Composable
-fun SellerMainScreenPreview() {
+private fun SellerHomeScreenPreview() {
     val items =
         remember {
             listOf(
@@ -178,9 +178,9 @@ fun SellerMainScreenPreview() {
                 ),
             )
         }
-    val state = SellerMainUiState.Shown(items)
+    val state = SellerHomeUiState.Shown(items)
     SsaviceTheme {
-        SellerMainScreen(
+        SellerHomeScreen(
             state = state,
             onAddClick = {},
             onServiceClick = {},
