@@ -34,30 +34,16 @@ fun NavGraphBuilder.myPage(
     ) {
     composable<UserMyPageRoute>(
         enterTransition = {
-            val isBottomBarNavigation =
-                (targetState.destination.route?.contains("UserMyPageRoute") == true) &&
-                    (initialState.destination.route?.contains("HomeRoute") == true)
-            if (isBottomBarNavigation) {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(),
-                )
-            } else {
-                null
-            }
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(),
+            )
         },
         exitTransition = {
-            val isBottomBarNavigation =
-                (initialState.destination.route?.contains("UserMyPageRoute") == true) &&
-                    (targetState.destination.route?.contains("HomeRoute") == true)
-            if (isBottomBarNavigation) {
-                slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(),
-                )
-            } else {
-                null
-            }
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(),
+            )
         },
     ) {
         MyPageRoute(

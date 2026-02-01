@@ -29,6 +29,9 @@ fun MainTopBar(
             UserHomeTopBar(homeViewModel)
         }
         TopLevelDestination.CHATTING -> {
+            SsaviceTitle(
+                "채팅"
+            )
 
         }
         TopLevelDestination.MY_PAGE -> {

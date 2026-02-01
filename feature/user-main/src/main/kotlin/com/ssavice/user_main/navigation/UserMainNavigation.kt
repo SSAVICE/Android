@@ -1,11 +1,9 @@
 package com.ssavice.user_main.navigation
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import com.ssavice.user_home.UserHomeViewModel
 import com.ssavice.user_main.UserMainContainer
 import com.ssavice.user_my_page.ProfileState
 import kotlinx.serialization.Serializable
