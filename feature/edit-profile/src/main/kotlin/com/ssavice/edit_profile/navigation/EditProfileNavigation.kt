@@ -72,19 +72,19 @@ fun NavGraphBuilder.editProfileScreen(
                 SsaviceTitle(
                     title = "프로필 수정",
                 )
-            }
+            },
         ) { innerPadding ->
             EditProfileRoute(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
                 viewModel = hiltViewModel(),
                 onSubmit = onSubmit,
                 onBackClick = onBackClick,
                 onProfileImageClick = onProfileImageClick,
             )
         }
-
     }
 }
 

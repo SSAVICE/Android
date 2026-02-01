@@ -1,9 +1,9 @@
 package com.ssavice.post_service
 
 import android.net.Uri
-import com.ssavice.model.enums.Category
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.TimeStamp
+import com.ssavice.model.enums.Category
 import java.net.URI
 
 data class AddServiceUiState(

@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 fun SellerMyPageRoute(modifier: Modifier) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+    ) {
         Text("마이 페이지")
     }
 }

@@ -16,7 +16,6 @@ import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.service_detail.ServiceDetailScreen
 import com.ssavice.service_detail.ServiceDetailViewModel
 import com.ssavice.service_detail.ui.ServiceDetailBottomBar
-import com.ssavice.ui.navigation.ScaffoldConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -60,21 +59,21 @@ fun NavGraphBuilder.serviceDetailScreen(
             topBar = {
                 SsavicePopUpTopBar(
                     title = "상세 정보",
-                    onBackClicked = onBack
+                    onBackClicked = onBack,
                 )
             },
             bottomBar = {
                 ServiceDetailBottomBar(
                     viewModel = viewModel,
                 )
-
-            }
+            },
         ) { innerPadding ->
 
             ServiceDetailScreen(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
                 viewModel = viewModel,
                 onBackClick = onBackClick,
                 onChatClick = onChatClick,

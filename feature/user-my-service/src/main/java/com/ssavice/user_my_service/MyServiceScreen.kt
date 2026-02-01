@@ -71,8 +71,9 @@ fun MyServiceScreen(
     onLoadMore: () -> Unit = {},
     uiState: MyServiceUiState,
 ) {
-    val isLoading = uiState.myServiceScreenStatus == MyServiceState.Loading
-            || uiState.myServiceScreenStatus == MyServiceState.Initial
+    val isLoading =
+        uiState.myServiceScreenStatus == MyServiceState.Loading ||
+            uiState.myServiceScreenStatus == MyServiceState.Initial
     InfiniteScrollContainer(
         modifier =
             modifier

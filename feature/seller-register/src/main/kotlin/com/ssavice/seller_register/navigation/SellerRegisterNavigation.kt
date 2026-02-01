@@ -22,22 +22,21 @@ fun NavController.navigateToRegister(navOptions: NavOptionsBuilder.() -> Unit = 
     }
 }
 
-fun NavGraphBuilder.registerScreen(
-    onSubmit: () -> Unit,
-) {
+fun NavGraphBuilder.registerScreen(onSubmit: () -> Unit) {
     composable<RegisterRoute>
     {
         Scaffold(
             topBar = {
                 SsaviceTitle(
-                    "회원가입"
+                    "회원가입",
                 )
-            }
+            },
         ) { innerPadding ->
             RegisterScreen(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
                 onSubmit = onSubmit,
             )
         }

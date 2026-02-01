@@ -15,13 +15,12 @@ import com.ssavice.seller_my_page.navigation.myPage
 fun SellerMainContainer(
     onServiceClick: (Long) -> Unit = {},
     onAddClick: () -> Unit,
-
     onEditProfileButtonClick: () -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
-    onWithdrawButtonClick: () -> Unit = {}
+    onWithdrawButtonClick: () -> Unit = {},
 ) {
     val mainNavController = rememberNavController()
 
@@ -31,17 +30,17 @@ fun SellerMainContainer(
         },
         topBar = {
             MainTopBar(mainNavController)
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController = mainNavController,
             startDestination = HomeRoute,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) {
             myPage()
 
             home(
-                onAddClick = onAddClick
+                onAddClick = onAddClick,
             )
 
             chat()

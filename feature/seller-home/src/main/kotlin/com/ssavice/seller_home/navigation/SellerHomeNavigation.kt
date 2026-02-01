@@ -20,9 +20,7 @@ fun NavController.navigateToHome(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.home(
-    onAddClick: () -> Unit = {},
-) {
+fun NavGraphBuilder.home(onAddClick: () -> Unit = {}) {
     composable<HomeRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -35,7 +33,7 @@ fun NavGraphBuilder.home(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
                 animationSpec = tween(),
             )
-        }
+        },
     )
     {
         SellerHomeRoute(

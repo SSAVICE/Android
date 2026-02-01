@@ -15,7 +15,6 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.post_service.AddServiceRoute
-import com.ssavice.ui.navigation.SsaviceTitle
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -50,15 +49,16 @@ fun NavGraphBuilder.addServiceScreen(
             topBar = {
                 SsavicePopUpTopBar(
                     "서비스 추가",
-                    onBackClicked = onDismiss
+                    onBackClicked = onDismiss,
                 )
-            }
+            },
         ) { innerPadding ->
             AddServiceRoute(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState()),
                 onSubmit = onSubmit,
                 onDismiss = onDismiss,
             )

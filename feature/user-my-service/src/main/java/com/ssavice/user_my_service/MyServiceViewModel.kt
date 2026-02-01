@@ -82,7 +82,7 @@ class MyServiceViewModel
                                 _uiState.update { origin ->
                                     origin.copy(
                                         services =
-                                            uiItems,
+                                        uiItems,
                                         myServiceScreenStatus = MyServiceState.Loaded,
                                         hasNext = it.hasNext,
                                         nextPage = it.currentPage.toInt() + 1,

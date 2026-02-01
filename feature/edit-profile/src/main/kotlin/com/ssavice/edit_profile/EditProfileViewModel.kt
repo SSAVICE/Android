@@ -96,7 +96,9 @@ class EditProfileViewModel
 
         private suspend fun getProfileRemote(): FormWithProfileImage {
             userInfoRepository
-                .getUserProfile().last().let { result ->
+                .getUserProfile()
+                .last()
+                .let { result ->
                     return FormWithProfileImage(
                         form =
                             EditProfileForm(

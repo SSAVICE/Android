@@ -6,20 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
-import com.ssavice.designsystem.component.SsaviceTopBar
 import com.ssavice.search.SearchForm
 import com.ssavice.search.SearchFormScreen
-import com.ssavice.ui.navigation.ScaffoldConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -58,7 +52,7 @@ fun NavController.navigateToSearchForm(navOptions: NavOptionsBuilder.() -> Unit 
 
 fun NavGraphBuilder.searchFormScreen(
     onSearch: (SearchForm) -> Unit = {},
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
 ) {
     composable<SearchFormRoute>(
         enterTransition = {
@@ -79,14 +73,15 @@ fun NavGraphBuilder.searchFormScreen(
                 {
                     SsavicePopUpTopBar(
                         title = "검색",
-                        onBackClicked = onBack
+                        onBackClicked = onBack,
                     )
-                }
+                },
         ) { innerPadding ->
             SearchFormScreen(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .background(MaterialTheme.colorScheme.background),
                 onSearch = onSearch,
             )
         }

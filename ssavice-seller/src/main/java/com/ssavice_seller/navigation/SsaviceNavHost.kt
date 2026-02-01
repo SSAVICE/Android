@@ -7,11 +7,9 @@ import androidx.navigation.compose.NavHost
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
 import com.ssavice.seller_home.navigation.loginScreen
-import com.ssavice.seller_home.navigation.home
 import com.ssavice.seller_home.navigation.navigateToHome
 import com.ssavice.seller_main.navigation.mainScreen
 import com.ssavice.seller_register.navigation.registerScreen
-import com.ssavice.ui.navigation.ScaffoldConfig
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -54,7 +52,7 @@ fun SsaviceNavHost(
         mainScreen(
             onAddClick = {
                 navController.navigateToAddService()
-            }
+            },
         )
     }
 }

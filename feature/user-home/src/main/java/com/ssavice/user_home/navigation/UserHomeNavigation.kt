@@ -36,7 +36,7 @@ fun NavGraphBuilder.home(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
                 animationSpec = tween(),
             )
-        }
+        },
     ) {
         UserHomeScreen(
             viewModel = viewModel,

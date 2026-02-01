@@ -22,8 +22,7 @@ fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}
     }
 }
 
-fun NavGraphBuilder.myPage(
-) {
+fun NavGraphBuilder.myPage() {
     composable<MyPageRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -36,12 +35,13 @@ fun NavGraphBuilder.myPage(
                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
                 animationSpec = tween(),
             )
-        }
+        },
     ) {
         SellerMyPageRoute(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize(),
         )
     }
 }

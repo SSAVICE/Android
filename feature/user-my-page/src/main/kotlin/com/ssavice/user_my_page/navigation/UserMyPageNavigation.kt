@@ -30,8 +30,8 @@ fun NavGraphBuilder.myPage(
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
-    onWithdrawButtonClick: () -> Unit = {}
-    ) {
+    onWithdrawButtonClick: () -> Unit = {},
+) {
     composable<UserMyPageRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -47,9 +47,10 @@ fun NavGraphBuilder.myPage(
         },
     ) {
         MyPageRoute(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .verticalScroll(rememberScrollState()),
             onEditProfileButtonClick = onEditProfileButtonClick,
             onParticipatedServiceButtonClick = onParticipatedServiceButtonClick,
             onLikedServiceButtonClick = onLikedServiceButtonClick,

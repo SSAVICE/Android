@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 fun SellerChatRoute(modifier: Modifier) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+    ) {
         Text("채팅 화면")
     }
 }

@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ssavice.designsystem.component.SsavicePopUpTopBar
-import com.ssavice.designsystem.component.SsaviceTopBar
 import com.ssavice.ui.navigation.SsaviceTitle
 import com.ssavice.user_home.UserHomeTopBar
 import com.ssavice.user_home.UserHomeViewModel
@@ -14,7 +12,8 @@ import com.ssavice.user_main.navigation.TopLevelDestination
 @Composable
 fun MainTopBar(
     navController: NavController,
-    homeViewModel: UserHomeViewModel) {
+    homeViewModel: UserHomeViewModel,
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val destinations =
@@ -24,23 +23,24 @@ fun MainTopBar(
             TopLevelDestination.MY_PAGE,
         )
 
-    when(destinations.find { currentDestination?.route == it.route::class.qualifiedName }) {
+    when (destinations.find { currentDestination?.route == it.route::class.qualifiedName }) {
         TopLevelDestination.USER_HOME -> {
             UserHomeTopBar(homeViewModel)
         }
+
         TopLevelDestination.CHATTING -> {
             SsaviceTitle(
-                "채팅"
+                "채팅",
             )
-
         }
+
         TopLevelDestination.MY_PAGE -> {
             SsaviceTitle(
-                "마이 페이지"
+                "마이 페이지",
             )
         }
-        null -> {
 
+        null -> {
         }
     }
 }

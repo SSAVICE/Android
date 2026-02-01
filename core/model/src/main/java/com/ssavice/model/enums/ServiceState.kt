@@ -4,7 +4,7 @@ enum class ServiceState(
     val value: String,
     val visibleAsOption: Boolean = false,
     val cancellable: Boolean = false,
-    val reviewable: Boolean = false
+    val reviewable: Boolean = false,
 ) {
     ALL("전체", visibleAsOption = true),
     RECRUITING("모집 중", visibleAsOption = true, cancellable = true),
@@ -12,7 +12,8 @@ enum class ServiceState(
     COMPLETED("이용 완료", reviewable = true),
     CANCELED("취소됨", visibleAsOption = true),
     USER_CANCELED("취소함"),
-    UNKNOWN("알 수 없음");
+    UNKNOWN("알 수 없음"),
+    ;
 
     companion object
 }

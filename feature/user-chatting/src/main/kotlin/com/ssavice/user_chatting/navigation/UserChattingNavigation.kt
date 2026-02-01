@@ -22,16 +22,17 @@ fun NavController.navigateToChat(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.chat(
-) {
+fun NavGraphBuilder.chat() {
     composable<UserChattingRoute>(
         enterTransition = {
             val fromLeft =
                 initialState.destination.route?.contains("HomeRoute") == true
-            val direction = if(fromLeft)
-                AnimatedContentTransitionScope.SlideDirection.Left
-            else
-                AnimatedContentTransitionScope.SlideDirection.Right
+            val direction =
+                if (fromLeft) {
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                } else {
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                }
 
             slideIntoContainer(
                 towards = direction,
@@ -41,21 +42,24 @@ fun NavGraphBuilder.chat(
         exitTransition = {
             val toLeft =
                 (targetState.destination.route?.contains("HomeRoute") == true)
-            val direction = if(toLeft)
-                AnimatedContentTransitionScope.SlideDirection.Right
-            else
-                AnimatedContentTransitionScope.SlideDirection.Left
+            val direction =
+                if (toLeft) {
+                    AnimatedContentTransitionScope.SlideDirection.Right
+                } else {
+                    AnimatedContentTransitionScope.SlideDirection.Left
+                }
 
             slideOutOfContainer(
                 towards = direction,
                 animationSpec = tween(),
             )
-        }
+        },
     ) {
         UserChattingRoute(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize(),
         )
     }
 }

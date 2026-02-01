@@ -85,7 +85,7 @@ fun SearchFormScreen(
     }
 
     LaunchedEffect(shouldRenderContent) {
-        if(!shouldRenderContent) {
+        if (!shouldRenderContent) {
             delay(Constant.ANIMATION_DELAY)
             shouldRenderContent = true
         }
@@ -164,7 +164,7 @@ fun SearchFormScreen(
                     .padding(top = 10.dp),
         )
 
-        if(!readyToRenderContent) return@Column
+        if (!readyToRenderContent) return@Column
         Column(
             modifier =
                 Modifier

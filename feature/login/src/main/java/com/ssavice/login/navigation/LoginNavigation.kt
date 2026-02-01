@@ -30,9 +30,10 @@ fun NavGraphBuilder.loginScreen(
     { backStackEntry ->
         Scaffold { innerPadding ->
             LoginRoute(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
                 onLoginComplete = onLoginComplete,
                 viewModel = hiltViewModel(),
                 isUser = isUser,

@@ -3,8 +3,8 @@ package com.ssavice.user_home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.model.enums.Category
 import com.ssavice.model.RegionInfo
+import com.ssavice.model.enums.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -6,11 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -46,9 +42,7 @@ fun NavController.navigateToPostReview(
     }
 }
 
-fun NavGraphBuilder.postReviewScreen(
-    onBack: () -> Unit = {},
-) {
+fun NavGraphBuilder.postReviewScreen(onBack: () -> Unit = {}) {
     composable<PostReviewRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -63,17 +57,19 @@ fun NavGraphBuilder.postReviewScreen(
             )
         },
     ) {
-        Scaffold(topBar = {
-            SsavicePopUpTopBar(
-                title = "리뷰 작성",
-                onBackClicked = onBack
-            )
-        }
+        Scaffold(
+            topBar = {
+                SsavicePopUpTopBar(
+                    title = "리뷰 작성",
+                    onBackClicked = onBack,
+                )
+            },
         ) { innerPadding ->
             PostReviewRoute(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
                 onBack = onBack,
             )
         }

@@ -44,7 +44,6 @@ fun SsaviceNavHost(
             onServiceClick = {
                 navController.navigateToServiceDetail(serviceId = it)
             },
-
             onParticipatedServiceButtonClick = {
                 navController.navigateToMyService()
             },
@@ -55,7 +54,7 @@ fun SsaviceNavHost(
                     phoneNumber = it?.phoneNumber,
                     profileImageUrl = it?.profileUrl,
                 )
-            }
+            },
         )
 
         loginScreen(
@@ -92,7 +91,7 @@ fun SsaviceNavHost(
             },
             onBack = {
                 navController.navigateUp()
-            }
+            },
         )
 
         searchResultScreen(
@@ -112,13 +111,12 @@ fun SsaviceNavHost(
             onServiceClicked = { serviceId ->
                 navController.navigateToServiceDetail(serviceId = serviceId)
             },
-            onBack = {navController.navigateUp()}
+            onBack = { navController.navigateUp() },
         )
 
         serviceDetailScreen(
-            onBack = {navController.navigateUp()}
+            onBack = { navController.navigateUp() },
         )
-
 
         myServiceScreen(
             onServiceClick = {
@@ -134,7 +132,7 @@ fun SsaviceNavHost(
             },
             onBack = {
                 navController.navigateUp()
-            }
+            },
         )
 
         editProfileScreen(
@@ -150,7 +148,7 @@ fun SsaviceNavHost(
         postReviewScreen(
             onBack = {
                 navController.navigateUp()
-            }
+            },
         )
     }
 }

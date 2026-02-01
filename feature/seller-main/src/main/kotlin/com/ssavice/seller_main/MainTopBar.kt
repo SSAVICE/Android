@@ -8,8 +8,7 @@ import com.ssavice.seller_main.navigation.TopLevelDestination
 import com.ssavice.ui.navigation.SsaviceTitle
 
 @Composable
-fun MainTopBar(
-    navController: NavController) {
+fun MainTopBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val destinations =
@@ -19,25 +18,26 @@ fun MainTopBar(
             TopLevelDestination.MY_PAGE,
         )
 
-    when(destinations.find { currentDestination?.route == it.route::class.qualifiedName }) {
+    when (destinations.find { currentDestination?.route == it.route::class.qualifiedName }) {
         TopLevelDestination.USER_HOME -> {
             SsaviceTitle(
-                "대시보드"
+                "대시보드",
             )
         }
+
         TopLevelDestination.CHATTING -> {
             SsaviceTitle(
-                "채팅"
+                "채팅",
             )
-
         }
+
         TopLevelDestination.MY_PAGE -> {
             SsaviceTitle(
-                "마이 페이지"
+                "마이 페이지",
             )
         }
-        null -> {
 
+        null -> {
         }
     }
 }

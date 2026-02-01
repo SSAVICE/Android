@@ -18,13 +18,12 @@ import com.ssavice.user_my_page.navigation.myPage
 fun UserMainContainer(
     onSearch: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
-
     onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
-    onWithdrawButtonClick: () -> Unit = {}
+    onWithdrawButtonClick: () -> Unit = {},
 ) {
     val mainNavController = rememberNavController()
     val homeViewModel: UserHomeViewModel = hiltViewModel()
@@ -35,12 +34,12 @@ fun UserMainContainer(
         },
         topBar = {
             MainTopBar(mainNavController, homeViewModel)
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController = mainNavController,
             startDestination = HomeRoute,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) {
             myPage(
                 onEditProfileButtonClick = onEditProfileButtonClick,
@@ -54,7 +53,7 @@ fun UserMainContainer(
             home(
                 onSearch = onSearch,
                 onServiceClick = onServiceClick,
-                viewModel = homeViewModel
+                viewModel = homeViewModel,
             )
 
             chat()

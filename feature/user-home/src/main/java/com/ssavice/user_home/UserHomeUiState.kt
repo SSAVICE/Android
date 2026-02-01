@@ -1,8 +1,8 @@
 package com.ssavice.user_home
 
 import com.ssavice.model.enums.Category
-import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.service.SearchQuery
 
 data class UserHomeUiState(
     val categories: List<Category> = emptyList(),
