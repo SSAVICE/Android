@@ -5,8 +5,6 @@ import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.mapState
 import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerServiceParticipationItem
-import com.ssavice.model.user.UserServiceParticipation
-import com.ssavice.model.user.UserServiceParticipationItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -48,6 +46,9 @@ data class CompanyContent(
                 endDate = Date.now(),
                 state = ServiceState.mapState(bookStatus),
                 isReviewed = isReviewed,
+                currentMemberCount = currentMember.toInt(),
+                minimumMemberCount = minimumMember.toInt(),
+                maximumMemberCount = maximumMember.toInt(),
             )
         }
 }

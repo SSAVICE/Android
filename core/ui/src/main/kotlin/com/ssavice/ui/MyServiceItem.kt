@@ -12,7 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +47,7 @@ fun MyService(
     reviewable: Boolean,
     price: String,
     thumbnailUrl: String,
+    memberStatus:String? = null,
     onCancelButtonClick: () -> Unit = {},
     onReviewButtonClick: () -> Unit = {},
     thumbnail: @Composable (String) -> Unit = {},
@@ -90,12 +95,34 @@ fun MyService(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         )
                         Spacer(Modifier.height(8.dp))
+                        val style = if(memberStatus != null)
+                            MaterialTheme.typography.bodyMedium
+                        else MaterialTheme.typography.bodyLarge
                         Text(
                             text = price,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = style,
                             overflow = TextOverflow.Ellipsis,
                             fontWeight = FontWeight.Bold,
                         )
+                        if(memberStatus != null) {
+                            Spacer(Modifier.height(2.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Participants",
+                                    modifier = Modifier.size(14.dp),
+                                    tint = Color.Gray,
+                                )
+                                Spacer(modifier = Modifier.width(1.dp))
+                                ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                                    Text(
+                                        text = memberStatus,
+                                        fontSize = 11.sp,
+                                        color = Color.Gray,
+                                    )
+                                }
+                            }
+                        }
                         Spacer(Modifier.height(4.dp))
                     }
                 }
@@ -229,6 +256,7 @@ private fun PreviewMyServiceLongTitle() {
             price = "₩400,000",
             thumbnailUrl = YOGA_IMAGE,
             state = ServiceState.RECRUITING,
+            memberStatus = "10/30 (최대 40)",
             thumbnail = { url ->
                 AsyncImage(
                     model =
