@@ -19,6 +19,7 @@ dependencies {
     api(libs.coil.kt)
     api(libs.coil.kt.compose)
     api(libs.coil.kt.svg)
+    implementation(libs.androidx.core)
 
     testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.androidx.compose.ui.testManifest)
