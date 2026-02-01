@@ -30,7 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.theme.SsaviceTheme
-import com.ssavice.model.service.ServiceState
+import com.ssavice.model.enums.ServiceState
 
 @Composable
 fun MyService(

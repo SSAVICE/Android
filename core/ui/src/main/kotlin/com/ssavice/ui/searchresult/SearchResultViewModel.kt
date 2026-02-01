@@ -3,11 +3,11 @@ package com.ssavice.ui.searchresult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
-import com.ssavice.model.Category
 import com.ssavice.model.Date
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
-import com.ssavice.model.service.SortingOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

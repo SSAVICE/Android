@@ -1,8 +1,8 @@
 package com.ssavice.network.model
 
 import com.ssavice.model.Date
-import com.ssavice.model.service.ServiceState
-import com.ssavice.model.service.mapState
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.mapState
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
 import kotlinx.serialization.SerialName

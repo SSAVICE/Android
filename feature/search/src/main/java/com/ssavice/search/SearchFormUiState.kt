@@ -1,6 +1,6 @@
 package com.ssavice.search
 
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.SortingOrder
 
 data class SearchFormUiState(
     val form: SearchForm,

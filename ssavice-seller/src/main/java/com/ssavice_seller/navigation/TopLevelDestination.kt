@@ -9,7 +9,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.ssavice.seller_main.navigation.MainRoute
+import com.ssavice.seller_home.navigation.HomeRoute
 import kotlinx.serialization.Serializable
 
 enum class TopLevelDestination(
@@ -19,19 +19,19 @@ enum class TopLevelDestination(
     val iconText: String,
 ) {
     USER_MAIN(
-        route = MainRoute,
+        route = HomeRoute,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         iconText = "홈",
     ),
     CHATTING(
-        route = MainRoute,
+        route = HomeRoute,
         selectedIcon = Icons.Filled.ChatBubble,
         unselectedIcon = Icons.Outlined.ChatBubbleOutline,
         iconText = "채팅",
     ),
     MY_PAGE(
-        route = MainRoute,
+        route = HomeRoute,
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.PersonOutline,
         iconText = "마이",

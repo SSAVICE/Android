@@ -100,7 +100,9 @@ import com.ssavice.post_service.AddServiceScreenDefaults.SERVICE_NAME_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.START_DATE_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.TAG_PLACEHOLDER
 import com.ssavice.post_service.AddServiceScreenDefaults.TAG_TEXT
+import com.ssavice.ui.common.Constant
 import com.ssavice.ui.uploadImage.ImageWithUploadState
+import kotlinx.coroutines.delay
 
 @Composable
 fun AddServiceRoute(
@@ -110,6 +112,14 @@ fun AddServiceRoute(
     onDismiss: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var shouldShowContent by remember { mutableStateOf(false) }
+
+    LaunchedEffect(shouldShowContent) {
+        if (!shouldShowContent) {
+            delay(Constant.ANIMATION_DELAY)
+            shouldShowContent = true
+        }
+    }
 
     LaunchedEffect(
         state.submitState,
@@ -148,6 +158,7 @@ fun AddServiceRoute(
         onEndDateChanged = viewModel::onEndDateChanged,
         onAddressSelected = viewModel::onAddressSelected,
         onDetailAddressChanged = viewModel::onDetailAddressChanged,
+        showContent = shouldShowContent,
     )
 }
 
@@ -175,7 +186,9 @@ fun AddServiceScreen(
     onEndDateChanged: (TimeStamp) -> Unit = {},
     onDetailAddressChanged: (String) -> Unit = {},
     onAddressSelected: (AddressForm) -> Unit = {},
+    showContent: Boolean = true,
 ) {
+    if (!showContent) return
     val serviceNameTextState = rememberTextFieldState(state.form.name)
     var category by remember { mutableStateOf(state.form.category) }
     val tagTextState = rememberTextFieldState(state.form.tag)

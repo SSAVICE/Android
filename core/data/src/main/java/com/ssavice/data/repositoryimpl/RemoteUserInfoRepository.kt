@@ -4,12 +4,13 @@ import android.util.Log
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.data.service.ImageUploadService
 import com.ssavice.data.service.UserInfoRetrofitService
+import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionDetail
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
-import com.ssavice.model.service.ServiceState
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
@@ -21,8 +22,14 @@ import com.ssavice.network.model.RegionPostDTO
 import com.ssavice.network.model.UpdateUserProfileDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import javax.inject.Inject
 
@@ -32,17 +39,37 @@ class RemoteUserInfoRepository
         private val userRetrofitService: UserInfoRetrofitService,
         private val imageUploadService: ImageUploadService,
     ) : UserInfoRepository {
+        val userProfileFlow =
+            MutableStateFlow(
+                UserProfile(
+                    "",
+                    "",
+                    Date.now(),
+                    "",
+                    "",
+                    0,
+                    "",
+                    "",
+                ),
+            )
+
         override suspend fun getUserParticipationSummary(): Result<ParticipationSummary> =
             processResponseOnResponseData(
                 userRetrofitService.getUserParticipationSummary(),
             ).map { it.toModel() }
 
-        override suspend fun getUserProfile(): Result<UserProfile> =
-            processResponseOnResponseData(
-                userRetrofitService.getUserProfile(),
-            ).map {
-                it.toModel()
+        override fun getUserProfile(): StateFlow<UserProfile> {
+            CoroutineScope(Dispatchers.IO).launch {
+                processResponseOnResponseData(
+                    userRetrofitService.getUserProfile(),
+                ).map {
+                    it.toModel()
+                }.onSuccess {
+                    userProfileFlow.emit(it)
+                }
             }
+            return userProfileFlow
+        }
 
         override suspend fun getMyService(
             searchCount: Int,
@@ -63,7 +90,16 @@ class RemoteUserInfoRepository
         override suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit> =
             processResponseOnResponseData(
                 userRetrofitService.updateUserProfile(UpdateUserProfileDTO.fromModel(profile)),
-            ).map { Unit }
+            ).map { newData ->
+                userProfileFlow.update {
+                    it.copy(
+                        name = newData.name,
+                        email = newData.email,
+                        phoneNumber = newData.phoneNumber,
+                    )
+                }
+                Unit
+            }
 
         override fun updateUserProfileImage(image: ResizableImage): Flow<ImageUploadProgress> =
             channelFlow {
@@ -114,6 +150,7 @@ class RemoteUserInfoRepository
                                     ),
                                 ).onSuccess { _ ->
                                     send(ImageUploadProgress.Done(url.objectKey))
+                                    getUserProfile()
                                 }.onFailure { e ->
                                     send(ImageUploadProgress.Error(e))
                                 }

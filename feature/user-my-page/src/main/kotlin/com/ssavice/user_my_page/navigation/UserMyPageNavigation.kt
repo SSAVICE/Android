@@ -2,13 +2,11 @@ package com.ssavice.user_my_page.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -26,55 +24,33 @@ fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}
     }
 }
 
-fun NavGraphBuilder.myPageScreen(
+fun NavGraphBuilder.myPage(
     onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
-    onScreenResolved: () -> Unit,
 ) {
     composable<UserMyPageRoute>(
         enterTransition = {
-            val isBottomBarNavigation =
-                (targetState.destination.route?.contains("UserMyPageRoute") == true) &&
-                    (initialState.destination.route?.contains("MainRoute") == true)
-            if (isBottomBarNavigation) {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(),
-                )
-            } else {
-                null
-            }
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(),
+            )
         },
         exitTransition = {
-            val isBottomBarNavigation =
-                (initialState.destination.route?.contains("UserMyPageRoute") == true) &&
-                    (targetState.destination.route?.contains("MainRoute") == true)
-            if (isBottomBarNavigation) {
-                slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(),
-                )
-            } else {
-                null
-            }
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(),
+            )
         },
-    ) { backStackEntry ->
-        val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
-
-        LaunchedEffect(lifecycleState) {
-            if (lifecycleState == Lifecycle.State.STARTED ||
-                lifecycleState == Lifecycle.State.RESUMED ||
-                lifecycleState == Lifecycle.State.CREATED
-            ) {
-                onScreenResolved()
-            }
-        }
+    ) {
         MyPageRoute(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .verticalScroll(rememberScrollState()),
             onEditProfileButtonClick = onEditProfileButtonClick,
             onParticipatedServiceButtonClick = onParticipatedServiceButtonClick,
             onLikedServiceButtonClick = onLikedServiceButtonClick,

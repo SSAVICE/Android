@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.data)
-    implementation(projects.core.addresspicker)
+    implementation(projects.feature.userHome)
+    implementation(projects.feature.userMyPage)
+    implementation(projects.feature.userChatting)
 }

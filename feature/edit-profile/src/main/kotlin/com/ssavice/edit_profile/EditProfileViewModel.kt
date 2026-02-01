@@ -16,6 +16,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -96,30 +97,18 @@ class EditProfileViewModel
         private suspend fun getProfileRemote(): FormWithProfileImage {
             userInfoRepository
                 .getUserProfile()
-                .fold(
-                    onSuccess = { result ->
-                        return FormWithProfileImage(
-                            form =
-                                EditProfileForm(
-                                    name = result.name,
-                                    email = result.email,
-                                    phoneNumber = result.phoneNumber.filter { it.isDigit() },
-                                ),
-                            profileImageUrl = result.imageUrl,
-                        )
-                    },
-                    onFailure = {
-                        Log.e(
-                            LOG,
-                            "getProfileRemote: ",
-                            it,
-                        )
-                        return FormWithProfileImage(
-                            form = EditProfileForm(),
-                            profileImageUrl = "",
-                        )
-                    },
-                )
+                .last()
+                .let { result ->
+                    return FormWithProfileImage(
+                        form =
+                            EditProfileForm(
+                                name = result.name,
+                                email = result.email,
+                                phoneNumber = result.phoneNumber.filter { it.isDigit() },
+                            ),
+                        profileImageUrl = result.imageUrl,
+                    )
+                }
         }
 
         private fun checkNameValid(): Boolean {

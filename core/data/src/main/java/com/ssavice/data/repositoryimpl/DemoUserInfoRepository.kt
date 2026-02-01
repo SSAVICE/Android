@@ -1,27 +1,62 @@
 package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.model.Category
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionDetail
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
-import com.ssavice.model.service.ServiceState
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
 import com.ssavice.model.user.UserServiceParticipation
 import com.ssavice.model.user.UserServiceParticipationItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 class DemoUserInfoRepository
     @Inject
     constructor() : UserInfoRepository {
+        val userProfileFlow by lazy {
+            flow {
+                emit(
+                    UserProfile(
+                        imageUrl = "https://picsum.photos/200",
+                        name = "권성찬",
+                        createdAt = Date.now(),
+                        email = "ksc1008@naver.com",
+                        phoneNumber = "01012345678",
+                        postCode = 12354,
+                        address = "대구 달서구 송현동",
+                        detailAddress = "데모로 123",
+                    ),
+                )
+            }.stateIn(
+                scope = CoroutineScope(Dispatchers.IO),
+                started = kotlinx.coroutines.flow.SharingStarted.Eagerly,
+                initialValue =
+                    UserProfile(
+                        "",
+                        "",
+                        Date.now(),
+                        "",
+                        "",
+                        0,
+                        "",
+                        "",
+                    ),
+            )
+        }
+
         override suspend fun getUserParticipationSummary(): Result<ParticipationSummary> =
             Result.success(
                 ParticipationSummary(
@@ -31,21 +66,7 @@ class DemoUserInfoRepository
                 ),
             )
 
-        override suspend fun getUserProfile(): Result<UserProfile> {
-            delay(500)
-            return Result.success(
-                UserProfile(
-                    imageUrl = "https://picsum.photos/200",
-                    name = "권성찬",
-                    createdAt = Date.now(),
-                    email = "ksc1008@naver.com",
-                    phoneNumber = "01012345678",
-                    postCode = 12354,
-                    address = "대구 달서구 송현동",
-                    detailAddress = "데모로 123",
-                ),
-            )
-        }
+        override fun getUserProfile(): StateFlow<UserProfile> = userProfileFlow
 
         private fun generateRandomService(
             id: Long,

@@ -5,9 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.service.SearchQuery
-import com.ssavice.model.service.SortingOrder
 import com.ssavice.search_result.navigation.SearchResultRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

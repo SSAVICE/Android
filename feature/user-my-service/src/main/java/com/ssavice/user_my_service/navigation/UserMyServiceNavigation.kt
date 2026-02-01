@@ -3,12 +3,15 @@ package com.ssavice.user_my_service.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.user_my_service.MyServiceRoute
 import kotlinx.serialization.Serializable
 
@@ -24,7 +27,7 @@ fun NavController.navigateToMyService(navOptions: NavOptionsBuilder.() -> Unit =
 fun NavGraphBuilder.myServiceScreen(
     onServiceClick: (Long) -> Unit,
     onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit,
-    onScreenResolved: () -> Unit,
+    onBack: () -> Unit = {},
 ) {
     composable<UserMyServiceRoute>(
         popEnterTransition = null,
@@ -41,11 +44,22 @@ fun NavGraphBuilder.myServiceScreen(
             )
         },
     ) {
-        onScreenResolved()
-        MyServiceRoute(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            onServiceClick = onServiceClick,
-            onReviewClick = onReviewClick,
-        )
+        Scaffold(
+            topBar = {
+                SsavicePopUpTopBar(
+                    title = "참여 서비스",
+                    onBackClicked = onBack,
+                )
+            },
+        ) { innerPadding ->
+            MyServiceRoute(
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
+                onServiceClick = onServiceClick,
+                onReviewClick = onReviewClick,
+            )
+        }
     }
 }

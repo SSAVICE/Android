@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun SsaviceTitle(
     title: String,
-    onBackButtonClick: (() -> Unit)?,
+    onBackButtonClick: (() -> Unit)? = null,
     action: @Composable () -> Unit = {},
 ) {
     TopAppBar(

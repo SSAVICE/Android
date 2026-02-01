@@ -1,13 +1,11 @@
-package com.ssavice.seller_main.navigation
+package com.ssavice.seller_home.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -26,24 +24,20 @@ fun NavController.navigateToLogin(navOptions: NavOptionsBuilder.() -> Unit = {})
 
 fun NavGraphBuilder.loginScreen(
     onLoginComplete: () -> Unit = {},
-    onScreenResolved: () -> Unit,
     isUser: Boolean,
 ) {
     composable<LoginRoute>
     { backStackEntry ->
-        val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
-
-        LaunchedEffect(lifecycleState) {
-            if (lifecycleState == Lifecycle.State.STARTED) {
-                onScreenResolved()
-            }
+        Scaffold { innerPadding ->
+            LoginRoute(
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
+                onLoginComplete = onLoginComplete,
+                viewModel = hiltViewModel(),
+                isUser = isUser,
+            )
         }
-
-        LoginRoute(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            onLoginComplete = onLoginComplete,
-            viewModel = hiltViewModel(),
-            isUser = isUser,
-        )
     }
 }

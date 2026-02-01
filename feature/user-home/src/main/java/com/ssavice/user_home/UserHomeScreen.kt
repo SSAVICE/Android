@@ -1,0 +1,171 @@
+package com.ssavice.user_home
+
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssavice.designsystem.component.OutlinedTextFieldButton
+import com.ssavice.designsystem.component.SsaviceBackground
+import com.ssavice.designsystem.component.SsaviceChip
+import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.ui.searchresult.SearchResultScreen
+
+@Composable
+fun UserHomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: UserHomeViewModel = hiltViewModel(),
+    onSearchBarClicked: () -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(state.addressState) {
+        if (state.addressState is RegionState.Initial) {
+            viewModel.initUserAddress()
+        }
+    }
+
+    UserHomeScreen(
+        modifier = modifier,
+        state = state,
+        onCategoryClicked = viewModel::onCategorySelect,
+        onSearchBarClicked = onSearchBarClicked,
+        onServiceClick = onServiceClick,
+        onAddressUpdate = viewModel::updateUserAddress,
+        onAddressDismiss = viewModel::onAddressSelectorDismiss,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserHomeScreen(
+    modifier: Modifier = Modifier,
+    state: UserHomeUiState,
+    onSearchBarClicked: () -> Unit = {},
+    onCategoryClicked: (Int) -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
+    onAddressUpdate: (RegionState.Showing) -> Unit = {},
+    onAddressDismiss: () -> Unit = {},
+) {
+    Column(modifier = modifier) {
+        OutlinedTextFieldButton(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
+            placeHolder = "서비스, 태그 검색 ...",
+            text = state.defaultSearchQuery.query,
+            onClick = onSearchBarClicked,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                )
+            },
+        )
+        SearchResultScreen(
+            modifier = Modifier.weight(1f),
+            query = state.defaultSearchQuery,
+            onServiceClick = onServiceClick,
+        ) {
+            item {
+                CategoryPicker(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
+                    categories = state.categories.map { it.value },
+                    selection = state.selected,
+                    onSelectionChanged = onCategoryClicked,
+                )
+            }
+        }
+        if (state.showAddressPicker) {
+            ModalBottomSheet(
+                onDismissRequest = onAddressDismiss,
+            ) {
+                AddressSelectForm(
+                    onConfirmChange = onAddressUpdate,
+                    initialState =
+                        (state.addressState as? RegionState.Showing) ?: RegionState.Showing(
+                            address = "",
+                            detailAddress = "",
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            postCode = "",
+                            regionCode = "",
+                        ),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CategoryPicker(
+    modifier: Modifier,
+    categories: List<String>,
+    selection: Int,
+    spacing: Dp = 7.dp,
+    onSelectionChanged: (Int) -> Unit = {},
+) {
+    Row(
+        modifier =
+            modifier
+                .horizontalScroll(rememberScrollState()),
+        horizontalArrangement =
+            androidx.compose.foundation.layout.Arrangement
+                .spacedBy(spacing),
+    ) {
+        categories.forEachIndexed { i, category ->
+            SsaviceChip(
+                selected = i == selection,
+                onSelectedChange = { onSelectionChanged(i) },
+                text = category,
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun CategoryPickerPreview() {
+    val categories by remember { mutableStateOf(List(5) { "Category $it" }) }
+    var selection by remember { mutableIntStateOf(0) }
+
+    SsaviceTheme {
+        SsaviceBackground(
+            modifier = Modifier.size(540.dp, 833.dp),
+        ) {
+            CategoryPicker(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp),
+                categories = categories,
+                selection = selection,
+                onSelectionChanged = { selection = it },
+            )
+        }
+    }
+}

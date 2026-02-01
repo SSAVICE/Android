@@ -1,6 +1,6 @@
 package com.ssavice.user_my_service
 
-import com.ssavice.model.service.ServiceState
+import com.ssavice.model.enums.ServiceState
 
 data class MyServiceUiState(
     val services: List<MyServiceItemUiState> = listOf(),
@@ -8,7 +8,7 @@ data class MyServiceUiState(
     val hasNext: Boolean = false,
     val nextPage: Int = 0,
     val searchTypeSelection: Int = 0,
-    val searchingState: List<String> = ServiceState.entries.map { it.value },
+    val searchingState: List<String> = ServiceState.entries.filter { it.visibleAsOption }.map { it.value },
 )
 
 data class MyServiceItemUiState(

@@ -4,18 +4,20 @@ import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionDetail
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
-import com.ssavice.model.service.ServiceState
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
 import com.ssavice.model.user.UserServiceParticipation
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
 interface UserInfoRepository {
     suspend fun getUserParticipationSummary(): Result<ParticipationSummary>
 
-    suspend fun getUserProfile(): Result<UserProfile>
+    fun getUserProfile(): StateFlow<UserProfile>
 
     suspend fun getMyService(
         searchCount: Int,
