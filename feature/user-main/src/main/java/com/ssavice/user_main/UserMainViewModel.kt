@@ -3,7 +3,7 @@ package com.ssavice.user_main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
 import com.ssavice.model.RegionInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

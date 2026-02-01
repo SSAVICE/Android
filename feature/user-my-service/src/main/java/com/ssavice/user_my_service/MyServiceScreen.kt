@@ -29,7 +29,7 @@ import coil.request.ImageRequest
 import com.ssavice.designsystem.component.InfiniteScrollContainer
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.theme.SsaviceTheme
-import com.ssavice.model.service.ServiceState
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.ui.MyService
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay

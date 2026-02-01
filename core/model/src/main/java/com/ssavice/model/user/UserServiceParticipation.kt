@@ -1,7 +1,7 @@
 package com.ssavice.model.user
 
 import com.ssavice.model.Date
-import com.ssavice.model.service.ServiceState
+import com.ssavice.model.enums.ServiceState
 
 data class UserServiceParticipationItem(
     val id: Long,

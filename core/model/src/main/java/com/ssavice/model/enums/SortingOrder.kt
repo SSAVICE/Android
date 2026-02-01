@@ -1,4 +1,4 @@
-package com.ssavice.model.service
+package com.ssavice.model.enums
 
 import kotlinx.serialization.Serializable
 

@@ -1,14 +1,14 @@
 package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionDetail
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
-import com.ssavice.model.service.ServiceState
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm

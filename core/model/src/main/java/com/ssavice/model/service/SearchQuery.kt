@@ -1,6 +1,7 @@
 package com.ssavice.model.service
 
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SortingOrder
 import kotlinx.serialization.Serializable
 
 @Serializable

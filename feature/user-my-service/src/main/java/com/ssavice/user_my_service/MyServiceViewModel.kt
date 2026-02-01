@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.model.service.ServiceState
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.user.UserServiceParticipationItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,12 +48,8 @@ class MyServiceViewModel
                 thumbnailUrl = item.thumbnail,
                 sellerName = item.sellerName,
                 duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
-                cancellable = getIfStateCancellable(item.state),
-                reviewable =
-                    getIfStateReviewable(
-                        item.state,
-                        item.isReviewed,
-                    ),
+                cancellable = item.state.cancellable,
+                reviewable = item.state.reviewable && !item.isReviewed,
                 sellerId = item.sellerId,
                 state = item.state,
             )
@@ -172,27 +168,4 @@ class MyServiceViewModel
                 )
             }
         }
-
-        private fun getIfStateCancellable(state: ServiceState): Boolean =
-            when (state) {
-                ServiceState.RECRUITING -> true
-                ServiceState.SUCCEEDED -> false
-                ServiceState.CANCELED -> false
-                ServiceState.USER_CANCELED -> false
-                ServiceState.COMPLETED -> false
-                else -> false
-            }
-
-        private fun getIfStateReviewable(
-            state: ServiceState,
-            reviewed: Boolean,
-        ): Boolean =
-            when (state) {
-                ServiceState.RECRUITING -> true
-                ServiceState.SUCCEEDED -> false
-                ServiceState.CANCELED -> false
-                ServiceState.USER_CANCELED -> false
-                ServiceState.COMPLETED -> !reviewed
-                else -> false
-            }
     }

@@ -52,7 +52,7 @@ import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay
 import kotlin.math.max

@@ -36,7 +36,7 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.theme.SsaviceTheme
-import com.ssavice.model.service.ServiceState
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.ui.SellerServiceListItem
 
 @Composable

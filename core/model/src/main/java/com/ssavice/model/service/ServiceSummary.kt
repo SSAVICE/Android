@@ -1,8 +1,7 @@
 package com.ssavice.model.service
 
 import com.ssavice.model.Date
-import java.net.URL
-import java.time.LocalDateTime
+import com.ssavice.model.enums.ServiceState
 
 data class ServiceSummary(
     val name: String,

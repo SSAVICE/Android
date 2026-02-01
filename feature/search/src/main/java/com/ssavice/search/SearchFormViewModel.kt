@@ -2,8 +2,8 @@ package com.ssavice.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.ssavice.model.Category
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.search.navigation.SearchFormRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import com.ssavice.edit_profile.navigation.editProfileScreen
 import com.ssavice.edit_profile.navigation.navigateToEditProfile
 import com.ssavice.login.LoginRoute
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search.SearchForm
 import com.ssavice.search.navigation.navigateToSearchForm

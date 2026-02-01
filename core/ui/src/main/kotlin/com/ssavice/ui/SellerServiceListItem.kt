@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.ssavice.model.service.ServiceState
+import com.ssavice.model.enums.ServiceState
 
 @Composable
 fun SellerServiceListItem(

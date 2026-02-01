@@ -1,10 +1,10 @@
 package com.ssavice.user_main
 
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
 import com.ssavice.model.Region
 import com.ssavice.model.RegionDetail
 import com.ssavice.model.service.SearchQuery
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.SortingOrder
 
 data class UserMainUiState(
     val categories: List<Category> = emptyList(),

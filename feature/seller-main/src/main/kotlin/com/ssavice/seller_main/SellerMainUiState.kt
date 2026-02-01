@@ -1,7 +1,6 @@
 package com.ssavice.seller_main
 
-import com.ssavice.model.service.ServiceState
-import java.net.URL
+import com.ssavice.model.enums.ServiceState
 
 sealed interface SellerMainUiState {
     data object Loading : SellerMainUiState

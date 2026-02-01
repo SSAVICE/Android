@@ -1,4 +1,4 @@
-package com.ssavice.model
+package com.ssavice.model.enums
 
 enum class Category(
     val value: String,

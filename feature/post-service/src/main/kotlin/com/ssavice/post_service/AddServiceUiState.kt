@@ -1,7 +1,7 @@
 package com.ssavice.post_service
 
 import android.net.Uri
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.TimeStamp
 import java.net.URI

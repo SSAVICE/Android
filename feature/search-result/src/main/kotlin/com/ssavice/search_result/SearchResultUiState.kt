@@ -1,8 +1,8 @@
 package com.ssavice.search_result
 
-import com.ssavice.model.Category
+import com.ssavice.model.enums.Category
 import com.ssavice.model.service.SearchQuery
-import com.ssavice.model.service.SortingOrder
+import com.ssavice.model.enums.SortingOrder
 import kotlinx.serialization.Serializable
 
 @Serializable
