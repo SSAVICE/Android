@@ -10,4 +10,7 @@ data class SellerMainInfo(
     val description: String,
     val services: List<ServiceSummary>,
     val region: Region,
+    val address: String,
+    val detailAddress: String,
+    val imageUrl: String
 )
