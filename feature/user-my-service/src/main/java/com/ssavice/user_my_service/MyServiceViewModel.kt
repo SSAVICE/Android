@@ -79,13 +79,14 @@ class MyServiceViewModel
                             serviceState = ServiceState.entries.getOrElse(uiState.value.searchTypeSelection) { ServiceState.ALL },
                         ).fold(
                             onSuccess = {
+                                val uiItems =
+                                    it.items.mapIndexed { i, item ->
+                                        mapItemToUiState(i, _uiState.value.services.size, item)
+                                    }
                                 _uiState.update { origin ->
-                                    val nextId = origin.services.size
                                     origin.copy(
                                         services =
-                                            it.items.mapIndexed { i, item ->
-                                                mapItemToUiState(i, nextId, item)
-                                            },
+                                            uiItems,
                                         myServiceScreenStatus = MyServiceState.Loaded,
                                         hasNext = it.hasNext,
                                         nextPage = it.currentPage.toInt() + 1,
@@ -122,13 +123,13 @@ class MyServiceViewModel
                     ).fold(
                         onSuccess = {
                             _uiState.update { origin ->
-                                val nextId = origin.services.size
+                                val uiItems =
+                                    it.items.mapIndexed { i, item ->
+                                        mapItemToUiState(i, _uiState.value.services.size, item)
+                                    }
                                 origin.copy(
                                     services =
-                                        origin.services +
-                                            it.items.mapIndexed { i, item ->
-                                                mapItemToUiState(i, nextId, item)
-                                            },
+                                        origin.services + uiItems,
                                     myServiceScreenStatus = MyServiceState.Loaded,
                                     hasNext = it.hasNext,
                                     nextPage = it.currentPage.toInt() + 1,

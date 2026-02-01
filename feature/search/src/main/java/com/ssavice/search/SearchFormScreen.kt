@@ -53,6 +53,8 @@ import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.service.SortingOrder
+import com.ssavice.ui.common.Constant
+import kotlinx.coroutines.delay
 import kotlin.math.max
 import kotlin.math.min
 
@@ -63,6 +65,9 @@ fun SearchFormScreen(
     onSearch: (SearchForm) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var shouldRenderContent by remember {
+        mutableStateOf(false)
+    }
 
     val query = rememberTextFieldState(state.form.query)
     LaunchedEffect(query) {
@@ -79,6 +84,13 @@ fun SearchFormScreen(
         focusRequester.requestFocus()
     }
 
+    LaunchedEffect(shouldRenderContent) {
+        if(!shouldRenderContent) {
+            delay(Constant.ANIMATION_DELAY)
+            shouldRenderContent = true
+        }
+    }
+
     SearchFormScreen(
         modifier =
             modifier
@@ -93,6 +105,7 @@ fun SearchFormScreen(
             onSearch(state.form)
         },
         focusRequester = focusRequester,
+        readyToRenderContent = shouldRenderContent,
     )
 }
 
@@ -107,6 +120,7 @@ fun SearchFormScreen(
     onSortByChange: (Int) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
     focusRequester: FocusRequester? = null,
+    readyToRenderContent: Boolean = true,
 ) {
     Column(modifier = modifier) {
         Row(
@@ -149,6 +163,8 @@ fun SearchFormScreen(
                     .padding(horizontal = 5.dp)
                     .padding(top = 10.dp),
         )
+
+        if(!readyToRenderContent) return@Column
         Column(
             modifier =
                 Modifier
@@ -160,8 +176,8 @@ fun SearchFormScreen(
                 elevation = CardDefaults.cardElevation(5.dp),
                 modifier =
                     Modifier
-                        .padding(horizontal = 15.dp, vertical = 15.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp, vertical = 15.dp),
                 colors =
                     CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface,

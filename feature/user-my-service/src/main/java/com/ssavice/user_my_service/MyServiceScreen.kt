@@ -31,6 +31,8 @@ import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.service.ServiceState
 import com.ssavice.ui.MyService
+import com.ssavice.ui.common.Constant
+import kotlinx.coroutines.delay
 
 @Composable
 fun MyServiceRoute(
@@ -43,6 +45,7 @@ fun MyServiceRoute(
 
     LaunchedEffect(state.myServiceScreenStatus) {
         if (state.myServiceScreenStatus == MyServiceState.Initial) {
+            delay(Constant.ANIMATION_DELAY)
             viewModel.loadService()
         }
     }
@@ -69,6 +72,7 @@ fun MyServiceScreen(
     uiState: MyServiceUiState,
 ) {
     val isLoading = uiState.myServiceScreenStatus == MyServiceState.Loading
+            || uiState.myServiceScreenStatus == MyServiceState.Initial
     InfiniteScrollContainer(
         modifier =
             modifier
