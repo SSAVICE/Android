@@ -11,11 +11,13 @@ import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
 import com.ssavice.model.user.UserServiceParticipation
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
 interface UserInfoRepository {
     suspend fun getUserParticipationSummary(): Result<ParticipationSummary>
 
-    suspend fun getUserProfile(): Result<UserProfile>
+    fun getUserProfile(): StateFlow<UserProfile>
 
     suspend fun getMyService(
         searchCount: Int,
