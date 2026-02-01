@@ -20,10 +20,9 @@ import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.postReviewScreen
 import com.ssavice.service_detail.navigation.serviceDetailScreen
 import com.ssavice.user_home.navigation.HomeRoute
-import com.ssavice.user_home.navigation.home
 import com.ssavice.user_home.navigation.navigateToHome
+import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
-import com.ssavice.user_my_page.navigation.myPage
 import com.ssavice.user_my_service.navigation.myServiceScreen
 import com.ssavice.user_my_service.navigation.navigateToMyService
 import kotlinx.serialization.Serializable
@@ -72,7 +71,7 @@ fun SsaviceNavHost(
             onSearch = { searchForm ->
                 navController.navigateToSearchResult(
                     navOptions = {
-                        popUpTo(HomeRoute) {
+                        popUpTo(MainRoute) {
                             inclusive = false
                         }
                         launchSingleTop = true
