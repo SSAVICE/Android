@@ -1,7 +1,9 @@
 package com.ssavice.seller_main.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -26,24 +28,19 @@ fun NavController.navigateToLogin(navOptions: NavOptionsBuilder.() -> Unit = {})
 
 fun NavGraphBuilder.loginScreen(
     onLoginComplete: () -> Unit = {},
-    onScreenResolved: () -> Unit,
     isUser: Boolean,
 ) {
     composable<LoginRoute>
     { backStackEntry ->
-        val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
-
-        LaunchedEffect(lifecycleState) {
-            if (lifecycleState == Lifecycle.State.STARTED) {
-                onScreenResolved()
-            }
+        Scaffold { innerPadding ->
+            LoginRoute(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(innerPadding),
+                onLoginComplete = onLoginComplete,
+                viewModel = hiltViewModel(),
+                isUser = isUser,
+            )
         }
-
-        LoginRoute(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            onLoginComplete = onLoginComplete,
-            viewModel = hiltViewModel(),
-            isUser = isUser,
-        )
     }
 }

@@ -1,4 +1,4 @@
-package com.ssavice.user_main
+package com.ssavice.user_home
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -21,7 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserMainTopBar(viewModel: UserMainViewModel) {
+fun UserHomeTopBar(viewModel: UserHomeViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     TopAppBar(
         title = {

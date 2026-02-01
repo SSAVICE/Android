@@ -1,4 +1,4 @@
-package com.ssavice.user_main
+package com.ssavice.user_home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,18 +14,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserMainViewModel
+class UserHomeViewModel
     @Inject
     constructor(
         private val userRepository: UserInfoRepository,
     ) : ViewModel() {
         private val _uiState =
             MutableStateFlow(
-                UserMainUiState(
+                UserHomeUiState(
                     categories = Category.entries,
                 ),
             )
-        val uiState: StateFlow<UserMainUiState> = _uiState
+        val uiState: StateFlow<UserHomeUiState> = _uiState
 
         fun onCategorySelect(index: Int) {
             if ((index !in 0 until _uiState.value.categories.size) || index == _uiState.value.selected) return

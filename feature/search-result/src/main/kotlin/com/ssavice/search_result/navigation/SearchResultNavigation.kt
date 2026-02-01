@@ -2,8 +2,13 @@ package com.ssavice.search_result.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -11,8 +16,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search_result.SearchResultScreen
+import com.ssavice.ui.navigation.ScaffoldConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,7 +54,7 @@ fun NavController.navigateToSearchResult(
 fun NavGraphBuilder.searchResultScreen(
     onSearchBarClicked: (SearchQuery) -> Unit = {},
     onServiceClicked: (Long) -> Unit = {},
-    onScreenResolved: () -> Unit,
+    onBack: () -> Unit = {}
 ) {
     composable<SearchResultRoute>(
         popExitTransition = {
@@ -56,18 +63,21 @@ fun NavGraphBuilder.searchResultScreen(
                 animationSpec = tween(),
             )
         },
-    ) { backStackEntry ->
-        val lifecycleState by backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
-
-        LaunchedEffect(lifecycleState) {
-            if (lifecycleState == Lifecycle.State.STARTED) {
-                onScreenResolved()
-            }
+    ) {
+        Scaffold(topBar = {
+            SsavicePopUpTopBar(
+                title = "검색 결과",
+                onBackClicked = onBack
+            )
+        }) { contentPadding ->
+            SearchResultScreen(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(contentPadding),
+                onSearchBarClicked = onSearchBarClicked,
+                onServiceClicked = onServiceClicked,
+            )
         }
-        SearchResultScreen(
-            onSearchBarClicked = onSearchBarClicked,
-            onServiceClicked = onServiceClicked,
-        )
     }
 }
 

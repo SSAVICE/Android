@@ -1,26 +1,30 @@
-package com.ssavice.ssavice.ui
+package com.ssavice.user_main
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
-import com.ssavice.ssavice.navigation.TopLevelDestination
-import com.ssavice.ssavice.navigation.navigateToTop
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ssavice.user_main.navigation.TopLevelDestination
+import com.ssavice.user_main.navigation.navigateToTop
 
 @Composable
-fun SsaviceBottomBar(navController: NavController) {
+fun MainBottomBar(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     val destinations =
         listOf(
-            TopLevelDestination.USER_MAIN,
+            TopLevelDestination.USER_HOME,
             TopLevelDestination.CHATTING,
             TopLevelDestination.MY_PAGE,
         )
 
     NavigationBar {
         destinations.forEach { destination ->
-            val selected = navController.currentDestination?.route == destination.route::class.qualifiedName
+            val selected = currentDestination?.route == destination.route::class.qualifiedName
             NavigationBarItem(
                 selected = selected,
                 onClick = {

@@ -1,4 +1,4 @@
-package com.ssavice.ssavice.navigation
+package com.ssavice.user_main.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
@@ -9,7 +9,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.ssavice.user_main.navigation.MainRoute
+import com.ssavice.user_home.navigation.HomeRoute
 import com.ssavice.user_my_page.navigation.UserMyPageRoute
 import kotlinx.serialization.Serializable
 
@@ -19,14 +19,14 @@ enum class TopLevelDestination(
     val unselectedIcon: ImageVector,
     val iconText: String,
 ) {
-    USER_MAIN(
-        route = MainRoute,
+    USER_HOME(
+        route = HomeRoute,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         iconText = "홈",
     ),
     CHATTING(
-        route = MainRoute,
+        route = HomeRoute,
         selectedIcon = Icons.Filled.ChatBubble,
         unselectedIcon = Icons.Outlined.ChatBubbleOutline,
         iconText = "채팅",

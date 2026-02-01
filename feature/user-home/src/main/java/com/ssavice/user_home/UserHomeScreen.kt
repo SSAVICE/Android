@@ -1,4 +1,4 @@
-package com.ssavice.user_main
+package com.ssavice.user_home
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
@@ -32,9 +32,9 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.ui.searchresult.SearchResultScreen
 
 @Composable
-fun UserMainScreen(
+fun UserHomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: UserMainViewModel = hiltViewModel(),
+    viewModel: UserHomeViewModel = hiltViewModel(),
     onSearchBarClicked: () -> Unit = {},
     onServiceClick: (Long) -> Unit = {},
 ) {
@@ -45,7 +45,7 @@ fun UserMainScreen(
         }
     }
 
-    UserMainScreen(
+    UserHomeScreen(
         modifier = modifier,
         state = state,
         onCategoryClicked = viewModel::onCategorySelect,
@@ -58,9 +58,9 @@ fun UserMainScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserMainScreen(
+fun UserHomeScreen(
     modifier: Modifier = Modifier,
-    state: UserMainUiState,
+    state: UserHomeUiState,
     onSearchBarClicked: () -> Unit = {},
     onCategoryClicked: (Int) -> Unit = {},
     onServiceClick: (Long) -> Unit = {},

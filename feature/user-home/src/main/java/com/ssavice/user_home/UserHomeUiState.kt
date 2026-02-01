@@ -1,12 +1,10 @@
-package com.ssavice.user_main
+package com.ssavice.user_home
 
 import com.ssavice.model.enums.Category
-import com.ssavice.model.Region
-import com.ssavice.model.RegionDetail
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.enums.SortingOrder
 
-data class UserMainUiState(
+data class UserHomeUiState(
     val categories: List<Category> = emptyList(),
     val selected: Int = 0,
     val defaultSearchQuery: SearchQuery =

@@ -1,4 +1,4 @@
-package com.ssavice.user_main
+package com.ssavice.user_home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +25,10 @@ import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.mappicker.AddressPickerDialog
-import com.ssavice.user_main.AddressBottomSheetConstants.ADDRESS_TEXT
-import com.ssavice.user_main.AddressBottomSheetConstants.APPLY_TEXT
-import com.ssavice.user_main.AddressBottomSheetConstants.DETAIL_ADDRESS_PLACEHOLDER
-import com.ssavice.user_main.AddressBottomSheetConstants.DETAIL_ADDRESS_TEXT
+import com.ssavice.user_home.AddressBottomSheetConstants.ADDRESS_TEXT
+import com.ssavice.user_home.AddressBottomSheetConstants.APPLY_TEXT
+import com.ssavice.user_home.AddressBottomSheetConstants.DETAIL_ADDRESS_PLACEHOLDER
+import com.ssavice.user_home.AddressBottomSheetConstants.DETAIL_ADDRESS_TEXT
 
 @Composable
 fun AddressSelectForm(

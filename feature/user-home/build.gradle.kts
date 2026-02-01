@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    namespace = "com.ssavice.feature.usermain"
+    namespace = "com.ssavice.feature.userhome"
 }
 
 dependencies {
-    implementation(projects.feature.userHome)
-    implementation(projects.feature.userMyPage)
+    implementation(projects.core.data)
+    implementation(projects.core.addresspicker)
 }

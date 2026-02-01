@@ -3,17 +3,17 @@ package com.ssavice.edit_profile.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.edit_profile.EditProfileRoute
+import com.ssavice.ui.navigation.SsaviceTitle
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -51,7 +51,6 @@ fun NavGraphBuilder.editProfileScreen(
     onSubmit: () -> Unit,
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
-    onScreenResolved: () -> Unit,
 ) {
     composable<EditProfileRoute>(
         enterTransition = {
@@ -67,23 +66,25 @@ fun NavGraphBuilder.editProfileScreen(
             )
         },
     )
-    { backStackEntry ->
-        val lifecycleStateFlow by
-            backStackEntry.lifecycle.currentStateFlow.collectAsStateWithLifecycle()
-        LaunchedEffect(
-            lifecycleStateFlow,
-        ) {
-            if (lifecycleStateFlow == androidx.lifecycle.Lifecycle.State.STARTED) {
-                onScreenResolved()
+    {
+        Scaffold(
+            topBar = {
+                SsaviceTitle(
+                    title = "프로필 수정",
+                )
             }
+        ) { innerPadding ->
+            EditProfileRoute(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(innerPadding),
+                viewModel = hiltViewModel(),
+                onSubmit = onSubmit,
+                onBackClick = onBackClick,
+                onProfileImageClick = onProfileImageClick,
+            )
         }
-        EditProfileRoute(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            viewModel = hiltViewModel(),
-            onSubmit = onSubmit,
-            onBackClick = onBackClick,
-            onProfileImageClick = onProfileImageClick,
-        )
+
     }
 }
 

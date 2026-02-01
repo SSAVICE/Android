@@ -18,7 +18,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.userMain)
+    implementation(projects.feature.userHome)
     implementation(projects.feature.search)
     implementation(projects.feature.searchResult)
     implementation(projects.feature.serviceDetail)
@@ -27,6 +27,7 @@ dependencies {
     implementation(projects.feature.editProfile)
     implementation(projects.feature.login)
     implementation(projects.feature.postReview)
+    implementation(projects.feature.userMain)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)
