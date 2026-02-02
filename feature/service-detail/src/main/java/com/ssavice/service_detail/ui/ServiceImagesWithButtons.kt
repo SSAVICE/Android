@@ -1,5 +1,8 @@
 package com.ssavice.service_detail.ui
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
@@ -14,10 +18,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.unit.dp
 import com.ssavice.ui.AsyncImageScrollList
@@ -28,7 +34,20 @@ fun ServiceImagesWithButtons(
     onLikeClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
     onImageClick: (String) -> Unit = {},
+    liked: Boolean = false
 ) {
+    val containerColor by animateColorAsState(
+        targetValue = if (liked) Color(0xFFE91E63) else MaterialTheme.colorScheme.surface,
+        animationSpec = tween(durationMillis = 300, easing = EaseIn),
+        label = "LikeContainerColor"
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = if (liked) Color.White else MaterialTheme.colorScheme.onSurface,
+        animationSpec = tween(durationMillis = 300, easing = EaseIn),
+        label = "LikeContentColor"
+    )
+
     Box {
         AsyncImageScrollList(
             modifier =
@@ -52,17 +71,18 @@ fun ServiceImagesWithButtons(
                             shape = CircleShape,
                             spotColor = DefaultShadowColor.copy(alpha = 0.4f),
                             ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        ).clip(CircleShape),
+                        )
+                        .clip(CircleShape),
                 onClick = onLikeClick,
-                colors =
-                    IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    ),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = containerColor,
+                    contentColor = contentColor
+                ),
             ) {
                 Icon(
-                    Icons.Default.FavoriteBorder,
+                    imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite",
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = contentColor,
                 )
             }
             IconButton(
@@ -73,7 +93,8 @@ fun ServiceImagesWithButtons(
                             shape = CircleShape,
                             spotColor = DefaultShadowColor.copy(alpha = 0.4f),
                             ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        ).clip(CircleShape),
+                        )
+                        .clip(CircleShape),
                 onClick = onShareClick,
                 colors =
                     IconButtonDefaults.filledIconButtonColors(

@@ -16,6 +16,7 @@ data class ServiceDetailUiState(
     val serviceInfoState: InfoState = InfoState.Waiting,
     val sellerInfoState: InfoState = InfoState.Waiting,
     val applyInfoState: InfoState = InfoState.Waiting,
+    val serviceLikeState: InfoState = InfoState.Waiting,
     val service: ServiceDetail? = null,
     val seller: SellerSummary? = null,
 )
@@ -35,6 +36,7 @@ data class ServiceDetail(
     val name: String,
     val address: String,
     val description: String,
+    val liked: Boolean,
     val tags: List<String>,
 )
 

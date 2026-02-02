@@ -9,6 +9,7 @@ import com.ssavice.model.ResizableImage
 import com.ssavice.model.enums.Category
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.service.WishList
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
@@ -134,4 +135,17 @@ class DemoUserInfoRepository
             )
 
         override suspend fun updateUserAddress(region: RegionInfo): Result<Unit> = Result.success(Unit)
+    override suspend fun wishService(
+        id: Long,
+        toEnable: Boolean
+    ): Result<Unit> {
+        TODO("Not yet implemented")
     }
+
+    override suspend fun getWishList(
+        searchCount: Int,
+        page: Int?
+    ): Result<WishList> {
+        TODO("Not yet implemented")
+    }
+}
