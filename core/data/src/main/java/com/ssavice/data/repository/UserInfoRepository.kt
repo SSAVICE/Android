@@ -35,9 +35,13 @@ interface UserInfoRepository {
 
     suspend fun updateUserAddress(region: RegionInfo): Result<Unit>
 
-    suspend fun wishService(id: Long, toEnable: Boolean): Result<Unit>
+    suspend fun wishService(
+        id: Long,
+        toEnable: Boolean,
+    ): Result<Unit>
 
     suspend fun getWishList(
         searchCount: Int,
-        page: Int?): Result<WishList>
+        page: Int?,
+    ): Result<WishList>
 }

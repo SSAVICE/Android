@@ -59,7 +59,7 @@ fun SsaviceNavHost(
             },
             onLikedServiceButtonClick = {
                 navController.navigateToUserLiked()
-            }
+            },
         )
 
         loginScreen(

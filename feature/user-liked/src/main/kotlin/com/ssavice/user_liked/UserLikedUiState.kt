@@ -14,20 +14,22 @@ sealed interface WishServiceState {
 
     object Loaded : WishServiceState
 
-    data class Error(val message: Throwable): WishServiceState
+    data class Error(
+        val message: Throwable,
+    ) : WishServiceState
 }
 
 data class UserLikedItem(
-    val index:Int,
-    val id:Long,
-    val imageUrl:String,
-    val sellerName:String,
-    val serviceName:String,
-    val tags:List<String>,
-    val locationInfo:String,
-    val deadline:String,
+    val index: Int,
+    val id: Long,
+    val imageUrl: String,
+    val sellerName: String,
+    val serviceName: String,
+    val tags: List<String>,
+    val locationInfo: String,
+    val deadline: String,
     val price: Int,
-    val discountedPrice:Int,
-    val participationInfo:String,
-    val discountRate:Int,
+    val discountedPrice: Int,
+    val participationInfo: String,
+    val discountRate: Int,
 )

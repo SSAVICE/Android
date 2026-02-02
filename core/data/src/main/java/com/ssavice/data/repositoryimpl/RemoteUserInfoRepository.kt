@@ -188,23 +188,27 @@ class RemoteUserInfoRepository
                 ),
             )
 
-    override suspend fun wishService(id: Long, toEnable: Boolean): Result<Unit> =
-        processResponse(userRetrofitService.wishService(
-            id, WishServiceDTO(targetStatus = toEnable)
-        ))
-
-
-    override suspend fun getWishList(
-        searchCount: Int,
-        page: Int?
-    ): Result<WishList> {
-        return processResponseOnResponseData(
-            userRetrofitService.getWish(
-                page = page ?: 0,
-                size = searchCount
+        override suspend fun wishService(
+            id: Long,
+            toEnable: Boolean,
+        ): Result<Unit> =
+            processResponse(
+                userRetrofitService.wishService(
+                    id,
+                    WishServiceDTO(targetStatus = toEnable),
+                ),
             )
-        ).map {
-            it.toModel()
-        }
+
+        override suspend fun getWishList(
+            searchCount: Int,
+            page: Int?,
+        ): Result<WishList> =
+            processResponseOnResponseData(
+                userRetrofitService.getWish(
+                    page = page ?: 0,
+                    size = searchCount,
+                ),
+            ).map {
+                it.toModel()
+            }
     }
-}

@@ -63,8 +63,9 @@ fun UserLikedScreen(
     InfiniteScrollContainer(
         modifier = modifier,
         onLoadMore = onRefresh,
-        isLoading = state.wishServiceScreenStatus == WishServiceState.Loading
-                || state.wishServiceScreenStatus == WishServiceState.Initial,
+        isLoading =
+            state.wishServiceScreenStatus == WishServiceState.Loading ||
+                state.wishServiceScreenStatus == WishServiceState.Initial,
         hasMoreData = state.hasNext,
         topElement = topElement,
     ) {

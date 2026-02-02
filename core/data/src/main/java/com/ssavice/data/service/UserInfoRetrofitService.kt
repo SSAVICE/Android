@@ -66,6 +66,6 @@ interface UserInfoRetrofitService {
     @GET("/api/user/wish")
     suspend fun getWish(
         @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
     ): Response<WishListDTO>
 }

@@ -51,7 +51,7 @@ fun NavGraphBuilder.likedScreen(
                 )
             },
         ) { innerPadding ->
-            UserLikedRoute (
+            UserLikedRoute(
                 modifier =
                     Modifier
                         .background(MaterialTheme.colorScheme.background)

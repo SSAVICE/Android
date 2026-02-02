@@ -36,24 +36,26 @@ fun ServiceImagesWithButtons(
     onLikeClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
     onImageClick: (String) -> Unit = {},
-    liked: Boolean = false
+    liked: Boolean = false,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (liked) Color(0xFFE91E63) else MaterialTheme.colorScheme.surface,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioNoBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "LikeContainerColor"
+        animationSpec =
+            spring(
+                dampingRatio = Spring.DampingRatioNoBouncy,
+                stiffness = Spring.StiffnessMedium,
+            ),
+        label = "LikeContainerColor",
     )
 
     val contentColor by animateColorAsState(
         targetValue = if (liked) Color.White else MaterialTheme.colorScheme.onSurface,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioNoBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "LikeContentColor"
+        animationSpec =
+            spring(
+                dampingRatio = Spring.DampingRatioNoBouncy,
+                stiffness = Spring.StiffnessMedium,
+            ),
+        label = "LikeContentColor",
     )
 
     Box {
@@ -79,13 +81,13 @@ fun ServiceImagesWithButtons(
                             shape = CircleShape,
                             spotColor = DefaultShadowColor.copy(alpha = 0.4f),
                             ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        )
-                        .clip(CircleShape),
+                        ).clip(CircleShape),
                 onClick = onLikeClick,
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = containerColor,
-                    contentColor = contentColor
-                ),
+                colors =
+                    IconButtonDefaults.filledIconButtonColors(
+                        containerColor = containerColor,
+                        contentColor = contentColor,
+                    ),
             ) {
                 Icon(
                     imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -101,8 +103,7 @@ fun ServiceImagesWithButtons(
                             shape = CircleShape,
                             spotColor = DefaultShadowColor.copy(alpha = 0.4f),
                             ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        )
-                        .clip(CircleShape),
+                        ).clip(CircleShape),
                 onClick = onShareClick,
                 colors =
                     IconButtonDefaults.filledIconButtonColors(

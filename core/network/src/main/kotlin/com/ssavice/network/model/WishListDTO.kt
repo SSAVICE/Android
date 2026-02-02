@@ -11,14 +11,14 @@ data class WishListDTO(
     val currentPage: Int,
     val size: Int,
     val totalElements: Long,
-    val totalPages: Int
+    val totalPages: Int,
 ) {
     fun toModel(): WishList =
         WishList(
             items = content.map { it.toModel() },
             currentPage = currentPage.toLong(),
             searchCount = totalElements.toInt(),
-            hasNext = totalPages > currentPage + 1
+            hasNext = totalPages > currentPage + 1,
         )
 }
 
@@ -38,7 +38,7 @@ data class WishContentDTO(
     val serviceId: Long,
     val tag: String,
     val thumbnailUrl: String,
-    val title: String
+    val title: String,
 ) {
     fun toModel(): UserWishListItem =
         UserWishListItem(
@@ -55,6 +55,6 @@ data class WishContentDTO(
             deadLine = Date.parse(deadline),
             companyName = companyName,
             companyId = companyId,
-            region = region.toModel()
+            region = region.toModel(),
         )
 }
