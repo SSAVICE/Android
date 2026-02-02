@@ -190,6 +190,7 @@ private fun StatusChip(
 
             ServiceState.CANCELED,
             ServiceState.USER_CANCELED,
+            ServiceState.FAILED,
             -> Color(0xFFF5F5F5) to Color(0xFF757575)
 
             ServiceState.UNKNOWN,

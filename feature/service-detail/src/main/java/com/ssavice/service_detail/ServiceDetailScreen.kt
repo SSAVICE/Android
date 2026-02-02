@@ -81,7 +81,7 @@ fun ServiceDetailScreen(
                 .background(MaterialTheme.colorScheme.background),
         uiState.service,
         uiState.seller,
-        onLikeClick = onLikeClick,
+        onLikeClick = viewModel::onLikeButtonClick,
         enabled = enabled,
     )
 }
@@ -105,6 +105,7 @@ fun ServiceDetailScreen(
             ServiceImagesWithButtons(
                 urls = service.imageUrls,
                 onLikeClick = { onLikeClick(service.id) },
+                liked = service.liked,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -261,6 +262,7 @@ fun ServiceDetailScreenPreview() {
             id = 123123L,
             companyId = 123L,
             category = "건강",
+            liked = true,
         )
     val company =
         SellerSummary(

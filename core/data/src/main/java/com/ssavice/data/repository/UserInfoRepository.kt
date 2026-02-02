@@ -6,6 +6,7 @@ import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.service.WishList
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
@@ -33,4 +34,14 @@ interface UserInfoRepository {
     suspend fun getUserAddress(): Result<RegionDetail>
 
     suspend fun updateUserAddress(region: RegionInfo): Result<Unit>
+
+    suspend fun wishService(
+        id: Long,
+        toEnable: Boolean,
+    ): Result<Unit>
+
+    suspend fun getWishList(
+        searchCount: Int,
+        page: Int?,
+    ): Result<WishList>
 }

@@ -10,11 +10,14 @@ import com.ssavice.network.model.UpdateUserProfileResponseDTO
 import com.ssavice.network.model.UserBookDTO
 import com.ssavice.network.model.UserBookSummaryDTO
 import com.ssavice.network.model.UserProfileDTO
+import com.ssavice.network.model.WishListDTO
+import com.ssavice.network.model.WishServiceDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserInfoRetrofitService {
@@ -53,4 +56,16 @@ interface UserInfoRetrofitService {
 
     @GET("/api/user/address")
     suspend fun getUserAddress(): Response<GetAddressDTO>
+
+    @POST("/api/user/wish/{id}")
+    suspend fun wishService(
+        @Path(value = "id") id: Long,
+        @Body body: WishServiceDTO,
+    ): Response<Unit>
+
+    @GET("/api/user/wish")
+    suspend fun getWish(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+    ): Response<WishListDTO>
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.service_detail.navigation.ServiceDetailRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ class ServiceDetailViewModel
         private val savedStateHandle: SavedStateHandle,
         private val serviceRepository: ServiceRepository,
         private val sellerRepository: SellerInfoRepository,
+        private val userRepository: UserInfoRepository,
     ) : ViewModel() {
         private val _sellerId = MutableStateFlow(-1L)
         val sellerId = _sellerId
@@ -107,6 +109,7 @@ class ServiceDetailViewModel
                                         address = "${it.regionInfo.region1}, ${it.regionInfo.region2}",
                                         description = it.description,
                                         tags = it.tag.split(','),
+                                        liked = it.liked,
                                     ),
                             )
                         _sellerId.value = it.companyId
@@ -147,11 +150,44 @@ class ServiceDetailViewModel
             } ?: run {
                 Log.d("KSC", "service is null")
             }
+        }
 
-            fun onLikeButtonClick() {
+        fun onLikeButtonClick(id: Long) {
+            if (_uiState.value.serviceLikeState == InfoState.Loading) return
+            if (_uiState.value.service != null) {
+                val isLiked = (uiState.value.service?.liked) ?: return
+                _uiState.update {
+                    it.copy(
+                        serviceLikeState = InfoState.Loading,
+                        service =
+                            it.service?.copy(
+                                liked = !isLiked,
+                            ),
+                    )
+                }
+                viewModelScope.launch(Dispatchers.IO) {
+                    userRepository.wishService(id, !isLiked).fold(
+                        onSuccess = {
+                            _uiState.update {
+                                it.copy(serviceLikeState = InfoState.Done)
+                            }
+                        },
+                        onFailure = { e ->
+                            _uiState.update {
+                                it.copy(
+                                    serviceLikeState = InfoState.Error(e),
+                                    service =
+                                        it.service?.copy(
+                                            liked = isLiked,
+                                        ),
+                                )
+                            }
+                        },
+                    )
+                }
             }
+        }
 
-            fun onShareButtonClick() {
-            }
+        fun onShareButtonClick() {
         }
     }
