@@ -2,7 +2,9 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.Review
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
@@ -17,6 +19,7 @@ import com.ssavice.model.user.ParticipationSummary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -164,4 +167,8 @@ internal class DemoSellerInfoRepository
         ): Result<SellerServiceParticipation> {
             TODO("Not yet implemented")
         }
+
+    override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> {
+        TODO("Not yet implemented")
     }
+}

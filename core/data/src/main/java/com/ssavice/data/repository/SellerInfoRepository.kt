@@ -1,6 +1,8 @@
 package com.ssavice.data.repository
 
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
@@ -10,6 +12,7 @@ import com.ssavice.model.seller.SellerRegisterForm
 import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerSummary
 import com.ssavice.model.user.ParticipationSummary
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface SellerInfoRepository {
@@ -38,4 +41,6 @@ interface SellerInfoRepository {
         sortingOrder: SortingOrder,
         serviceState: ServiceState,
     ): Result<SellerServiceParticipation>
+
+    fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress>
 }

@@ -1,5 +1,8 @@
 package com.ssavice.model.seller
 
 data class SellerProfileUpdateForm(
-    val t: String,
+    val sellerName: String,
+    val phoneNumber: String,
+    val description: String,
+    val detail: String
 )
