@@ -2,6 +2,8 @@ package com.ssavice.service_detail.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -38,13 +40,19 @@ fun ServiceImagesWithButtons(
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (liked) Color(0xFFE91E63) else MaterialTheme.colorScheme.surface,
-        animationSpec = tween(durationMillis = 300, easing = EaseIn),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
         label = "LikeContainerColor"
     )
 
     val contentColor by animateColorAsState(
         targetValue = if (liked) Color.White else MaterialTheme.colorScheme.onSurface,
-        animationSpec = tween(durationMillis = 300, easing = EaseIn),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
         label = "LikeContentColor"
     )
 

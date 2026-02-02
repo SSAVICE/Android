@@ -20,6 +20,8 @@ import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.postReviewScreen
 import com.ssavice.service_detail.navigation.serviceDetailScreen
 import com.ssavice.user_home.navigation.navigateToHome
+import com.ssavice.user_liked.navigation.likedScreen
+import com.ssavice.user_liked.navigation.navigateToUserLiked
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
 import com.ssavice.user_my_service.navigation.myServiceScreen
@@ -55,6 +57,9 @@ fun SsaviceNavHost(
                     profileImageUrl = it?.profileUrl,
                 )
             },
+            onLikedServiceButtonClick = {
+                navController.navigateToUserLiked()
+            }
         )
 
         loginScreen(
@@ -146,6 +151,15 @@ fun SsaviceNavHost(
         )
 
         postReviewScreen(
+            onBack = {
+                navController.navigateUp()
+            },
+        )
+
+        likedScreen(
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it)
+            },
             onBack = {
                 navController.navigateUp()
             },
