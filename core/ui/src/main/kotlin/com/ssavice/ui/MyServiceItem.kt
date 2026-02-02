@@ -47,7 +47,7 @@ fun MyService(
     reviewable: Boolean,
     price: String,
     thumbnailUrl: String,
-    memberStatus:String? = null,
+    memberStatus: String? = null,
     onCancelButtonClick: () -> Unit = {},
     onReviewButtonClick: () -> Unit = {},
     thumbnail: @Composable (String) -> Unit = {},
@@ -95,16 +95,19 @@ fun MyService(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         )
                         Spacer(Modifier.height(8.dp))
-                        val style = if(memberStatus != null)
-                            MaterialTheme.typography.bodyMedium
-                        else MaterialTheme.typography.bodyLarge
+                        val style =
+                            if (memberStatus != null) {
+                                MaterialTheme.typography.bodyMedium
+                            } else {
+                                MaterialTheme.typography.bodyLarge
+                            }
                         Text(
                             text = price,
                             style = style,
                             overflow = TextOverflow.Ellipsis,
                             fontWeight = FontWeight.Bold,
                         )
-                        if(memberStatus != null) {
+                        if (memberStatus != null) {
                             Spacer(Modifier.height(2.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(

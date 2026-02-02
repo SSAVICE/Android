@@ -51,7 +51,7 @@ class MyServiceViewModel
                 cancellable = item.state.cancellable && item.currentMemberCount == 0,
                 sellerId = item.sellerId,
                 state = item.state,
-                memberStatus = "${item.currentMemberCount}/${item.minimumMemberCount} (최대 ${item.maximumMemberCount})"
+                memberStatus = "${item.currentMemberCount}/${item.minimumMemberCount} (최대 ${item.maximumMemberCount})",
             )
 
         fun loadService() {
@@ -160,7 +160,7 @@ class MyServiceViewModel
                 )
             }
             viewModelScope.launch(Dispatchers.IO) {
-                serviceRepository.cancelService(id).fold(
+                serviceRepository.deleteService(id).fold(
                     onSuccess = {
                         loadService()
                     },

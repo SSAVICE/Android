@@ -3,7 +3,6 @@ package com.ssavice.seller_my_page.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +23,7 @@ fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}
     }
 }
 
-fun NavGraphBuilder.myPage(
-    onMyServiceClick: () -> Unit = {}
-) {
+fun NavGraphBuilder.myPage(onMyServiceClick: () -> Unit = {}) {
     composable<MyPageRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -46,7 +43,7 @@ fun NavGraphBuilder.myPage(
                 Modifier
                     .background(MaterialTheme.colorScheme.background)
                     .verticalScroll(rememberScrollState()),
-            onParticipatedServiceButtonClick = onMyServiceClick
+            onParticipatedServiceButtonClick = onMyServiceClick,
         )
     }
 }

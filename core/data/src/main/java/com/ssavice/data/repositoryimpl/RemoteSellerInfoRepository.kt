@@ -25,90 +25,101 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class RemoteSellerInfoRepository
-@Inject
-constructor(
-    private val companyRetrofitService: CompanyRetrofitService,
-) : SellerInfoRepository {
-    private val sellerInfoFlow = MutableStateFlow(
-        SellerMainInfo(
-            "", "", "", "", emptyList(), Region(
-                0.0, 0.0, "", ""
-            ),
-            "", "", ""
-        )
-    )
+    @Inject
+    constructor(
+        private val companyRetrofitService: CompanyRetrofitService,
+    ) : SellerInfoRepository {
+        private val sellerInfoFlow =
+            MutableStateFlow(
+                SellerMainInfo(
+                    "",
+                    "",
+                    "",
+                    "",
+                    emptyList(),
+                    Region(
+                        0.0,
+                        0.0,
+                        "",
+                        "",
+                    ),
+                    "",
+                    "",
+                    "",
+                ),
+            )
 
-    override suspend fun registerSellerInformation(
-        sellerInfo: SellerRegisterForm,
-        token: CompanyVerifyToken,
-    ): Result<Unit> =
-        processResponse(
-            companyRetrofitService.registerSeller(
-                AddCompanyDTO.fromModel(sellerInfo, token.token),
-            ),
-        )
+        override suspend fun registerSellerInformation(
+            sellerInfo: SellerRegisterForm,
+            token: CompanyVerifyToken,
+        ): Result<Unit> =
+            processResponse(
+                companyRetrofitService.registerSeller(
+                    AddCompanyDTO.fromModel(sellerInfo, token.token),
+                ),
+            )
 
-    override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
-        CoroutineScope(Dispatchers.IO).launch {
+        override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
+            CoroutineScope(Dispatchers.IO).launch {
+                processResponseOnResponseData(
+                    companyRetrofitService.getCompanyInfo(),
+                ).map {
+                    sellerInfoFlow.emit(it.toSellerMainInfoModel())
+                }
+            }
+            return sellerInfoFlow
+        }
+
+        override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
             processResponseOnResponseData(
-                companyRetrofitService.getCompanyInfo(),
+                companyRetrofitService.getCompanySummary(id),
+            ).map { it.toModel() }
+
+        override suspend fun verifyBusinessInfo(
+            name: String,
+            openDate: Date,
+            businessNumber: String,
+        ): Result<CompanyVerifyToken> {
+            val now = System.currentTimeMillis()
+            val formattedDate = "%04d%02d%02d".format(openDate.year, openDate.month, openDate.day)
+            return processResponseOnResponseData(
+                companyRetrofitService.validateBusinessInfo(
+                    ValidateBusinessDTO(
+                        name = name,
+                        startDate = formattedDate,
+                        businessNumber = businessNumber,
+                    ),
+                ),
             ).map {
-                sellerInfoFlow.emit(it.toSellerMainInfoModel())
+                CompanyVerifyToken(
+                    it.verifyToken,
+                    now,
+                )
             }
         }
-        return sellerInfoFlow
-    }
 
-    override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanySummary(id),
-        ).map { it.toModel() }
+        override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyParticipationSummary(),
+            ).map { it.toModel() }
 
-    override suspend fun verifyBusinessInfo(
-        name: String,
-        openDate: Date,
-        businessNumber: String,
-    ): Result<CompanyVerifyToken> {
-        val now = System.currentTimeMillis()
-        val formattedDate = "%04d%02d%02d".format(openDate.year, openDate.month, openDate.day)
-        return processResponseOnResponseData(
-            companyRetrofitService.validateBusinessInfo(
-                ValidateBusinessDTO(
-                    name = name,
-                    startDate = formattedDate,
-                    businessNumber = businessNumber,
+        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getMyService(
+            searchCount: Int,
+            page: Int?,
+            sortingOrder: SortingOrder,
+            serviceState: ServiceState,
+        ): Result<SellerServiceParticipation> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyBook(
+                    page = page ?: 0,
+                    size = searchCount,
+                    status = serviceState.name,
                 ),
-            ),
-        ).map {
-            CompanyVerifyToken(
-                it.verifyToken,
-                now,
-            )
-        }
+            ).map {
+                it.toModel()
+            }
     }
-
-    override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanyParticipationSummary(),
-        ).map { it.toModel() }
-
-    override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getMyService(
-        searchCount: Int,
-        page: Int?,
-        sortingOrder: SortingOrder,
-        serviceState: ServiceState
-    ): Result<SellerServiceParticipation> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanyBook(
-                page = page ?: 0,
-                size = searchCount,
-                status = serviceState.name,
-            ),
-        ).map {
-            it.toModel()
-        }
-}

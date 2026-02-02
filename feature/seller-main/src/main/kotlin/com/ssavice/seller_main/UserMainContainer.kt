@@ -38,7 +38,7 @@ fun SellerMainContainer(
             modifier = Modifier.padding(innerPadding),
         ) {
             myPage(
-                onMyServiceClick = onParticipatedServiceButtonClick
+                onMyServiceClick = onParticipatedServiceButtonClick,
             )
 
             home(

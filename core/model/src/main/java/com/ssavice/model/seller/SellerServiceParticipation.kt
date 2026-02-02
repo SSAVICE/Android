@@ -17,7 +17,7 @@ data class SellerServiceParticipationItem(
     val isReviewed: Boolean,
     val currentMemberCount: Int,
     val minimumMemberCount: Int,
-    val maximumMemberCount: Int
+    val maximumMemberCount: Int,
 )
 
 data class SellerServiceParticipation(

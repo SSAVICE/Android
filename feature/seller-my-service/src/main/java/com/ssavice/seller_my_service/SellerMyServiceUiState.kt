@@ -22,7 +22,7 @@ data class SellerMyServiceItemUiState(
     val cancellable: Boolean,
     val sellerId: Long,
     val state: ServiceState,
-    val memberStatus: String
+    val memberStatus: String,
 )
 
 sealed interface MyServiceState {

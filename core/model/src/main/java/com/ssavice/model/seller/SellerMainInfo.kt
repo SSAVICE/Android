@@ -12,5 +12,5 @@ data class SellerMainInfo(
     val region: Region,
     val address: String,
     val detailAddress: String,
-    val imageUrl: String
+    val imageUrl: String,
 )

@@ -57,16 +57,15 @@ fun SsaviceNavHost(
             },
             onParticipatedServiceButtonClick = {
                 navController.navigateToMyService()
-            }
+            },
         )
 
         myServiceScreen(
             onServiceClick = { _ ->
-
             },
             onBack = {
                 navController.navigateUp()
-            }
+            },
         )
     }
 }
