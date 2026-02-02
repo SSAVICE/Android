@@ -6,13 +6,20 @@ import com.ssavice.model.Region
 import com.ssavice.model.Review
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.seller.SellerProfileUpdateForm
 import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerSummary
 import com.ssavice.model.service.ServiceSummary
+import com.ssavice.model.user.ParticipationSummary
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.random.Random
@@ -20,6 +27,26 @@ import kotlin.random.Random
 internal class DemoSellerInfoRepository
     @Inject
     constructor() : SellerInfoRepository {
+        private val sellerInfoFlow =
+            MutableStateFlow(
+                SellerMainInfo(
+                    "",
+                    "",
+                    "",
+                    "",
+                    emptyList(),
+                    Region(
+                        0.0,
+                        0.0,
+                        "",
+                        "",
+                    ),
+                    "",
+                    "",
+                    "",
+                ),
+            )
+
         override suspend fun registerSellerInformation(
             sellerInfo: SellerRegisterForm,
             token: CompanyVerifyToken,
@@ -28,7 +55,7 @@ internal class DemoSellerInfoRepository
             return Result.success(Unit)
         }
 
-        override fun getMySellerInformation(): Flow<Result<SellerMainInfo>> {
+        override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
             val rand = Random(LocalDateTime.now().second)
 
             fun createService(
@@ -51,25 +78,28 @@ internal class DemoSellerInfoRepository
                 state = ServiceState.RECRUITING,
             )
 
-            return flow {
+            CoroutineScope(Dispatchers.IO).launch {
                 delay(1000)
-                emit(
-                    Result.success(
-                        SellerMainInfo(
-                            companyName = "주식회사 싸비스",
-                            phoneNumber = "010-1234-5678",
-                            businessNumber = "123-45-67890",
-                            description = "데모 판매자 정보입니다.",
-                            services =
-                                listOf(
-                                    createService("서비스1"),
-                                    createService("요가 클래스", listOf("힐링", "건강")),
-                                ),
-                            region = Region(0.0, 0.0, "달서구", "상인동"),
-                        ),
+                sellerInfoFlow.emit(
+                    SellerMainInfo(
+                        companyName = "주식회사 싸비스",
+                        phoneNumber = "010-1234-5678",
+                        businessNumber = "123-45-67890",
+                        description = "데모 판매자 정보입니다.",
+                        services =
+                            listOf(
+                                createService("서비스1"),
+                                createService("요가 클래스", listOf("힐링", "건강")),
+                            ),
+                        region = Region(0.0, 0.0, "달서구", "상인동"),
+                        address = "대구 달서구 상인동",
+                        detailAddress = "상인동 123-456",
+                        imageUrl = "https://picsum.photos/400",
                     ),
                 )
             }
+
+            return sellerInfoFlow
         }
 
         override suspend fun getSellerSummary(id: Long): Result<SellerSummary> {
@@ -86,7 +116,13 @@ internal class DemoSellerInfoRepository
                     rateCount = 100,
                     review =
                         listOf(
-                            Review(userName = "권*찬", comment = "너무 좋아요", serviceName = "요가 클래스", createdAt = Date.now(), rating = 4),
+                            Review(
+                                userName = "권*찬",
+                                comment = "너무 좋아요",
+                                serviceName = "요가 클래스",
+                                createdAt = Date.now(),
+                                rating = 4,
+                            ),
                             Review(
                                 userName = "장*욱",
                                 comment = "사장님이 친절해요 \n서비스 퀄리티도 좋아요",
@@ -94,7 +130,13 @@ internal class DemoSellerInfoRepository
                                 createdAt = Date.now(),
                                 rating = 5,
                             ),
-                            Review(userName = "추*훈", comment = "별로임", serviceName = "요가 클래스", createdAt = Date.now(), rating = 2),
+                            Review(
+                                userName = "추*훈",
+                                comment = "별로임",
+                                serviceName = "요가 클래스",
+                                createdAt = Date.now(),
+                                rating = 2,
+                            ),
                         ),
                 ),
             )
@@ -105,4 +147,21 @@ internal class DemoSellerInfoRepository
             openDate: Date,
             businessNumber: String,
         ): Result<CompanyVerifyToken> = Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
+
+        override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getMyService(
+            searchCount: Int,
+            page: Int?,
+            sortingOrder: SortingOrder,
+            serviceState: ServiceState,
+        ): Result<SellerServiceParticipation> {
+            TODO("Not yet implemented")
+        }
     }

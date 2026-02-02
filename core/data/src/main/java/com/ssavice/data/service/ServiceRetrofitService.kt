@@ -10,6 +10,7 @@ import com.ssavice.network.model.PresignedUrlResponseDTO
 import com.ssavice.network.model.SearchServiceResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -49,5 +50,10 @@ interface ServiceRetrofitService {
     @POST("/api/review")
     suspend fun postReview(
         @Body body: PostReviewDTO,
+    ): Response<Unit>
+
+    @DELETE("/api/service/{id}")
+    suspend fun deleteService(
+        @Path(value = "id") id: Long,
     ): Response<Unit>
 }

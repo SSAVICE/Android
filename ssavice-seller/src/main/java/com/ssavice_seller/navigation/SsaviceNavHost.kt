@@ -9,6 +9,8 @@ import com.ssavice.post_service.navigation.navigateToAddService
 import com.ssavice.seller_home.navigation.loginScreen
 import com.ssavice.seller_home.navigation.navigateToHome
 import com.ssavice.seller_main.navigation.mainScreen
+import com.ssavice.seller_my_service.navigation.myServiceScreen
+import com.ssavice.seller_my_service.navigation.navigateToMyService
 import com.ssavice.seller_register.navigation.registerScreen
 import kotlinx.serialization.Serializable
 
@@ -52,6 +54,17 @@ fun SsaviceNavHost(
         mainScreen(
             onAddClick = {
                 navController.navigateToAddService()
+            },
+            onParticipatedServiceButtonClick = {
+                navController.navigateToMyService()
+            },
+        )
+
+        myServiceScreen(
+            onServiceClick = { _ ->
+            },
+            onBack = {
+                navController.navigateUp()
             },
         )
     }

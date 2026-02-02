@@ -283,4 +283,8 @@ class DemoServiceRepository
         override suspend fun cancelService(id: Long): Result<Unit> = Result.success(Unit)
 
         override suspend fun reviewService(review: ReviewForm): Result<Unit> = Result.success(Unit)
+
+        override suspend fun deleteService(id: Long): Result<Unit> {
+            TODO("Not yet implemented")
+        }
     }

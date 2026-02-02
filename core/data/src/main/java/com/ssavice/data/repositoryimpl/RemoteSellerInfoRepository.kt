@@ -3,16 +3,25 @@ package com.ssavice.data.repositoryimpl
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.service.CompanyRetrofitService
 import com.ssavice.model.Date
+import com.ssavice.model.Region
 import com.ssavice.model.auth.CompanyVerifyToken
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.seller.SellerMainInfo
+import com.ssavice.model.seller.SellerProfileUpdateForm
 import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerSummary
+import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.model.ValidateBusinessDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class RemoteSellerInfoRepository
@@ -20,6 +29,26 @@ internal class RemoteSellerInfoRepository
     constructor(
         private val companyRetrofitService: CompanyRetrofitService,
     ) : SellerInfoRepository {
+        private val sellerInfoFlow =
+            MutableStateFlow(
+                SellerMainInfo(
+                    "",
+                    "",
+                    "",
+                    "",
+                    emptyList(),
+                    Region(
+                        0.0,
+                        0.0,
+                        "",
+                        "",
+                    ),
+                    "",
+                    "",
+                    "",
+                ),
+            )
+
         override suspend fun registerSellerInformation(
             sellerInfo: SellerRegisterForm,
             token: CompanyVerifyToken,
@@ -30,16 +59,16 @@ internal class RemoteSellerInfoRepository
                 ),
             )
 
-        override fun getMySellerInformation(): Flow<Result<SellerMainInfo>> =
-            flow {
-                emit(
-                    processResponseOnResponseData(
-                        companyRetrofitService.getCompanyInfo(),
-                    ).map {
-                        it.toSellerMainInfoModel()
-                    },
-                )
+        override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
+            CoroutineScope(Dispatchers.IO).launch {
+                processResponseOnResponseData(
+                    companyRetrofitService.getCompanyInfo(),
+                ).map {
+                    sellerInfoFlow.emit(it.toSellerMainInfoModel())
+                }
             }
+            return sellerInfoFlow
+        }
 
         override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
             processResponseOnResponseData(
@@ -68,4 +97,29 @@ internal class RemoteSellerInfoRepository
                 )
             }
         }
+
+        override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyParticipationSummary(),
+            ).map { it.toModel() }
+
+        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getMyService(
+            searchCount: Int,
+            page: Int?,
+            sortingOrder: SortingOrder,
+            serviceState: ServiceState,
+        ): Result<SellerServiceParticipation> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyBook(
+                    page = page ?: 0,
+                    size = searchCount,
+                    status = serviceState.name,
+                ),
+            ).map {
+                it.toModel()
+            }
     }

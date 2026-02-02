@@ -56,6 +56,9 @@ data class GetCompanyInfoDTO(
                     latitude = latitude,
                     longitude = longitude,
                 ),
+            address = address,
+            detailAddress = detailAddress,
+            imageUrl = imageUrl ?: "",
         )
 }
 

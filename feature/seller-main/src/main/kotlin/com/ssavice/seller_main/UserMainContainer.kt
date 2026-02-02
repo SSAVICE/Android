@@ -37,7 +37,9 @@ fun SellerMainContainer(
             startDestination = HomeRoute,
             modifier = Modifier.padding(innerPadding),
         ) {
-            myPage()
+            myPage(
+                onMyServiceClick = onParticipatedServiceButtonClick,
+            )
 
             home(
                 onAddClick = onAddClick,

@@ -143,4 +143,6 @@ internal class RemoteServiceRepository
                     PostReviewDTO.fromModel(review),
                 ),
             )
+
+        override suspend fun deleteService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.deleteService(id))
     }

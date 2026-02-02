@@ -1,4 +1,4 @@
-package com.ssavice.user_my_service
+package com.ssavice.seller_my_service
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -39,7 +39,6 @@ fun MyServiceRoute(
     modifier: Modifier = Modifier,
     viewModel: MyServiceViewModel = hiltViewModel(),
     onServiceClick: (Long) -> Unit = {},
-    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _ -> },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -54,7 +53,6 @@ fun MyServiceRoute(
         modifier = modifier,
         uiState = state,
         onLoadMore = viewModel::loadMoreService,
-        onReviewClick = onReviewClick,
         onServiceClick = onServiceClick,
         onSearchingStateChanged = viewModel::onSearchingStateChange,
         onCancelClick = viewModel::onCancelClick,
@@ -66,10 +64,9 @@ fun MyServiceScreen(
     modifier: Modifier = Modifier,
     onServiceClick: (Long) -> Unit = {},
     onCancelClick: (Long) -> Unit = {},
-    onReviewClick: (id: Long, name: String, thumbnailUrl: String, companyId: Long) -> Unit = { _, _, _, _ -> },
     onSearchingStateChanged: (Int) -> Unit = {},
     onLoadMore: () -> Unit = {},
-    uiState: MyServiceUiState,
+    uiState: SellerMyServiceUiState,
 ) {
     val isLoading =
         uiState.myServiceScreenStatus == MyServiceState.Loading ||
@@ -106,19 +103,12 @@ fun MyServiceScreen(
                 sellerName = service.sellerName,
                 duration = service.duration,
                 cancellable = service.cancellable,
-                reviewable = service.reviewable,
+                reviewable = false,
                 price = service.price,
                 thumbnailUrl = service.thumbnailUrl,
                 onCancelButtonClick = { onCancelClick(service.id) },
-                onReviewButtonClick = {
-                    onReviewClick(
-                        service.id,
-                        service.title,
-                        service.thumbnailUrl,
-                        service.sellerId,
-                    )
-                },
                 onClick = { onServiceClick(uiState.services[it].id) },
+                memberStatus = service.memberStatus,
                 state = service.state,
                 thumbnail = { url ->
                     AsyncImage(
@@ -169,8 +159,8 @@ fun ServiceStateFilter(
 @Preview
 @Composable
 fun MyServiceScreenPreview() {
-    fun makeSampleData(i: Int): MyServiceItemUiState =
-        MyServiceItemUiState(
+    fun makeSampleData(i: Int): SellerMyServiceItemUiState =
+        SellerMyServiceItemUiState(
             i,
             i.toLong(),
             "서비스 $i",
@@ -178,14 +168,14 @@ fun MyServiceScreenPreview() {
             "https://picsum.photos/seed/item $i/200",
             "판매자 $i",
             "2026-01-16 - 2026-02-03",
-            cancellable = true,
-            reviewable = true,
+            true,
             sellerId = 0,
             state = ServiceState.RECRUITING,
+            memberStatus = "10/30 (최대 40)",
         )
 
     val state =
-        MyServiceUiState(
+        SellerMyServiceUiState(
             services = (0..10).map { makeSampleData(it) },
             myServiceScreenStatus = MyServiceState.Loaded,
             hasNext = false,

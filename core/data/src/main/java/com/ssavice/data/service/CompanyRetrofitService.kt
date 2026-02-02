@@ -2,6 +2,8 @@ package com.ssavice.data.service
 
 import GetCompanyInfoDTO
 import com.ssavice.network.model.AddCompanyDTO
+import com.ssavice.network.model.CompanyBookDTO
+import com.ssavice.network.model.CompanyBookSummaryDTO
 import com.ssavice.network.model.GetCompanySummaryDTO
 import com.ssavice.network.model.JwtDTO
 import com.ssavice.network.model.LoginDTO
@@ -12,6 +14,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CompanyRetrofitService {
     @POST("/api/company")
@@ -36,4 +39,14 @@ interface CompanyRetrofitService {
     suspend fun validateBusinessInfo(
         @Body body: ValidateBusinessDTO,
     ): Response<ValidateBusinessResponseDTO>
+
+    @GET("/api/company/book/summary")
+    suspend fun getCompanyParticipationSummary(): Response<CompanyBookSummaryDTO>
+
+    @GET("/api/company/book")
+    suspend fun getCompanyBook(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("status") status: String,
+    ): Response<CompanyBookDTO>
 }
