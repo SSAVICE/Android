@@ -12,6 +12,7 @@ enum class ServiceState(
     COMPLETED("이용 완료", reviewable = true),
     CANCELED("취소됨", visibleAsOption = true),
     USER_CANCELED("취소함"),
+    FAILED("모집 실패"),
     UNKNOWN("알 수 없음"),
     ;
 
