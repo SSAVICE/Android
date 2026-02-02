@@ -11,6 +11,7 @@ import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.service.WishList
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.model.user.UserProfile
 import com.ssavice.model.user.UserProfileUpdateForm
@@ -20,6 +21,7 @@ import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.RegionPostDTO
 import com.ssavice.network.model.UpdateUserProfileDTO
+import com.ssavice.network.model.WishServiceDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.CoroutineScope
@@ -185,4 +187,24 @@ class RemoteUserInfoRepository
                     RegionPostDTO.fromModel(region),
                 ),
             )
+
+    override suspend fun wishService(id: Long, toEnable: Boolean): Result<Unit> =
+        processResponse(userRetrofitService.wishService(
+            id, WishServiceDTO(targetStatus = toEnable)
+        ))
+
+
+    override suspend fun getWishList(
+        searchCount: Int,
+        page: Int?
+    ): Result<WishList> {
+        return processResponseOnResponseData(
+            userRetrofitService.getWish(
+                page = page ?: 0,
+                size = searchCount
+            )
+        ).map {
+            it.toModel()
+        }
     }
+}
