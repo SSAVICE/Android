@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.ssavice.login.navigation.loginScreen
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
 import com.ssavice.seller_edit_profile.navigation.editProfileScreen
 import com.ssavice.seller_edit_profile.navigation.navigateToEditProfile
-import com.ssavice.login.navigation.loginScreen
 import com.ssavice.seller_home.navigation.navigateToHome
 import com.ssavice.seller_main.navigation.mainScreen
 import com.ssavice.seller_main.navigation.navigateToMain
@@ -69,7 +69,7 @@ fun SsaviceNavHost(
                     phoneNumber = it?.phoneNumber,
                     profileImageUrl = it?.profileUrl,
                 )
-            }
+            },
         )
 
         myServiceScreen(

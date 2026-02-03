@@ -26,7 +26,8 @@ fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}
 
 fun NavGraphBuilder.myPage(
     onMyServiceClick: () -> Unit = {},
-    onEditProfileClick: (ProfileState?) -> Unit = {}) {
+    onEditProfileClick: (ProfileState?) -> Unit = {},
+) {
     composable<MyPageRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -47,7 +48,7 @@ fun NavGraphBuilder.myPage(
                     .background(MaterialTheme.colorScheme.background)
                     .verticalScroll(rememberScrollState()),
             onParticipatedServiceButtonClick = onMyServiceClick,
-            onEditProfileButtonClick = onEditProfileClick
+            onEditProfileButtonClick = onEditProfileClick,
         )
     }
 }

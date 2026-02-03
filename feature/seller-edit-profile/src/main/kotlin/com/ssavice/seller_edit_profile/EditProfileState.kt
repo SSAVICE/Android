@@ -24,7 +24,7 @@ data class EditProfileForm(
     val phoneNumberErrorMessage: String? = null,
     val detailAddress: String = "",
     val detailAddressErrorMessage: String? = null,
-    val address: AddressState = AddressState()
+    val address: AddressState = AddressState(),
 )
 
 data class AddressState(
@@ -32,7 +32,7 @@ data class AddressState(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val regionCode: String = "",
-    val postCode: String = ""
+    val postCode: String = "",
 )
 
 sealed interface ProfileState {
@@ -52,9 +52,9 @@ sealed interface ProfileState {
 }
 
 sealed interface AddressFormState {
-    object Initial: AddressFormState
+    object Initial : AddressFormState
 
-    object Fetching: AddressFormState
+    object Fetching : AddressFormState
 
-    object Idle: AddressFormState
+    object Idle : AddressFormState
 }

@@ -39,187 +39,187 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import javax.inject.Inject
 
 internal class RemoteSellerInfoRepository
-@Inject
-constructor(
-    private val companyRetrofitService: CompanyRetrofitService,
-    private val imageUploadService: ImageUploadService
-) : SellerInfoRepository {
-    private val sellerInfoFlow =
-        MutableStateFlow(
-            SellerMainInfo(
-                "",
-                "",
-                "",
-                "",
-                emptyList(),
-                Region(
-                    0.0,
-                    0.0,
+    @Inject
+    constructor(
+        private val companyRetrofitService: CompanyRetrofitService,
+        private val imageUploadService: ImageUploadService,
+    ) : SellerInfoRepository {
+        private val sellerInfoFlow =
+            MutableStateFlow(
+                SellerMainInfo(
+                    "",
+                    "",
+                    "",
+                    "",
+                    emptyList(),
+                    Region(
+                        0.0,
+                        0.0,
+                        "",
+                        "",
+                    ),
+                    "",
+                    "",
                     "",
                     "",
                 ),
-                "",
-                "",
-                "",
-                ""
-            ),
-        )
+            )
 
-    override suspend fun registerSellerInformation(
-        sellerInfo: SellerRegisterForm,
-        token: CompanyVerifyToken,
-    ): Result<Unit> =
-        processResponse(
-            companyRetrofitService.registerSeller(
-                AddCompanyDTO.fromModel(sellerInfo, token.token),
-            ),
-        )
+        override suspend fun registerSellerInformation(
+            sellerInfo: SellerRegisterForm,
+            token: CompanyVerifyToken,
+        ): Result<Unit> =
+            processResponse(
+                companyRetrofitService.registerSeller(
+                    AddCompanyDTO.fromModel(sellerInfo, token.token),
+                ),
+            )
 
-    override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
-        CoroutineScope(Dispatchers.IO).launch {
+        override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
+            CoroutineScope(Dispatchers.IO).launch {
+                processResponseOnResponseData(
+                    companyRetrofitService.getCompanyInfo(),
+                ).map {
+                    sellerInfoFlow.emit(it.toSellerMainInfoModel())
+                }
+            }
+            return sellerInfoFlow
+        }
+
+        override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
             processResponseOnResponseData(
-                companyRetrofitService.getCompanyInfo(),
+                companyRetrofitService.getCompanySummary(id),
+            ).map { it.toModel() }
+
+        override suspend fun verifyBusinessInfo(
+            name: String,
+            openDate: Date,
+            businessNumber: String,
+        ): Result<CompanyVerifyToken> {
+            val now = System.currentTimeMillis()
+            val formattedDate = "%04d%02d%02d".format(openDate.year, openDate.month, openDate.day)
+            return processResponseOnResponseData(
+                companyRetrofitService.validateBusinessInfo(
+                    ValidateBusinessDTO(
+                        name = name,
+                        startDate = formattedDate,
+                        businessNumber = businessNumber,
+                    ),
+                ),
             ).map {
-                sellerInfoFlow.emit(it.toSellerMainInfoModel())
+                CompanyVerifyToken(
+                    it.verifyToken,
+                    now,
+                )
             }
         }
-        return sellerInfoFlow
-    }
 
-    override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanySummary(id),
-        ).map { it.toModel() }
-
-    override suspend fun verifyBusinessInfo(
-        name: String,
-        openDate: Date,
-        businessNumber: String,
-    ): Result<CompanyVerifyToken> {
-        val now = System.currentTimeMillis()
-        val formattedDate = "%04d%02d%02d".format(openDate.year, openDate.month, openDate.day)
-        return processResponseOnResponseData(
-            companyRetrofitService.validateBusinessInfo(
-                ValidateBusinessDTO(
-                    name = name,
-                    startDate = formattedDate,
-                    businessNumber = businessNumber,
-                ),
-            ),
-        ).map {
-            CompanyVerifyToken(
-                it.verifyToken,
-                now,
-            )
-        }
-    }
-
-    override suspend fun getSellerAddress(): Result<RegionDetail> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanyAddress(),
-        ).map {
-            RegionDetail(
-                regionInfo =
-                    RegionInfo(
-                        latitude = it.latitude,
-                        longitude = it.longitude,
-                        address = it.address,
-                        detailAddress = it.detailAddress,
-                        postCode = it.postCode,
-                        regionCode = it.regionCode,
-                    ),
-                region1 = it.gugun,
-                region2 = it.region,
-            )
-        }
-
-    override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanyParticipationSummary(),
-        ).map { it.toModel() }
-
-    override suspend fun getMyService(
-        searchCount: Int,
-        page: Int?,
-        sortingOrder: SortingOrder,
-        serviceState: ServiceState,
-    ): Result<SellerServiceParticipation> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanyBook(
-                page = page ?: 0,
-                size = searchCount,
-                status = serviceState.name,
-            ),
-        ).map {
-            it.toModel()
-        }
-
-    override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> =
-        channelFlow {
-            Log.d("KSC", "updateSellerProfileImage: ${image.mimeType}")
-            send(
-                ImageUploadProgress.Preprocessing,
-            )
-
-            val fetchUrlRequest =
-                processResponseOnResponseData(
-                    companyRetrofitService.requestProfileUploadUrl(
-                        ContentTypeDTO(
-                            contentType = image.mimeType,
+        override suspend fun getSellerAddress(): Result<RegionDetail> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyAddress(),
+            ).map {
+                RegionDetail(
+                    regionInfo =
+                        RegionInfo(
+                            latitude = it.latitude,
+                            longitude = it.longitude,
+                            address = it.address,
+                            detailAddress = it.detailAddress,
+                            postCode = it.postCode,
+                            regionCode = it.regionCode,
                         ),
-                    ),
+                    region1 = it.gugun,
+                    region2 = it.region,
+                )
+            }
+
+        override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyParticipationSummary(),
+            ).map { it.toModel() }
+
+        override suspend fun getMyService(
+            searchCount: Int,
+            page: Int?,
+            sortingOrder: SortingOrder,
+            serviceState: ServiceState,
+        ): Result<SellerServiceParticipation> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyBook(
+                    page = page ?: 0,
+                    size = searchCount,
+                    status = serviceState.name,
+                ),
+            ).map {
+                it.toModel()
+            }
+
+        override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> =
+            channelFlow {
+                Log.d("KSC", "updateSellerProfileImage: ${image.mimeType}")
+                send(
+                    ImageUploadProgress.Preprocessing,
                 )
 
-            val body =
-                ProgressRequestBody(
-                    contentType = image.mimeType.toMediaTypeOrNull(),
-                    data = image.data,
-                    onProgress = { progress ->
-                        trySend(ImageUploadProgress.Progress((progress * 100).toInt()))
-                    },
-                )
+                val fetchUrlRequest =
+                    processResponseOnResponseData(
+                        companyRetrofitService.requestProfileUploadUrl(
+                            ContentTypeDTO(
+                                contentType = image.mimeType,
+                            ),
+                        ),
+                    )
 
-            fetchUrlRequest
-                .onFailure {
-                    send(ImageUploadProgress.Error(it))
-                }.onSuccess { url ->
-                    val imageResponse =
-                        imageUploadService.uploadImage(
-                            url = url.uploadUrl,
-                            contentType = image.mimeType,
-                            body = body,
-                        )
-                    send(ImageUploadProgress.Progress(0))
-                    processResponse(imageResponse)
-                        .onSuccess { key ->
-                            send(ImageUploadProgress.Progress(100))
+                val body =
+                    ProgressRequestBody(
+                        contentType = image.mimeType.toMediaTypeOrNull(),
+                        data = image.data,
+                        onProgress = { progress ->
+                            trySend(ImageUploadProgress.Progress((progress * 100).toInt()))
+                        },
+                    )
 
-                            processResponse(
-                                companyRetrofitService.confirmProfileUpload(
-                                    body =
-                                        ConfirmImageDTO(
-                                            objectKey = url.objectKey,
-                                        ),
-                                ),
-                            ).onSuccess { _ ->
-                                send(ImageUploadProgress.Done(url.objectKey))
-                                getMySellerInformation()
+                fetchUrlRequest
+                    .onFailure {
+                        send(ImageUploadProgress.Error(it))
+                    }.onSuccess { url ->
+                        val imageResponse =
+                            imageUploadService.uploadImage(
+                                url = url.uploadUrl,
+                                contentType = image.mimeType,
+                                body = body,
+                            )
+                        send(ImageUploadProgress.Progress(0))
+                        processResponse(imageResponse)
+                            .onSuccess { key ->
+                                send(ImageUploadProgress.Progress(100))
+
+                                processResponse(
+                                    companyRetrofitService.confirmProfileUpload(
+                                        body =
+                                            ConfirmImageDTO(
+                                                objectKey = url.objectKey,
+                                            ),
+                                    ),
+                                ).onSuccess { _ ->
+                                    send(ImageUploadProgress.Done(url.objectKey))
+                                    getMySellerInformation()
+                                }.onFailure { e ->
+                                    send(ImageUploadProgress.Error(e))
+                                }
                             }.onFailure { e ->
                                 send(ImageUploadProgress.Error(e))
                             }
-                        }.onFailure { e ->
-                            send(ImageUploadProgress.Error(e))
-                        }
-                }
-        }
+                    }
+            }
 
-    override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
-        processResponse(
-            companyRetrofitService.putCompanyProfile(
-                body = UpdateCompanyProfileDTO.fromModel(profile)
-            )
-        ).onSuccess {
-            getMySellerInformation()
-            Unit
-        }
-}
+        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
+            processResponse(
+                companyRetrofitService.putCompanyProfile(
+                    body = UpdateCompanyProfileDTO.fromModel(profile),
+                ),
+            ).onSuccess {
+                getMySellerInformation()
+                Unit
+            }
+    }

@@ -798,7 +798,7 @@ private fun InputAddressScreen(
             isError,
             errorMessage,
         ) {
-            AddressPickerSelectButton(addressState.address){
+            AddressPickerSelectButton(addressState.address) {
                 if (!showAddressPicker) showAddressPicker = true
             }
         }

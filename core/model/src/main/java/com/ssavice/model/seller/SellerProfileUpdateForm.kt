@@ -7,5 +7,5 @@ data class SellerProfileUpdateForm(
     val phoneNumber: String,
     val description: String,
     val detail: String,
-    val region: RegionInfo
+    val region: RegionInfo,
 )

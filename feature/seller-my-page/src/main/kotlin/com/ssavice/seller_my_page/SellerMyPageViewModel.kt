@@ -34,7 +34,7 @@ class SellerMyPageViewModel
                                     description = profile.description,
                                     profileUrl = profile.imageUrl,
                                     phoneNumber = profile.phoneNumber,
-                                    detail = profile.detail
+                                    detail = profile.detail,
                                 ),
                         )
                     }

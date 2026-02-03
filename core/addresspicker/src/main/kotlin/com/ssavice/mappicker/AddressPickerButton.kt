@@ -10,7 +10,7 @@ import com.ssavice.designsystem.component.OutlinedTextFieldButton
 fun AddressPickerSelectButton(
     addressText: String,
     placeHolder: String = "",
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     OutlinedTextFieldButton(
         placeHolder = placeHolder,

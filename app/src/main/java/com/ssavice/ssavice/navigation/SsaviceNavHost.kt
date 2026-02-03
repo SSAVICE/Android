@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssavice.edit_profile.navigation.editProfileScreen
 import com.ssavice.edit_profile.navigation.navigateToEditProfile
+import com.ssavice.login.navigation.LoginRoute
+import com.ssavice.login.navigation.loginScreen
 import com.ssavice.model.enums.Category
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search.SearchForm
@@ -13,8 +15,6 @@ import com.ssavice.search.navigation.navigateToSearchForm
 import com.ssavice.search.navigation.searchFormScreen
 import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
-import com.ssavice.login.navigation.LoginRoute
-import com.ssavice.login.navigation.loginScreen
 import com.ssavice.service_detail.navigation.navigateToPostReview
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.postReviewScreen

@@ -97,7 +97,7 @@ fun EditProfileRoute(
         }
     }
     LaunchedEffect(state.addressState) {
-        if(state.addressState is AddressFormState.Initial) {
+        if (state.addressState is AddressFormState.Initial) {
             delay(Constant.ANIMATION_DELAY)
             viewModel.initAddressState()
         }
@@ -152,10 +152,12 @@ fun EditProfileScreen(
     imageUploading: Boolean = false,
 ) {
     val dataInitialized =
-            (state.profileUpdateState != ProfileState.Initial && state.form.name.isNotEmpty()) ||
-                    isStateModifiable(state.profileUpdateState)
+        (state.profileUpdateState != ProfileState.Initial && state.form.name.isNotEmpty()) ||
+            isStateModifiable(state.profileUpdateState)
     val addressInitialized =
-        state.addressState == AddressFormState.Idle && state.form.address.address.isNotEmpty()
+        state.addressState == AddressFormState.Idle &&
+            state.form.address.address
+                .isNotEmpty()
     val nameState = rememberTextFieldState(state.form.name)
     val descriptionState = rememberTextFieldState(state.form.description)
     val detailState = rememberTextFieldState(state.form.detail)
@@ -179,7 +181,7 @@ fun EditProfileScreen(
         }
     }
     LaunchedEffect(addressInitialized) {
-        if(addressInitialized) {
+        if (addressInitialized) {
             detailAddressState.edit {
                 replace(0, detailAddressState.text.length, state.form.detailAddress)
             }
@@ -206,9 +208,8 @@ fun EditProfileScreen(
             snapshotFlow { phoneNumberState.text }
                 .collectLatest { onPhoneNumberChange(it.toString()) }
         }
-
     }
-    if(addressInitialized) {
+    if (addressInitialized) {
         LaunchedEffect(detailAddressState) {
             snapshotFlow { detailAddressState.text }
                 .collectLatest { onDetailAddressChange(it.toString()) }
@@ -389,9 +390,10 @@ fun EditProfileScreen(
                 modifier = Modifier.weight(1f),
                 text = "저장",
                 onClick = onSubmitButtonClick,
-                enabled = enabled
-                        && isStateModifiable(state.imageUpdateState)
-                        && state.addressState is AddressFormState.Idle,
+                enabled =
+                    enabled &&
+                        isStateModifiable(state.imageUpdateState) &&
+                        state.addressState is AddressFormState.Idle,
             )
         }
     }
@@ -403,7 +405,7 @@ private fun AddressForm(
     onAddressChange: (AddressState) -> Unit,
     detailAddressState: TextFieldState,
     detailAddressError: String?,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     var showAddressPicker by remember { mutableStateOf(false) }
 
@@ -412,7 +414,7 @@ private fun AddressForm(
         "주소",
     ) {
         AddressPickerSelectButton(
-            addressState.address
+            addressState.address,
         ) {
             showAddressPicker = true
         }
@@ -426,7 +428,7 @@ private fun AddressForm(
         enabled = enabled,
     )
 
-    if(showAddressPicker) {
+    if (showAddressPicker) {
         AddressPickerDialog(
             onSelect = {
                 it.run {
@@ -436,15 +438,15 @@ private fun AddressForm(
                             latitude = latitude,
                             longitude = longitude,
                             regionCode = regionCode,
-                            postCode = zipCode
-                        )
+                            postCode = zipCode,
+                        ),
                     )
                 }
                 showAddressPicker = false
             },
             onDismiss = {
                 showAddressPicker = false
-            }
+            },
         )
     }
 }
@@ -478,7 +480,7 @@ fun EditProfileScreenPreview() {
                 onDetailChange = {},
                 onDetailAddressChange = {},
                 onSubmitButtonClick = {},
-                onAddressUpdate = {}
+                onAddressUpdate = {},
             )
         }
     }

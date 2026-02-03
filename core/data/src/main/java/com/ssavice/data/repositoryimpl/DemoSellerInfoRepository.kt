@@ -48,7 +48,7 @@ internal class DemoSellerInfoRepository
                     "",
                     "",
                     "",
-                    ""
+                    "",
                 ),
             )
 
@@ -100,7 +100,7 @@ internal class DemoSellerInfoRepository
                         address = "대구 달서구 상인동",
                         detailAddress = "상인동 123-456",
                         imageUrl = "https://picsum.photos/400",
-                        detail = "상세 정보입니다."
+                        detail = "상세 정보입니다.",
                     ),
                 )
             }
@@ -154,11 +154,11 @@ internal class DemoSellerInfoRepository
             businessNumber: String,
         ): Result<CompanyVerifyToken> = Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
 
-    override suspend fun getSellerAddress(): Result<RegionDetail> {
-        TODO("Not yet implemented")
-    }
+        override suspend fun getSellerAddress(): Result<RegionDetail> {
+            TODO("Not yet implemented")
+        }
 
-    override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> {
+        override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> {
             TODO("Not yet implemented")
         }
 
@@ -175,7 +175,7 @@ internal class DemoSellerInfoRepository
             TODO("Not yet implemented")
         }
 
-    override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> {
-        TODO("Not yet implemented")
+        override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> {
+            TODO("Not yet implemented")
+        }
     }
-}
