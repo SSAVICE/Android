@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Date
@@ -27,7 +28,7 @@ class AddServiceViewModel
     @Inject
     constructor(
         private val serviceRepository: ServiceRepository,
-        private val userRepository: UserInfoRepository,
+        private val sellerRepository: SellerInfoRepository,
         @ApplicationContext private val context: Context,
     ) : ViewModel() {
         val uiState =
@@ -297,7 +298,7 @@ class AddServiceViewModel
         fun getUserAddressAndApply() {
             return // TODO: 현재 이용 불가
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.getUserAddress().onSuccess { address ->
+                sellerRepository.getSellerAddress().onSuccess { address ->
                     uiState.update {
                         it.copy(
                             form =
@@ -376,6 +377,8 @@ class AddServiceViewModel
                         onSuccess = {
                             uiState.value =
                                 uiState.value.copy(submitState = SubmitState.Success(it))
+
+                            sellerRepository.getMySellerInformation()
                         },
                         onFailure = {
                             uiState.value =
