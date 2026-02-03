@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.seller_edit_profile.EditProfileRoute
 import com.ssavice.ui.navigation.SsaviceTitle
 import kotlinx.serialization.Serializable
@@ -72,8 +73,9 @@ fun NavGraphBuilder.editProfileScreen(
     {
         Scaffold(
             topBar = {
-                SsaviceTitle(
+                SsavicePopUpTopBar(
                     title = "프로필 수정",
+                    onBackClicked = onBackClick,
                 )
             },
         ) { innerPadding ->

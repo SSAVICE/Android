@@ -7,6 +7,8 @@ import com.ssavice.data.service.ImageUploadService
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
+import com.ssavice.model.RegionDetail
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
@@ -111,6 +113,25 @@ constructor(
             )
         }
     }
+
+    override suspend fun getSellerAddress(): Result<RegionDetail> =
+        processResponseOnResponseData(
+            companyRetrofitService.getCompanyAddress(),
+        ).map {
+            RegionDetail(
+                regionInfo =
+                    RegionInfo(
+                        latitude = it.latitude,
+                        longitude = it.longitude,
+                        address = it.address,
+                        detailAddress = it.detailAddress,
+                        postCode = it.postCode,
+                        regionCode = it.regionCode,
+                    ),
+                region1 = it.gugun,
+                region2 = it.region,
+            )
+        }
 
     override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
         processResponseOnResponseData(

@@ -13,17 +13,17 @@ import com.ssavice.search.navigation.navigateToSearchForm
 import com.ssavice.search.navigation.searchFormScreen
 import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
-import com.ssavice.seller_home.navigation.LoginRoute
-import com.ssavice.seller_home.navigation.loginScreen
+import com.ssavice.login.navigation.LoginRoute
+import com.ssavice.login.navigation.loginScreen
 import com.ssavice.service_detail.navigation.navigateToPostReview
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.postReviewScreen
 import com.ssavice.service_detail.navigation.serviceDetailScreen
-import com.ssavice.user_home.navigation.navigateToHome
 import com.ssavice.user_liked.navigation.likedScreen
 import com.ssavice.user_liked.navigation.navigateToUserLiked
 import com.ssavice.user_main.navigation.MainRoute
 import com.ssavice.user_main.navigation.mainScreen
+import com.ssavice.user_main.navigation.navigateToMain
 import com.ssavice.user_my_service.navigation.myServiceScreen
 import com.ssavice.user_my_service.navigation.navigateToMyService
 import kotlinx.serialization.Serializable
@@ -64,7 +64,7 @@ fun SsaviceNavHost(
 
         loginScreen(
             onLoginComplete = {
-                navController.navigateToHome {
+                navController.navigateToMain {
                     popUpTo(LoginRoute) { inclusive = true }
                 }
             },

@@ -2,6 +2,7 @@ package com.ssavice.data.repository
 
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.RegionDetail
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
@@ -30,6 +31,8 @@ interface SellerInfoRepository {
         openDate: Date,
         businessNumber: String,
     ): Result<CompanyVerifyToken>
+
+    suspend fun getSellerAddress(): Result<RegionDetail>
 
     suspend fun getSellerParticipationSummary(): Result<ParticipationSummary>
 

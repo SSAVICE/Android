@@ -6,9 +6,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
-import com.ssavice.seller_home.navigation.loginScreen
+import com.ssavice.seller_edit_profile.navigation.editProfileScreen
+import com.ssavice.seller_edit_profile.navigation.navigateToEditProfile
+import com.ssavice.login.navigation.loginScreen
 import com.ssavice.seller_home.navigation.navigateToHome
 import com.ssavice.seller_main.navigation.mainScreen
+import com.ssavice.seller_main.navigation.navigateToMain
 import com.ssavice.seller_my_service.navigation.myServiceScreen
 import com.ssavice.seller_my_service.navigation.navigateToMyService
 import com.ssavice.seller_register.navigation.registerScreen
@@ -44,7 +47,7 @@ fun SsaviceNavHost(
 
         loginScreen(
             onLoginComplete = {
-                navController.navigateToHome {
+                navController.navigateToMain {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
             },
@@ -58,12 +61,30 @@ fun SsaviceNavHost(
             onParticipatedServiceButtonClick = {
                 navController.navigateToMyService()
             },
+            onEditProfileButtonClick = {
+                navController.navigateToEditProfile(
+                    name = it?.name,
+                    description = it?.description,
+                    detail = it?.detail,
+                    phoneNumber = it?.phoneNumber,
+                    profileImageUrl = it?.profileUrl,
+                )
+            }
         )
 
         myServiceScreen(
             onServiceClick = { _ ->
             },
             onBack = {
+                navController.navigateUp()
+            },
+        )
+
+        editProfileScreen(
+            onSubmit = {
+                navController.navigateUp()
+            },
+            onBackClick = {
                 navController.navigateUp()
             },
         )

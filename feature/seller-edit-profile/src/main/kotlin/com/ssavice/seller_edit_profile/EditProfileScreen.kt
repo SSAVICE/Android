@@ -56,7 +56,9 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.edit_profile.EditProfileViewModel
 import com.ssavice.mappicker.AddressPickerDialog
 import com.ssavice.mappicker.AddressPickerSelectButton
+import com.ssavice.ui.common.Constant
 import com.ssavice.ui.uploadImage.ImageWithUploadState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,12 +89,20 @@ fun EditProfileRoute(
             }
 
             ProfileState.Initial -> {
+                delay(Constant.ANIMATION_DELAY)
                 viewModel.initUiState()
             }
 
             else -> {}
         }
     }
+    LaunchedEffect(state.addressState) {
+        if(state.addressState is AddressFormState.Initial) {
+            delay(Constant.ANIMATION_DELAY)
+            viewModel.initAddressState()
+        }
+    }
+
     val profileImageClick =
         if (isStateModifiable(state.imageUpdateState)) {
             {
@@ -141,10 +151,11 @@ fun EditProfileScreen(
     onSubmitButtonClick: () -> Unit,
     imageUploading: Boolean = false,
 ) {
-    val dataInitialized = (
+    val dataInitialized =
             (state.profileUpdateState != ProfileState.Initial && state.form.name.isNotEmpty()) ||
                     isStateModifiable(state.profileUpdateState)
-            )
+    val addressInitialized =
+        state.addressState == AddressFormState.Idle && state.form.address.address.isNotEmpty()
     val nameState = rememberTextFieldState(state.form.name)
     val descriptionState = rememberTextFieldState(state.form.description)
     val detailState = rememberTextFieldState(state.form.detail)
@@ -164,6 +175,13 @@ fun EditProfileScreen(
             }
             phoneNumberState.edit {
                 replace(0, phoneNumberState.text.length, state.form.phoneNumber)
+            }
+        }
+    }
+    LaunchedEffect(addressInitialized) {
+        if(addressInitialized) {
+            detailAddressState.edit {
+                replace(0, detailAddressState.text.length, state.form.detailAddress)
             }
         }
     }
@@ -189,6 +207,8 @@ fun EditProfileScreen(
                 .collectLatest { onPhoneNumberChange(it.toString()) }
         }
 
+    }
+    if(addressInitialized) {
         LaunchedEffect(detailAddressState) {
             snapshotFlow { detailAddressState.text }
                 .collectLatest { onDetailAddressChange(it.toString()) }
@@ -288,7 +308,7 @@ fun EditProfileScreen(
                 SsaviceInputField(
                     state = nameState,
                     labelText = "판매자명",
-                    placeholderText = "이름을 입력해주세요",
+                    placeholderText = "",
                     isError = state.form.nameErrorMessage != null,
                     errorMessage = state.form.nameErrorMessage,
                     enabled = enabled,
@@ -297,7 +317,6 @@ fun EditProfileScreen(
                 SsaviceInputField(
                     state = descriptionState,
                     labelText = "판매자 소게",
-                    placeholderText = "간단한 판매자 소개를 입력해주세요",
                     isError = state.form.descriptionErrorMessage != null,
                     errorMessage = state.form.descriptionErrorMessage,
                     enabled = enabled,
@@ -306,7 +325,6 @@ fun EditProfileScreen(
                 SsaviceInputField(
                     state = detailState,
                     labelText = "상세 설명",
-                    placeholderText = "판매자에 대한 상세 설명을 입력해주세요",
                     isError = state.form.detailErrorMessage != null,
                     errorMessage = state.form.detailErrorMessage,
                     enabled = enabled,
@@ -315,7 +333,6 @@ fun EditProfileScreen(
                 SsaviceInputField(
                     state = phoneNumberState,
                     labelText = "전화번호",
-                    placeholderText = "전화번호를 입력해주세요",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     inputTransformation = InputTransformations.digitOnlyInputTransformation,
                     outputTransformation = OutputTransformations.formatPhoneNumber,
@@ -349,7 +366,7 @@ fun EditProfileScreen(
                     onAddressChange = onAddressUpdate,
                     detailAddressState = detailAddressState,
                     detailAddressError = state.form.detailAddressErrorMessage,
-                    enabled = state.addressState !is AddressFormState.Initial,
+                    enabled = state.addressState is AddressFormState.Idle,
                 )
             }
         }
@@ -372,7 +389,9 @@ fun EditProfileScreen(
                 modifier = Modifier.weight(1f),
                 text = "저장",
                 onClick = onSubmitButtonClick,
-                enabled = enabled && isStateModifiable(state.imageUpdateState),
+                enabled = enabled
+                        && isStateModifiable(state.imageUpdateState)
+                        && state.addressState is AddressFormState.Idle,
             )
         }
     }
@@ -402,7 +421,6 @@ private fun AddressForm(
     SsaviceInputField(
         state = detailAddressState,
         labelText = "상세 주소",
-        placeholderText = "101동 1001호 ...",
         isError = detailAddressError != null,
         errorMessage = detailAddressError,
         enabled = enabled,

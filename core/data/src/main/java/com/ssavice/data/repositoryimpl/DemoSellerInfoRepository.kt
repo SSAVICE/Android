@@ -4,6 +4,7 @@ import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
+import com.ssavice.model.RegionDetail
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.Review
 import com.ssavice.model.auth.CompanyVerifyToken
@@ -153,7 +154,11 @@ internal class DemoSellerInfoRepository
             businessNumber: String,
         ): Result<CompanyVerifyToken> = Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
 
-        override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> {
+    override suspend fun getSellerAddress(): Result<RegionDetail> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> {
             TODO("Not yet implemented")
         }
 

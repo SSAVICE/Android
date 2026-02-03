@@ -6,6 +6,7 @@ import com.ssavice.network.model.CompanyBookDTO
 import com.ssavice.network.model.CompanyBookSummaryDTO
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
+import com.ssavice.network.model.GetAddressDTO
 import com.ssavice.network.model.GetCompanySummaryDTO
 import com.ssavice.network.model.JwtDTO
 import com.ssavice.network.model.LoginDTO
@@ -16,6 +17,7 @@ import com.ssavice.network.model.ValidateBusinessResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -48,6 +50,9 @@ interface CompanyRetrofitService {
     @GET("/api/company/book/summary")
     suspend fun getCompanyParticipationSummary(): Response<CompanyBookSummaryDTO>
 
+    @GET("/api/company/address")
+    suspend fun getCompanyAddress(): Response<GetAddressDTO>
+
     @GET("/api/company/book")
     suspend fun getCompanyBook(
         @Query("page") page: Int,
@@ -65,7 +70,7 @@ interface CompanyRetrofitService {
         @Body body: ConfirmImageDTO,
     ): Response<Unit>
 
-    @PUT("/api/company/")
+    @PUT("/api/company")
     suspend fun putCompanyProfile(
         @Body body: UpdateCompanyProfileDTO,
     ): Response<Unit>

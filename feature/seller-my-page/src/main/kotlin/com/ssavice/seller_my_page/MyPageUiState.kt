@@ -13,6 +13,7 @@ data class ProfileState(
     val description: String,
     val profileUrl: String,
     val phoneNumber: String,
+    val detail: String
 )
 
 data class ParticipationState(

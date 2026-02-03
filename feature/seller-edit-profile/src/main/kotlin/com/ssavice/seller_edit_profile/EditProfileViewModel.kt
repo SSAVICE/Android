@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.ImageUploadProgress
+import com.ssavice.model.RegionInfo
 import com.ssavice.model.seller.SellerProfileUpdateForm
 import com.ssavice.seller_edit_profile.AddressFormState
 import com.ssavice.seller_edit_profile.AddressState
@@ -76,7 +77,36 @@ constructor(
     }
 
     fun initAddressState() {
+        _uiState.update {
+            it.copy(addressState = AddressFormState.Fetching)
+        }
 
+        viewModelScope.launch(Dispatchers.IO) {
+            sellerInfoRepository.getSellerAddress().fold(
+                onSuccess = { address ->
+                    _uiState.update {
+                        it.copy(
+                            form = it.form.copy(
+                                address = AddressState(
+                                    address = address.regionInfo.address,
+                                    latitude = address.regionInfo.latitude,
+                                    longitude = address.regionInfo.longitude,
+                                    regionCode = address.regionInfo.regionCode,
+                                    postCode = address.regionInfo.postCode,
+                                ),
+                                detailAddress = address.regionInfo.detailAddress
+                            )
+                        )
+                    }
+                },
+                onFailure = {
+                    Log.e(LOG, "initAddressState: ", it)
+                }
+            )
+            _uiState.update {
+                it.copy(addressState = AddressFormState.Idle)
+            }
+        }
     }
 
     private fun getProfileFromSavedStateHandle(): FormWithProfileImage? {
@@ -217,6 +247,14 @@ constructor(
                         phoneNumber = phoneNumber,
                         description = description,
                         detail = detail,
+                        region = RegionInfo(
+                            latitude = _uiState.value.form.address.latitude,
+                            longitude = _uiState.value.form.address.longitude,
+                            address = _uiState.value.form.address.address,
+                            detailAddress = _uiState.value.form.detailAddress,
+                            postCode = _uiState.value.form.address.postCode,
+                            regionCode = _uiState.value.form.address.regionCode,
+                        )
                     ),
                 ).fold(
                     onSuccess = {

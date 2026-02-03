@@ -8,7 +8,8 @@ data class UpdateCompanyProfileDTO(
     val companyName: String,
     val description: String,
     val detail: String,
-    val phoneNumber: String
+    val phoneNumber: String,
+    val region: RegionPostDTO
 ) {
     companion object {
         fun fromModel(model: SellerProfileUpdateForm): UpdateCompanyProfileDTO =
@@ -16,7 +17,8 @@ data class UpdateCompanyProfileDTO(
                 companyName = model.sellerName,
                 description = model.description,
                 detail = model.detail,
-                phoneNumber = model.phoneNumber
+                phoneNumber = model.phoneNumber,
+                region = RegionPostDTO.fromModel(model.region)
             )
     }
 }

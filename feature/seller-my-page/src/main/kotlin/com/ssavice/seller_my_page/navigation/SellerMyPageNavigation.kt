@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.seller_my_page.ProfileState
 import com.ssavice.seller_my_page.SellerMyPageRoute
 import kotlinx.serialization.Serializable
 
@@ -23,7 +24,9 @@ fun NavController.navigateToMyPage(navOptions: NavOptionsBuilder.() -> Unit = {}
     }
 }
 
-fun NavGraphBuilder.myPage(onMyServiceClick: () -> Unit = {}) {
+fun NavGraphBuilder.myPage(
+    onMyServiceClick: () -> Unit = {},
+    onEditProfileClick: (ProfileState?) -> Unit = {}) {
     composable<MyPageRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -44,6 +47,7 @@ fun NavGraphBuilder.myPage(onMyServiceClick: () -> Unit = {}) {
                     .background(MaterialTheme.colorScheme.background)
                     .verticalScroll(rememberScrollState()),
             onParticipatedServiceButtonClick = onMyServiceClick,
+            onEditProfileButtonClick = onEditProfileClick
         )
     }
 }
