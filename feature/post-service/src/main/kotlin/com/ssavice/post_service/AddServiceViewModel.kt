@@ -296,7 +296,6 @@ class AddServiceViewModel
         }
 
         fun getUserAddressAndApply() {
-            return // TODO: 현재 이용 불가
             viewModelScope.launch(Dispatchers.IO) {
                 sellerRepository.getSellerAddress().onSuccess { address ->
                     uiState.update {
