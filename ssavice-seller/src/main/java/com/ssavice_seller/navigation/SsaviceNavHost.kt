@@ -38,10 +38,10 @@ fun SsaviceNavHost(
 
         addServiceScreen(
             onDismiss = {
-                navController.popBackStack()
+                navController.navigateUp()
             },
             onSubmit = {
-                navController.popBackStack()
+                navController.navigateUp()
             },
         )
 

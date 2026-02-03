@@ -14,7 +14,6 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.seller_edit_profile.EditProfileRoute
-import com.ssavice.ui.navigation.SsaviceTitle
 import kotlinx.serialization.Serializable
 
 @Serializable
