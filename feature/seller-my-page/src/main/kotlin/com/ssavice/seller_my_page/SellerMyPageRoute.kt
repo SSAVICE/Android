@@ -144,6 +144,7 @@ fun MyPagePreview() {
                         description = "설명창 입니다.\n두 번째 줄 입니다.",
                         profileUrl = "https://picsum.photos/200",
                         phoneNumber = "010-1234-1234",
+                        detail = "",
                     ),
                 participation =
                     ParticipationState(

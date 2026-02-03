@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.seller_main.SellerMainContainer
+import com.ssavice.seller_my_page.ProfileState
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +20,7 @@ fun NavController.navigateToMain(navOptions: NavOptionsBuilder.() -> Unit = {}) 
 fun NavGraphBuilder.mainScreen(
     onServiceClick: (Long) -> Unit = {},
     onAddClick: () -> Unit,
-    onEditProfileButtonClick: () -> Unit = {},
+    onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},

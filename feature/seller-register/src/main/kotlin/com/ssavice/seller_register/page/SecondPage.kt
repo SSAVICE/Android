@@ -32,6 +32,7 @@ import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.designsystem.component.OutputTransformations
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.mappicker.AddressPickerDialog
+import com.ssavice.mappicker.AddressPickerSelectButton
 import com.ssavice.seller_register.AddressForm
 import com.ssavice.seller_register.RegisterScreenDefaults
 
@@ -122,17 +123,12 @@ private fun InputAddressScreen(
             isError,
             errorMessage,
         ) {
-            OutlinedTextFieldButton(
+            AddressPickerSelectButton(
                 placeHolder = RegisterScreenDefaults.ADDRESS_PLACEHOLDER,
-                text = addressState.address,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = "Open Date Picker",
-                    )
-                },
-                onClick = { if (!showAddressPicker) showAddressPicker = true },
-            )
+                addressText = addressState.address,
+            ) {
+                if (!showAddressPicker) showAddressPicker = true
+            }
         }
 
         SsaviceInputField(

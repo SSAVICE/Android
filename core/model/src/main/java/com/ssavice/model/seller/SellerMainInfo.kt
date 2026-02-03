@@ -13,4 +13,5 @@ data class SellerMainInfo(
     val address: String,
     val detailAddress: String,
     val imageUrl: String,
+    val detail: String,
 )

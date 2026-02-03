@@ -59,6 +59,7 @@ data class GetCompanyInfoDTO(
             address = address,
             detailAddress = detailAddress,
             imageUrl = imageUrl ?: "",
+            detail = detail ?: "",
         )
 }
 

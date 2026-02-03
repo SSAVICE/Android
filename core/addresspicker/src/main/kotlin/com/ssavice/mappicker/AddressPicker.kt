@@ -3,9 +3,11 @@ package com.ssavice.mappicker
 import android.annotation.SuppressLint
 import android.webkit.WebView
 import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.webkit.WebViewAssetLoader
@@ -22,6 +24,7 @@ fun AddressPickerWebView(
     onResult: (AddressPickResult) -> Unit,
 ) {
     val context = LocalContext.current
+    val backgroundColor = MaterialTheme.colorScheme.background
     AndroidView(
         modifier = modifier.background(Color.Green),
         factory = {
@@ -35,6 +38,7 @@ fun AddressPickerWebView(
                 JavascriptInterface(onResult),
                 WebviewConstants.JS_BRIDGE,
             )
+            webView.setBackgroundColor(backgroundColor.toArgb())
 
             val assetLoader =
                 WebViewAssetLoader

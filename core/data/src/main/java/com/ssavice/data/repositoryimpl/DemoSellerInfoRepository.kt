@@ -2,7 +2,10 @@ package com.ssavice.data.repositoryimpl
 
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
+import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
+import com.ssavice.model.RegionDetail
+import com.ssavice.model.ResizableImage
 import com.ssavice.model.Review
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
@@ -17,6 +20,7 @@ import com.ssavice.model.user.ParticipationSummary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -41,6 +45,7 @@ internal class DemoSellerInfoRepository
                         "",
                         "",
                     ),
+                    "",
                     "",
                     "",
                     "",
@@ -95,6 +100,7 @@ internal class DemoSellerInfoRepository
                         address = "대구 달서구 상인동",
                         detailAddress = "상인동 123-456",
                         imageUrl = "https://picsum.photos/400",
+                        detail = "상세 정보입니다.",
                     ),
                 )
             }
@@ -148,6 +154,10 @@ internal class DemoSellerInfoRepository
             businessNumber: String,
         ): Result<CompanyVerifyToken> = Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
 
+        override suspend fun getSellerAddress(): Result<RegionDetail> {
+            TODO("Not yet implemented")
+        }
+
         override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> {
             TODO("Not yet implemented")
         }
@@ -162,6 +172,10 @@ internal class DemoSellerInfoRepository
             sortingOrder: SortingOrder,
             serviceState: ServiceState,
         ): Result<SellerServiceParticipation> {
+            TODO("Not yet implemented")
+        }
+
+        override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> {
             TODO("Not yet implemented")
         }
     }
