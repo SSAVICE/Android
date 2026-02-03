@@ -47,6 +47,7 @@ internal class DemoSellerInfoRepository
                     "",
                     "",
                     "",
+                    ""
                 ),
             )
 
@@ -98,6 +99,7 @@ internal class DemoSellerInfoRepository
                         address = "대구 달서구 상인동",
                         detailAddress = "상인동 123-456",
                         imageUrl = "https://picsum.photos/400",
+                        detail = "상세 정보입니다."
                     ),
                 )
             }

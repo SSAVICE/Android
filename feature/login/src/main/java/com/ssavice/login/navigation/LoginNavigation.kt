@@ -1,6 +1,7 @@
-package com.ssavice.seller_home.navigation
+package com.ssavice.login.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,6 +33,7 @@ fun NavGraphBuilder.loginScreen(
             LoginRoute(
                 modifier =
                     Modifier
+                        .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                         .padding(innerPadding),
                 onLoginComplete = onLoginComplete,

@@ -1,7 +1,6 @@
 package com.ssavice.data.service
 
 import GetCompanyInfoDTO
-import com.ssavice.model.ImageUploadProgress
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.model.CompanyBookDTO
 import com.ssavice.network.model.CompanyBookSummaryDTO
@@ -14,7 +13,6 @@ import com.ssavice.network.model.PresignedUrlDTO
 import com.ssavice.network.model.UpdateCompanyProfileDTO
 import com.ssavice.network.model.ValidateBusinessDTO
 import com.ssavice.network.model.ValidateBusinessResponseDTO
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -63,11 +61,11 @@ interface CompanyRetrofitService {
     ): Response<PresignedUrlDTO>
 
     @POST("/api/company/image/confirm")
-    fun confirmProfileUpload(
+    suspend fun confirmProfileUpload(
         @Body body: ConfirmImageDTO,
     ): Response<Unit>
 
-    @PUT("/api/company/image")
+    @PUT("/api/company/")
     suspend fun putCompanyProfile(
         @Body body: UpdateCompanyProfileDTO,
     ): Response<Unit>

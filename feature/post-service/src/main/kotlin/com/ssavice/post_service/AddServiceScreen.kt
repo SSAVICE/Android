@@ -75,6 +75,7 @@ import com.ssavice.designsystem.component.SsaviceDropdown
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.mappicker.AddressPickerDialog
+import com.ssavice.mappicker.AddressPickerSelectButton
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.TimeStamp
 import com.ssavice.post_service.AddServiceScreenDefaults.ADDRESS_TEXT
@@ -797,17 +798,9 @@ private fun InputAddressScreen(
             isError,
             errorMessage,
         ) {
-            OutlinedTextFieldButton(
-                placeHolder = "",
-                text = addressState.address,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = "Open Date Picker",
-                    )
-                },
-                onClick = { if (!showAddressPicker) showAddressPicker = true },
-            )
+            AddressPickerSelectButton(addressState.address){
+                if (!showAddressPicker) showAddressPicker = true
+            }
         }
 
         SsaviceInputField(

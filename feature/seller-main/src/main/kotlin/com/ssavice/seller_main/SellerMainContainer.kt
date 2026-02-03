@@ -9,13 +9,14 @@ import androidx.navigation.compose.rememberNavController
 import com.ssavice.seller_chatting.navigation.chat
 import com.ssavice.seller_home.navigation.HomeRoute
 import com.ssavice.seller_home.navigation.home
+import com.ssavice.seller_my_page.ProfileState
 import com.ssavice.seller_my_page.navigation.myPage
 
 @Composable
 fun SellerMainContainer(
     onServiceClick: (Long) -> Unit = {},
     onAddClick: () -> Unit,
-    onEditProfileButtonClick: () -> Unit = {},
+    onEditProfileButtonClick: (ProfileState?) -> Unit = {},
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
@@ -39,6 +40,7 @@ fun SellerMainContainer(
         ) {
             myPage(
                 onMyServiceClick = onParticipatedServiceButtonClick,
+                onEditProfileClick = onEditProfileButtonClick,
             )
 
             home(
