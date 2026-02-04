@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.seller_reviews.navigation.SellerReviewsRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -113,7 +114,7 @@ class SellerReviewsViewModel @Inject constructor(
     }
 
     private fun getIdFromSavedState(): Long {
-        return savedStateHandle.get<Long>("id") ?: let {
+        return savedStateHandle.get<Long>(SellerReviewsRouteContract.ID) ?: let {
             throw IllegalArgumentException("id is required")
         }
     }

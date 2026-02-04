@@ -54,6 +54,7 @@ fun ServiceDetailScreen(
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
@@ -82,6 +83,7 @@ fun ServiceDetailScreen(
         uiState.seller,
         onLikeClick = viewModel::onLikeButtonClick,
         onSellerClick = onSellerClick,
+        onMoreReviewClick = onMoreReviewClick,
         enabled = enabled,
     )
 }
@@ -94,6 +96,7 @@ fun ServiceDetailScreen(
     seller: SellerSummary?,
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {},
     enabled: Boolean = true,
 ) {
     Column(
@@ -216,7 +219,7 @@ fun ServiceDetailScreen(
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        TextButton(onClick = { /*TODO*/ }) { Text("모두 보기") }
+                        TextButton(onClick = { onMoreReviewClick(service.companyId) }) { Text("모두 보기") }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -259,8 +262,8 @@ fun ServiceDetailScreenPreview() {
             imageUrls =
                 listOf(
                     "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2120" +
-                        "&auto=format&fit=crop&ixlib=rb-4.0.3" +
-                        "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "&auto=format&fit=crop&ixlib=rb-4.0.3" +
+                            "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ),
             deadLine = "Date(2026,2,15)",
             id = 123123L,
@@ -319,7 +322,9 @@ fun ServiceDetailScreenPreview() {
 @Composable
 fun Loading(height: Dp) {
     Box(
-        modifier = Modifier.height(height).fillMaxWidth(),
+        modifier = Modifier
+            .height(height)
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()

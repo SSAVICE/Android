@@ -38,6 +38,7 @@ fun NavGraphBuilder.serviceDetailScreen(
     onParticipateClick: (Long) -> Unit = {},
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     composable<ServiceDetailRoute>(
@@ -80,6 +81,7 @@ fun NavGraphBuilder.serviceDetailScreen(
                 onChatClick = onChatClick,
                 onParticipateClick = onParticipateClick,
                 onSellerClick = onSellerClick,
+                onMoreReviewClick = onMoreReviewClick
             )
         }
     }

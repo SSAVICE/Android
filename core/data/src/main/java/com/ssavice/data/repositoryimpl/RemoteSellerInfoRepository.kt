@@ -17,6 +17,7 @@ import com.ssavice.model.seller.SellerDetail
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerProfileUpdateForm
 import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.model.seller.SellerReviews
 import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerSummary
 import com.ssavice.model.user.ParticipationSummary
@@ -220,7 +221,22 @@ internal class RemoteSellerInfoRepository
                 it.toModel()
             }
 
-        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
+    override suspend fun getSellerReviews(
+        id: Long,
+        page: Int,
+        searchCount: Int
+    ): Result<SellerReviews> =
+        processResponseOnResponseData(
+            companyRetrofitService.getCompanyReview(
+                id = id,
+                page = page,
+                size = searchCount,
+            )
+        ).map {
+            it.toModel()
+        }
+
+    override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
             processResponse(
                 companyRetrofitService.putCompanyProfile(
                     body = UpdateCompanyProfileDTO.fromModel(profile),

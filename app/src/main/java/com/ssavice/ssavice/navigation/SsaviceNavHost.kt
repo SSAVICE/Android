@@ -17,6 +17,8 @@ import com.ssavice.search_result.navigation.navigateToSearchResult
 import com.ssavice.search_result.navigation.searchResultScreen
 import com.ssavice.seller_detail.navigation.navigateToSellerDetail
 import com.ssavice.seller_detail.navigation.sellerDetailScreen
+import com.ssavice.seller_reviews.navigation.navigateToSellerReviews
+import com.ssavice.seller_reviews.navigation.sellerReviewsScreen
 import com.ssavice.service_detail.navigation.navigateToPostReview
 import com.ssavice.service_detail.navigation.navigateToServiceDetail
 import com.ssavice.service_detail.navigation.postReviewScreen
@@ -126,6 +128,9 @@ fun SsaviceNavHost(
             onSellerClick = {
                 navController.navigateToSellerDetail(sellerId = it)
             },
+            onMoreReviewClick = {
+                navController.navigateToSellerReviews(sellerId = it)
+            }
         )
 
         myServiceScreen(
@@ -171,6 +176,15 @@ fun SsaviceNavHost(
         )
 
         sellerDetailScreen(
+            onBackClick = {
+                navController.navigateUp()
+            },
+            onMoreReview = {
+                navController.navigateToSellerReviews(sellerId = it)
+            }
+        )
+
+        sellerReviewsScreen(
             onBackClick = {
                 navController.navigateUp()
             },

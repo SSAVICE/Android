@@ -84,9 +84,8 @@ interface CompanyRetrofitService {
 
     @GET("/api/review/{id}")
     suspend fun getCompanyReview(
+        @Path(value = "id") id: Long,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("status") status: String,
-        @Path(value = "id") id: Long
     ): Response<GetCompanyReviewDTO>
 }
