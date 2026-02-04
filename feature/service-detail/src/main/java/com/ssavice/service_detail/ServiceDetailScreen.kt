@@ -54,6 +54,7 @@ fun ServiceDetailScreen(
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
@@ -82,6 +83,7 @@ fun ServiceDetailScreen(
         uiState.seller,
         onLikeClick = viewModel::onLikeButtonClick,
         onSellerClick = onSellerClick,
+        onMoreReviewClick = onMoreReviewClick,
         enabled = enabled,
     )
 }
@@ -94,6 +96,7 @@ fun ServiceDetailScreen(
     seller: SellerSummary?,
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {},
     enabled: Boolean = true,
 ) {
     Column(
@@ -173,7 +176,7 @@ fun ServiceDetailScreen(
                     icon = Icons.Default.LocationOn,
                     iconContentDescription = "Location",
                     title = "위치",
-                    content = service.address ?: "",
+                    content = service.address,
                 )
                 InfoRow(
                     icon = Icons.Default.Group,
@@ -216,7 +219,7 @@ fun ServiceDetailScreen(
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        TextButton(onClick = { /*TODO*/ }) { Text("모두 보기") }
+                        TextButton(onClick = { onMoreReviewClick(service.companyId) }) { Text("모두 보기") }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -319,7 +322,10 @@ fun ServiceDetailScreenPreview() {
 @Composable
 fun Loading(height: Dp) {
     Box(
-        modifier = Modifier.height(height).fillMaxWidth(),
+        modifier =
+            Modifier
+                .height(height)
+                .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()

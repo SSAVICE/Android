@@ -8,6 +8,7 @@ import com.ssavice.network.model.CompanyDetailDTO
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.GetAddressDTO
+import com.ssavice.network.model.GetCompanyReviewDTO
 import com.ssavice.network.model.GetCompanySummaryDTO
 import com.ssavice.network.model.JwtDTO
 import com.ssavice.network.model.LoginDTO
@@ -80,4 +81,11 @@ interface CompanyRetrofitService {
     suspend fun getCompanyDetail(
         @Path(value = "id") id: Long,
     ): Response<CompanyDetailDTO>
+
+    @GET("/api/review/{id}")
+    suspend fun getCompanyReview(
+        @Path(value = "id") id: Long,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+    ): Response<GetCompanyReviewDTO>
 }

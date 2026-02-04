@@ -28,6 +28,7 @@ dependencies {
     implementation(projects.feature.editProfile)
     implementation(projects.feature.login)
     implementation(projects.feature.postReview)
+    implementation(projects.feature.sellerReviews)
     implementation(projects.feature.userMain)
     implementation(projects.feature.userLiked)
     implementation(projects.core.common)
