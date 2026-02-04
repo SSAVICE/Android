@@ -51,5 +51,9 @@ interface SellerInfoRepository {
 
     suspend fun getSellerDetail(id: Long): Result<SellerDetail>
 
-    suspend fun getSellerReviews(id: Long, page: Int, searchCount: Int): Result<SellerReviews>
+    suspend fun getSellerReviews(
+        id: Long,
+        page: Int,
+        searchCount: Int,
+    ): Result<SellerReviews>
 }

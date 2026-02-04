@@ -130,7 +130,7 @@ fun SsaviceNavHost(
             },
             onMoreReviewClick = {
                 navController.navigateToSellerReviews(sellerId = it)
-            }
+            },
         )
 
         myServiceScreen(
@@ -181,7 +181,7 @@ fun SsaviceNavHost(
             },
             onMoreReview = {
                 navController.navigateToSellerReviews(sellerId = it)
-            }
+            },
         )
 
         sellerReviewsScreen(

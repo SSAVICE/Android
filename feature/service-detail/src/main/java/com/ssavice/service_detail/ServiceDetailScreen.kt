@@ -54,7 +54,7 @@ fun ServiceDetailScreen(
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
-    onMoreReviewClick: (Long) -> Unit = {}
+    onMoreReviewClick: (Long) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
@@ -176,7 +176,7 @@ fun ServiceDetailScreen(
                     icon = Icons.Default.LocationOn,
                     iconContentDescription = "Location",
                     title = "위치",
-                    content = service.address ?: "",
+                    content = service.address,
                 )
                 InfoRow(
                     icon = Icons.Default.Group,
@@ -262,8 +262,8 @@ fun ServiceDetailScreenPreview() {
             imageUrls =
                 listOf(
                     "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2120" +
-                            "&auto=format&fit=crop&ixlib=rb-4.0.3" +
-                            "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        "&auto=format&fit=crop&ixlib=rb-4.0.3" +
+                        "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 ),
             deadLine = "Date(2026,2,15)",
             id = 123123L,
@@ -322,9 +322,10 @@ fun ServiceDetailScreenPreview() {
 @Composable
 fun Loading(height: Dp) {
     Box(
-        modifier = Modifier
-            .height(height)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .height(height)
+                .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()

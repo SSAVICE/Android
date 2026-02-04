@@ -51,8 +51,9 @@ fun SellerReviewRoute(
     SellerReviewScreen(
         modifier = modifier,
         reviews = state.reviews,
-        isLoading = state.reviewState is SellerReviewState.Loading
-                || state.reviewState is SellerReviewState.Initial,
+        isLoading =
+            state.reviewState is SellerReviewState.Loading ||
+                state.reviewState is SellerReviewState.Initial,
         hasMoreData = state.hasNext,
         onLoadMore = viewModel::loadMoreReviews,
     )
@@ -147,10 +148,11 @@ fun ReviewItemPreview() {
     SsaviceTheme {
         Scaffold { innerPadding ->
             SellerReviewScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
                 reviews = reviews,
                 isLoading = false,
                 hasMoreData = false,
@@ -158,5 +160,4 @@ fun ReviewItemPreview() {
             )
         }
     }
-
 }

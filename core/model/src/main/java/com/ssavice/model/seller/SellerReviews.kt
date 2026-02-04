@@ -6,5 +6,5 @@ data class SellerReviews(
     val currentPage: Long,
     val searchCount: Int,
     val hasNext: Boolean,
-    val reviews: List<Review>
+    val reviews: List<Review>,
 )

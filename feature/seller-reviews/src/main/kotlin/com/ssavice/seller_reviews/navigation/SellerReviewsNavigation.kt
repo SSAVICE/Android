@@ -29,9 +29,7 @@ fun NavController.navigateToSellerReviews(
     }
 }
 
-fun NavGraphBuilder.sellerReviewsScreen(
-    onBackClick: () -> Unit = {},
-) {
+fun NavGraphBuilder.sellerReviewsScreen(onBackClick: () -> Unit = {}) {
     composable<SellerReviewsRoute>(
         popEnterTransition = null,
         enterTransition = {

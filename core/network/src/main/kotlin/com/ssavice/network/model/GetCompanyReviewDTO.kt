@@ -16,6 +16,6 @@ data class GetCompanyReviewDTO(
             currentPage = currentPage.toLong(),
             searchCount = size,
             hasNext = currentPage < totalPages,
-            reviews = content.map { it.toModel() }
+            reviews = content.map { it.toModel() },
         )
 }

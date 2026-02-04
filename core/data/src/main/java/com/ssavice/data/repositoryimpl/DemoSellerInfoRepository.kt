@@ -185,11 +185,11 @@ internal class DemoSellerInfoRepository
             TODO("Not yet implemented")
         }
 
-    override suspend fun getSellerReviews(
-        id: Long,
-        page: Int,
-        searchCount: Int
-    ): Result<SellerReviews> {
-        TODO("Not yet implemented")
+        override suspend fun getSellerReviews(
+            id: Long,
+            page: Int,
+            searchCount: Int,
+        ): Result<SellerReviews> {
+            TODO("Not yet implemented")
+        }
     }
-}

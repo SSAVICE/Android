@@ -5,7 +5,7 @@ data class SellerReviewUiState(
     val hasNext: Boolean = false,
     val nextPage: Int = 0,
     val sellerId: Long = -1L,
-    val reviewState: SellerReviewState = SellerReviewState.Initial
+    val reviewState: SellerReviewState = SellerReviewState.Initial,
 )
 
 data class SellerReviewItemState(
@@ -14,12 +14,17 @@ data class SellerReviewItemState(
     val comment: String,
     val serviceName: String,
     val createdAt: String,
-    val rate: Int
+    val rate: Int,
 )
 
 sealed interface SellerReviewState {
     object Initial : SellerReviewState
+
     object Loading : SellerReviewState
+
     object Idle : SellerReviewState
-    data class Error(val message: Throwable): SellerReviewState
+
+    data class Error(
+        val message: Throwable,
+    ) : SellerReviewState
 }

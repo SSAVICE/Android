@@ -81,7 +81,7 @@ fun NavGraphBuilder.serviceDetailScreen(
                 onChatClick = onChatClick,
                 onParticipateClick = onParticipateClick,
                 onSellerClick = onSellerClick,
-                onMoreReviewClick = onMoreReviewClick
+                onMoreReviewClick = onMoreReviewClick,
             )
         }
     }

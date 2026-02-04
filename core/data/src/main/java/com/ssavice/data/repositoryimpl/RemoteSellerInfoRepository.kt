@@ -221,22 +221,22 @@ internal class RemoteSellerInfoRepository
                 it.toModel()
             }
 
-    override suspend fun getSellerReviews(
-        id: Long,
-        page: Int,
-        searchCount: Int
-    ): Result<SellerReviews> =
-        processResponseOnResponseData(
-            companyRetrofitService.getCompanyReview(
-                id = id,
-                page = page,
-                size = searchCount,
-            )
-        ).map {
-            it.toModel()
-        }
+        override suspend fun getSellerReviews(
+            id: Long,
+            page: Int,
+            searchCount: Int,
+        ): Result<SellerReviews> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyReview(
+                    id = id,
+                    page = page,
+                    size = searchCount,
+                ),
+            ).map {
+                it.toModel()
+            }
 
-    override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
+        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
             processResponse(
                 companyRetrofitService.putCompanyProfile(
                     body = UpdateCompanyProfileDTO.fromModel(profile),
