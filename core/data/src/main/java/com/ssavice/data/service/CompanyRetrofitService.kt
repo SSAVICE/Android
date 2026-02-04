@@ -78,6 +78,6 @@ interface CompanyRetrofitService {
 
     @GET("/api/company/{id}")
     suspend fun getCompanyDetail(
-        @Path(value = "id") id: Long
+        @Path(value = "id") id: Long,
     ): Response<CompanyDetailDTO>
 }

@@ -63,7 +63,7 @@ fun NavGraphBuilder.sellerDetailScreen(
                         .background(MaterialTheme.colorScheme.background)
                         .padding(innerPadding),
                 onMoreReviewClick = onMoreReview,
-                onMoreServiceClick = onMoreService
+                onMoreServiceClick = onMoreService,
             )
         }
     }

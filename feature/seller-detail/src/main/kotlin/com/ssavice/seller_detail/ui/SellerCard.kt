@@ -37,7 +37,7 @@ internal fun SellerCard(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

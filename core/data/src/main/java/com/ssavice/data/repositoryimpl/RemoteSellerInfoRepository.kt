@@ -213,15 +213,14 @@ internal class RemoteSellerInfoRepository
                     }
             }
 
-    override suspend fun getSellerDetail(id: Long): Result<SellerDetail> {
-        return processResponseOnResponseData(
-            companyRetrofitService.getCompanyDetail(id)
-        ).map {
-            it.toModel()
-        }
-    }
+        override suspend fun getSellerDetail(id: Long): Result<SellerDetail> =
+            processResponseOnResponseData(
+                companyRetrofitService.getCompanyDetail(id),
+            ).map {
+                it.toModel()
+            }
 
-    override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
+        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
             processResponse(
                 companyRetrofitService.putCompanyProfile(
                     body = UpdateCompanyProfileDTO.fromModel(profile),

@@ -156,12 +156,11 @@ class SearchResultViewModel
                 )
         }
 
-        private fun getDeadlineMessage(deadline: Date): String {
-            return getDeadlineMessageFromTimestamp(
+        private fun getDeadlineMessage(deadline: Date): String =
+            getDeadlineMessageFromTimestamp(
                 deadline = deadline.toTimeStamp().timeInMillis,
                 today = Date.now().toTimeStamp().timeInMillis,
             )
-        }
 
         private fun onSearchFailure(exception: Throwable) {
         }

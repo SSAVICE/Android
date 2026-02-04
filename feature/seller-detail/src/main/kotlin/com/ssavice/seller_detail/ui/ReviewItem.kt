@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.component.SsaviceElevatedCard
 
-
 @Composable
 internal fun ReviewItem(
     review: String,

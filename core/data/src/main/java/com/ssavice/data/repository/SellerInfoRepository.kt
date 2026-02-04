@@ -48,7 +48,5 @@ interface SellerInfoRepository {
 
     fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress>
 
-    suspend fun getSellerDetail(
-        id: Long
-    ): Result<SellerDetail>
+    suspend fun getSellerDetail(id: Long): Result<SellerDetail>
 }

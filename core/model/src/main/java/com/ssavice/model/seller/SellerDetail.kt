@@ -19,5 +19,5 @@ data class SellerDetail(
     val reviewItems: List<Review>,
     val ownerName: String,
     val ownerPhoneNumber: String,
-    val businessNumber: String
+    val businessNumber: String,
 )

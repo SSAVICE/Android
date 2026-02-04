@@ -17,122 +17,136 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerDetailViewModel @Inject constructor(
-    private val sellerRepository: SellerInfoRepository,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(SellerDetailUiState())
-    val uiState = _uiState.asStateFlow()
+class SellerDetailViewModel
+    @Inject
+    constructor(
+        private val sellerRepository: SellerInfoRepository,
+        private val savedStateHandle: SavedStateHandle,
+    ) : ViewModel() {
+        private val _uiState = MutableStateFlow(SellerDetailUiState())
+        val uiState = _uiState.asStateFlow()
 
-    fun load() {
-        _uiState.update {
-            it.copy(
-                sellerDetailState = SellerDetailState.Loading
-            )
-        }
-
-        val id = getIdFromSavedStateHandle()
-
-        if(id == -1L) {
+        fun load() {
             _uiState.update {
                 it.copy(
-                    sellerDetailState = SellerDetailState.Error(IllegalStateException("판매자 조회에 실패했습니다."))
+                    sellerDetailState = SellerDetailState.Loading,
                 )
             }
-            return
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            fetchAndUpdateSummary(id)
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            fetchAndUpdateInfo(id)
-        }
+            val id = getIdFromSavedStateHandle()
 
-    }
-
-    private fun getIdFromSavedStateHandle(): Long {
-        return savedStateHandle.get<Long>(SellerDetailRouteContract.ID) ?: -1L
-    }
-
-    private suspend fun fetchAndUpdateSummary(id: Long) {
-        sellerRepository.getSellerSummary(id)
-            .onSuccess {
-                _uiState.update { state ->
-                    state.copy(
-                        sellerInfo = state.sellerInfo.copy(
-                            rate = it.companyRate,
-                            rateCount = it.rateCount,
-                            thumbnailUrl = it.companyImageUrl?:""
-                        )
+            if (id == -1L) {
+                _uiState.update {
+                    it.copy(
+                        sellerDetailState = SellerDetailState.Error(IllegalStateException("판매자 조회에 실패했습니다.")),
                     )
                 }
+                return
             }
-    }
 
-    private fun mapPriceToString(price: Int): String = "￦%,d".format(price)
-
-    private fun mapSchedule(state: ServiceState, deadline: Date, start: Date, end: Date): String {
-        return when(state) {
-            ServiceState.RECRUITING, ServiceState.SUCCEEDED -> {
-                getDeadlineMessageFromTimestamp(
-                    deadline = deadline.toTimeStamp().timeInMillis,
-                    today = Date.now().toTimeStamp().timeInMillis,
-                )
+            viewModelScope.launch(Dispatchers.IO) {
+                fetchAndUpdateSummary(id)
             }
-            ServiceState.COMPLETED -> {
-                "${start.toSimpleString()} - ${end.toSimpleString()}"
+            viewModelScope.launch(Dispatchers.IO) {
+                fetchAndUpdateInfo(id)
             }
-            else -> ""
         }
-    }
 
-    private suspend fun fetchAndUpdateInfo(id: Long) {
-        sellerRepository.getSellerDetail(id)
-            .fold(
-                onSuccess = { detail ->
+        private fun getIdFromSavedStateHandle(): Long = savedStateHandle.get<Long>(SellerDetailRouteContract.ID) ?: -1L
+
+        private suspend fun fetchAndUpdateSummary(id: Long) {
+            sellerRepository
+                .getSellerSummary(id)
+                .onSuccess {
                     _uiState.update { state ->
                         state.copy(
-                            sellerDetailState = SellerDetailState.Loaded,
-                            sellerInfo = state.sellerInfo.copy(
-                                name = detail.sellerName,
-                                description = detail.description,
-                                detail = detail.detail,
-                                address = detail.address,
-                                detailAddress = detail.detailAddress,
-                                phoneNumber = detail.phoneNumber,
-                                imageUrls = listOf(),
-                                id = detail.id,
-                                region = detail.region,
-                            ),
-                            serviceItems = detail.serviceItems.map {
-                                ServiceItemState(
-                                    serviceId = it.id,
-                                    name = it.name,
-                                    thumbnailUrl = it.image,
-                                    serviceState = it.state,
-                                    category = it.category,
-                                    price = mapPriceToString(it.discountedPrice.toInt()),
-                                    dayState = mapSchedule(
-                                        it.state,
-                                        it.deadLine,
-                                        it.startDate,
-                                        it.endDate),
-                                    region = ""
-                                )
-                            },
-                            reviewItems = state.reviewItems,
-                            businessInfo = state.businessInfo
-                        )
-                    }
-                },
-                onFailure = { e ->
-                    _uiState.update {
-                        it.copy(
-                            sellerDetailState = SellerDetailState.Error(e)
+                            sellerInfo =
+                                state.sellerInfo.copy(
+                                    rate = it.companyRate,
+                                    rateCount = it.rateCount,
+                                    thumbnailUrl = it.companyImageUrl ?: "",
+                                ),
                         )
                     }
                 }
-            )
+        }
+
+        private fun mapPriceToString(price: Int): String = "￦%,d".format(price)
+
+        private fun mapSchedule(
+            state: ServiceState,
+            deadline: Date,
+            start: Date,
+            end: Date,
+        ): String =
+            when (state) {
+                ServiceState.RECRUITING, ServiceState.SUCCEEDED -> {
+                    getDeadlineMessageFromTimestamp(
+                        deadline = deadline.toTimeStamp().timeInMillis,
+                        today = Date.now().toTimeStamp().timeInMillis,
+                    )
+                }
+
+                ServiceState.COMPLETED -> {
+                    "${start.toSimpleString()} - ${end.toSimpleString()}"
+                }
+
+                else -> {
+                    ""
+                }
+            }
+
+        private suspend fun fetchAndUpdateInfo(id: Long) {
+            sellerRepository
+                .getSellerDetail(id)
+                .fold(
+                    onSuccess = { detail ->
+                        _uiState.update { state ->
+                            state.copy(
+                                sellerDetailState = SellerDetailState.Loaded,
+                                sellerInfo =
+                                    state.sellerInfo.copy(
+                                        name = detail.sellerName,
+                                        description = detail.description,
+                                        detail = detail.detail,
+                                        address = detail.address,
+                                        detailAddress = detail.detailAddress,
+                                        phoneNumber = detail.phoneNumber,
+                                        imageUrls = listOf(),
+                                        id = detail.id,
+                                        region = detail.region,
+                                    ),
+                                serviceItems =
+                                    detail.serviceItems.map {
+                                        ServiceItemState(
+                                            serviceId = it.id,
+                                            name = it.name,
+                                            thumbnailUrl = it.image,
+                                            serviceState = it.state,
+                                            category = it.category,
+                                            price = mapPriceToString(it.discountedPrice.toInt()),
+                                            dayState =
+                                                mapSchedule(
+                                                    it.state,
+                                                    it.deadLine,
+                                                    it.startDate,
+                                                    it.endDate,
+                                                ),
+                                            region = "",
+                                        )
+                                    },
+                                reviewItems = state.reviewItems,
+                                businessInfo = state.businessInfo,
+                            )
+                        }
+                    },
+                    onFailure = { e ->
+                        _uiState.update {
+                            it.copy(
+                                sellerDetailState = SellerDetailState.Error(e),
+                            )
+                        }
+                    },
+                )
+        }
     }
-}

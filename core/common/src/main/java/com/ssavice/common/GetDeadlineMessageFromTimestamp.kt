@@ -1,6 +1,9 @@
 package com.ssavice.common
 
-fun getDeadlineMessageFromTimestamp(deadline: Long, today: Long): String {
+fun getDeadlineMessageFromTimestamp(
+    deadline: Long,
+    today: Long,
+): String {
     val timeRemaining = deadline - today
     if (timeRemaining < 1000 * 60 * 60 * 24) {
         val hourRemaining = timeRemaining / (1000 * 60 * 60)

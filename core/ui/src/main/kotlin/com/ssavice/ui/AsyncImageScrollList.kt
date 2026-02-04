@@ -86,15 +86,13 @@ fun AsyncImageScrollList(
                     Modifier
                         .graphicsLayer {
                             this.alpha = alpha
-                        }
-                        .run {
+                        }.run {
                             if (imageAspectRatio != null) {
                                 aspectRatio(imageAspectRatio)
                             } else {
                                 this
                             }
-                        }
-                        .fillMaxWidth()
+                        }.fillMaxWidth()
                         .clickable { onImageClick(imageUrls[pageIndex]) },
             ) {
                 AsyncImage(
@@ -109,18 +107,21 @@ fun AsyncImageScrollList(
                     contentScale = contentScale,
                 )
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.2f) // 하단 50% 영역에만 그라데이션 적용 (조절 가능)
-                        .align(Alignment.BottomCenter)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,          // 위쪽은 투명
-                                    Color.Black.copy(alpha = 0.7f) // 아래쪽으로 갈수록 어두운 검정
-                                )
-                            )
-                        )
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.2f) // 하단 50% 영역에만 그라데이션 적용 (조절 가능)
+                            .align(Alignment.BottomCenter)
+                            .background(
+                                brush =
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Transparent, // 위쪽은 투명
+                                                Color.Black.copy(alpha = 0.7f), // 아래쪽으로 갈수록 어두운 검정
+                                            ),
+                                    ),
+                            ),
                 )
             }
         }

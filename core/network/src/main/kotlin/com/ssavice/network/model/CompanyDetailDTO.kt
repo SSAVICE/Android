@@ -24,31 +24,32 @@ data class CompanyDetailDTO(
     val phoneNumber: String,
     val postCode: String,
     val review: List<ServiceDetailReviewItemDTO>,
-    val service: List<ServiceDetailServiceItemDTO>
+    val service: List<ServiceDetailServiceItemDTO>,
 ) {
-    fun toModel(): SellerDetail = SellerDetail(
-        id = companyId,
-        thumbnailUrl = imageUrl?:"",
-        sellerName = companyName,
-        address = address,
-        detailAddress = detailAddress,
-        imageUrls = listOf(),
-        region = Region(
-            latitude = latitude,
-            longitude = longitude,
-            region1 = "",
-            region2 = ""
-        ),
-        description = description,
-        detail = detail?:"",
-        phoneNumber = phoneNumber,
-        serviceItems = service.map { it.toModel() },
-        reviewItems = review.map { it.toModel() },
-
-        ownerName = "",
-        ownerPhoneNumber = "",
-        businessNumber = businessNumber,
-    )
+    fun toModel(): SellerDetail =
+        SellerDetail(
+            id = companyId,
+            thumbnailUrl = imageUrl ?: "",
+            sellerName = companyName,
+            address = address,
+            detailAddress = detailAddress,
+            imageUrls = listOf(),
+            region =
+                Region(
+                    latitude = latitude,
+                    longitude = longitude,
+                    region1 = "",
+                    region2 = "",
+                ),
+            description = description,
+            detail = detail ?: "",
+            phoneNumber = phoneNumber,
+            serviceItems = service.map { it.toModel() },
+            reviewItems = review.map { it.toModel() },
+            ownerName = "",
+            ownerPhoneNumber = "",
+            businessNumber = businessNumber,
+        )
 }
 
 @Serializable
@@ -57,15 +58,16 @@ data class ServiceDetailReviewItemDTO(
     val createdAt: String,
     val rating: Int,
     val serviceName: String,
-    val userName: String
+    val userName: String,
 ) {
-    fun toModel(): Review = Review(
-        userName = userName,
-        comment = comment,
-        serviceName = serviceName,
-        createdAt = Date.parse(createdAt),
-        rating = rating
-    )
+    fun toModel(): Review =
+        Review(
+            userName = userName,
+            comment = comment,
+            serviceName = serviceName,
+            createdAt = Date.parse(createdAt),
+            rating = rating,
+        )
 }
 
 @Serializable
@@ -86,22 +88,23 @@ data class ServiceDetailServiceItemDTO(
     val status: String,
     val tag: String,
     val thumbnailUrl: String?,
-    val title: String
+    val title: String,
 ) {
-    fun toModel(): ServiceSummary = ServiceSummary(
-        name = title,
-        id = serviceId,
-        image = thumbnailUrl?:"",
-        category = category,
-        minimumMember = minimumMember.toInt(),
-        currentMember = currentMember.toInt(),
-        basePrice = basePrice,
-        discountRatio = discountRate.toDouble(),
-        discountedPrice = discountedPrice,
-        deadLine = Date.parse(deadline),
-        startDate = Date.parse(startDate),
-        endDate = Date.parse(endDate),
-        serviceTag = tag,
-        state = ServiceState.mapState(status)
-    )
+    fun toModel(): ServiceSummary =
+        ServiceSummary(
+            name = title,
+            id = serviceId,
+            image = thumbnailUrl ?: "",
+            category = category,
+            minimumMember = minimumMember.toInt(),
+            currentMember = currentMember.toInt(),
+            basePrice = basePrice,
+            discountRatio = discountRate.toDouble(),
+            discountedPrice = discountedPrice,
+            deadLine = Date.parse(deadline),
+            startDate = Date.parse(startDate),
+            endDate = Date.parse(endDate),
+            serviceTag = tag,
+            state = ServiceState.mapState(status),
+        )
 }
