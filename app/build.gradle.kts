@@ -22,6 +22,7 @@ dependencies {
     implementation(projects.feature.search)
     implementation(projects.feature.searchResult)
     implementation(projects.feature.serviceDetail)
+    implementation(projects.feature.sellerDetail)
     implementation(projects.feature.userMyPage)
     implementation(projects.feature.userMyService)
     implementation(projects.feature.editProfile)

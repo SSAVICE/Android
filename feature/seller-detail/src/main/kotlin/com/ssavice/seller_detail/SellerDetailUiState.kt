@@ -28,10 +28,13 @@ data class SellerInfoState(
     val region: Region = Region(
         0.0,0.0,"", ""
     ),
+    val thumbnailUrl: String = "",
     val address: String = "",
     val detailAddress: String = "",
     val description: String = "",
     val detail: String = "",
+    val rate: Double = 0.0,
+    val rateCount: Int = -1,
     val phoneNumber: String = "",
     val imageUrls: List<String> = listOf()
 )

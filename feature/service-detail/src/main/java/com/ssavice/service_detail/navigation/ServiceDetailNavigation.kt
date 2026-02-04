@@ -37,16 +37,18 @@ fun NavGraphBuilder.serviceDetailScreen(
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
     onLikeClick: (Long) -> Unit = {},
+    onSellerClick: (Long) -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     composable<ServiceDetailRoute>(
+        popEnterTransition = null,
         enterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
                 animationSpec = tween(),
             )
         },
-        exitTransition = {
+        popExitTransition = {
             slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
                 animationSpec = tween(),
@@ -75,10 +77,9 @@ fun NavGraphBuilder.serviceDetailScreen(
                         .background(MaterialTheme.colorScheme.background)
                         .padding(innerPadding),
                 viewModel = viewModel,
-                onBackClick = onBackClick,
                 onChatClick = onChatClick,
                 onParticipateClick = onParticipateClick,
-                onLikeClick = onLikeClick,
+                onSellerClick = onSellerClick,
             )
         }
     }

@@ -7,7 +7,9 @@ import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.mapState
 import com.ssavice.model.seller.SellerDetail
 import com.ssavice.model.service.ServiceSummary
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CompanyDetailDTO(
     val address: String,
     val businessNumber: String,
@@ -49,6 +51,7 @@ data class CompanyDetailDTO(
     )
 }
 
+@Serializable
 data class ServiceDetailReviewItemDTO(
     val comment: String,
     val createdAt: String,
@@ -65,6 +68,7 @@ data class ServiceDetailReviewItemDTO(
     )
 }
 
+@Serializable
 data class ServiceDetailServiceItemDTO(
     val basePrice: Long,
     val category: String,

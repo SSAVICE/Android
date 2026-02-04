@@ -50,16 +50,21 @@ import com.ssavice.seller_detail.ui.SellerCard
 import com.ssavice.ui.AsyncImageScrollList
 import com.ssavice.ui.InfoRow
 import com.ssavice.ui.SellerServiceListItem
+import com.ssavice.ui.common.Constant
+import kotlinx.coroutines.delay
 
 @Composable
 fun SellerDetailRoute(
     modifier: Modifier = Modifier,
-    viewModel: SellerDetailViewModel = hiltViewModel()
+    viewModel: SellerDetailViewModel = hiltViewModel(),
+    onMoreServiceClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.sellerDetailState) {
         if(state.sellerDetailState is SellerDetailState.Initial) {
+            delay(Constant.ANIMATION_DELAY)
             viewModel.load()
         }
     }
@@ -67,6 +72,8 @@ fun SellerDetailRoute(
     if(state.sellerDetailState is SellerDetailState.Loaded) {
         SellerDetailScreen(
             modifier = modifier,
+            onMoreServiceClick = onMoreServiceClick,
+            onMoreReviewClick = onMoreReviewClick,
             state = state,
         )
     }
@@ -79,6 +86,8 @@ fun SellerDetailRoute(
 fun SellerDetailScreen(
     modifier: Modifier = Modifier,
     state: SellerDetailUiState,
+    onMoreServiceClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {},
     scrollState: ScrollState = rememberScrollState()
 ) {
     Column(
@@ -90,38 +99,41 @@ fun SellerDetailScreen(
         Spacer(Modifier.height(10.dp))
 
         SellerCard(
-            name = "테스트 회사",
-            thumbnailUrl = "https://picsum.photos/200",
-            sellerRate = 4.12588,
-            rateCount = 123,
-            description = "테스트 회사입니다.",
+            name = state.sellerInfo.name,
+            thumbnailUrl = state.sellerInfo.thumbnailUrl,
+            sellerRate = state.sellerInfo.rate,
+            rateCount = state.sellerInfo.rateCount,
+            description = state.sellerInfo.description,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         DescriptionAndAddress(
-            detail = "테스트용 디테일" +
-                    "\n이것은 두 번째 줄입니다." +
-                    "\n디테일 정보는 많은 줄을 포함할 수 있어야 합니다.",
-            address = "서울특별시 강남구 강남대로 10",
-            phoneNumber = "010-1234-5678",
-            detailAddress = "101동 1001호"
+            detail = state.sellerInfo.detail,
+            address = state.sellerInfo.address,
+            detailAddress = state.sellerInfo.detailAddress,
+            phoneNumber = state.sellerInfo.phoneNumber,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        ServiceSummary((1..3).map { demoService(it) })
+        ServiceSummary(state.serviceItems,
+            onMoreClick = {onMoreReviewClick(state.sellerInfo.id)}
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ReviewSummary((1..3).map { demoReview(it) })
+        ReviewSummary(
+            state.reviewItems,
+            onMoreClick = {onMoreReviewClick(state.sellerInfo.id)}
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         BusinessInfo(
-            owner = "홍길동",
-            phoneNumber = "010-1234-5678",
-            businessNumber = "123-45-78910"
+            owner = state.businessInfo.ownerName,
+            phoneNumber = state.businessInfo.phoneNumber,
+            businessNumber = state.businessInfo.businessNumber
         )
     }
 }

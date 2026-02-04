@@ -3,7 +3,11 @@ package com.ssavice.seller_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.common.getDeadlineMessageFromTimestamp
 import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.model.Date
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.seller_detail.navigation.SellerDetailRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +32,19 @@ class SellerDetailViewModel @Inject constructor(
         }
 
         val id = getIdFromSavedStateHandle()
+
+        if(id == -1L) {
+            _uiState.update {
+                it.copy(
+                    sellerDetailState = SellerDetailState.Error(IllegalStateException("판매자 조회에 실패했습니다."))
+                )
+            }
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            fetchAndUpdateSummary(id)
+        }
         viewModelScope.launch(Dispatchers.IO) {
             fetchAndUpdateInfo(id)
         }
@@ -35,30 +52,77 @@ class SellerDetailViewModel @Inject constructor(
     }
 
     private fun getIdFromSavedStateHandle(): Long {
-        return savedStateHandle.get<Long>("id") ?: -1L
+        return savedStateHandle.get<Long>(SellerDetailRouteContract.ID) ?: -1L
+    }
+
+    private suspend fun fetchAndUpdateSummary(id: Long) {
+        sellerRepository.getSellerSummary(id)
+            .onSuccess {
+                _uiState.update { state ->
+                    state.copy(
+                        sellerInfo = state.sellerInfo.copy(
+                            rate = it.companyRate,
+                            rateCount = it.rateCount,
+                            thumbnailUrl = it.companyImageUrl?:""
+                        )
+                    )
+                }
+            }
+    }
+
+    private fun mapPriceToString(price: Int): String = "￦%,d".format(price)
+
+    private fun mapSchedule(state: ServiceState, deadline: Date, start: Date, end: Date): String {
+        return when(state) {
+            ServiceState.RECRUITING, ServiceState.SUCCEEDED -> {
+                getDeadlineMessageFromTimestamp(
+                    deadline = deadline.toTimeStamp().timeInMillis,
+                    today = Date.now().toTimeStamp().timeInMillis,
+                )
+            }
+            ServiceState.COMPLETED -> {
+                "${start.toSimpleString()} - ${end.toSimpleString()}"
+            }
+            else -> ""
+        }
     }
 
     private suspend fun fetchAndUpdateInfo(id: Long) {
         sellerRepository.getSellerDetail(id)
             .fold(
-                onSuccess = {
-                    _uiState.update {
-                        it.copy(
+                onSuccess = { detail ->
+                    _uiState.update { state ->
+                        state.copy(
                             sellerDetailState = SellerDetailState.Loaded,
-                            sellerInfo = SellerInfoState(
-                                name = it.sellerInfo.name,
-                                description = it.sellerInfo.description,
-                                detail = it.sellerInfo.detail,
-                                address = it.sellerInfo.address,
-                                detailAddress = it.sellerInfo.detailAddress,
-                                phoneNumber = it.sellerInfo.phoneNumber,
-                                imageUrls = it.sellerInfo.imageUrls,
-                                id = it.sellerInfo.id,
-                                region = it.sellerInfo.region,
+                            sellerInfo = state.sellerInfo.copy(
+                                name = detail.sellerName,
+                                description = detail.description,
+                                detail = detail.detail,
+                                address = detail.address,
+                                detailAddress = detail.detailAddress,
+                                phoneNumber = detail.phoneNumber,
+                                imageUrls = listOf(),
+                                id = detail.id,
+                                region = detail.region,
                             ),
-                            serviceItems = it.serviceItems,
-                            reviewItems = it.reviewItems,
-                            businessInfo = it.businessInfo
+                            serviceItems = detail.serviceItems.map {
+                                ServiceItemState(
+                                    serviceId = it.id,
+                                    name = it.name,
+                                    thumbnailUrl = it.image,
+                                    serviceState = it.state,
+                                    category = it.category,
+                                    price = mapPriceToString(it.discountedPrice.toInt()),
+                                    dayState = mapSchedule(
+                                        it.state,
+                                        it.deadLine,
+                                        it.startDate,
+                                        it.endDate),
+                                    region = ""
+                                )
+                            },
+                            reviewItems = state.reviewItems,
+                            businessInfo = state.businessInfo
                         )
                     }
                 },
