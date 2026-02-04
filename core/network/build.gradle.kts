@@ -27,6 +27,11 @@ val backendURL =
         .map { it.getProperty("BACKEND_URL") }
         .orElse("http://example.com")
 
+val kakaoRestURL =
+    localProps
+        .map { it.getProperty("KAKAO_REST_URL") }
+        .orElse("http://example.com")
+
 dependencies {
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
@@ -41,6 +46,12 @@ androidComponents {
         it.buildConfigFields!!.put(
             "BACKEND_URL",
             backendURL.map { value ->
+                BuildConfigField(type = "String", value = """"$value"""", comment = null)
+            },
+        )
+        it.buildConfigFields!!.put(
+            "KAKAO_REST_URL",
+            kakaoRestURL.map { value ->
                 BuildConfigField(type = "String", value = """"$value"""", comment = null)
             },
         )
