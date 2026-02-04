@@ -15,7 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -74,6 +76,12 @@ fun MyServiceScreen(
     val isLoading =
         uiState.myServiceScreenStatus == MyServiceState.Loading ||
             uiState.myServiceScreenStatus == MyServiceState.Initial
+    val serviceStates by remember {
+        derivedStateOf {
+            uiState.searchingState.map { it.value }
+        }
+    }
+
     InfiniteScrollContainer(
         modifier =
             modifier
@@ -86,7 +94,7 @@ fun MyServiceScreen(
             item {
                 ServiceStateFilter(
                     modifier = Modifier.fillMaxWidth(),
-                    searchRange = uiState.searchingState,
+                    searchRange = serviceStates,
                     selection = uiState.searchTypeSelection,
                     onSelectionChanged = onSearchingStateChanged,
                 )

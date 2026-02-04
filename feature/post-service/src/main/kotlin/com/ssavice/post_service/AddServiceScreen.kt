@@ -125,22 +125,28 @@ fun AddServiceRoute(
     LaunchedEffect(
         state.submitState,
     ) {
-        if (state.submitState is SubmitState.Success) {
-            (state.submitState as? SubmitState.Success)?.run {
-                onSubmit(this.serviceId)
+        when (state.submitState) {
+            is SubmitState.Success -> {
+                (state.submitState as? SubmitState.Success)?.run {
+                    onSubmit(this.serviceId)
+                }
             }
-        } else if (state.submitState is SubmitState.Dismiss) {
-            onDismiss()
-        } else if (state.submitState is SubmitState.Idle) {
-            viewModel.getUserAddressAndApply()
+
+            is SubmitState.Dismiss -> {
+                onDismiss()
+            }
+
+            is SubmitState.Idle -> {
+                viewModel.getUserAddressAndApply()
+            }
+
+            else -> {}
         }
     }
 
     AddServiceScreen(
         modifier = modifier,
         state = state,
-        onSubmit = onSubmit,
-        onDismiss = viewModel::onDismissButtonClicked,
         onBackButtonClicked = onDismiss,
         onSubmitButtonClicked = viewModel::onSubmitButtonClicked,
         onImageSelected = viewModel::onImageSelected,
@@ -167,8 +173,6 @@ fun AddServiceRoute(
 fun AddServiceScreen(
     modifier: Modifier = Modifier,
     state: AddServiceUiState,
-    onSubmit: (Long) -> Unit = {},
-    onDismiss: () -> Unit = {},
     onBackButtonClicked: () -> Unit = {},
     onSubmitButtonClicked: () -> Unit = {},
     onImageSelected: (uri: Uri) -> Unit = {},
@@ -283,13 +287,6 @@ fun AddServiceScreen(
             }
     }
 
-    LaunchedEffect(state.submitState) {
-        if (state.submitState is SubmitState.Success) {
-            onSubmit(state.submitState.serviceId)
-        } else if (state.submitState is SubmitState.Dismiss) {
-            onDismiss()
-        }
-    }
     LaunchedEffect(state.form.discountedPrice) {
         discountedPriceTextState.edit {
             replace(

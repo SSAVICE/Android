@@ -72,7 +72,7 @@ class MyServiceViewModel
                             page = null,
                             searchCount = 10,
                             sortingOrder = SortingOrder.POPULARITY,
-                            serviceState = ServiceState.entries.getOrElse(uiState.value.searchTypeSelection) { ServiceState.ALL },
+                            serviceState = uiState.value.searchingState.getOrElse(uiState.value.searchTypeSelection) { ServiceState.ALL },
                         ).fold(
                             onSuccess = {
                                 val uiItems =

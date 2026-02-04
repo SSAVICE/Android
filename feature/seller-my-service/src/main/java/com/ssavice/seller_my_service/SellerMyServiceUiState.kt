@@ -8,7 +8,7 @@ data class SellerMyServiceUiState(
     val hasNext: Boolean = false,
     val nextPage: Int = 0,
     val searchTypeSelection: Int = 0,
-    val searchingState: List<String> = ServiceState.entries.filter { it.visibleAsOption }.map { it.value },
+    val searchingState: List<ServiceState> = ServiceState.entries.filter { it.visibleAsOption },
 )
 
 data class SellerMyServiceItemUiState(
