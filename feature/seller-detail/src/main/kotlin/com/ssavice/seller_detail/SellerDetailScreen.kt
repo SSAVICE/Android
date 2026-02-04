@@ -427,10 +427,13 @@ fun SellerCardPreview() {
         detailAddress = "101동 1001호",
         phoneNumber = "010-1234-5678",
         imageUrls = listOf(
-            "https://picsum.photos/id/122/200",
-            "https://picsum.photos/id/123/200",
-            "https://picsum.photos/id/124/200",
+            "https://picsum.photos/id/122/600",
+            "https://picsum.photos/id/123/600",
+            "https://picsum.photos/id/124/600",
         ),
+        rate = 4.5,
+        rateCount = 120,
+        thumbnailUrl = "https://picsum.photos/id/125/200",
         id = 1L,
     )
     val services= (1..3).map {
