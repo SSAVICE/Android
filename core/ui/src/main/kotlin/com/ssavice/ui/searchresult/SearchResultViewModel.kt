@@ -2,6 +2,7 @@ package com.ssavice.ui.searchresult
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.common.getDeadlineMessageFromTimestamp
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.model.Date
 import com.ssavice.model.enums.Category
@@ -155,20 +156,11 @@ class SearchResultViewModel
                 )
         }
 
-        private fun getDeadlineMessage(deadline: Date): String {
-            val deadline = deadline.toTimeStamp().timeInMillis
-            val today = Date.now().toTimeStamp().timeInMillis
-
-            val timeRemaining = deadline - today
-            if (timeRemaining < 1000 * 60 * 60 * 24) {
-                val hourRemaining = timeRemaining / (1000 * 60 * 60)
-
-                return "${hourRemaining}시간 후 마감"
-            } else {
-                val dayRemaining = timeRemaining / (1000 * 60 * 60 * 24)
-                return "${dayRemaining}일 후 마감"
-            }
-        }
+        private fun getDeadlineMessage(deadline: Date): String =
+            getDeadlineMessageFromTimestamp(
+                deadline = deadline.toTimeStamp().timeInMillis,
+                today = Date.now().toTimeStamp().timeInMillis,
+            )
 
         private fun onSearchFailure(exception: Throwable) {
         }

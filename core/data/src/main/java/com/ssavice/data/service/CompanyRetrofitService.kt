@@ -4,6 +4,7 @@ import GetCompanyInfoDTO
 import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.model.CompanyBookDTO
 import com.ssavice.network.model.CompanyBookSummaryDTO
+import com.ssavice.network.model.CompanyDetailDTO
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.GetAddressDTO
@@ -74,4 +75,9 @@ interface CompanyRetrofitService {
     suspend fun putCompanyProfile(
         @Body body: UpdateCompanyProfileDTO,
     ): Response<Unit>
+
+    @GET("/api/company/{id}")
+    suspend fun getCompanyDetail(
+        @Path(value = "id") id: Long,
+    ): Response<CompanyDetailDTO>
 }

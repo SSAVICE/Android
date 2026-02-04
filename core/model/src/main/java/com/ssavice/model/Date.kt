@@ -22,12 +22,6 @@ data class Date(
     val month: Int,
     val day: Int,
 ) : Comparable<Date> {
-    init {
-        require(year > 0)
-        require(month > 0)
-        require(day > 0)
-    }
-
     fun toTimeStamp(): TimeStamp {
         val calendar =
             Calendar.getInstance(DEFAULT_TIME_ZONE).apply {

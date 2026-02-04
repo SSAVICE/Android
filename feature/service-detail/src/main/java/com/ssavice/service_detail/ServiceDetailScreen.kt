@@ -51,10 +51,9 @@ import kotlinx.coroutines.delay
 fun ServiceDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: ServiceDetailViewModel = hiltViewModel(),
-    onBackClick: () -> Unit = {},
     onChatClick: (Long) -> Unit = {},
     onParticipateClick: (Long) -> Unit = {},
-    onLikeClick: (Long) -> Unit = {},
+    onSellerClick: (Long) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
@@ -82,6 +81,7 @@ fun ServiceDetailScreen(
         uiState.service,
         uiState.seller,
         onLikeClick = viewModel::onLikeButtonClick,
+        onSellerClick = onSellerClick,
         enabled = enabled,
     )
 }
@@ -93,6 +93,7 @@ fun ServiceDetailScreen(
     service: ServiceDetail?,
     seller: SellerSummary?,
     onLikeClick: (Long) -> Unit = {},
+    onSellerClick: (Long) -> Unit = {},
     enabled: Boolean = true,
 ) {
     Column(
@@ -200,7 +201,10 @@ fun ServiceDetailScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             if (seller != null) {
-                CompanyCard(seller = seller)
+                CompanyCard(
+                    seller = seller,
+                    onSellerClick = { onSellerClick(seller.id) },
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 

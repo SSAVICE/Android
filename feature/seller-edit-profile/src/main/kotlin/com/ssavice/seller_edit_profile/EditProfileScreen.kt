@@ -328,6 +328,7 @@ fun EditProfileScreen(
                     labelText = "상세 설명",
                     isError = state.form.detailErrorMessage != null,
                     errorMessage = state.form.detailErrorMessage,
+                    multiLine = true,
                     enabled = enabled,
                 )
 

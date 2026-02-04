@@ -10,6 +10,7 @@ import com.ssavice.model.Review
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.seller.SellerDetail
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerProfileUpdateForm
 import com.ssavice.model.seller.SellerRegisterForm
@@ -176,6 +177,10 @@ internal class DemoSellerInfoRepository
         }
 
         override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getSellerDetail(id: Long): Result<SellerDetail> {
             TODO("Not yet implemented")
         }
     }
