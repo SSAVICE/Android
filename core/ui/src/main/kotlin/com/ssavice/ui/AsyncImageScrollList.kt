@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,10 +19,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -78,28 +81,48 @@ fun AsyncImageScrollList(
                     stop = 1f, // 중앙 이미지의 투명도
                     fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
                 )
-            AsyncImage(
-                model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(imageUrls[pageIndex])
-                        .crossfade(true) // 부드러운 이미지 로딩 효과
-                        .build(),
-                contentDescription = "Image $pageIndex",
-                contentScale = contentScale,
+            Box(
                 modifier =
                     Modifier
                         .graphicsLayer {
                             this.alpha = alpha
-                        }.run {
+                        }
+                        .run {
                             if (imageAspectRatio != null) {
                                 aspectRatio(imageAspectRatio)
                             } else {
                                 this
                             }
-                        }.fillMaxWidth()
+                        }
+                        .fillMaxWidth()
                         .clickable { onImageClick(imageUrls[pageIndex]) },
-            )
+            ) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxWidth(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(imageUrls[pageIndex])
+                            .crossfade(true) // 부드러운 이미지 로딩 효과
+                            .build(),
+                    contentDescription = "Image $pageIndex",
+                    contentScale = contentScale,
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.2f) // 하단 50% 영역에만 그라데이션 적용 (조절 가능)
+                        .align(Alignment.BottomCenter)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,          // 위쪽은 투명
+                                    Color.Black.copy(alpha = 0.7f) // 아래쪽으로 갈수록 어두운 검정
+                                )
+                            )
+                        )
+                )
+            }
         }
 
         // 2. 인디케이터 (이미지가 2개 이상일 때만 표시)
@@ -107,6 +130,7 @@ fun AsyncImageScrollList(
             PagerIndicator(
                 modifier = Modifier.padding(bottom = 10.dp),
                 pagerState = pagerState,
+                activeColor = MaterialTheme.colorScheme.primary,
             )
         }
     }
@@ -159,10 +183,10 @@ private fun AsyncImageScrollListPreview() {
     val fakeImageUrls =
         listOf(
             // 미리보기용 플레이스홀더 이미지 URL
-            "https://via.placeholder.com/600/92c952",
-            "https://via.placeholder.com/600/771796",
-            "https://via.placeholder.com/600/24f355",
-            "https://via.placeholder.com/600/d32776",
+            "https://picsum.photos/id/${(1..1000).random()}/600",
+            "https://picsum.photos/id/${(1..1000).random()}/600",
+            "https://picsum.photos/id/${(1..1000).random()}/600",
+            "https://picsum.photos/id/${(1..1000).random()}/600",
         )
 
     SsaviceTheme {
