@@ -13,6 +13,7 @@ import com.ssavice.model.ResizableImage
 import com.ssavice.model.auth.CompanyVerifyToken
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.seller.SellerDetail
 import com.ssavice.model.seller.SellerMainInfo
 import com.ssavice.model.seller.SellerProfileUpdateForm
 import com.ssavice.model.seller.SellerRegisterForm
@@ -212,7 +213,15 @@ internal class RemoteSellerInfoRepository
                     }
             }
 
-        override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
+    override suspend fun getSellerDetail(id: Long): Result<SellerDetail> {
+        return processResponseOnResponseData(
+            companyRetrofitService.getCompanyDetail(id)
+        ).map {
+            it.toModel()
+        }
+    }
+
+    override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
             processResponse(
                 companyRetrofitService.putCompanyProfile(
                     body = UpdateCompanyProfileDTO.fromModel(profile),

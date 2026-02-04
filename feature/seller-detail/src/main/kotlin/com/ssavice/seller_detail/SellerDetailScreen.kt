@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -23,14 +25,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -42,28 +51,41 @@ import com.ssavice.ui.AsyncImageScrollList
 import com.ssavice.ui.InfoRow
 import com.ssavice.ui.SellerServiceListItem
 
-/*
-    상단에 판매자 상위 서비스 3개 사진.
-    이러면 관련 이미지도 거져와야 함. 서비스에서 가져올수도, 프로필 설정에서 설정하게 할 수도
+@Composable
+fun SellerDetailRoute(
+    modifier: Modifier = Modifier,
+    viewModel: SellerDetailViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    그 아래에 판매자 요약 정보
-    그 아래에 판매자 상세 정보
-    + 판매자 찜 기능 있으면 좋을 거 같음. 다만 기능 구현이 복잡할 지도?
-    그 아래 판매자 상위 서비스 목록. 전체 서비스 조회 버튼도 있음
-    그 아래 판매자 상위 리뷰 목록. 전체 리뷰 조회 버튼도 있음
- */
+    LaunchedEffect(state.sellerDetailState) {
+        if(state.sellerDetailState is SellerDetailState.Initial) {
+            viewModel.load()
+        }
+    }
+
+    if(state.sellerDetailState is SellerDetailState.Loaded) {
+        SellerDetailScreen(
+            modifier = modifier,
+            state = state,
+        )
+    }
+    else {
+        Loading(400.dp)
+    }
+}
 
 @Composable
 fun SellerDetailScreen(
     modifier: Modifier = Modifier,
-    imageUrls: List<String>,
+    state: SellerDetailUiState,
     scrollState: ScrollState = rememberScrollState()
 ) {
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
     ) {
-        SellerServiceSummaryImages(imageUrls = imageUrls)
+        SellerServiceSummaryImages(imageUrls = state.sellerInfo.imageUrls)
 
         Spacer(Modifier.height(10.dp))
 
@@ -369,9 +391,53 @@ private fun LabelWithMoreButton(
     }
 }
 
+@Composable
+private fun Loading(height: Dp) {
+    Box(
+        modifier = Modifier.height(height).fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+
 @Preview
 @Composable
 fun SellerCardPreview() {
+    val sellerInfo = SellerInfoState(
+        description = "테스트 회사입니다",
+        name = "테스트 회사",
+        detail = "테스트용 디테일" +
+                "\n이것은 두 번째 줄입니다." +
+                "\n디테일 정보는 많은 줄을 포함할 수 있어야 합니다.",
+        address = "서울특별시 강남구 강남대로 10",
+        detailAddress = "101동 1001호",
+        phoneNumber = "010-1234-5678",
+        imageUrls = listOf(
+            "https://picsum.photos/id/122/200",
+            "https://picsum.photos/id/123/200",
+            "https://picsum.photos/id/124/200",
+        ),
+        id = 1L,
+    )
+    val services= (1..3).map {
+        demoService(it)
+    }
+    val reviews = (1..3).map {
+        demoReview(it)
+    }
+    val state by remember {
+        mutableStateOf(
+            SellerDetailUiState(
+                sellerInfo = sellerInfo,
+                serviceItems = services,
+                reviewItems = reviews,
+                sellerDetailState = SellerDetailState.Loaded
+            )
+        )
+    }
+
     SsaviceTheme {
         Scaffold(
             topBar = { SsavicePopUpTopBar("판매자 상세 정보") },
@@ -380,12 +446,7 @@ fun SellerCardPreview() {
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
                     .padding(innerPadding),
-                imageUrls = listOf(
-                    "https://picsum.photos/id/15/800",
-                    "https://picsum.photos/id/17/800",
-                    "https://picsum.photos/id/19/800",
-                    "https://picsum.photos/id/21/800",
-                )
+                state = state
             )
         }
     }

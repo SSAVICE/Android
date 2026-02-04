@@ -1,6 +1,40 @@
 package com.ssavice.seller_detail
 
+import com.ssavice.model.Region
 import com.ssavice.model.enums.ServiceState
+
+data class SellerDetailUiState(
+    val sellerDetailState: SellerDetailState = SellerDetailState.Initial,
+    val sellerInfo: SellerInfoState = SellerInfoState(),
+    val serviceItems: List<ServiceItemState> = listOf(),
+    val reviewItems: List<ReviewItemState> = listOf(),
+    val businessInfo: BusinessInfoState = BusinessInfoState(
+        ownerName = "홍길동",
+        phoneNumber = "010-1234-5678",
+        businessNumber = "123-45-67890"
+    )
+)
+
+sealed interface SellerDetailState{
+    object Initial: SellerDetailState
+    object Loading: SellerDetailState
+    object Loaded: SellerDetailState
+    data class Error(val message: Throwable): SellerDetailState
+}
+
+data class SellerInfoState(
+    val id: Long = -1L,
+    val name: String = "",
+    val region: Region = Region(
+        0.0,0.0,"", ""
+    ),
+    val address: String = "",
+    val detailAddress: String = "",
+    val description: String = "",
+    val detail: String = "",
+    val phoneNumber: String = "",
+    val imageUrls: List<String> = listOf()
+)
 
 data class ServiceItemState(
     val serviceId: Long,
@@ -19,6 +53,12 @@ data class ReviewItemState(
     val serviceName: String,
     val createdAt: String,
     val rate: Int
+)
+
+data class BusinessInfoState(
+    val ownerName: String,
+    val phoneNumber: String,
+    val businessNumber: String
 )
 
 internal fun demoService(id: Int): ServiceItemState = ServiceItemState(
