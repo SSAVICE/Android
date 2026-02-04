@@ -13,34 +13,36 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerHomeViewModel @Inject constructor(
-    private val repository: SellerInfoRepository,
-) : ViewModel() {
-    val uiState: StateFlow<SellerHomeUiState> by lazy {
-        val mf = MutableStateFlow<SellerHomeUiState>(SellerHomeUiState.Loading)
-        viewModelScope.launch(Dispatchers.IO) {
-            sellerInfoFlow.collect { sellerInfo ->
-                mf.update {
-                    SellerHomeUiState.Shown(
-                        sellerInfo.services.map { service ->
-                            SellerItemUiState(
-                                id = service.id,
-                                title = service.name,
-                                category = service.category,
-                                meta = "${service.currentMember}명",
-                                priceText = "₩${service.discountedPrice}",
-                                isRecruiting = service.deadLine > Date.now(),
-                                imageUrl = service.image,
-                                state = service.state,
-                            )
-                        },
-                    )
+class SellerHomeViewModel
+    @Inject
+    constructor(
+        private val repository: SellerInfoRepository,
+    ) : ViewModel() {
+        val uiState: StateFlow<SellerHomeUiState> by lazy {
+            val mf = MutableStateFlow<SellerHomeUiState>(SellerHomeUiState.Loading)
+            viewModelScope.launch(Dispatchers.IO) {
+                sellerInfoFlow.collect { sellerInfo ->
+                    mf.update {
+                        SellerHomeUiState.Shown(
+                            sellerInfo.services.map { service ->
+                                SellerItemUiState(
+                                    id = service.id,
+                                    title = service.name,
+                                    category = service.category,
+                                    meta = "${service.currentMember}명",
+                                    priceText = "₩${service.discountedPrice}",
+                                    isRecruiting = service.deadLine > Date.now(),
+                                    imageUrl = service.image,
+                                    state = service.state,
+                                )
+                            },
+                        )
+                    }
                 }
             }
+            mf
         }
-        mf
+        val sellerInfoFlow by lazy {
+            repository.getMySellerInformation()
+        }
     }
-    val sellerInfoFlow by lazy {
-        repository.getMySellerInformation()
-    }
-}
