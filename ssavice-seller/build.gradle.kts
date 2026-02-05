@@ -1,3 +1,7 @@
+import com.android.build.api.variant.BuildConfigField
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     alias(libs.plugins.ssavice.android.application)
     alias(libs.plugins.ssavice.hilt)
@@ -10,6 +14,9 @@ plugins {
 android {
     namespace = "com.ssavice_seller"
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.ssavice_seller"
         versionCode = 1
@@ -46,6 +53,32 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
+    implementation(libs.kakao.map)
+    implementation(libs.kakao.auth)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+val localProps =
+    providers
+        .fileContents(isolated.rootProject.projectDirectory.file("local.properties"))
+        .asText
+        .map {
+            Properties().apply { load(it.reader()) }
+        }
+
+val kakaoSellerApiKey =
+    localProps
+        .map { it.getProperty("KAKAO_API_KEY_SELLER") }
+        .orElse("1")
+
+androidComponents {
+    onVariants {
+        it.buildConfigFields!!.put(
+            "KAKAO_API_KEY_SELLER",
+            kakaoSellerApiKey.map { value ->
+                BuildConfigField(type = "String", value = """"$value"""", comment = null)
+            },
+        )
+    }
 }
