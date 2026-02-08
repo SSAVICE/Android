@@ -201,6 +201,7 @@ class DemoServiceRepository
                             ),
                         companyName = generateRandomCompanyName(),
                         companyId = (0..100).random().toLong(),
+                        booked = false,
                     )
                 }
 
@@ -253,6 +254,7 @@ class DemoServiceRepository
                     liked = false,
                     status = "STATUS",
                     createdAt = Date.now(),
+                    booked = false,
                     regionInfo =
                         Region(
                             latitude = 0.0,

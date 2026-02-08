@@ -18,6 +18,7 @@ data class SearchResultItem(
     val companyName: String,
     val companyId: Long,
     val region: Region,
+    val booked: Boolean,
 )
 
 data class SearchResult(

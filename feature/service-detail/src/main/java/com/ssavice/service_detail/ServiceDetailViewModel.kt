@@ -110,6 +110,7 @@ class ServiceDetailViewModel
                                         description = it.description,
                                         tags = it.tag.split(','),
                                         liked = it.liked,
+                                        applied = it.booked,
                                     ),
                             )
                         _sellerId.value = it.companyId

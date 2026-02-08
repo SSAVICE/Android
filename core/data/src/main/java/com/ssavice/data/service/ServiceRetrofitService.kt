@@ -37,12 +37,12 @@ interface ServiceRetrofitService {
         @Body contentTypes: ImageUploadDTO,
     ): Response<PresignedUrlResponseDTO>
 
-    @POST("/api/service/{id}/apply")
+    @POST("/api/book/{id}/apply")
     suspend fun applyService(
         @Path(value = "id") id: Long,
     ): Response<ApplyServiceResultDTO>
 
-    @POST("/api/service/{id}/cancel")
+    @POST("/api/book/{id}/cancel")
     suspend fun cancelService(
         @Path(value = "id") id: Long,
     ): Response<Unit>

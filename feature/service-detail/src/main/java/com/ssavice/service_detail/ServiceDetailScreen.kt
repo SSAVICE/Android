@@ -270,6 +270,7 @@ fun ServiceDetailScreenPreview() {
             companyId = 123L,
             category = "건강",
             liked = true,
+            applied = false,
         )
     val company =
         SellerSummary(

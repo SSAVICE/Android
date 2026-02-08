@@ -49,13 +49,13 @@ interface CompanyRetrofitService {
         @Body body: ValidateBusinessDTO,
     ): Response<ValidateBusinessResponseDTO>
 
-    @GET("/api/company/book/summary")
+    @GET("/api/service/company/summary")
     suspend fun getCompanyParticipationSummary(): Response<CompanyBookSummaryDTO>
 
     @GET("/api/company/address")
     suspend fun getCompanyAddress(): Response<GetAddressDTO>
 
-    @GET("/api/company/book")
+    @GET("/api/service/company/my")
     suspend fun getCompanyBook(
         @Query("page") page: Int,
         @Query("size") size: Int,

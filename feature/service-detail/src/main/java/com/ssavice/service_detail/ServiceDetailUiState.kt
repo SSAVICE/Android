@@ -37,6 +37,7 @@ data class ServiceDetail(
     val address: String,
     val description: String,
     val liked: Boolean,
+    val applied: Boolean,
     val tags: List<String>,
 )
 
