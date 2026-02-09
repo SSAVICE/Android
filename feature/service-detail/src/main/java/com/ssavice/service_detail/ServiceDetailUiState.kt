@@ -1,5 +1,7 @@
 package com.ssavice.service_detail
 
+import com.ssavice.service_detail.ui.seller.ParticipantUiModel
+
 sealed interface InfoState {
     object Waiting : InfoState
 
@@ -17,8 +19,11 @@ data class ServiceDetailUiState(
     val sellerInfoState: InfoState = InfoState.Waiting,
     val applyInfoState: InfoState = InfoState.Waiting,
     val serviceLikeState: InfoState = InfoState.Waiting,
+    val showUserInfo: Boolean = true,
+    val showSellerInfo: Boolean = false,
     val service: ServiceDetail? = null,
     val seller: SellerSummary? = null,
+    val accountInfo: SellerAccountInfo? = null,
 )
 
 data class ServiceDetail(
@@ -59,4 +64,13 @@ data class Review(
     val rating: Int,
     val createdAt: String,
     val serviceName: String,
+)
+
+data class SellerAccountInfo(
+    val expectedRevenue: Long,
+    val participantCount: Int,
+    val pricePerPerson: Long,
+    val lastNotice: String?,
+    val noticeDate: String?,
+    val participants: List<ParticipantUiModel>,
 )

@@ -1,6 +1,5 @@
 package com.ssavice.service_detail
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,9 +40,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.Date
-import com.ssavice.service_detail.ui.CompanyCard
-import com.ssavice.service_detail.ui.ReviewItem
 import com.ssavice.service_detail.ui.ServiceImagesWithButtons
+import com.ssavice.service_detail.ui.seller.ParticipantUiModel
+import com.ssavice.service_detail.ui.seller.SellerManageScreen
+import com.ssavice.service_detail.ui.user.CompanyCard
+import com.ssavice.service_detail.ui.user.ReviewItem
 import com.ssavice.ui.InfoRow
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay
@@ -73,19 +75,77 @@ fun ServiceDetailScreen(
         }
     }
 
-    val enabled =
-        uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
     ServiceDetailScreen(
-        modifier =
-            modifier
-                .background(MaterialTheme.colorScheme.background),
-        uiState.service,
-        uiState.seller,
+        modifier = modifier
+            .verticalScroll(rememberScrollState()),
+        uiState = uiState,
         onLikeClick = viewModel::onLikeButtonClick,
         onSellerClick = onSellerClick,
-        onMoreReviewClick = onMoreReviewClick,
-        enabled = enabled,
+        onMoreReviewClick = onMoreReviewClick
     )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ServiceDetailScreen(
+    modifier: Modifier = Modifier,
+    uiState: ServiceDetailUiState,
+    onLikeClick: (Long) -> Unit = {},
+    onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {}
+) {
+    val enabled =
+        uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
+
+    val service = uiState.service
+
+    Column(
+        modifier =
+            modifier
+    ) {
+        ServiceDetailScreen(
+            service = service,
+            onLikeClick = onLikeClick,
+            enabled = enabled,
+            showLikeAndShare = uiState.showUserInfo
+        )
+
+        if (uiState.showUserInfo) {
+            val seller = uiState.seller
+            if (seller != null && service != null) {
+                SellerAndReviewScreen(
+                    seller = seller,
+                    sellerId = service.companyId,
+                    onSellerClick = onSellerClick,
+                    onMoreReviewClick = onMoreReviewClick
+                )
+            } else {
+                Loading(400.dp)
+            }
+        }
+
+        if (uiState.showSellerInfo) {
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.LightGray.copy(alpha = 0.7f))
+
+            Spacer(Modifier.height(16.dp))
+
+            val account = uiState.accountInfo
+            if (account != null) {
+                SellerManageScreen(
+                    expectedRevenue = account.expectedRevenue,
+                    participantCount = account.participantCount,
+                    pricePerPerson = account.pricePerPerson,
+                    lastNotice = account.lastNotice,
+                    noticeDate = account.noticeDate,
+                    participants = account.participants
+                )
+            } else {
+                Loading(400.dp)
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,23 +153,21 @@ fun ServiceDetailScreen(
 fun ServiceDetailScreen(
     modifier: Modifier = Modifier,
     service: ServiceDetail?,
-    seller: SellerSummary?,
+    showLikeAndShare: Boolean = true,
     onLikeClick: (Long) -> Unit = {},
-    onSellerClick: (Long) -> Unit = {},
-    onMoreReviewClick: (Long) -> Unit = {},
     enabled: Boolean = true,
 ) {
     Column(
         modifier =
             modifier
-                .fillMaxWidth()
-                .verticalScroll(state = rememberScrollState()),
+                .fillMaxWidth(),
     ) {
         if (service != null) {
             ServiceImagesWithButtons(
                 urls = service.imageUrls,
                 onLikeClick = { onLikeClick(service.id) },
                 liked = service.liked,
+                showButtons = showLikeAndShare
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -194,7 +252,8 @@ fun ServiceDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.LightGray.copy(alpha = 0.7f))
 
             Spacer(modifier = Modifier.height(24.dp))
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -202,46 +261,51 @@ fun ServiceDetailScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            if (seller != null) {
-                CompanyCard(
-                    seller = seller,
-                    onSellerClick = { onSellerClick(seller.id) },
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            "판매자 리뷰 (${seller.rateCount})",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        TextButton(onClick = { onMoreReviewClick(service.companyId) }) { Text("모두 보기") }
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        seller.reviews.forEach { review ->
-                            ReviewItem(
-                                review = review.content,
-                                rating = review.rating,
-                                userName = review.userName,
-                                date = review.createdAt,
-                                serviceName = review.serviceName,
-                            )
-                        }
-                    }
-                }
-            } else {
-                Loading(400.dp)
-            }
-            Spacer(modifier = Modifier.height(10.dp))
         } else {
             Loading(400.dp)
         }
     }
+}
+
+@Composable
+fun SellerAndReviewScreen(
+    modifier: Modifier = Modifier,
+    seller: SellerSummary,
+    sellerId: Long,
+    onSellerClick: (Long) -> Unit = {},
+    onMoreReviewClick: (Long) -> Unit = {}
+) {
+    CompanyCard(
+        seller = seller,
+        onSellerClick = { onSellerClick(seller.id) },
+    )
+
+    Spacer(modifier = Modifier.height(24.dp))
+
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "판매자 리뷰 (${seller.rateCount})",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            TextButton(onClick = { onMoreReviewClick(sellerId) }) { Text("모두 보기") }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            seller.reviews.forEach { review ->
+                ReviewItem(
+                    review = review.content,
+                    rating = review.rating,
+                    userName = review.userName,
+                    date = review.createdAt,
+                    serviceName = review.serviceName,
+                )
+            }
+        }
+    }
+    Spacer(modifier = Modifier.height(10.dp))
 }
 
 @Preview(showBackground = true)
@@ -261,9 +325,9 @@ fun ServiceDetailScreenPreview() {
             description = "초보자 친화적인 주말 요가 클래스입니다. 함께 건강하고 행복한 삶을 만들어봐요.",
             imageUrls =
                 listOf(
-                    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2120" +
-                        "&auto=format&fit=crop&ixlib=rb-4.0.3" +
-                        "&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://picsum.photos/seed/abc/1200/800",
+                    "https://picsum.photos/seed/def/1200/800",
+                    "https://picsum.photos/seed/ghq/1200/800",
                 ),
             deadLine = "Date(2026,2,15)",
             id = 123123L,
@@ -307,14 +371,101 @@ fun ServiceDetailScreenPreview() {
                     ),
                 ),
         )
+
+    val uiState = ServiceDetailUiState(
+        service = service,
+        seller = company,
+        showUserInfo = true,
+    )
     SsaviceTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
             ServiceDetailScreen(
-                modifier = Modifier.padding(innerPadding),
-                service = service,
-                seller = company,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
+                uiState = uiState,
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SellerServiceDetailScreenPreview() {
+    val service =
+        ServiceDetail(
+            name = "주말 요가 클래스",
+            tags = listOf("요가", "힐링", "운동"),
+            basePrice = 70000,
+            discountedPrice = 50000,
+            discountRatio = 30,
+            address = "강남구",
+            participantInfo = "8/15명 (7자리 남음)",
+            startDate = "2025-01-15",
+            endDate = "2025-02-15",
+            description = "초보자 친화적인 주말 요가 클래스입니다. 함께 건강하고 행복한 삶을 만들어봐요.",
+            imageUrls =
+                listOf(
+                    "https://picsum.photos/seed/abc/1200/800",
+                    "https://picsum.photos/seed/def/1200/800",
+                    "https://picsum.photos/seed/ghq/1200/800",
+                ),
+            deadLine = "Date(2026,2,15)",
+            id = 123123L,
+            companyId = 123L,
+            category = "건강",
+            liked = true,
+            applied = false
+        )
+
+    val dummyParticipants = listOf(
+        ParticipantUiModel(
+            profileUrl = "https://picsum.photos/id/112/200",
+            userId = 101,
+            name = "김민수"
+        ),
+        ParticipantUiModel(
+            profileUrl = "https://picsum.photos/id/113/200",
+            userId = 102,
+            name = "이서연"
+        ),
+        ParticipantUiModel(
+            profileUrl = "https://picsum.photos/id/114/200",
+            userId = 103,
+            name = "박지훈"
+        ),
+        ParticipantUiModel(
+            profileUrl = "https://picsum.photos/id/115/200",
+            userId = 104,
+            name = "최유나"
+        )
+    )
+
+    val uiState = ServiceDetailUiState(
+        service = service,
+        seller = null,
+        accountInfo = SellerAccountInfo(
+            participants = dummyParticipants,
+            expectedRevenue = 1300000L,
+            participantCount = dummyParticipants.size,
+            pricePerPerson = 325000L,
+            lastNotice = "2/15 집합 장소가 변경되었습니다",
+            noticeDate = "02.08",
+        ),
+        showSellerInfo = true,
+        showUserInfo = false,
+    )
+    SsaviceTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
+            ServiceDetailScreen(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
+                uiState = uiState,
             )
         }
     }
