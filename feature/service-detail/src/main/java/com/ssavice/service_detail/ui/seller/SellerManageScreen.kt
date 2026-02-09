@@ -47,7 +47,7 @@ import com.ssavice.designsystem.theme.SsaviceTheme
 data class ParticipantUiModel(
     val profileUrl: String,
     val userId: Long,
-    val name: String,
+    val name: String
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,9 +65,8 @@ fun SellerManageScreen(
     onChatClick: (ParticipantUiModel) -> Unit = {},
 ) {
     Column(
-        modifier =
-            modifier
-                .padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp)
     ) {
         // 1. 예상 수익 카드
         ManageSectionCard(modifier = Modifier.padding(top = 16.dp)) {
@@ -77,7 +76,7 @@ fun SellerManageScreen(
                         imageVector = Icons.Default.TrendingUp,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("예상 수익", style = MaterialTheme.typography.labelLarge, color = Color.Gray)
@@ -86,22 +85,22 @@ fun SellerManageScreen(
                 Text(
                     text = "₩${String.format("%,d", expectedRevenue)}",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.ExtraBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         Icons.Default.PersonOutline,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MaterialTheme.colorScheme.primary
                     )
                     Spacer(Modifier.width(3.dp))
                     Text(
                         text = "${participantCount}명 x ₩${String.format("%,d", pricePerPerson)}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = Color.Gray
                     )
                 }
             }
@@ -115,26 +114,26 @@ fun SellerManageScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Default.NotificationsNone,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             "공지사항",
                             style = MaterialTheme.typography.labelLarge,
-                            color = Color.Gray,
+                            color = Color.Gray
                         )
                     }
                     Text(
                         text = "+ 새 공지 작성",
                         modifier = Modifier.clickable { onNewNoticeClick() },
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -144,14 +143,13 @@ fun SellerManageScreen(
                 Surface(
                     onClick = onNoticeDetailClick,
                     color = Color(0xFFf6f6f6),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
@@ -159,68 +157,64 @@ fun SellerManageScreen(
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Medium,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
+                                overflow = TextOverflow.Ellipsis
                             )
                             Text(
                                 text = noticeDate ?: "",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color.Gray,
+                                color = Color.Gray
                             )
                         }
                         Icon(
                             Icons.Default.KeyboardArrowRight,
                             contentDescription = null,
-                            tint = Color.LightGray,
+                            tint = Color.LightGray
                         )
                     }
                 }
             }
         }
 
-        HorizontalDivider(
-            modifier = Modifier.padding(top = 24.dp),
-            color = Color.LightGray.copy(alpha = 0.7f),
-        )
+        HorizontalDivider(modifier = Modifier.padding(top = 24.dp),
+            color = Color.LightGray.copy(alpha = 0.7f))
 
         // 3. 참가자 명단 섹션
         SectionHeader(
             title = "참가자 명단",
-            count = participantCount,
+            count = participantCount
         )
 
         val builder =
-            ImageRequest
-                .Builder(LocalContext.current)
+            ImageRequest.Builder(LocalContext.current)
                 .crossfade(true)
 
         participants.fastForEachIndexed { i, participant ->
             ParticipantItem(
                 participant = participant,
                 onChatClick = { onChatClick(participant) },
-                builder,
+                builder
             )
 
-            if (i != participants.lastIndex) {
+            if (i != participants.lastIndex)
                 HorizontalDivider(color = Color.LightGray.copy(alpha = 0.7f))
-            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
+
 @Composable
 fun ParticipantItem(
     participant: ParticipantUiModel,
     onChatClick: () -> Unit,
-    imageRequest: ImageRequest.Builder,
+    imageRequest: ImageRequest.Builder
 ) {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         // 프로필 이미지 (Coil 사용)
         AsyncImage(
@@ -229,10 +223,9 @@ fun ParticipantItem(
                     .data(participant.profileUrl)
                     .build(),
             contentDescription = null,
-            modifier =
-                Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape),
             contentScale = ContentScale.Crop,
         )
 
@@ -242,48 +235,48 @@ fun ParticipantItem(
             Text(
                 text = participant.name,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Bold
             )
         }
 
         // 채팅 버튼
         Row(
-            modifier =
-                Modifier
-                    .clickable { onChatClick() }
-                    .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable { onChatClick() }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = Icons.Default.ChatBubbleOutline,
                 contentDescription = null,
                 modifier = Modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "채팅",
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primary
             )
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
                 modifier = Modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
 }
 
+
 @Composable
 fun ManageSectionCard(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     SsaviceElevatedCard(
         modifier = modifier.fillMaxWidth(),
-        content = content,
+        content = content
     )
 }
 
@@ -292,37 +285,35 @@ fun SectionHeader(
     title: String,
     count: Int? = null,
     actionText: String? = null,
-    onActionClick: () -> Unit = {},
+    onActionClick: () -> Unit = {}
 ) {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Bold
             )
             count?.let {
                 Spacer(modifier = Modifier.width(8.dp))
                 Surface(
                     color = MaterialTheme.colorScheme.primaryContainer, // 연한 핑크 배경
-                    shape = CircleShape,
+                    shape = CircleShape
                 ) {
                     Text(
                         text = "${it}명",
-                        modifier =
-                            Modifier.padding(
-                                horizontal = 8.dp,
-                                vertical = 2.dp,
-                            ),
+                        modifier = Modifier.padding(
+                            horizontal = 8.dp,
+                            vertical = 2.dp
+                        ),
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
@@ -333,7 +324,7 @@ fun SectionHeader(
                 modifier = Modifier.clickable { onActionClick() },
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Medium
             )
         }
     }
@@ -341,30 +332,29 @@ fun SectionHeader(
 
 @Preview()
 @Composable
-private fun SellerManageScreenPreview() { // 1. 더미 데이터 생성
-    val dummyParticipants =
-        listOf(
-            ParticipantUiModel(
-                profileUrl = "https://example.com/p1.jpg",
-                userId = 101,
-                name = "김민수",
-            ),
-            ParticipantUiModel(
-                profileUrl = "https://example.com/p2.jpg",
-                userId = 102,
-                name = "이서연",
-            ),
-            ParticipantUiModel(
-                profileUrl = "https://example.com/p3.jpg",
-                userId = 103,
-                name = "박지훈",
-            ),
-            ParticipantUiModel(
-                profileUrl = "https://example.com/p4.jpg",
-                userId = 104,
-                name = "최유나",
-            ),
+private fun SellerManageScreenPreview() {    // 1. 더미 데이터 생성
+    val dummyParticipants = listOf(
+        ParticipantUiModel(
+            profileUrl = "https://example.com/p1.jpg",
+            userId = 101,
+            name = "김민수"
+        ),
+        ParticipantUiModel(
+            profileUrl = "https://example.com/p2.jpg",
+            userId = 102,
+            name = "이서연"
+        ),
+        ParticipantUiModel(
+            profileUrl = "https://example.com/p3.jpg",
+            userId = 103,
+            name = "박지훈"
+        ),
+        ParticipantUiModel(
+            profileUrl = "https://example.com/p4.jpg",
+            userId = 104,
+            name = "최유나"
         )
+    )
 
     SsaviceTheme {
         Scaffold { innerPadding ->
@@ -378,7 +368,7 @@ private fun SellerManageScreenPreview() { // 1. 더미 데이터 생성
                 participants = dummyParticipants,
                 onNewNoticeClick = {},
                 onNoticeDetailClick = {},
-                onChatClick = {},
+                onChatClick = {}
             )
         }
     }
