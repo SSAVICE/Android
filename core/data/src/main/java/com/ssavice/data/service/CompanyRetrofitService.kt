@@ -82,7 +82,7 @@ interface CompanyRetrofitService {
         @Path(value = "id") id: Long,
     ): Response<CompanyDetailDTO>
 
-    @GET("/api/review/{id}")
+    @GET("/api/review/company/{id}")
     suspend fun getCompanyReview(
         @Path(value = "id") id: Long,
         @Query("page") page: Int,
