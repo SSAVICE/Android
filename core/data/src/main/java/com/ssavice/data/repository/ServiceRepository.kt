@@ -7,6 +7,7 @@ import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.model.service.ServiceDetail
+import com.ssavice.model.service.ServiceParticipantResponse
 import kotlinx.coroutines.flow.Flow
 
 interface ServiceRepository {
@@ -36,4 +37,6 @@ interface ServiceRepository {
     suspend fun reviewService(review: ReviewForm): Result<Unit>
 
     suspend fun deleteService(id: Long): Result<Unit>
+
+    suspend fun getServiceParticipant(id: Long, size: Int, page: Int): Result<ServiceParticipantResponse>
 }
