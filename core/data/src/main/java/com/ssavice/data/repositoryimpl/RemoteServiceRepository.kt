@@ -146,19 +146,19 @@ internal class RemoteServiceRepository
             )
 
         override suspend fun deleteService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.deleteService(id))
-
-        override suspend fun getServiceParticipant(
-            id: Long,
-            size: Int,
-            page: Int,
-        ): Result<ServiceParticipantResponse> =
-            processResponseOnResponseData(
-                serviceRetrofitService.getParticipant(
-                    id = id,
-                    size = size,
-                    page = page,
-                ),
-            ).map {
-                it.toModel()
-            }
+    override suspend fun getServiceParticipant(
+        id: Long,
+        size: Int,
+        page: Int
+    ): Result<ServiceParticipantResponse> {
+        return processResponseOnResponseData(
+            serviceRetrofitService.getParticipant(
+                id = id,
+                size = size,
+                page = page
+            )
+        ).map {
+            it.toModel()
+        }
     }
+}

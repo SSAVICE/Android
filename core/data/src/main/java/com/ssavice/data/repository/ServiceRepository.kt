@@ -38,9 +38,5 @@ interface ServiceRepository {
 
     suspend fun deleteService(id: Long): Result<Unit>
 
-    suspend fun getServiceParticipant(
-        id: Long,
-        size: Int,
-        page: Int,
-    ): Result<ServiceParticipantResponse>
+    suspend fun getServiceParticipant(id: Long, size: Int, page: Int): Result<ServiceParticipantResponse>
 }
