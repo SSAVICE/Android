@@ -48,7 +48,7 @@ class MyServiceViewModel
                 price = DomainFormatter.formatPrice(item.price),
                 thumbnailUrl = item.thumbnail,
                 duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
-                cancellable = item.state.cancellable && item.currentMemberCount == 0,
+                cancellable = item.state.cancellable,
                 state = item.state,
                 memberStatus = "${item.currentMemberCount}/${item.minimumMemberCount} (최대 ${item.maximumMemberCount})",
             )
