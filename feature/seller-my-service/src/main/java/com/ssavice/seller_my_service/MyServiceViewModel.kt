@@ -44,7 +44,7 @@ class MyServiceViewModel
                 index = i + nextId,
                 id = item.id,
                 title = item.name,
-                price = "%,d".format(item.price),
+                price = "₩%,d".format(item.price),
                 thumbnailUrl = item.thumbnail,
                 duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
                 cancellable = item.state.cancellable && item.currentMemberCount == 0,

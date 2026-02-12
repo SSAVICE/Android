@@ -30,7 +30,7 @@ class SellerHomeViewModel
                                     title = service.name,
                                     category = service.category,
                                     meta = "${service.currentMember}명",
-                                    priceText = "₩${service.discountedPrice}",
+                                    priceText = "₩%,d".format(service.discountedPrice),
                                     isRecruiting = service.deadLine > Date.now(),
                                     imageUrl = service.image,
                                     state = service.state,
