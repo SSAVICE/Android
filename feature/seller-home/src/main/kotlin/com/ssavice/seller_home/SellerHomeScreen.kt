@@ -44,12 +44,14 @@ fun SellerHomeRoute(
     modifier: Modifier = Modifier,
     viewModel: SellerHomeViewModel = hiltViewModel(),
     onAddClick: () -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     SellerHomeScreen(
         state = state,
         modifier = modifier,
         onAddClick = onAddClick,
+        onServiceClick = { onServiceClick(it) }
     )
 }
 
@@ -69,7 +71,7 @@ fun SellerHomeScreen(
             modifier = Modifier.fillMaxSize(),
         )
     },
-    onServiceClick: (SellerItemUiState) -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val imageRequest =
         ImageRequest
@@ -134,6 +136,7 @@ fun SellerHomeScreen(
                             .shadow(8.dp, RoundedCornerShape(14.dp), clip = false)
                             .clip(RoundedCornerShape(14.dp))
                             .background(Color.White),
+                    onClick = onServiceClick,
                 )
             }
         }

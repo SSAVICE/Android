@@ -26,9 +26,10 @@ data class ServiceDetailRoute(
 
 fun NavController.navigateToServiceDetail(
     navOptions: NavOptionsBuilder.() -> Unit = {},
+    isSeller: Boolean = true,
     serviceId: Long,
 ) {
-    navigate(ServiceDetailRoute(serviceId)) {
+    navigate(ServiceDetailRoute(serviceId, isSeller)) {
         navOptions()
     }
 }
@@ -90,5 +91,5 @@ fun NavGraphBuilder.serviceDetailScreen(
 
 object ServiceDetailRouteContract {
     const val ID = "serviceId"
-    const val SELLER_PAGE = "sellerPage"
+    const val IS_SELLER = "sellerPage"
 }

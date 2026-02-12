@@ -3,6 +3,8 @@ package com.ssavice.service_detail
 import com.ssavice.service_detail.ui.seller.ParticipantUiModel
 
 sealed interface InfoState {
+    object Initial: InfoState
+
     object Waiting : InfoState
 
     object Loading : InfoState
@@ -15,8 +17,8 @@ sealed interface InfoState {
 }
 
 data class ServiceDetailUiState(
-    val serviceInfoState: InfoState = InfoState.Waiting,
-    val sellerInfoState: InfoState = InfoState.Waiting,
+    val serviceInfoState: InfoState = InfoState.Initial,
+    val sellerInfoState: InfoState = InfoState.Initial,
     val applyInfoState: InfoState = InfoState.Waiting,
     val serviceLikeState: InfoState = InfoState.Waiting,
     val showUserInfo: Boolean = true,

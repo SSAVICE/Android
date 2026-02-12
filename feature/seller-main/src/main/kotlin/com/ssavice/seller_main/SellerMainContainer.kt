@@ -40,11 +40,12 @@ fun SellerMainContainer(
         ) {
             myPage(
                 onMyServiceClick = onParticipatedServiceButtonClick,
-                onEditProfileClick = onEditProfileButtonClick,
+                onEditProfileClick = onEditProfileButtonClick
             )
 
             home(
                 onAddClick = onAddClick,
+                onServiceClick = onServiceClick
             )
 
             chat()

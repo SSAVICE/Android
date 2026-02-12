@@ -20,7 +20,10 @@ fun NavController.navigateToHome(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.home(onAddClick: () -> Unit = {}) {
+fun NavGraphBuilder.home(
+    onAddClick: () -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
+) {
     composable<HomeRoute>(
         enterTransition = {
             slideIntoContainer(
@@ -38,6 +41,7 @@ fun NavGraphBuilder.home(onAddClick: () -> Unit = {}) {
     {
         SellerHomeRoute(
             onAddClick = onAddClick,
+            onServiceClick = onServiceClick
         )
     }
 }

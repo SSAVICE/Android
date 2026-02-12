@@ -15,6 +15,8 @@ import com.ssavice.seller_main.navigation.navigateToMain
 import com.ssavice.seller_my_service.navigation.myServiceScreen
 import com.ssavice.seller_my_service.navigation.navigateToMyService
 import com.ssavice.seller_register.navigation.registerScreen
+import com.ssavice.service_detail.navigation.navigateToServiceDetail
+import com.ssavice.service_detail.navigation.serviceDetailScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -70,10 +72,20 @@ fun SsaviceNavHost(
                     profileImageUrl = it?.profileUrl,
                 )
             },
+            onServiceClick = {
+                navController.navigateToServiceDetail(
+                    serviceId = it,
+                    isSeller = true
+                )
+            }
         )
 
         myServiceScreen(
-            onServiceClick = { _ ->
+            onServiceClick = {
+                navController.navigateToServiceDetail(
+                    serviceId = it,
+                    isSeller = true
+                )
             },
             onBack = {
                 navController.navigateUp()
@@ -87,6 +99,10 @@ fun SsaviceNavHost(
             onBackClick = {
                 navController.navigateUp()
             },
+        )
+
+        serviceDetailScreen(
+            onBack = { navController.navigateUp() },
         )
     }
 }
