@@ -152,7 +152,6 @@ class MyServiceViewModel
         }
 
         fun onCancelClick(id: Long) {
-            return // TODO: 구현
             _uiState.update {
                 it.copy(
                     myServiceScreenStatus = MyServiceState.Loading,
