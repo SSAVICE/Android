@@ -2,6 +2,7 @@ package com.ssavice.user_my_service
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.common.DomainFormatter
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.ServiceState
@@ -44,7 +45,7 @@ class MyServiceViewModel
                 index = i + nextId,
                 id = item.id,
                 title = item.name,
-                price = "%,d".format(item.price),
+                price = DomainFormatter.formatPrice(item.price),
                 thumbnailUrl = item.thumbnail,
                 sellerName = item.sellerName,
                 duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",

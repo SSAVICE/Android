@@ -2,6 +2,7 @@ package com.ssavice.seller_home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssavice.common.DomainFormatter
 import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.model.Date
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,7 @@ class SellerHomeViewModel
                                     title = service.name,
                                     category = service.category,
                                     meta = "${service.currentMember}명",
-                                    priceText = "₩%,d".format(service.discountedPrice),
+                                    priceText = DomainFormatter.formatPrice(service.discountedPrice),
                                     isRecruiting = service.deadLine > Date.now(),
                                     imageUrl = service.image,
                                     state = service.state,
