@@ -41,7 +41,7 @@ fun SellerServiceListItem(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 14.dp,
     elevation: Dp = 8.dp,
-    onClick: ((Long) -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
     thumbnail: @Composable () -> Unit,
 ) {
     val shape = RoundedCornerShape(cornerRadius)
@@ -56,7 +56,7 @@ fun SellerServiceListItem(
                     .clip(shape)
                     .background(Color.White)
                     .fillMaxWidth()
-                    .clickable(true) { onClick }
+                    .clickable(true, onClick = { onClick?.invoke() })
                     .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
