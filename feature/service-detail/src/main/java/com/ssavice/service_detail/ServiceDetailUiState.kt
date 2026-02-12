@@ -3,7 +3,7 @@ package com.ssavice.service_detail
 import com.ssavice.service_detail.ui.seller.ParticipantUiModel
 
 sealed interface InfoState {
-    object Initial : InfoState
+    object Initial: InfoState
 
     object Waiting : InfoState
 

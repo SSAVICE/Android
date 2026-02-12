@@ -51,7 +51,7 @@ fun SellerHomeRoute(
         state = state,
         modifier = modifier,
         onAddClick = onAddClick,
-        onServiceClick = { onServiceClick(it) },
+        onServiceClick = { onServiceClick(it) }
     )
 }
 

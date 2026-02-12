@@ -59,18 +59,17 @@ fun ServiceDetailScreen(
     onMoreReviewClick: (Long) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val serviceIdState by viewModel.serviceId.collectAsStateWithLifecycle()
     val sellerIdState by viewModel.sellerId.collectAsStateWithLifecycle()
 
-    LaunchedEffect(serviceIdState) {
-        if (serviceIdState != -1L) {
+    LaunchedEffect(uiState.serviceInfoState) {
+        if (uiState.serviceInfoState is InfoState.Initial) {
             delay(Constant.ANIMATION_DELAY)
-            viewModel.loadService(viewModel.serviceId.value)
+            viewModel.onInit()
         }
     }
 
     LaunchedEffect(sellerIdState) {
-        if (sellerIdState != -1L) {
+        if (sellerIdState != -1L && uiState.sellerInfoState is InfoState.Initial) {
             viewModel.loadSeller(viewModel.sellerId.value)
         }
     }
