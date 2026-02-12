@@ -75,15 +75,15 @@ fun ServiceDetailScreen(
     }
 
     ServiceDetailScreen(
-        modifier = modifier
-            .verticalScroll(rememberScrollState()),
+        modifier =
+            modifier
+                .verticalScroll(rememberScrollState()),
         uiState = uiState,
         onLikeClick = viewModel::onLikeButtonClick,
         onSellerClick = onSellerClick,
-        onMoreReviewClick = onMoreReviewClick
+        onMoreReviewClick = onMoreReviewClick,
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,7 +92,7 @@ fun ServiceDetailScreen(
     uiState: ServiceDetailUiState,
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
-    onMoreReviewClick: (Long) -> Unit = {}
+    onMoreReviewClick: (Long) -> Unit = {},
 ) {
     val enabled =
         uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
@@ -101,13 +101,13 @@ fun ServiceDetailScreen(
 
     Column(
         modifier =
-            modifier
+        modifier,
     ) {
         ServiceDetailScreen(
             service = service,
             onLikeClick = onLikeClick,
             enabled = enabled,
-            showLikeAndShare = uiState.showUserInfo
+            showLikeAndShare = uiState.showUserInfo,
         )
 
         if (uiState.showUserInfo) {
@@ -117,7 +117,7 @@ fun ServiceDetailScreen(
                     seller = seller,
                     sellerId = service.companyId,
                     onSellerClick = onSellerClick,
-                    onMoreReviewClick = onMoreReviewClick
+                    onMoreReviewClick = onMoreReviewClick,
                 )
             } else {
                 Loading(400.dp)
@@ -125,8 +125,10 @@ fun ServiceDetailScreen(
         }
 
         if (uiState.showSellerInfo) {
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp),
-                color = Color.LightGray.copy(alpha = 0.7f))
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.LightGray.copy(alpha = 0.7f),
+            )
 
             Spacer(Modifier.height(16.dp))
 
@@ -138,7 +140,7 @@ fun ServiceDetailScreen(
                     pricePerPerson = account.pricePerPerson,
                     lastNotice = account.lastNotice,
                     noticeDate = account.noticeDate,
-                    participants = account.participants
+                    participants = account.participants,
                 )
             } else {
                 Loading(400.dp)
@@ -166,7 +168,7 @@ fun ServiceDetailScreen(
                 urls = service.imageUrls,
                 onLikeClick = { onLikeClick(service.id) },
                 liked = service.liked,
-                showButtons = showLikeAndShare
+                showButtons = showLikeAndShare,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -251,8 +253,10 @@ fun ServiceDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp),
-                color = Color.LightGray.copy(alpha = 0.7f))
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.LightGray.copy(alpha = 0.7f),
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -272,7 +276,7 @@ fun SellerAndReviewScreen(
     seller: SellerSummary,
     sellerId: Long,
     onSellerClick: (Long) -> Unit = {},
-    onMoreReviewClick: (Long) -> Unit = {}
+    onMoreReviewClick: (Long) -> Unit = {},
 ) {
     CompanyCard(
         seller = seller,
@@ -371,19 +375,21 @@ fun ServiceDetailScreenPreview() {
                 ),
         )
 
-    val uiState = ServiceDetailUiState(
-        service = service,
-        seller = company,
-        showUserInfo = true,
-    )
+    val uiState =
+        ServiceDetailUiState(
+            service = service,
+            seller = company,
+            showUserInfo = true,
+        )
     SsaviceTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
             ServiceDetailScreen(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState()),
                 uiState = uiState,
             )
         }
@@ -416,54 +422,58 @@ fun SellerServiceDetailScreenPreview() {
             companyId = 123L,
             category = "건강",
             liked = true,
-            applied = false
+            applied = false,
         )
 
-    val dummyParticipants = listOf(
-        ParticipantUiModel(
-            profileUrl = "https://picsum.photos/id/112/200",
-            userId = 101,
-            name = "김민수"
-        ),
-        ParticipantUiModel(
-            profileUrl = "https://picsum.photos/id/113/200",
-            userId = 102,
-            name = "이서연"
-        ),
-        ParticipantUiModel(
-            profileUrl = "https://picsum.photos/id/114/200",
-            userId = 103,
-            name = "박지훈"
-        ),
-        ParticipantUiModel(
-            profileUrl = "https://picsum.photos/id/115/200",
-            userId = 104,
-            name = "최유나"
+    val dummyParticipants =
+        listOf(
+            ParticipantUiModel(
+                profileUrl = "https://picsum.photos/id/112/200",
+                userId = 101,
+                name = "김민수",
+            ),
+            ParticipantUiModel(
+                profileUrl = "https://picsum.photos/id/113/200",
+                userId = 102,
+                name = "이서연",
+            ),
+            ParticipantUiModel(
+                profileUrl = "https://picsum.photos/id/114/200",
+                userId = 103,
+                name = "박지훈",
+            ),
+            ParticipantUiModel(
+                profileUrl = "https://picsum.photos/id/115/200",
+                userId = 104,
+                name = "최유나",
+            ),
         )
-    )
 
-    val uiState = ServiceDetailUiState(
-        service = service,
-        seller = null,
-        accountInfo = SellerAccountInfo(
-            participants = dummyParticipants,
-            expectedRevenue = 1300000L,
-            participantCount = dummyParticipants.size,
-            pricePerPerson = 325000L,
-            lastNotice = "2/15 집합 장소가 변경되었습니다",
-            noticeDate = "02.08",
-        ),
-        showSellerInfo = true,
-        showUserInfo = false,
-    )
+    val uiState =
+        ServiceDetailUiState(
+            service = service,
+            seller = null,
+            accountInfo =
+                SellerAccountInfo(
+                    participants = dummyParticipants,
+                    expectedRevenue = 1300000L,
+                    participantCount = dummyParticipants.size,
+                    pricePerPerson = 325000L,
+                    lastNotice = "2/15 집합 장소가 변경되었습니다",
+                    noticeDate = "02.08",
+                ),
+            showSellerInfo = true,
+            showUserInfo = false,
+        )
     SsaviceTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
             ServiceDetailScreen(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState()),
                 uiState = uiState,
             )
         }

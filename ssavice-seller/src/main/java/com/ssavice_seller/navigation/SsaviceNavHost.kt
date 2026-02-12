@@ -75,16 +75,16 @@ fun SsaviceNavHost(
             onServiceClick = {
                 navController.navigateToServiceDetail(
                     serviceId = it,
-                    isSeller = true
+                    isSeller = true,
                 )
-            }
+            },
         )
 
         myServiceScreen(
             onServiceClick = {
                 navController.navigateToServiceDetail(
                     serviceId = it,
-                    isSeller = true
+                    isSeller = true,
                 )
             },
             onBack = {

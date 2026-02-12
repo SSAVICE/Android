@@ -1,6 +1,6 @@
 package com.ssavice.model.service
 
-data class ServiceParticipantResponse (
+data class ServiceParticipantResponse(
     val items: List<ServiceParticipant>,
     val currentPage: Int,
     val size: Int,

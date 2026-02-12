@@ -291,11 +291,11 @@ class DemoServiceRepository
             TODO("Not yet implemented")
         }
 
-    override suspend fun getServiceParticipant(
-        id: Long,
-        size: Int,
-        page: Int
-    ): Result<ServiceParticipantResponse> {
-        TODO("Not yet implemented")
+        override suspend fun getServiceParticipant(
+            id: Long,
+            size: Int,
+            page: Int,
+        ): Result<ServiceParticipantResponse> {
+            TODO("Not yet implemented")
+        }
     }
-}

@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ServiceDetailRoute(
     val serviceId: Long,
-    val sellerPage: Boolean = false
+    val sellerPage: Boolean = false,
 )
 
 fun NavController.navigateToServiceDetail(

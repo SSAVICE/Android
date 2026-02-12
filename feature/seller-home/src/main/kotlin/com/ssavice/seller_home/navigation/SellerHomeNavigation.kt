@@ -41,7 +41,7 @@ fun NavGraphBuilder.home(
     {
         SellerHomeRoute(
             onAddClick = onAddClick,
-            onServiceClick = onServiceClick
+            onServiceClick = onServiceClick,
         )
     }
 }

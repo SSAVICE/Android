@@ -10,14 +10,15 @@ data class GetServiceParticipantDTO(
     val currentPage: Int,
     val size: Int,
     val totalElements: Long,
-    val totalPages: Int
+    val totalPages: Int,
 ) {
-    fun toModel(): ServiceParticipantResponse = ServiceParticipantResponse(
-        items = content.map { it.toModel() },
-        currentPage = currentPage,
-        size = size,
-        totalElements = totalElements
-    )
+    fun toModel(): ServiceParticipantResponse =
+        ServiceParticipantResponse(
+            items = content.map { it.toModel() },
+            currentPage = currentPage,
+            size = size,
+            totalElements = totalElements,
+        )
 }
 
 @Serializable
@@ -25,11 +26,12 @@ data class Participant(
     val bookId: Long,
     val name: String,
     val thumbnailUrl: String,
-    val userId: Long
+    val userId: Long,
 ) {
-    fun toModel(): ServiceParticipant = ServiceParticipant(
-        name = name,
-        thumbnailUrl = thumbnailUrl,
-        userId = userId
-    )
+    fun toModel(): ServiceParticipant =
+        ServiceParticipant(
+            name = name,
+            thumbnailUrl = thumbnailUrl,
+            userId = userId,
+        )
 }
