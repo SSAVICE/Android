@@ -67,19 +67,17 @@ fun LoginRoute(
         }
     }
 
-    if (state.loginState is LoginState.NeedLogin) {
-        LoginPage(
-            modifier = modifier,
-            onLoginButtonClicked = {
-                loginWithKakaoTalk(
-                    context = context,
-                    onSuccess = viewModel::onKakaoLoginSuccess,
-                    onError = viewModel::onKakaoLoginError
-                )
-            },
-            uiState = state,
-        )
-    }
+    LoginPage(
+        modifier = modifier,
+        onLoginButtonClicked = {
+            loginWithKakaoTalk(
+                context = context,
+                onSuccess = viewModel::onKakaoLoginSuccess,
+                onError = viewModel::onKakaoLoginError
+            )
+        },
+        uiState = state,
+    )
 }
 
 @Composable
@@ -101,11 +99,15 @@ fun LoginPage(
                     .fillMaxWidth()
                     .weight(2f)
             )
-            LoginSpace(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f), onLoginButtonClicked, uiState
-            )
+            if(uiState.loginState == LoginState.NeedLogin) {
+                LoginSpace(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    onLoginButtonClicked = onLoginButtonClicked,
+                    uiState = uiState,
+                )
+            }
         }
     }
 }
@@ -232,7 +234,6 @@ fun LoginSpace(
                     indication = null,
                     // 2. 상호작용 상태를 추적할 source (필수 입력)
                     interactionSource = remember { MutableInteractionSource() },
-                    enabled = uiState.loginState !is LoginState.NeedLogin,
                     onClick = onLoginButtonClicked
                 ),
             contentAlignment = Alignment.Center

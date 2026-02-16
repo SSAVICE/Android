@@ -91,11 +91,13 @@ constructor(
     fun onLogout() {
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.logout()
-            _uiState.value =
-                _uiState.value.copy(
-                    participationState = MyPageState.Done,
-                )
-            loadProfile()
+                .onSuccess {
+                    _uiState.value =
+                        _uiState.value.copy(
+                            participationState = MyPageState.Done,
+                        )
+                    userInfoRepository.getUserAddress()
+                }
         }
     }
 }
