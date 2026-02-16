@@ -1,8 +1,9 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.user
 
 import com.ssavice.model.Date
 import com.ssavice.model.service.UserWishListItem
 import com.ssavice.model.service.WishList
+import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.Serializable
 
 @Serializable

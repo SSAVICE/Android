@@ -14,11 +14,11 @@ import com.ssavice.model.service.ServiceDetail
 import com.ssavice.model.service.ServiceParticipantResponse
 import com.ssavice.network.ProgressRequestBody
 import com.ssavice.network.exception.ServerInternalErrorException
-import com.ssavice.network.model.AddServiceDTO
+import com.ssavice.network.model.service.AddServiceDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.ImageUploadDTO
-import com.ssavice.network.model.PostReviewDTO
-import com.ssavice.network.model.SearchServiceDTO
+import com.ssavice.network.model.review.PostReviewDTO
+import com.ssavice.network.model.service.SearchServiceDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.flow.Flow

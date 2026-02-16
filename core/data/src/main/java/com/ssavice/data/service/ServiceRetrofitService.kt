@@ -1,14 +1,14 @@
 package com.ssavice.data.service
 
-import com.ssavice.network.model.AddServiceDTO
-import com.ssavice.network.model.AddServiceResponseDTO
-import com.ssavice.network.model.ApplyServiceResultDTO
-import com.ssavice.network.model.GetServiceDetailDTO
-import com.ssavice.network.model.GetServiceParticipantDTO
+import com.ssavice.network.model.service.AddServiceDTO
+import com.ssavice.network.model.service.AddServiceResponseDTO
+import com.ssavice.network.model.service.ApplyServiceResultDTO
+import com.ssavice.network.model.service.GetServiceDetailDTO
+import com.ssavice.network.model.service.GetServiceParticipantDTO
 import com.ssavice.network.model.ImageUploadDTO
-import com.ssavice.network.model.PostReviewDTO
+import com.ssavice.network.model.review.PostReviewDTO
 import com.ssavice.network.model.PresignedUrlResponseDTO
-import com.ssavice.network.model.SearchServiceResponseDTO
+import com.ssavice.network.model.service.SearchServiceResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

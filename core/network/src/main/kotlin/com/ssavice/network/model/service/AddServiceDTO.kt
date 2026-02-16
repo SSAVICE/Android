@@ -1,6 +1,7 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.service
 
 import com.ssavice.model.service.ServiceAddForm
+import com.ssavice.network.model.RegionPostDTO
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -41,7 +42,7 @@ data class AddServiceDTO(
                     startDate = startDate.toString(),
                     endDate = endDate.toString(),
                     discountRate = discountRatio.toLong(),
-                    region = RegionPostDTO.fromModel(region),
+                    region = RegionPostDTO.Companion.fromModel(region),
                     imageConfirms = objectKeys.map { ImageConfirmKeyDTO(it) },
                 )
             }

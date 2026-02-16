@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.user
 
 import com.ssavice.model.user.UserProfileUpdateForm
 import kotlinx.serialization.Serializable

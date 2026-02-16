@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.review
 
 import com.ssavice.model.service.ReviewForm
 import kotlinx.serialization.Serializable

@@ -1,6 +1,7 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.review
 
 import com.ssavice.model.seller.SellerReviews
+import com.ssavice.network.model.company.ReviewDTO
 import kotlinx.serialization.Serializable
 
 @Serializable

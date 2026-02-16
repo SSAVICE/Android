@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.company
 
 import com.ssavice.model.Date
 import com.ssavice.model.Review

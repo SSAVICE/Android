@@ -20,8 +20,8 @@ import com.ssavice.network.ProgressRequestBody
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.RegionPostDTO
-import com.ssavice.network.model.UpdateUserProfileDTO
-import com.ssavice.network.model.WishServiceDTO
+import com.ssavice.network.model.user.UpdateUserProfileDTO
+import com.ssavice.network.model.service.WishServiceDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.CoroutineScope

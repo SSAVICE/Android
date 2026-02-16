@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.company
 
 import kotlinx.serialization.Serializable
 

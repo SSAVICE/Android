@@ -1,6 +1,7 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.company
 
 import com.ssavice.model.seller.SellerProfileUpdateForm
+import com.ssavice.network.model.RegionPostDTO
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,7 +19,7 @@ data class UpdateCompanyProfileDTO(
                 description = model.description,
                 detail = model.detail,
                 phoneNumber = model.phoneNumber,
-                region = RegionPostDTO.fromModel(model.region),
+                region = RegionPostDTO.Companion.fromModel(model.region),
             )
     }
 }

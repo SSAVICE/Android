@@ -1,10 +1,10 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.user
 
 import com.ssavice.model.user.ParticipationSummary
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CompanyBookSummaryDTO(
+data class UserBookSummaryDTO(
     val applying: Long,
     val completed: Long,
     val total: Long,
