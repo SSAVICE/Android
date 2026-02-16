@@ -6,12 +6,12 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @Serializable
 @JsonIgnoreUnknownKeys
 data class KakaoGetCoordinateDTO(
-    val documents: List<KakaoGetCoordinateDocumentDTO>
+    val documents: List<KakaoGetCoordinateDocumentDTO>,
 )
 
 @Serializable
 @JsonIgnoreUnknownKeys
 data class KakaoGetCoordinateDocumentDTO(
     val x: Double,
-    val y: Double
+    val y: Double,
 )

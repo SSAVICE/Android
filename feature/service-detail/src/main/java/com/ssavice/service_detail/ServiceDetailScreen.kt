@@ -106,7 +106,7 @@ fun ServiceDetailScreen(
 
     Column(
         modifier =
-            modifier,
+        modifier,
     ) {
         ServiceDetailScreen(
             service = service,
@@ -243,28 +243,28 @@ fun ServiceDetailScreen(
                     iconContentDescription = "Location",
                     title = "위치",
                     content = service.address,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = true, onClick = {showMap = true}),
-                    
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = true, onClick = { showMap = true }),
                 )
                 InfoRow(
                     icon = Icons.Default.Group,
                     iconContentDescription = "Participants",
                     title = "참여 인원",
                     content = service.participantInfo,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = true, onClick = {showMap = true}),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
                 InfoRow(
                     icon = Icons.Default.CalendarToday,
                     iconContentDescription = "Period",
                     title = "기간",
                     content = "${service.startDate} ~ ${service.endDate}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = true, onClick = {showMap = true}),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
             }
 
@@ -291,7 +291,7 @@ fun ServiceDetailScreen(
             onDismiss = { showMap = false },
             latitude = service.latitude,
             longitude = service.longitude,
-            label = service.name
+            label = service.name,
         )
     }
 }

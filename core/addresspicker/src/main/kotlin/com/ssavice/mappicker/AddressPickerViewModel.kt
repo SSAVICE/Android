@@ -16,41 +16,44 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddressPickerViewModel @Inject constructor(
-    private val convertCoordinateDatasource: ConvertCoordinateDatasource
-): ViewModel(){
-    private val _uiState = MutableStateFlow<AddressPickerState>(AddressPickerState.Idle)
-    val uiState = _uiState.asStateFlow()
-    private val _coordinateConvertFinishedEvent = Channel<AddressPickResult>()
-    val coordinateConvertFinishedEvent = _coordinateConvertFinishedEvent.receiveAsFlow()
+class AddressPickerViewModel
+    @Inject
+    constructor(
+        private val convertCoordinateDatasource: ConvertCoordinateDatasource,
+    ) : ViewModel() {
+        private val _uiState = MutableStateFlow<AddressPickerState>(AddressPickerState.Idle)
+        val uiState = _uiState.asStateFlow()
+        private val _coordinateConvertFinishedEvent = Channel<AddressPickResult>()
+        val coordinateConvertFinishedEvent = _coordinateConvertFinishedEvent.receiveAsFlow()
 
-
-
-    fun convertCoordinate(address: AddressPickResult) {
-        _uiState.update {
-            AddressPickerState.Loading
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            convertCoordinateDatasource.convertCoordinate(
-                address.address
-            ).onSuccess { result ->
-                _uiState.update {
-                    AddressPickerState.Idle
-                }
-                _coordinateConvertFinishedEvent.send(address.copy(
-                    latitude = result.y,
-                    longitude = result.x
-                ))
-            }.onFailure {
-                Log.e(
-                    "AddressPickerViewModel",
-                    "convertCoordinate: ${it.message}",
-                    it
-                )
-                _uiState.update {
-                    AddressPickerState.Idle
-                }
+        fun convertCoordinate(address: AddressPickResult) {
+            _uiState.update {
+                AddressPickerState.Loading
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                convertCoordinateDatasource
+                    .convertCoordinate(
+                        address.address,
+                    ).onSuccess { result ->
+                        _uiState.update {
+                            AddressPickerState.Idle
+                        }
+                        _coordinateConvertFinishedEvent.send(
+                            address.copy(
+                                latitude = result.y,
+                                longitude = result.x,
+                            ),
+                        )
+                    }.onFailure {
+                        Log.e(
+                            "AddressPickerViewModel",
+                            "convertCoordinate: ${it.message}",
+                            it,
+                        )
+                        _uiState.update {
+                            AddressPickerState.Idle
+                        }
+                    }
             }
         }
     }
-}

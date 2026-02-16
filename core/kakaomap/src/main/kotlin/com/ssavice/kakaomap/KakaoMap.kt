@@ -49,18 +49,18 @@ fun KakaoMap(
                         }
                     },
                     object : KakaoMapReadyCallback() {
-
                         override fun onMapReady(kakaoMap: KakaoMap) {
-
-                            val cameraUpdate = CameraUpdateFactory.newCenterPosition(
-                                LatLng.from(
-                                    latitude,
-                                    longitude
+                            val cameraUpdate =
+                                CameraUpdateFactory.newCenterPosition(
+                                    LatLng.from(
+                                        latitude,
+                                        longitude,
+                                    ),
                                 )
-                            )
 
                             val style =
-                                LabelStyle.from(R.drawable.marker)
+                                LabelStyle
+                                    .from(R.drawable.marker)
                                     .setAnchorPoint(0.5f, 1.1f)
 
                             if (label != null) {
@@ -68,16 +68,18 @@ fun KakaoMap(
                                     32,
                                     Color.Black.toArgb(),
                                     1,
-                                    Color.Gray.toArgb()
+                                    Color.Gray.toArgb(),
                                 )
                             }
 
                             val styles =
                                 kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(style))
 
-                            val options = LabelOptions.from(LatLng.from(latitude, longitude))
-                                .setStyles(styles)
-                                .setTexts(LabelTextBuilder().setTexts(label ?: ""))
+                            val options =
+                                LabelOptions
+                                    .from(LatLng.from(latitude, longitude))
+                                    .setStyles(styles)
+                                    .setTexts(LabelTextBuilder().setTexts(label ?: ""))
 
                             val layer = kakaoMap.labelManager?.layer
 

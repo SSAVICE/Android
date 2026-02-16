@@ -47,8 +47,8 @@ dependencies {
     implementation(libs.retrofit.kotlin.serialization)
 }
 
-androidComponents{
-    onVariants{
+androidComponents {
+    onVariants {
         it.buildConfigFields!!.put(
             "KAKAO_REST_KEY",
             kakaoRestKey.map { value ->

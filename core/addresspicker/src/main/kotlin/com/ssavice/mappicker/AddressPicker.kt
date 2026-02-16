@@ -35,7 +35,7 @@ import javax.inject.Inject
 fun AddressPickerWebView(
     modifier: Modifier = Modifier,
     onResult: (AddressPickResult) -> Unit,
-    viewModel: AddressPickerViewModel = hiltViewModel()
+    viewModel: AddressPickerViewModel = hiltViewModel(),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val context = LocalContext.current

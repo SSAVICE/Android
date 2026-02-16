@@ -117,7 +117,7 @@ fun SellerDetailScreen(
             address = state.sellerInfo.address,
             detailAddress = state.sellerInfo.detailAddress,
             phoneNumber = state.sellerInfo.phoneNumber,
-            onAddressClick = {showMap = true}
+            onAddressClick = { showMap = true },
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -142,12 +142,12 @@ fun SellerDetailScreen(
             businessNumber = state.businessInfo.businessNumber,
         )
     }
-    if(showMap) {
+    if (showMap) {
         KakaoMapDialog(
             onDismiss = { showMap = false },
             latitude = state.sellerInfo.region.latitude,
             longitude = state.sellerInfo.region.longitude,
-            label = state.sellerInfo.name
+            label = state.sellerInfo.name,
         )
     }
 }

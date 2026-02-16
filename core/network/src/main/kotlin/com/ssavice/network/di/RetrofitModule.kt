@@ -82,8 +82,8 @@ object RetrofitModule {
                 OkHttpClient
                     .Builder()
                     .addInterceptor(interceptor)
-                    .build())
-            .build()
+                    .build(),
+            ).build()
 
     @Provides
     @Singleton

@@ -18,7 +18,7 @@ fun KakaoMapDialog(
     onDismiss: () -> Unit,
     longitude: Double,
     latitude: Double,
-    label: String? = null
+    label: String? = null,
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -37,12 +37,13 @@ fun KakaoMapDialog(
                 ),
         ) {
             KakaoMap(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
                 longitude = longitude,
                 latitude = latitude,
-                label = label
+                label = label,
             )
         }
     }
