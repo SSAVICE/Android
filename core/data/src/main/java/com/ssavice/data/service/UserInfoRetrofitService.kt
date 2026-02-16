@@ -24,7 +24,7 @@ interface UserInfoRetrofitService {
     @GET("/api/user/profile")
     suspend fun getUserProfile(): Response<UserProfileDTO>
 
-    @GET("/api/user/book")
+    @GET("/api/book/user")
     suspend fun getUserBook(
         @Query("page") page: Int,
         @Query("size") size: Int,
@@ -36,7 +36,7 @@ interface UserInfoRetrofitService {
         @Body body: UpdateUserProfileDTO,
     ): Response<UpdateUserProfileResponseDTO>
 
-    @GET("/api/user/book/summary")
+    @GET("/api/book/user/summary")
     suspend fun getUserParticipationSummary(): Response<UserBookSummaryDTO>
 
     @POST("/api/user/profile/image")

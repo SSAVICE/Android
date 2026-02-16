@@ -27,28 +27,36 @@ data class CompanyBookDTO(
 
 @Serializable
 data class CompanyContent(
-    val bookStatus: String,
-    val isReviewed: Boolean,
-    @SerialName("service")
-    val serviceInfo: ServiceInfoDTO,
+    val basePrice: Long,
+    val category: String,
+    val currentMember: Long,
+    val deadline: String,
+    val description: String,
+    val discountRate: Int,
+    val discountedPrice: Long,
+    val endDate: String,
+    val maximumMember: Long,
+    val minimumMember: Long,
+    val region: RegionDTO,
+    val serviceId: Long,
+    val startDate: String,
+    val status: String,
+    val tag: String,
+    val thumbnailUrl: String,
+    val title: String,
 ) {
     fun toModel(): SellerServiceParticipationItem =
-        with(serviceInfo) {
-            SellerServiceParticipationItem(
-                id = serviceId,
-                thumbnail = thumbnailUrl,
-                category = category,
-                price = discountedPrice.toInt(),
-                name = title,
-                sellerName = companyName,
-                sellerId = companyId,
-                startDate = Date.now(),
-                endDate = Date.now(),
-                state = ServiceState.mapState(bookStatus),
-                isReviewed = isReviewed,
-                currentMemberCount = currentMember.toInt(),
-                minimumMemberCount = minimumMember.toInt(),
-                maximumMemberCount = maximumMember.toInt(),
-            )
-        }
+        SellerServiceParticipationItem(
+            id = serviceId,
+            thumbnail = thumbnailUrl,
+            category = category,
+            price = discountedPrice.toInt(),
+            name = title,
+            startDate = Date.parse(startDate),
+            endDate = Date.parse(endDate),
+            state = ServiceState.mapState(status),
+            currentMemberCount = currentMember.toInt(),
+            minimumMemberCount = minimumMember.toInt(),
+            maximumMemberCount = maximumMember.toInt(),
+        )
 }

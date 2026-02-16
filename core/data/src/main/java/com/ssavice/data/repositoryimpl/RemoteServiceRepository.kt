@@ -11,6 +11,7 @@ import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.model.service.ServiceDetail
+import com.ssavice.model.service.ServiceParticipantResponse
 import com.ssavice.network.ProgressRequestBody
 import com.ssavice.network.exception.ServerInternalErrorException
 import com.ssavice.network.model.AddServiceDTO
@@ -145,4 +146,19 @@ internal class RemoteServiceRepository
             )
 
         override suspend fun deleteService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.deleteService(id))
+
+        override suspend fun getServiceParticipant(
+            id: Long,
+            size: Int,
+            page: Int,
+        ): Result<ServiceParticipantResponse> =
+            processResponseOnResponseData(
+                serviceRetrofitService.getParticipant(
+                    id = id,
+                    size = size,
+                    page = page,
+                ),
+            ).map {
+                it.toModel()
+            }
     }

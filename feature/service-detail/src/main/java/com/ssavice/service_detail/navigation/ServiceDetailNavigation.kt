@@ -21,13 +21,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ServiceDetailRoute(
     val serviceId: Long,
+    val sellerPage: Boolean = false,
 )
 
 fun NavController.navigateToServiceDetail(
     navOptions: NavOptionsBuilder.() -> Unit = {},
+    isSeller: Boolean = true,
     serviceId: Long,
 ) {
-    navigate(ServiceDetailRoute(serviceId)) {
+    navigate(ServiceDetailRoute(serviceId, isSeller)) {
         navOptions()
     }
 }
@@ -89,4 +91,5 @@ fun NavGraphBuilder.serviceDetailScreen(
 
 object ServiceDetailRouteContract {
     const val ID = "serviceId"
+    const val IS_SELLER = "sellerPage"
 }

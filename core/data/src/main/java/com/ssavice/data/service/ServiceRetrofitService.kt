@@ -4,6 +4,7 @@ import com.ssavice.network.model.AddServiceDTO
 import com.ssavice.network.model.AddServiceResponseDTO
 import com.ssavice.network.model.ApplyServiceResultDTO
 import com.ssavice.network.model.GetServiceDetailDTO
+import com.ssavice.network.model.GetServiceParticipantDTO
 import com.ssavice.network.model.ImageUploadDTO
 import com.ssavice.network.model.PostReviewDTO
 import com.ssavice.network.model.PresignedUrlResponseDTO
@@ -14,6 +15,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface ServiceRetrofitService {
@@ -37,12 +39,12 @@ interface ServiceRetrofitService {
         @Body contentTypes: ImageUploadDTO,
     ): Response<PresignedUrlResponseDTO>
 
-    @POST("/api/service/{id}/apply")
+    @POST("/api/book/{id}/apply")
     suspend fun applyService(
         @Path(value = "id") id: Long,
     ): Response<ApplyServiceResultDTO>
 
-    @POST("/api/service/{id}/cancel")
+    @POST("/api/book/{id}/cancel")
     suspend fun cancelService(
         @Path(value = "id") id: Long,
     ): Response<Unit>
@@ -56,4 +58,11 @@ interface ServiceRetrofitService {
     suspend fun deleteService(
         @Path(value = "id") id: Long,
     ): Response<Unit>
+
+    @GET("/api/book/book/{id}/participant")
+    suspend fun getParticipant(
+        @Path(value = "id") id: Long,
+        @Query("size") size: Int,
+        @Query("page") page: Int,
+    ): Response<GetServiceParticipantDTO>
 }

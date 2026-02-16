@@ -46,10 +46,8 @@ class MyServiceViewModel
                 title = item.name,
                 price = "%,d".format(item.price),
                 thumbnailUrl = item.thumbnail,
-                sellerName = item.sellerName,
                 duration = "${item.startDate.toSimpleString()} - ${item.endDate.toSimpleString()}",
                 cancellable = item.state.cancellable && item.currentMemberCount == 0,
-                sellerId = item.sellerId,
                 state = item.state,
                 memberStatus = "${item.currentMemberCount}/${item.minimumMemberCount} (최대 ${item.maximumMemberCount})",
             )

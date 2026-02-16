@@ -17,10 +17,8 @@ data class SellerMyServiceItemUiState(
     val title: String,
     val price: String,
     val thumbnailUrl: String,
-    val sellerName: String,
     val duration: String,
     val cancellable: Boolean,
-    val sellerId: Long,
     val state: ServiceState,
     val memberStatus: String,
 )

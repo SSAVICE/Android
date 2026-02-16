@@ -8,6 +8,7 @@ import com.ssavice.data.repository.SellerInfoRepository
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.service_detail.navigation.ServiceDetailRouteContract
+import com.ssavice.service_detail.ui.seller.ParticipantUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,16 +27,25 @@ class ServiceDetailViewModel
     ) : ViewModel() {
         private val _sellerId = MutableStateFlow(-1L)
         val sellerId = _sellerId
-        val serviceId = savedStateHandle.getStateFlow(ServiceDetailRouteContract.ID, -1L)
         private val _uiState =
             MutableStateFlow(
                 ServiceDetailUiState(
-                    serviceInfoState = InfoState.Waiting,
-                    sellerInfoState = InfoState.Waiting,
+                    serviceInfoState = InfoState.Initial,
+                    sellerInfoState = InfoState.Initial,
                 ),
             )
 
         val uiState = _uiState
+
+        private fun getParameterFromSavedStateHandle(): Pair<Long, Boolean>? {
+            val id = savedStateHandle.get<Long>(ServiceDetailRouteContract.ID)
+            val isSeller = savedStateHandle.get<Boolean>(ServiceDetailRouteContract.IS_SELLER)
+
+            if (id != null && isSeller != null) {
+                return Pair(id, isSeller)
+            }
+            return null
+        }
 
         fun loadSeller(id: Long) {
             _uiState.value =
@@ -81,10 +91,32 @@ class ServiceDetailViewModel
             }
         }
 
-        fun loadService(id: Long) {
+        fun onChatButtonClick() {
+        }
+
+        fun onInit() {
+            val params = getParameterFromSavedStateHandle()
+
+            if (params != null) {
+                val id = params.first
+                val isSeller = params.second
+
+                loadService(id, isSeller)
+
+                if (isSeller) {
+                    loadParticipants(id)
+                }
+            }
+        }
+
+        private fun loadService(
+            id: Long,
+            isSeller: Boolean = false,
+        ) {
             _uiState.value =
                 _uiState.value.copy(
                     serviceInfoState = InfoState.Loading,
+                    showSellerInfo = isSeller,
                 )
             viewModelScope.launch(Dispatchers.IO) {
                 serviceRepository.getService(id).fold(
@@ -110,6 +142,7 @@ class ServiceDetailViewModel
                                         description = it.description,
                                         tags = it.tag.split(','),
                                         liked = it.liked,
+                                        applied = it.booked,
                                     ),
                             )
                         _sellerId.value = it.companyId
@@ -124,7 +157,32 @@ class ServiceDetailViewModel
             }
         }
 
-        fun onChatButtonClick() {
+        private fun loadParticipants(id: Long) {
+            viewModelScope.launch {
+                val participants = serviceRepository.getServiceParticipant(id, 5, 0)
+                participants.onSuccess { result ->
+                    _uiState.update {
+                        it.copy(
+                            accountInfo =
+                                SellerAccountInfo(
+                                    expectedRevenue = 100,
+                                    participantCount = result.size,
+                                    pricePerPerson = 100,
+                                    lastNotice = "2/15 집합 장소가 변경되었습니다",
+                                    noticeDate = "02.08",
+                                    participants =
+                                        result.items.map { item ->
+                                            ParticipantUiModel(
+                                                profileUrl = item.thumbnailUrl,
+                                                userId = item.userId,
+                                                name = item.name,
+                                            )
+                                        },
+                                ),
+                        )
+                    }
+                }
+            }
         }
 
         fun onParticipateButtonClick() {

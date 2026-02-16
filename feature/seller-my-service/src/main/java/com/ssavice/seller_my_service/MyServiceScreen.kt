@@ -107,7 +107,7 @@ fun MyServiceScreen(
             val service = uiState.services[it]
             MyService(
                 title = service.title,
-                sellerName = service.sellerName,
+                sellerName = "",
                 duration = service.duration,
                 cancellable = service.cancellable,
                 reviewable = false,
@@ -173,10 +173,8 @@ fun MyServiceScreenPreview() {
             "서비스 $i",
             "₩%,d".format(100000 * i),
             "https://picsum.photos/seed/item $i/200",
-            "판매자 $i",
             "2026-01-16 - 2026-02-03",
             true,
-            sellerId = 0,
             state = ServiceState.RECRUITING,
             memberStatus = "10/30 (최대 40)",
         )

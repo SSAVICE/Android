@@ -1,10 +1,8 @@
 package com.ssavice.service_detail.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,6 +35,7 @@ fun ServiceImagesWithButtons(
     onShareClick: () -> Unit = {},
     onImageClick: (String) -> Unit = {},
     liked: Boolean = false,
+    showButtons: Boolean = true,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (liked) Color(0xFFE91E63) else MaterialTheme.colorScheme.surface,
@@ -67,54 +66,56 @@ fun ServiceImagesWithButtons(
             imageUrls = urls,
             onImageClick = onImageClick,
         )
-        Row(
-            modifier =
-                Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp),
-        ) {
-            IconButton(
+        if (showButtons) {
+            Row(
                 modifier =
                     Modifier
-                        .shadow(
-                            elevation = 4.dp,
-                            shape = CircleShape,
-                            spotColor = DefaultShadowColor.copy(alpha = 0.4f),
-                            ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        ).clip(CircleShape),
-                onClick = onLikeClick,
-                colors =
-                    IconButtonDefaults.filledIconButtonColors(
-                        containerColor = containerColor,
-                        contentColor = contentColor,
-                    ),
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp),
             ) {
-                Icon(
-                    imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Favorite",
-                    tint = contentColor,
-                )
-            }
-            IconButton(
-                modifier =
-                    Modifier
-                        .shadow(
-                            elevation = 4.dp,
-                            shape = CircleShape,
-                            spotColor = DefaultShadowColor.copy(alpha = 0.4f),
-                            ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
-                        ).clip(CircleShape),
-                onClick = onShareClick,
-                colors =
-                    IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    ),
-            ) {
-                Icon(
-                    Icons.Default.Share,
-                    contentDescription = "Share",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
+                IconButton(
+                    modifier =
+                        Modifier
+                            .shadow(
+                                elevation = 4.dp,
+                                shape = CircleShape,
+                                spotColor = DefaultShadowColor.copy(alpha = 0.4f),
+                                ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
+                            ).clip(CircleShape),
+                    onClick = onLikeClick,
+                    colors =
+                        IconButtonDefaults.filledIconButtonColors(
+                            containerColor = containerColor,
+                            contentColor = contentColor,
+                        ),
+                ) {
+                    Icon(
+                        imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Favorite",
+                        tint = contentColor,
+                    )
+                }
+                IconButton(
+                    modifier =
+                        Modifier
+                            .shadow(
+                                elevation = 4.dp,
+                                shape = CircleShape,
+                                spotColor = DefaultShadowColor.copy(alpha = 0.4f),
+                                ambientColor = DefaultShadowColor.copy(alpha = 0.4f),
+                            ).clip(CircleShape),
+                    onClick = onShareClick,
+                    colors =
+                        IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ),
+                ) {
+                    Icon(
+                        Icons.Default.Share,
+                        contentDescription = "Share",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
             }
         }
     }

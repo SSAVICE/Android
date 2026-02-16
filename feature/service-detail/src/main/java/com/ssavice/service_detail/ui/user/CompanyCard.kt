@@ -1,4 +1,4 @@
-package com.ssavice.service_detail.ui
+package com.ssavice.service_detail.ui.user
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

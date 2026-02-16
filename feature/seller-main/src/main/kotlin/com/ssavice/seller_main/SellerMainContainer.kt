@@ -45,6 +45,7 @@ fun SellerMainContainer(
 
             home(
                 onAddClick = onAddClick,
+                onServiceClick = onServiceClick,
             )
 
             chat()

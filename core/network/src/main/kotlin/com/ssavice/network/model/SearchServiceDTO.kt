@@ -100,6 +100,7 @@ data class SearchServiceItemDTO(
     val discountRatio: Long,
     val discountedPrice: Long,
     val deadline: String,
+    val isBooked: Boolean,
 ) {
     fun toModel(): SearchResultItem =
         SearchResultItem(
@@ -117,5 +118,6 @@ data class SearchServiceItemDTO(
             companyName = companyName,
             companyId = companyId,
             region = region.toModel(),
+            booked = isBooked,
         )
 }

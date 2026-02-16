@@ -12,6 +12,7 @@ import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
 import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.model.service.ServiceDetail
+import com.ssavice.model.service.ServiceParticipantResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -201,6 +202,7 @@ class DemoServiceRepository
                             ),
                         companyName = generateRandomCompanyName(),
                         companyId = (0..100).random().toLong(),
+                        booked = false,
                     )
                 }
 
@@ -253,6 +255,7 @@ class DemoServiceRepository
                     liked = false,
                     status = "STATUS",
                     createdAt = Date.now(),
+                    booked = false,
                     regionInfo =
                         Region(
                             latitude = 0.0,
@@ -285,6 +288,14 @@ class DemoServiceRepository
         override suspend fun reviewService(review: ReviewForm): Result<Unit> = Result.success(Unit)
 
         override suspend fun deleteService(id: Long): Result<Unit> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getServiceParticipant(
+            id: Long,
+            size: Int,
+            page: Int,
+        ): Result<ServiceParticipantResponse> {
             TODO("Not yet implemented")
         }
     }
