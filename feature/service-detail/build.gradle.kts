@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(libs.coil.kt.compose)
+    implementation(projects.core.kakaomap)
 }

@@ -43,6 +43,8 @@ data class ServiceDetail(
     val name: String,
     val address: String,
     val description: String,
+    val longitude: Double,
+    val latitude: Double,
     val liked: Boolean,
     val applied: Boolean,
     val tags: List<String>,
