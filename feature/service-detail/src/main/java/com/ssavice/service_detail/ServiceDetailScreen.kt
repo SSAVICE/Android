@@ -290,7 +290,8 @@ fun ServiceDetailScreen(
         KakaoMapDialog(
             onDismiss = { showMap = false },
             latitude = service.latitude,
-            longitude = service.longitude
+            longitude = service.longitude,
+            label = service.name
         )
     }
 }

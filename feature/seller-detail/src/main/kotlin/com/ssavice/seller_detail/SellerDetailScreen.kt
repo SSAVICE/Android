@@ -146,7 +146,8 @@ fun SellerDetailScreen(
         KakaoMapDialog(
             onDismiss = { showMap = false },
             latitude = state.sellerInfo.region.latitude,
-            longitude = state.sellerInfo.region.longitude
+            longitude = state.sellerInfo.region.longitude,
+            label = state.sellerInfo.name
         )
     }
 }
