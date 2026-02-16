@@ -48,7 +48,7 @@ fun SsaviceNavHost(
                 navController.navigateToSearchForm()
             },
             onServiceClick = {
-                navController.navigateToServiceDetail(serviceId = it)
+                navController.navigateToServiceDetail(serviceId = it, isSeller = false)
             },
             onParticipatedServiceButtonClick = {
                 navController.navigateToMyService()
@@ -118,7 +118,7 @@ fun SsaviceNavHost(
                 )
             },
             onServiceClicked = { serviceId ->
-                navController.navigateToServiceDetail(serviceId = serviceId)
+                navController.navigateToServiceDetail(serviceId = serviceId, isSeller = false)
             },
             onBack = { navController.navigateUp() },
         )
@@ -135,7 +135,7 @@ fun SsaviceNavHost(
 
         myServiceScreen(
             onServiceClick = {
-                navController.navigateToServiceDetail(serviceId = it)
+                navController.navigateToServiceDetail(serviceId = it, isSeller = false)
             },
             onReviewClick = { id, name, thumbnailUrl, sellerId ->
                 navController.navigateToPostReview(
@@ -168,7 +168,7 @@ fun SsaviceNavHost(
 
         likedScreen(
             onServiceClick = {
-                navController.navigateToServiceDetail(serviceId = it)
+                navController.navigateToServiceDetail(serviceId = it, isSeller = false)
             },
             onBack = {
                 navController.navigateUp()

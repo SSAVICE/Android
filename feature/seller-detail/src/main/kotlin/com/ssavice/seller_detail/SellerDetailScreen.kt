@@ -295,7 +295,7 @@ fun BusinessInfo(
 fun ServiceSummary(
     services: List<ServiceItemState>,
     onMoreClick: () -> Unit = {},
-    onClickService: (Long) -> Unit = {},
+    onClickService: () -> Unit = {},
     thumbnail: @Composable (String, ImageRequest.Builder) -> Unit = { url, request ->
         AsyncImage(
             model =
@@ -337,9 +337,7 @@ fun ServiceSummary(
                     priceText = it.price,
                     status = it.serviceState,
                     elevation = 2.dp,
-                    onClick = { _ ->
-                        onClickService(it.serviceId)
-                    },
+                    onClick = onClickService,
                 ) {
                     thumbnail(it.thumbnailUrl, imageRequest)
                 }

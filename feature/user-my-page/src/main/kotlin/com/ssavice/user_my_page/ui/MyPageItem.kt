@@ -2,8 +2,8 @@ package com.ssavice.user_my_page.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -28,7 +28,7 @@ fun MyPageItem(
         modifier =
             Modifier.Companion
                 .fillMaxWidth()
-                .height(90.dp)
+                .defaultMinSize(minHeight = 95.dp)
                 .padding(5.dp),
         onClick = onClick,
     ) {

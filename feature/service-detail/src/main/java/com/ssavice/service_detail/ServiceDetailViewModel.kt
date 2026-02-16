@@ -117,6 +117,7 @@ class ServiceDetailViewModel
                 _uiState.value.copy(
                     serviceInfoState = InfoState.Loading,
                     showSellerInfo = isSeller,
+                    showUserInfo = !isSeller
                 )
             viewModelScope.launch(Dispatchers.IO) {
                 serviceRepository.getService(id).fold(
