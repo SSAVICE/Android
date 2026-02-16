@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.common.getDeadlineMessageFromTimestamp
 import com.ssavice.data.repository.ServiceRepository
+import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Date
 import com.ssavice.model.enums.Category
 import com.ssavice.model.enums.SortingOrder
@@ -22,6 +23,7 @@ class SearchResultViewModel
     @Inject
     constructor(
         private val serviceRepository: ServiceRepository,
+        private val userInfoRepository: UserInfoRepository,
     ) : ViewModel() {
         private var searchJob: Job? = null
 
@@ -42,6 +44,8 @@ class SearchResultViewModel
                             maxPrice = 0,
                             sortBy = SortingOrder.POPULARITY,
                             category = Category.entries[0],
+                            latitude = 0.0,
+                            longitude = 0.0,
                         ),
                 ),
             )
@@ -62,6 +66,10 @@ class SearchResultViewModel
 
             searchJob =
                 viewModelScope.launch(Dispatchers.IO) {
+                    val address = userInfoRepository.getUserAddress().getOrElse {
+                        return@launch
+                    }
+
                     val query = uiState.value.searchQuery
                     serviceRepository
                         .searchService(
@@ -69,12 +77,14 @@ class SearchResultViewModel
                                 SearchQuery(
                                     category = query.category,
                                     query = query.query,
-                                    region1 = query.region1,
-                                    region2 = query.region2,
+                                    region1 = address.region1,
+                                    region2 = address.region2,
                                     searchRange = query.searchRange,
                                     minPrice = query.minPrice,
                                     maxPrice = query.maxPrice,
                                     sortBy = query.sortBy,
+                                    latitude = address.regionInfo.latitude,
+                                    longitude = address.regionInfo.longitude,
                                 ),
                             searchCount = SEARCH_COUNT,
                             startIndex = uiState.value.items.size,
@@ -90,6 +100,9 @@ class SearchResultViewModel
         }
 
         private suspend fun search() {
+            val address = userInfoRepository.getUserAddress().getOrElse {
+                return
+            }
             val query = uiState.value.searchQuery
             serviceRepository
                 .searchService(
@@ -97,12 +110,14 @@ class SearchResultViewModel
                         SearchQuery(
                             category = query.category,
                             query = query.query,
-                            region1 = query.region1,
-                            region2 = query.region2,
+                            region1 = address.region1,
+                            region2 = address.region2,
                             searchRange = query.searchRange,
                             minPrice = query.minPrice,
                             maxPrice = query.maxPrice,
                             sortBy = query.sortBy,
+                            latitude = address.regionInfo.latitude,
+                            longitude = address.regionInfo.longitude,
                         ),
                     nextId = uiState.value.nextId,
                     searchCount = SEARCH_COUNT,

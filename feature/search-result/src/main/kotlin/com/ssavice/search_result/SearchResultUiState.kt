@@ -17,6 +17,8 @@ data class SearchResultUiState(
             minPrice = 0,
             maxPrice = Int.MAX_VALUE,
             sortBy = SortingOrder.POPULARITY,
+            latitude = 0.0,
+            longitude = 0.0,
         ),
     val searchCount: Int = 10,
 )

@@ -17,6 +17,8 @@ data class UserHomeUiState(
             minPrice = 0,
             maxPrice = Int.MAX_VALUE,
             sortBy = SortingOrder.POPULARITY,
+            latitude = 0.0,
+            longitude = 0.0,
         ),
     val showAddressPicker: Boolean = false,
     val addressState: RegionState = RegionState.Initial,

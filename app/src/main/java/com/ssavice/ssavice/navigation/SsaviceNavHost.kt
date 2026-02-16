@@ -95,6 +95,8 @@ fun SsaviceNavHost(
                             maxPrice = searchForm.priceRange.last,
                             searchRange = searchForm.searchRange,
                             sortBy = searchForm.sortBy,
+                            latitude = 0.0,
+                            longitude = 0.0,
                         ),
                 )
             },
