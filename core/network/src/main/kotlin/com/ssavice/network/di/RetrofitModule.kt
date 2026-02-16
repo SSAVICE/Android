@@ -23,6 +23,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
+    private val retroJson = Json { ignoreUnknownKeys = true }
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class ServiceRetrofit
@@ -46,7 +47,7 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides
@@ -56,7 +57,7 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
             .build()
 
@@ -67,7 +68,7 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides
@@ -77,7 +78,7 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.KAKAO_REST_URL)
-            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .client(
                 OkHttpClient
                     .Builder()
