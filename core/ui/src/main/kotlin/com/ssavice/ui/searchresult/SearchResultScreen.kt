@@ -1,5 +1,6 @@
 package com.ssavice.ui.searchresult
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -87,7 +88,9 @@ fun SearchResultScreen(
                 discountRate = item.discountRatio,
             ) { url ->
                 AsyncImage(
-                    modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp)),
                     model =
                         imageRequest
                             .data(url)
