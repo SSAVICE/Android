@@ -72,7 +72,7 @@ fun SsaviceNavHost(
         loginScreen(
             onLoginComplete = {
                 navController.navigateToMain {
-                    popUpTo(LoginRoute) { inclusive = true }
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
             },
             isUser = true,

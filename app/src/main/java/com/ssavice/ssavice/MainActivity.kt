@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.login.navigation.navigateToLogin
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
             authEventManager.event.collectAsEffect {
                 when (it) {
                     is AuthEvent.Unauthorized -> {
-                        navController.navigateToLogin()
+                        navController.navigateToLogin(isUser = true)
                     }
 
                     else -> { }
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
             }
         }
         KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
+        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+
     }
 }
 

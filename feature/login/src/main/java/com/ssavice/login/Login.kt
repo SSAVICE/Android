@@ -1,13 +1,11 @@
 package com.ssavice.login
 
-import android.widget.ImageButton
-import androidx.compose.animation.AnimatedVisibility
+import android.content.Context
+import android.util.Log
 import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +13,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,8 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,15 +31,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 import com.ssavice.designsystem.theme.SsaviceGradientBackground
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.feature.login.R
@@ -54,20 +51,35 @@ import kotlinx.coroutines.delay
 fun LoginRoute(
     modifier: Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
-    isUser: Boolean,
     onLoginComplete: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(state.loginState) {
-        if (state.loginState is LoginState.Success) onLoginComplete()
+        when (state.loginState) {
+            LoginState.CheckAutoLogin -> {
+                viewModel.tryAutoLogin()
+            }
+
+            LoginState.Success -> onLoginComplete()
+            else -> {}
+        }
     }
 
-    LoginPage(
-        modifier = modifier,
-        onLoginButtonClicked = { viewModel.onLoginButtonClicked(isUser) },
-        uiState = state,
-    )
+    if (state.loginState is LoginState.NeedLogin) {
+        LoginPage(
+            modifier = modifier,
+            onLoginButtonClicked = {
+                loginWithKakaoTalk(
+                    context = context,
+                    onSuccess = viewModel::onKakaoLoginSuccess,
+                    onError = viewModel::onKakaoLoginError
+                )
+            },
+            uiState = state,
+        )
+    }
 }
 
 @Composable
@@ -115,24 +127,22 @@ fun TitleSpace(modifier: Modifier = Modifier) {
         FadingText(
             delay = 0,
             startAnimation = startAnimation
-        ) {
-            modifier ->
-                Text(
-                    modifier = modifier,
-                    text = "이곳에 슬로건 삽입",
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        letterSpacing = 4.sp,
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
+        ) { modifier ->
+            Text(
+                modifier = modifier,
+                text = "이곳에 슬로건 삽입",
+                style = MaterialTheme.typography.displaySmall.copy(
+                    letterSpacing = 4.sp,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Spacer(modifier = Modifier.height(25.dp))
         FadingText(
-            delay = 400,
+            delay = 600,
             startAnimation = startAnimation
-        ) {
-            modifier ->
+        ) { modifier ->
             Text(
                 modifier = modifier,
                 text = "SSAVICE",
@@ -147,6 +157,31 @@ fun TitleSpace(modifier: Modifier = Modifier) {
     }
 }
 
+private fun loginWithKakaoTalk(
+    context: Context,
+    onSuccess: (String) -> Unit,
+    onError: (Throwable) -> Unit,
+) {
+    UserApiClient.instance.loginWithKakaoTalk(
+        context
+    ) { token, error ->
+        if (error != null) {
+            Log.d(TAG, "로그인 실패", error)
+
+            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                return@loginWithKakaoTalk
+            }
+
+            else{
+                onError(error)
+            }
+        } else if (token != null) {
+            Log.d(TAG, "로그인 성공 ${token.accessToken}")
+            onSuccess(token.accessToken)
+        }
+    }
+}
+
 @Composable
 fun FadingText(
     delay: Int,
@@ -154,11 +189,12 @@ fun FadingText(
     content: @Composable (Modifier) -> Unit
 ) {
     val offset by animateDpAsState(
-        targetValue = if (startAnimation) 0.dp else 40.dp,
+        targetValue = if (startAnimation) (-20).dp else 0.dp,
         animationSpec = tween(
             durationMillis = 2000,
             delayMillis = delay,
-            easing = EaseOutCubic),
+            easing = EaseOutCubic
+        ),
         label = "SloganOffset"
     )
     val alpha by animateFloatAsState(
@@ -166,13 +202,16 @@ fun FadingText(
         animationSpec = tween(
             durationMillis = 2000,
             delayMillis = delay,
-            easing = EaseOutCubic),
+            easing = EaseOutCubic
+        ),
         label = "Alpha"
     )
 
-    content(Modifier
-        .offset(y = offset)
-        .alpha(alpha))
+    content(
+        Modifier
+            .offset(y = offset)
+            .alpha(alpha)
+    )
 }
 
 @Composable
@@ -193,7 +232,7 @@ fun LoginSpace(
                     indication = null,
                     // 2. 상호작용 상태를 추적할 source (필수 입력)
                     interactionSource = remember { MutableInteractionSource() },
-                    enabled = uiState.loginState !is LoginState.Loading,
+                    enabled = uiState.loginState !is LoginState.NeedLogin,
                     onClick = onLoginButtonClicked
                 ),
             contentAlignment = Alignment.Center
@@ -229,6 +268,7 @@ fun LoginPagePreview() {
     val state =
         LoginUiState(
             loginState = LoginState.Idle,
+            isUser = true
         )
     SsaviceTheme {
         LoginPage(
@@ -257,6 +297,7 @@ fun LoginPageErrorPreview() {
                             "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
                             "ongErrorErrorThisisLongErrorThisisVeryLongError",
                 ),
+            isUser = true
         )
     SsaviceTheme {
         LoginPage(
@@ -269,3 +310,5 @@ fun LoginPageErrorPreview() {
         )
     }
 }
+
+private const val TAG = "LoginScreen"
