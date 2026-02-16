@@ -184,6 +184,9 @@ fun SsaviceNavHost(
             onMoreReview = {
                 navController.navigateToSellerReviews(sellerId = it)
             },
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it, isSeller = false)
+            },
         )
 
         sellerReviewsScreen(

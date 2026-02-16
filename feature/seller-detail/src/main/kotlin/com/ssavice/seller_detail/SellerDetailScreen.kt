@@ -61,6 +61,7 @@ fun SellerDetailRoute(
     viewModel: SellerDetailViewModel = hiltViewModel(),
     onMoreServiceClick: (Long) -> Unit = {},
     onMoreReviewClick: (Long) -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -76,6 +77,7 @@ fun SellerDetailRoute(
             modifier = modifier,
             onMoreServiceClick = onMoreServiceClick,
             onMoreReviewClick = onMoreReviewClick,
+            onServiceClick = onServiceClick,
             state = state,
         )
     } else {
@@ -89,6 +91,7 @@ fun SellerDetailScreen(
     state: SellerDetailUiState,
     onMoreServiceClick: (Long) -> Unit = {},
     onMoreReviewClick: (Long) -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
     scrollState: ScrollState = rememberScrollState(),
 ) {
     var showMap by remember { mutableStateOf(false) }
@@ -125,6 +128,7 @@ fun SellerDetailScreen(
         ServiceSummary(
             state.serviceItems,
             onMoreClick = { onMoreReviewClick(state.sellerInfo.id) },
+            onClickService = onServiceClick
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -308,7 +312,7 @@ fun BusinessInfo(
 fun ServiceSummary(
     services: List<ServiceItemState>,
     onMoreClick: () -> Unit = {},
-    onClickService: () -> Unit = {},
+    onClickService: (Long) -> Unit = {},
     thumbnail: @Composable (String, ImageRequest.Builder) -> Unit = { url, request ->
         AsyncImage(
             model =
@@ -350,7 +354,7 @@ fun ServiceSummary(
                     priceText = it.price,
                     status = it.serviceState,
                     elevation = 2.dp,
-                    onClick = onClickService,
+                    onClick = { onClickService(it.serviceId) },
                 ) {
                     thumbnail(it.thumbnailUrl, imageRequest)
                 }
@@ -426,7 +430,9 @@ private fun LabelWithMoreButton(
 @Composable
 private fun Loading(height: Dp) {
     Box(
-        modifier = Modifier.height(height).fillMaxWidth(),
+        modifier = Modifier
+            .height(height)
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
