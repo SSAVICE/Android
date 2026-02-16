@@ -29,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -45,6 +46,7 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.kakaomap.KakaoMapDialog
 import com.ssavice.seller_detail.ui.ReviewItem
 import com.ssavice.seller_detail.ui.SellerCard
 import com.ssavice.ui.AsyncImageScrollList
@@ -89,6 +91,8 @@ fun SellerDetailScreen(
     onMoreReviewClick: (Long) -> Unit = {},
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    var showMap by remember { mutableStateOf(false) }
+
     Column(
         modifier =
             modifier
@@ -113,6 +117,7 @@ fun SellerDetailScreen(
             address = state.sellerInfo.address,
             detailAddress = state.sellerInfo.detailAddress,
             phoneNumber = state.sellerInfo.phoneNumber,
+            onAddressClick = { showMap = true },
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -135,6 +140,14 @@ fun SellerDetailScreen(
             owner = state.businessInfo.ownerName,
             phoneNumber = state.businessInfo.phoneNumber,
             businessNumber = state.businessInfo.businessNumber,
+        )
+    }
+    if (showMap) {
+        KakaoMapDialog(
+            onDismiss = { showMap = false },
+            latitude = state.sellerInfo.region.latitude,
+            longitude = state.sellerInfo.region.longitude,
+            label = state.sellerInfo.name,
         )
     }
 }

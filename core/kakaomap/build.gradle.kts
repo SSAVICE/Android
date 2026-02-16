@@ -3,10 +3,8 @@ import java.util.Properties
 import kotlin.apply
 
 plugins {
-    alias(libs.plugins.ssavice.android.library)
     alias(libs.plugins.ssavice.android.library.compose)
     alias(libs.plugins.ssavice.android.feature)
-    alias(libs.plugins.ssavice.hilt)
 }
 
 android {
@@ -14,20 +12,8 @@ android {
         buildConfig = true
     }
 
-    namespace = "com.ssavice.core.mappicker"
+    namespace = "com.ssavice.core.kakaomap"
 }
-val localProps =
-    providers
-        .fileContents(isolated.rootProject.projectDirectory.file("local.properties"))
-        .asText
-        .map {
-            Properties().apply { load(it.reader()) }
-        }
-
-val kakaoRestKey =
-    localProps
-        .map { it.getProperty("KAKAO_REST_KEY") }
-        .orElse("http://example.com")
 
 dependencies {
     api(libs.androidx.compose.foundation)
@@ -45,13 +31,39 @@ dependencies {
 
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.kakao.map)
 }
+
+val localProps =
+    providers
+        .fileContents(isolated.rootProject.projectDirectory.file("local.properties"))
+        .asText
+        .map {
+            Properties().apply { load(it.reader()) }
+        }
+
+val kakaoUserApiKey =
+    localProps
+        .map { it.getProperty("KAKAO_API_KEY") }
+        .orElse("0")
+
+val kakaoSellerApiKey =
+    localProps
+        .map { it.getProperty("KAKAO_API_KEY_SELLER") }
+        .orElse("1")
 
 androidComponents {
     onVariants {
         it.buildConfigFields!!.put(
-            "KAKAO_REST_KEY",
-            kakaoRestKey.map { value ->
+            "KAKAO_API_KEY",
+            kakaoUserApiKey.map { value ->
+                BuildConfigField(type = "String", value = """"$value"""", comment = null)
+            },
+        )
+
+        it.buildConfigFields!!.put(
+            "KAKAO_API_KEY_SELLER",
+            kakaoSellerApiKey.map { value ->
                 BuildConfigField(type = "String", value = """"$value"""", comment = null)
             },
         )

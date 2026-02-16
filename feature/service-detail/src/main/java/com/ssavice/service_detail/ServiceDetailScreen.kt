@@ -1,5 +1,6 @@
 package com.ssavice.service_detail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.kakaomap.KakaoMapDialog
 import com.ssavice.model.Date
 import com.ssavice.service_detail.ui.ServiceImagesWithButtons
 import com.ssavice.service_detail.ui.seller.ParticipantUiModel
@@ -158,6 +163,8 @@ fun ServiceDetailScreen(
     onLikeClick: (Long) -> Unit = {},
     enabled: Boolean = true,
 ) {
+    var showMap by remember { mutableStateOf(false) }
+
     Column(
         modifier =
             modifier
@@ -236,18 +243,28 @@ fun ServiceDetailScreen(
                     iconContentDescription = "Location",
                     title = "위치",
                     content = service.address,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = true, onClick = { showMap = true }),
                 )
                 InfoRow(
                     icon = Icons.Default.Group,
                     iconContentDescription = "Participants",
                     title = "참여 인원",
                     content = service.participantInfo,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
                 InfoRow(
                     icon = Icons.Default.CalendarToday,
                     iconContentDescription = "Period",
                     title = "기간",
                     content = "${service.startDate} ~ ${service.endDate}",
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
             }
 
@@ -267,6 +284,15 @@ fun ServiceDetailScreen(
         } else {
             Loading(400.dp)
         }
+    }
+
+    if (showMap && service != null) {
+        KakaoMapDialog(
+            onDismiss = { showMap = false },
+            latitude = service.latitude,
+            longitude = service.longitude,
+            label = service.name,
+        )
     }
 }
 
@@ -338,6 +364,8 @@ fun ServiceDetailScreenPreview() {
             category = "건강",
             liked = true,
             applied = false,
+            longitude = 127.0,
+            latitude = 37.0,
         )
     val company =
         SellerSummary(
@@ -423,6 +451,8 @@ fun SellerServiceDetailScreenPreview() {
             category = "건강",
             liked = true,
             applied = false,
+            longitude = 127.0,
+            latitude = 37.0,
         )
 
     val dummyParticipants =

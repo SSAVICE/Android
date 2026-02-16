@@ -1,0 +1,50 @@
+package com.ssavice.kakaomap
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+
+@Composable
+fun KakaoMapDialog(
+    onDismiss: () -> Unit,
+    longitude: Double,
+    latitude: Double,
+    label: String? = null,
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+            ),
+    ) {
+        Card(
+            modifier = Modifier.height(500.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors =
+                CardDefaults.cardColors().copy(
+                    containerColor = Color.White,
+                ),
+        ) {
+            KakaoMap(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                longitude = longitude,
+                latitude = latitude,
+                label = label,
+            )
+        }
+    }
+}

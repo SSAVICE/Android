@@ -35,6 +35,10 @@ object RetrofitModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class ImageRetrofit
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class KakaoRestRetrofit
+
     @Provides
     @Singleton
     @ServiceAuthRetrofit
@@ -65,6 +69,21 @@ object RetrofitModule {
             .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
             .build()
+
+    @Provides
+    @Singleton
+    @KakaoRestRetrofit
+    fun provideKakaoRetrofitBuilder(interceptor: HttpLoggingInterceptor): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.KAKAO_REST_URL)
+            .addConverterFactory(Json.Default.asConverterFactory("application/json".toMediaType()))
+            .client(
+                OkHttpClient
+                    .Builder()
+                    .addInterceptor(interceptor)
+                    .build(),
+            ).build()
 
     @Provides
     @Singleton

@@ -144,6 +144,8 @@ class ServiceDetailViewModel
                                         tags = it.tag.split(','),
                                         liked = it.liked,
                                         applied = it.booked,
+                                        latitude = it.regionInfo.latitude,
+                                        longitude = it.regionInfo.longitude,
                                     ),
                             )
                         _sellerId.value = it.companyId
