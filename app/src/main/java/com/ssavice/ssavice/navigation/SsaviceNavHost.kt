@@ -64,6 +64,9 @@ fun SsaviceNavHost(
             onLikedServiceButtonClick = {
                 navController.navigateToUserLiked()
             },
+            onServiceSummaryClick = {
+                navController.navigateToMyService(searchFilter = it)
+            },
         )
 
         loginScreen(
@@ -95,6 +98,8 @@ fun SsaviceNavHost(
                             maxPrice = searchForm.priceRange.last,
                             searchRange = searchForm.searchRange,
                             sortBy = searchForm.sortBy,
+                            latitude = 0.0,
+                            longitude = 0.0,
                         ),
                 )
             },
@@ -181,6 +186,9 @@ fun SsaviceNavHost(
             },
             onMoreReview = {
                 navController.navigateToSellerReviews(sellerId = it)
+            },
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it, isSeller = false)
             },
         )
 

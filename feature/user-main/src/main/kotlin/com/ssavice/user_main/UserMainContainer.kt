@@ -24,6 +24,7 @@ fun UserMainContainer(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
+    onServiceSummaryClick: (com.ssavice.model.enums.ServiceState) -> Unit = {},
 ) {
     val mainNavController = rememberNavController()
     val homeViewModel: UserHomeViewModel = hiltViewModel()
@@ -48,6 +49,7 @@ fun UserMainContainer(
                 onHelpButtonClick = onHelpButtonClick,
                 onLogoutButtonClick = onLogoutButtonClick,
                 onWithdrawButtonClick = onWithdrawButtonClick,
+                onServiceSummaryClick = onServiceSummaryClick,
             )
 
             home(

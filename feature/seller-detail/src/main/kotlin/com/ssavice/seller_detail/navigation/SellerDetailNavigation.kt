@@ -33,6 +33,7 @@ fun NavGraphBuilder.sellerDetailScreen(
     onBackClick: () -> Unit = {},
     onMoreService: (Long) -> Unit = {},
     onMoreReview: (Long) -> Unit = {},
+    onServiceClick: (Long) -> Unit = {},
 ) {
     composable<SellerDetailRoute>(
         popEnterTransition = null,
@@ -64,6 +65,7 @@ fun NavGraphBuilder.sellerDetailScreen(
                         .padding(innerPadding),
                 onMoreReviewClick = onMoreReview,
                 onMoreServiceClick = onMoreService,
+                onServiceClick = onServiceClick,
             )
         }
     }

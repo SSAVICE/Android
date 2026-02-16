@@ -14,4 +14,6 @@ data class SearchQuery(
     val minPrice: Int,
     val maxPrice: Int,
     val sortBy: SortingOrder,
+    val latitude: Double,
+    val longitude: Double,
 )

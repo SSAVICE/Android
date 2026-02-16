@@ -22,11 +22,11 @@ import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerSummary
 import com.ssavice.model.user.ParticipationSummary
 import com.ssavice.network.ProgressRequestBody
-import com.ssavice.network.model.AddCompanyDTO
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
-import com.ssavice.network.model.UpdateCompanyProfileDTO
-import com.ssavice.network.model.ValidateBusinessDTO
+import com.ssavice.network.model.company.AddCompanyDTO
+import com.ssavice.network.model.company.UpdateCompanyProfileDTO
+import com.ssavice.network.model.company.ValidateBusinessDTO
 import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.CoroutineScope

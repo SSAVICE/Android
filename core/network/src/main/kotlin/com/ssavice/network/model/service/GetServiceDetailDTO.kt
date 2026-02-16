@@ -1,7 +1,8 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.service
 
 import com.ssavice.model.Date
 import com.ssavice.model.service.ServiceDetail
+import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.user
 
 import com.ssavice.model.Date
 import com.ssavice.model.user.UserProfile
@@ -18,7 +18,7 @@ data class UserProfileDTO(
     fun toModel(): UserProfile =
         UserProfile(
             address = address ?: "",
-            createdAt = Date.parse(createdAt),
+            createdAt = Date.Companion.parse(createdAt),
             detailAddress = detailAddress ?: "",
             email = email,
             imageUrl = imageUrl,

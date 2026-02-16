@@ -1,6 +1,7 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.company
 
 import com.ssavice.model.seller.SellerRegisterForm
+import com.ssavice.network.model.RegionPostDTO
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,7 +32,7 @@ class AddCompanyDTO(
                 description = sellerInfo.description,
                 detail = sellerInfo.detail,
                 depositor = sellerInfo.accountDepositor,
-                region = RegionPostDTO.fromModel(sellerInfo.region),
+                region = RegionPostDTO.Companion.fromModel(sellerInfo.region),
             )
     }
 }

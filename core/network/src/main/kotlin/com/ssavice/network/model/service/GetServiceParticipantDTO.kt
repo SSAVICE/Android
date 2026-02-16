@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.service
 
 import com.ssavice.model.service.ServiceParticipant
 import com.ssavice.model.service.ServiceParticipantResponse

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.user_my_page.ui.MyPageItem
 import com.ssavice.user_my_page.ui.MyPageSmallItem
 import com.ssavice.user_my_page.ui.ParticipationSummary
@@ -41,6 +42,7 @@ fun MyPageRoute(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
+    onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -66,6 +68,7 @@ fun MyPageRoute(
         onHelpButtonClick = onHelpButtonClick,
         onLogoutButtonClick = onLogoutButtonClick,
         onWithdrawButtonClick = onWithdrawButtonClick,
+        onServiceSummaryClick = onServiceSummaryClick,
     )
 }
 
@@ -79,6 +82,7 @@ fun MyPageScreen(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
+    onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         ProfileSummary(
@@ -92,7 +96,7 @@ fun MyPageScreen(
             modifier = Modifier.padding(8.dp),
             verticalArrangement = spacedBy(5.dp),
         ) {
-            ParticipationSummary(myPageUiState.participation)
+            ParticipationSummary(myPageUiState.participation, onServiceSummaryClick)
             Spacer(modifier = Modifier.height(8.dp))
             MyPageItem(
                 icon = Icons.Outlined.LibraryAddCheck,

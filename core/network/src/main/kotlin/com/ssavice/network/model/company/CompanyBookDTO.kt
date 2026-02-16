@@ -1,11 +1,11 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.company
 
 import com.ssavice.model.Date
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.mapState
 import com.ssavice.model.seller.SellerServiceParticipation
 import com.ssavice.model.seller.SellerServiceParticipationItem
-import kotlinx.serialization.SerialName
+import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.Serializable
 
 @Serializable

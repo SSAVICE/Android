@@ -1,9 +1,10 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.service
 
 import com.ssavice.model.Date
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
+import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,6 +13,8 @@ data class SearchServiceDTO(
     val query: String,
     val region1: String,
     val region2: String,
+    val latitude: Double,
+    val longitude: Double,
     val range: Int,
     val minPrice: Long,
     val maxPrice: Long,
@@ -32,6 +35,8 @@ data class SearchServiceDTO(
                 "sortBy" to sortBy.toString(),
                 "lastId" to lastId.toString(),
                 "size" to size.toString(),
+                "userLatitude" to latitude.toString(),
+                "userLongitude" to longitude.toString(),
             )
         } else {
             mapOf(
@@ -44,6 +49,8 @@ data class SearchServiceDTO(
                 "maxPrice" to maxPrice.toString(),
                 "sortBy" to sortBy.toString(),
                 "size" to size.toString(),
+                "userLatitude" to latitude.toString(),
+                "userLongitude" to longitude.toString(),
             )
         }
 
@@ -64,6 +71,8 @@ data class SearchServiceDTO(
                 sortBy = query.sortBy.value,
                 lastId = nextId,
                 size = searchCount,
+                latitude = query.latitude,
+                longitude = query.longitude,
             )
     }
 }

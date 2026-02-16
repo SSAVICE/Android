@@ -9,7 +9,15 @@ data class MyServiceUiState(
     val nextPage: Int = 0,
     val searchTypeSelection: Int = 0,
     val searchingState: List<ServiceState> = ServiceState.entries.filter { it.visibleAsOption },
-)
+) {
+    fun select(state: ServiceState?): MyServiceUiState {
+        val index = searchingState.indexOf(state ?: ServiceState.ALL)
+        if (index == -1) return this
+        return copy(
+            searchTypeSelection = index,
+        )
+    }
+}
 
 data class MyServiceItemUiState(
     val index: Int,

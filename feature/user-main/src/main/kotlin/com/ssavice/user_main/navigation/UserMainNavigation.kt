@@ -26,6 +26,7 @@ fun NavGraphBuilder.mainScreen(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
+    onServiceSummaryClick: (com.ssavice.model.enums.ServiceState) -> Unit = {},
 ) {
     composable<MainRoute>
     {
@@ -38,6 +39,7 @@ fun NavGraphBuilder.mainScreen(
             onHelpButtonClick = onHelpButtonClick,
             onLogoutButtonClick = onLogoutButtonClick,
             onWithdrawButtonClick = onWithdrawButtonClick,
+            onServiceSummaryClick = onServiceSummaryClick,
         )
     }
 }

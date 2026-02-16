@@ -1,4 +1,4 @@
-package com.ssavice.network.model
+package com.ssavice.network.model.service
 
 import kotlinx.serialization.Serializable
 

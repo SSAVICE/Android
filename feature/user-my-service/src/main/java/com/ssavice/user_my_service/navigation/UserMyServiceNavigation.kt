@@ -12,14 +12,20 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.user_my_service.MyServiceRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object UserMyServiceRoute
+data class UserMyServiceRoute(
+    val searchFilter: ServiceState = ServiceState.ALL,
+)
 
-fun NavController.navigateToMyService(navOptions: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(UserMyServiceRoute) {
+fun NavController.navigateToMyService(
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+    searchFilter: ServiceState = ServiceState.ALL,
+) {
+    navigate(UserMyServiceRoute(searchFilter)) {
         navOptions()
     }
 }
@@ -62,4 +68,8 @@ fun NavGraphBuilder.myServiceScreen(
             )
         }
     }
+}
+
+object UserMyServiceNavigationContract {
+    const val SEARCH_FILTER = "searchFilter"
 }
