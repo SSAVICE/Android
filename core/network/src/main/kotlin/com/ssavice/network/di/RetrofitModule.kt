@@ -24,6 +24,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     private val retroJson = Json { ignoreUnknownKeys = true }
+
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class ServiceRetrofit

@@ -66,7 +66,7 @@ fun SsaviceNavHost(
             },
             onServiceSummaryClick = {
                 navController.navigateToMyService(searchFilter = it)
-            }
+            },
         )
 
         loginScreen(

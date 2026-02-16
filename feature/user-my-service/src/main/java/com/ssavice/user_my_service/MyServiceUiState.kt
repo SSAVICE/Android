@@ -11,7 +11,7 @@ data class MyServiceUiState(
     val searchingState: List<ServiceState> = ServiceState.entries.filter { it.visibleAsOption },
 ) {
     fun select(state: ServiceState?): MyServiceUiState {
-        val index = searchingState.indexOf(state?: ServiceState.ALL)
+        val index = searchingState.indexOf(state ?: ServiceState.ALL)
         if (index == -1) return this
         return copy(
             searchTypeSelection = index,

@@ -88,9 +88,10 @@ fun SearchResultScreen(
                 discountRate = item.discountRatio,
             ) { url ->
                 AsyncImage(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp)),
                     model =
                         imageRequest
                             .data(url)

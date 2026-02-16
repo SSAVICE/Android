@@ -42,7 +42,7 @@ fun MyPageRoute(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
-    onServiceSummaryClick: (ServiceState) -> Unit = {}
+    onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -68,7 +68,7 @@ fun MyPageRoute(
         onHelpButtonClick = onHelpButtonClick,
         onLogoutButtonClick = onLogoutButtonClick,
         onWithdrawButtonClick = onWithdrawButtonClick,
-        onServiceSummaryClick = onServiceSummaryClick
+        onServiceSummaryClick = onServiceSummaryClick,
     )
 }
 
@@ -82,7 +82,7 @@ fun MyPageScreen(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
-    onServiceSummaryClick: (ServiceState) -> Unit = {}
+    onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         ProfileSummary(

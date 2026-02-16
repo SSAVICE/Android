@@ -128,7 +128,7 @@ fun SellerDetailScreen(
         ServiceSummary(
             state.serviceItems,
             onMoreClick = { onMoreReviewClick(state.sellerInfo.id) },
-            onClickService = onServiceClick
+            onClickService = onServiceClick,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -430,9 +430,10 @@ private fun LabelWithMoreButton(
 @Composable
 private fun Loading(height: Dp) {
     Box(
-        modifier = Modifier
-            .height(height)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .height(height)
+                .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()

@@ -53,7 +53,7 @@ class SearchResultViewModel
                             maxPrice = endPrice,
                             sortBy = SortingOrder.entries.getOrElse(sortBy, { SortingOrder.POPULARITY }),
                             latitude = region?.regionInfo?.latitude ?: 0.0,
-                            longitude = region?.regionInfo?.longitude ?: 0.0
+                            longitude = region?.regionInfo?.longitude ?: 0.0,
                         )
                     q
                 }.stateIn(
@@ -70,7 +70,7 @@ class SearchResultViewModel
                             maxPrice = 10_000_000,
                             sortBy = SortingOrder.POPULARITY,
                             latitude = 0.0,
-                            longitude = 0.0
+                            longitude = 0.0,
                         ),
                 )
             }

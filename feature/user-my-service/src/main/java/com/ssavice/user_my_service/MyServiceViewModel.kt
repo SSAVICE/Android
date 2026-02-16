@@ -25,7 +25,7 @@ class MyServiceViewModel
     constructor(
         private val userInfoRepository: UserInfoRepository,
         private val serviceRepository: ServiceRepository,
-        private val savedStateHandle: SavedStateHandle
+        private val savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
         private var searchingProcess: Job? = null
         private val _uiState =
@@ -33,9 +33,9 @@ class MyServiceViewModel
                 MyServiceUiState(
                     services = listOf(),
                     myServiceScreenStatus = MyServiceState.Initial,
-                    hasNext = true
+                    hasNext = true,
                 ).select(
-                    savedStateHandle.get<ServiceState>(UserMyServiceNavigationContract.SEARCH_FILTER)
+                    savedStateHandle.get<ServiceState>(UserMyServiceNavigationContract.SEARCH_FILTER),
                 ),
             )
 

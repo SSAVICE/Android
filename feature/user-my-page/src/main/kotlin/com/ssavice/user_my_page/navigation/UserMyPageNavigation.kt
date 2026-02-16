@@ -32,7 +32,7 @@ fun NavGraphBuilder.myPage(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
-    onServiceSummaryClick: (ServiceState) -> Unit = {}
+    onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
     composable<UserMyPageRoute>(
         enterTransition = {
@@ -59,7 +59,7 @@ fun NavGraphBuilder.myPage(
             onHelpButtonClick = onHelpButtonClick,
             onLogoutButtonClick = onLogoutButtonClick,
             onWithdrawButtonClick = onWithdrawButtonClick,
-            onServiceSummaryClick = onServiceSummaryClick
+            onServiceSummaryClick = onServiceSummaryClick,
         )
     }
 }

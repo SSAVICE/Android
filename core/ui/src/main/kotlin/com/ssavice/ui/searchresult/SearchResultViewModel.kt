@@ -66,9 +66,10 @@ class SearchResultViewModel
 
             searchJob =
                 viewModelScope.launch(Dispatchers.IO) {
-                    val address = userInfoRepository.getUserAddress().getOrElse {
-                        return@launch
-                    }
+                    val address =
+                        userInfoRepository.getUserAddress().getOrElse {
+                            return@launch
+                        }
 
                     val query = uiState.value.searchQuery
                     serviceRepository
@@ -100,9 +101,10 @@ class SearchResultViewModel
         }
 
         private suspend fun search() {
-            val address = userInfoRepository.getUserAddress().getOrElse {
-                return
-            }
+            val address =
+                userInfoRepository.getUserAddress().getOrElse {
+                    return
+                }
             val query = uiState.value.searchQuery
             serviceRepository
                 .searchService(

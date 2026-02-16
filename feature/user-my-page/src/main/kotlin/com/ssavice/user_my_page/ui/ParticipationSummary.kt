@@ -22,7 +22,8 @@ import com.ssavice.user_my_page.ParticipationState
 @Composable
 fun ParticipationSummary(
     participationState: ParticipationState?,
-    onParticipationSummaryItemClick: (ServiceState) -> Unit = {}) {
+    onParticipationSummaryItemClick: (ServiceState) -> Unit = {},
+) {
     @Composable
     fun CardElement(
         modifier: Modifier,

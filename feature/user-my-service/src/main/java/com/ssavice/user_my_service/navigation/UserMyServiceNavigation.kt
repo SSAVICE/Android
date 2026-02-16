@@ -17,11 +17,13 @@ import com.ssavice.user_my_service.MyServiceRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserMyServiceRoute(val searchFilter: ServiceState = ServiceState.ALL)
+data class UserMyServiceRoute(
+    val searchFilter: ServiceState = ServiceState.ALL,
+)
 
 fun NavController.navigateToMyService(
     navOptions: NavOptionsBuilder.() -> Unit = {},
-    searchFilter: ServiceState = ServiceState.ALL
+    searchFilter: ServiceState = ServiceState.ALL,
 ) {
     navigate(UserMyServiceRoute(searchFilter)) {
         navOptions()
