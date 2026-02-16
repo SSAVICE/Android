@@ -1,5 +1,6 @@
 package com.ssavice.user_my_service
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.common.DomainFormatter
@@ -8,6 +9,7 @@ import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.user.UserServiceParticipationItem
+import com.ssavice.user_my_service.navigation.UserMyServiceNavigationContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,6 +25,7 @@ class MyServiceViewModel
     constructor(
         private val userInfoRepository: UserInfoRepository,
         private val serviceRepository: ServiceRepository,
+        private val savedStateHandle: SavedStateHandle
     ) : ViewModel() {
         private var searchingProcess: Job? = null
         private val _uiState =
@@ -30,7 +33,9 @@ class MyServiceViewModel
                 MyServiceUiState(
                     services = listOf(),
                     myServiceScreenStatus = MyServiceState.Initial,
-                    hasNext = true,
+                    hasNext = true
+                ).select(
+                    savedStateHandle.get<ServiceState>(UserMyServiceNavigationContract.SEARCH_FILTER)
                 ),
             )
 

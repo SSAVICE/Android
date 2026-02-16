@@ -16,18 +16,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssavice.designsystem.component.SsaviceElevatedCard
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.user_my_page.ParticipationState
 
 @Composable
-fun ParticipationSummary(participationState: ParticipationState?) {
+fun ParticipationSummary(
+    participationState: ParticipationState?,
+    onParticipationSummaryItemClick: (ServiceState) -> Unit = {}) {
     @Composable
     fun CardElement(
         modifier: Modifier,
         value: String,
         text: String,
+        onClick: () -> Unit = {},
     ) {
         SsaviceElevatedCard(
             modifier = modifier,
+            onClick = onClick,
         ) {
             Column(
                 modifier = Modifier.fillMaxSize().padding(8.dp),
@@ -57,9 +62,15 @@ fun ParticipationSummary(participationState: ParticipationState?) {
         horizontalArrangement = spacedBy(16.dp),
     ) {
         if (participationState != null) {
-            CardElement(Modifier.weight(1f), participationState.onProgress.toString(), "진행 중")
-            CardElement(Modifier.weight(1f), participationState.done.toString(), "완료")
-            CardElement(Modifier.weight(1f), participationState.total.toString(), "전체")
+            CardElement(Modifier.weight(1f), participationState.onProgress.toString(), "진행 중") {
+                onParticipationSummaryItemClick(ServiceState.RECRUITING)
+            }
+            CardElement(Modifier.weight(1f), participationState.done.toString(), "완료") {
+                onParticipationSummaryItemClick(ServiceState.SUCCEEDED)
+            }
+            CardElement(Modifier.weight(1f), participationState.total.toString(), "전체") {
+                onParticipationSummaryItemClick(ServiceState.ALL)
+            }
         } else {
             CardElement(Modifier.weight(1f), "-", "진행중")
             CardElement(Modifier.weight(1f), "-", "완료")

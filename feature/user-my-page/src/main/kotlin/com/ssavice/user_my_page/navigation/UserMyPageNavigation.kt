@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.user_my_page.MyPageRoute
 import com.ssavice.user_my_page.ProfileState
 import kotlinx.serialization.Serializable
@@ -31,6 +32,7 @@ fun NavGraphBuilder.myPage(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
+    onServiceSummaryClick: (ServiceState) -> Unit = {}
 ) {
     composable<UserMyPageRoute>(
         enterTransition = {
@@ -57,6 +59,7 @@ fun NavGraphBuilder.myPage(
             onHelpButtonClick = onHelpButtonClick,
             onLogoutButtonClick = onLogoutButtonClick,
             onWithdrawButtonClick = onWithdrawButtonClick,
+            onServiceSummaryClick = onServiceSummaryClick
         )
     }
 }

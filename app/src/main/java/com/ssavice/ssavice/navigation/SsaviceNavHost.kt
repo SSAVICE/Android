@@ -64,6 +64,9 @@ fun SsaviceNavHost(
             onLikedServiceButtonClick = {
                 navController.navigateToUserLiked()
             },
+            onServiceSummaryClick = {
+                navController.navigateToMyService(searchFilter = it)
+            }
         )
 
         loginScreen(
