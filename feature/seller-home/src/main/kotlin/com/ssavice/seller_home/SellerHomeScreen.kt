@@ -121,6 +121,7 @@ fun SellerHomeScreen(
                 items = if (state is SellerHomeUiState.Shown) state.items else emptyList(),
                 key = { it.id },
             ) { item ->
+                // 클릭이 필요하면 카드에 clickable 추가하면 됨 (여기선 레이아웃 위주로 유지)
                 SellerServiceListItem(
                     title = item.title,
                     category = item.category,
@@ -135,7 +136,7 @@ fun SellerHomeScreen(
                             .shadow(8.dp, RoundedCornerShape(14.dp), clip = false)
                             .clip(RoundedCornerShape(14.dp))
                             .background(Color.White),
-                    onClick = { onServiceClick(item.id) },
+                    onClick = onServiceClick,
                 )
             }
         }
