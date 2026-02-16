@@ -138,13 +138,13 @@ fun MyPageScreen(
         }
     }
 
-    if(showLogoutDialog) {
+    if (showLogoutDialog) {
         LogoutAlertDialog(
             onApply = {
                 showLogoutDialog = false
                 onLogoutButtonClick()
             },
-            onDismiss = { showLogoutDialog = false }
+            onDismiss = { showLogoutDialog = false },
         )
     }
 }
@@ -152,7 +152,7 @@ fun MyPageScreen(
 @Composable
 fun LogoutAlertDialog(
     onApply: () -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -167,7 +167,7 @@ fun LogoutAlertDialog(
             Button(onClick = onDismiss) {
                 Text("취소")
             }
-        }
+        },
     )
 }
 

@@ -16,9 +16,14 @@ import com.ssavice.login.LoginRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRoute(val isUser: Boolean)
+data class LoginRoute(
+    val isUser: Boolean,
+)
 
-fun NavController.navigateToLogin(navOptions: NavOptionsBuilder.() -> Unit = {}, isUser: Boolean) {
+fun NavController.navigateToLogin(
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+    isUser: Boolean,
+) {
     navigate(route = LoginRoute(isUser)) {
         popUpTo(graph.startDestinationId) { inclusive = true }
     }
@@ -31,7 +36,7 @@ fun NavGraphBuilder.loginScreen(
     composable<LoginRoute>
     { backStackEntry ->
         Scaffold(
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
         ) { innerPadding ->
             LoginRoute(
                 modifier =

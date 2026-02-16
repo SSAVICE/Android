@@ -2,15 +2,15 @@ package com.ssavice.login
 
 data class LoginUiState(
     val loginState: LoginState = LoginState.CheckAutoLogin,
-    val isUser: Boolean
+    val isUser: Boolean,
 )
 
 sealed interface LoginState {
-    object CheckAutoLogin: LoginState
+    object CheckAutoLogin : LoginState
 
     object NeedLogin : LoginState
 
-    object OnLogin: LoginState
+    object OnLogin : LoginState
 
     data class Error(
         val message: String,

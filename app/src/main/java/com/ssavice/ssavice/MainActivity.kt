@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
         }
         KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
         KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
-
     }
 }
 

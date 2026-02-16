@@ -17,10 +17,11 @@ data class BackgroundTheme(
  */
 val LocalBackgroundTheme = staticCompositionLocalOf { BackgroundTheme() }
 
-val SsaviceGradientBackground = Brush.verticalGradient(
-    listOf(
-        Color(0xFFEE5633),
-        SsaviceOrange,
-        Color(0xFFAF3D23)
+val SsaviceGradientBackground =
+    Brush.verticalGradient(
+        listOf(
+            Color(0xFFEE5633),
+            SsaviceOrange,
+            Color(0xFFAF3D23),
+        ),
     )
-)

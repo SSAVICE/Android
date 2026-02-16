@@ -62,7 +62,10 @@ fun LoginRoute(
                 viewModel.tryAutoLogin()
             }
 
-            LoginState.Success -> onLoginComplete()
+            LoginState.Success -> {
+                onLoginComplete()
+            }
+
             else -> {}
         }
     }
@@ -73,7 +76,7 @@ fun LoginRoute(
             loginWithKakaoTalk(
                 context = context,
                 onSuccess = viewModel::onKakaoLoginSuccess,
-                onError = viewModel::onKakaoLoginError
+                onError = viewModel::onKakaoLoginError,
             )
         },
         uiState = state,
@@ -97,9 +100,9 @@ fun LoginPage(
             TitleSpace(
                 Modifier
                     .fillMaxWidth()
-                    .weight(2f)
+                    .weight(2f),
             )
-            if(uiState.loginState == LoginState.NeedLogin) {
+            if (uiState.loginState == LoginState.NeedLogin) {
                 LoginSpace(
                     Modifier
                         .fillMaxWidth()
@@ -117,7 +120,7 @@ fun TitleSpace(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         var startAnimation by remember { mutableStateOf(false) }
 
@@ -128,33 +131,34 @@ fun TitleSpace(modifier: Modifier = Modifier) {
 
         FadingText(
             delay = 0,
-            startAnimation = startAnimation
+            startAnimation = startAnimation,
         ) { modifier ->
             Text(
                 modifier = modifier,
                 text = "이곳에 슬로건 삽입",
-                style = MaterialTheme.typography.displaySmall.copy(
-                    letterSpacing = 4.sp,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                color = MaterialTheme.colorScheme.onPrimary
+                style =
+                    MaterialTheme.typography.displaySmall.copy(
+                        letterSpacing = 4.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    ),
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
         Spacer(modifier = Modifier.height(25.dp))
         FadingText(
             delay = 600,
-            startAnimation = startAnimation
+            startAnimation = startAnimation,
         ) { modifier ->
             Text(
                 modifier = modifier,
                 text = "SSAVICE",
-                style = MaterialTheme.typography.displayLarge.copy(
-                    letterSpacing = 12.sp,
-                    fontWeight = FontWeight.Black
-                ),
-                color = MaterialTheme.colorScheme.onPrimary
+                style =
+                    MaterialTheme.typography.displayLarge.copy(
+                        letterSpacing = 12.sp,
+                        fontWeight = FontWeight.Black,
+                    ),
+                color = MaterialTheme.colorScheme.onPrimary,
             )
-
         }
     }
 }
@@ -165,16 +169,14 @@ private fun loginWithKakaoTalk(
     onError: (Throwable) -> Unit,
 ) {
     UserApiClient.instance.loginWithKakaoTalk(
-        context
+        context,
     ) { token, error ->
         if (error != null) {
             Log.d(TAG, "로그인 실패", error)
 
             if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                 return@loginWithKakaoTalk
-            }
-
-            else{
+            } else {
                 onError(error)
             }
         } else if (token != null) {
@@ -188,31 +190,33 @@ private fun loginWithKakaoTalk(
 fun FadingText(
     delay: Int,
     startAnimation: Boolean,
-    content: @Composable (Modifier) -> Unit
+    content: @Composable (Modifier) -> Unit,
 ) {
     val offset by animateDpAsState(
         targetValue = if (startAnimation) (-20).dp else 0.dp,
-        animationSpec = tween(
-            durationMillis = 2000,
-            delayMillis = delay,
-            easing = EaseOutCubic
-        ),
-        label = "SloganOffset"
+        animationSpec =
+            tween(
+                durationMillis = 2000,
+                delayMillis = delay,
+                easing = EaseOutCubic,
+            ),
+        label = "SloganOffset",
     )
     val alpha by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 2000,
-            delayMillis = delay,
-            easing = EaseOutCubic
-        ),
-        label = "Alpha"
+        animationSpec =
+            tween(
+                durationMillis = 2000,
+                delayMillis = delay,
+                easing = EaseOutCubic,
+            ),
+        label = "Alpha",
     )
 
     content(
         Modifier
             .offset(y = offset)
-            .alpha(alpha)
+            .alpha(alpha),
     )
 }
 
@@ -220,28 +224,30 @@ fun FadingText(
 fun LoginSpace(
     modifier: Modifier = Modifier,
     onLoginButtonClicked: () -> Unit,
-    uiState: LoginUiState
+    uiState: LoginUiState,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            modifier = Modifier
-                .size(width = 320.dp, height = 65.dp)
-                .clickable(
-                    // 1. 클릭 시 시각적 효과(리플)를 제거하기 위해 indication을 null로 설정
-                    indication = null,
-                    // 2. 상호작용 상태를 추적할 source (필수 입력)
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onLoginButtonClicked
-                ),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(width = 320.dp, height = 65.dp)
+                    .clickable(
+                        // 1. 클릭 시 시각적 효과(리플)를 제거하기 위해 indication을 null로 설정
+                        indication = null,
+                        // 2. 상호작용 상태를 추적할 source (필수 입력)
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = onLoginButtonClicked,
+                    ),
+            contentAlignment = Alignment.Center,
         ) {
             Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(15.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(15.dp),
                 painter = painterResource(id = R.drawable.kakao_login_medium_wide),
                 contentDescription = "Login With Kakao",
             )
@@ -269,7 +275,7 @@ fun LoginPagePreview() {
     val state =
         LoginUiState(
             loginState = LoginState.Idle,
-            isUser = true
+            isUser = true,
         )
     SsaviceTheme {
         LoginPage(
@@ -291,14 +297,14 @@ fun LoginPageErrorPreview() {
             loginState =
                 LoginState.Error(
                     "ErrorThisisLongErrorThisisVeryLongError\n" +
-                            "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
-                            "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
-                            "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
-                            "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
-                            "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
-                            "ongErrorErrorThisisLongErrorThisisVeryLongError",
+                        "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
+                        "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
+                        "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
+                        "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
+                        "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
+                        "ongErrorErrorThisisLongErrorThisisVeryLongError",
                 ),
-            isUser = true
+            isUser = true,
         )
     SsaviceTheme {
         LoginPage(

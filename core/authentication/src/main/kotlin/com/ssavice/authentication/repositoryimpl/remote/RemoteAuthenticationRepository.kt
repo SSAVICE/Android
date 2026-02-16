@@ -18,7 +18,7 @@ class RemoteAuthenticationRepository
     constructor(
         private val authRetrofitService: AuthRetrofitService,
         private val jwtRepository: JwtRepository,
-        @ApplicationContext private val context: Context
+        @ApplicationContext private val context: Context,
     ) : AuthenticationRepository {
         override suspend fun refreshToken(jwt: Jwt): Result<Unit> {
             val response = authRetrofitService.refreshToken(jwt.refreshToken)
@@ -66,32 +66,31 @@ class RemoteAuthenticationRepository
             )
         }
 
-    override suspend fun logout(): Result<Unit> {
-        val jwt = jwtRepository.getJwt()
-        val result = processResponse(authRetrofitService.logout(
-            accessToken = "Bearer ${jwt.accessToken}",
-            refreshToken = "Bearer ${jwt.refreshToken}")
-        )
+        override suspend fun logout(): Result<Unit> {
+            val jwt = jwtRepository.getJwt()
+            val result =
+                processResponse(
+                    authRetrofitService.logout(
+                        accessToken = "Bearer ${jwt.accessToken}",
+                        refreshToken = "Bearer ${jwt.refreshToken}",
+                    ),
+                )
 
-
-
-        result.onSuccess {
-            jwtRepository.clearJwt()
-        }
-        UserApiClient.instance.logout { error ->
-            if (error != null) {
-                Log.e(TAG, "로그아웃 실패. SDK에서 토큰 폐기됨", error)
+            result.onSuccess {
+                jwtRepository.clearJwt()
             }
-            else {
-                Log.i(TAG, "로그아웃 성공. SDK에서 토큰 폐기됨")
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    Log.e(TAG, "로그아웃 실패. SDK에서 토큰 폐기됨", error)
+                } else {
+                    Log.i(TAG, "로그아웃 성공. SDK에서 토큰 폐기됨")
+                }
             }
+
+            return result
         }
 
-        return result
+        companion object {
+            private const val TAG = "RemoteAuthenticationRepository"
+        }
     }
-
-
-    companion object {
-        private const val TAG = "RemoteAuthenticationRepository"
-    }
-}
