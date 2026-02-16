@@ -13,4 +13,5 @@ class DemoAuthenticationRepository
         override suspend fun userLoginWithAccessToken(accessToken: String): Result<Unit> = Result.success(Unit)
 
         override suspend fun companyLoginWithAccessToken(accessToken: String): Result<Unit> = Result.success(Unit)
-    }
+    override suspend fun logout(): Result<Unit> = Result.success(Unit)
+}
