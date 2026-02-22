@@ -28,11 +28,11 @@ jobs:
         run: |
           echo "${{secrets.ENCODED_KEYSTORE_KEY}}" > ./keystore.b64
           base64 -d -i ./keystore.b64 > ./$
-          cp ./$ ./app/$
+          cp ./keystore.jks ./app/keystore.jks
       - name: Build Signed APK
         run: |
           bash ./gradlew :app:assembleRelease \
-            -Pandroid.injected.signing.store.file=keystore \
+            -Pandroid.injected.signing.store.file=keystore.jks \
             -Pandroid.injected.signing.store.password=${{secrets.PASS_KEYSTORE}} \
             -Pandroid.injected.signing.key.alias=${{secrets.ALIAS_KEY}} \
             -Pandroid.injected.signing.key.password=${{secrets.PASS_KEYSTORE_KEY}} \
