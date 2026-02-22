@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose)
     alias(libs.plugins.google.service)
+    alias(libs.plugins.firebase.distribution)
 }
 
 android {
@@ -55,7 +56,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)

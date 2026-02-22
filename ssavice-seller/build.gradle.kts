@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose)
     alias(libs.plugins.google.service)
+    alias(libs.plugins.firebase.distribution)
 }
 
 android {

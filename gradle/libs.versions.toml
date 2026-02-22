@@ -43,6 +43,7 @@ webkit = "1.15.0"
 core = "1.17.0"
 firebase = "34.9.0"
 google-service = "4.4.4"
+firebase-distribution = "5.2.1"
 
 [libraries]
 kakao-map = { module = "com.kakao.maps.open:android", version.ref = "kakaomap" }
@@ -134,6 +135,7 @@ room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-service = { id = "com.google.gms.google-services", version.ref = "google-service" }
+firebase-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-distribution"}
 
 ssavice-root = { id = "ssavice.root" }
 ssavice-hilt = { id = "ssavice.hilt" }
