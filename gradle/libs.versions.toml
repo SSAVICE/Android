@@ -41,6 +41,8 @@ datastore = "1.2.0"
 tink = "1.20.0"
 webkit = "1.15.0"
 core = "1.17.0"
+firebase = "34.9.0"
+google-service = "4.4.4"
 
 [libraries]
 kakao-map = { module = "com.kakao.maps.open:android", version.ref = "kakaomap" }
@@ -92,18 +94,19 @@ androidx-compose-material3-adaptive-navigation = { group = "androidx.compose.mat
 androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "androidxNavigation" }
-androidx-exifinterface = {group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface"}
+androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
-androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "webkit"}
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk"}
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 tink = { group = "com.google.crypto.tink", name = "tink-android", version.ref = "tink" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 
 # Dependencies of the included build-logic
 android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "androidGradlePlugin" }
@@ -130,6 +133,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+google-service = { id = "com.google.gms.google-services", version.ref = "google-service" }
 
 ssavice-root = { id = "ssavice.root" }
 ssavice-hilt = { id = "ssavice.hilt" }
