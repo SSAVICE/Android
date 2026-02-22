@@ -38,9 +38,9 @@ jobs:
             -Pandroid.injected.signing.key.password=${{secrets.PASS_KEYSTORE_KEY}} \
             --stacktrace
       - name: Upload APK
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
-          name: apk
+          pattern: apk-*
           path: app/build/outputs/apk/release/app-release.apk
   release:
     permissions: write-all
@@ -59,17 +59,17 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: $
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: $
-          release_name: Release $
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
       - name: Upload Release APK
         id: upload_release_asset
         uses: actions/upload-release-asset@v1.0.1
         env:
-          GITHUB_TOKEN: $
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: $
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: apk/app-release.apk
-          asset_name: $.apk
+          asset_name: $app-release.apk
           asset_content_type: application/zip
