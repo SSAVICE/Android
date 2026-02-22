@@ -8,4 +8,6 @@ interface AuthenticationRepository {
     suspend fun userLoginWithAccessToken(accessToken: String): Result<Unit>
 
     suspend fun companyLoginWithAccessToken(accessToken: String): Result<Unit>
+
+    suspend fun logout(): Result<Unit>
 }

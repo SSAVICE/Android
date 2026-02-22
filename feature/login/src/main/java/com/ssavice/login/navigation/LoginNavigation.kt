@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,10 +16,15 @@ import com.ssavice.login.LoginRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-object LoginRoute
+data class LoginRoute(
+    val isUser: Boolean,
+)
 
-fun NavController.navigateToLogin(navOptions: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(route = LoginRoute) {
+fun NavController.navigateToLogin(
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+    isUser: Boolean,
+) {
+    navigate(route = LoginRoute(isUser)) {
         popUpTo(graph.startDestinationId) { inclusive = true }
     }
 }
@@ -29,7 +35,9 @@ fun NavGraphBuilder.loginScreen(
 ) {
     composable<LoginRoute>
     { backStackEntry ->
-        Scaffold { innerPadding ->
+        Scaffold(
+            containerColor = Color.Transparent,
+        ) { innerPadding ->
             LoginRoute(
                 modifier =
                     Modifier
@@ -38,8 +46,11 @@ fun NavGraphBuilder.loginScreen(
                         .padding(innerPadding),
                 onLoginComplete = onLoginComplete,
                 viewModel = hiltViewModel(),
-                isUser = isUser,
             )
         }
     }
+}
+
+object LoginNavigationContract {
+    const val IS_USER = "isUser"
 }

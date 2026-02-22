@@ -26,10 +26,12 @@ interface AuthRetrofitService {
 
     @GET("/api/auth/logout")
     suspend fun logout(
+        @Header(AUTHORIZATION_HEADER_KEY) accessToken: String,
         @Header(REFRESH_TOKEN_HEADER_KEY) refreshToken: String,
     ): Response<Unit>
 
     companion object {
+        const val AUTHORIZATION_HEADER_KEY = "Authorization"
         const val REFRESH_TOKEN_HEADER_KEY = "X-Refresh-Token"
     }
 }

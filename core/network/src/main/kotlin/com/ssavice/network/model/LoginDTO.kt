@@ -7,4 +7,6 @@ import kotlinx.serialization.Serializable
 data class LoginDTO(
     @SerialName("token")
     val kakaoAccessToken: String,
+    @SerialName("provider")
+    val authProvider: String,
 )

@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             authEventManager.event.collectAsEffect {
                 when (it) {
                     is AuthEvent.Unauthorized -> {
-                        navController.navigateToLogin()
+                        navController.navigateToLogin(isUser = false)
                     }
 
                     is AuthEvent.Forbidden -> {

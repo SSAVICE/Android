@@ -3,6 +3,7 @@ package com.ssavice.user_my_page
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
+import com.ssavice.network.authentication.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ class UserMyPageViewModel
     @Inject
     constructor(
         private val userInfoRepository: UserInfoRepository,
+        private val authRepository: AuthenticationRepository,
     ) : ViewModel() {
         private val _uiState by lazy {
             val mf =
@@ -83,6 +85,20 @@ class UserMyPageViewModel
                             )
                     },
                 )
+            }
+        }
+
+        fun onLogout() {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepository
+                    .logout()
+                    .onSuccess {
+                        _uiState.value =
+                            _uiState.value.copy(
+                                participationState = MyPageState.Done,
+                            )
+                        userInfoRepository.getUserAddress()
+                    }
             }
         }
     }

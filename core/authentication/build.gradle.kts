@@ -19,4 +19,5 @@ dependencies {
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.util)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.kakao.user)
 }

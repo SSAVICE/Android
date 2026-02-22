@@ -13,13 +13,17 @@ import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.PersonOff
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +70,7 @@ fun MyPageRoute(
         onParticipatedServiceButtonClick = onParticipatedServiceButtonClick,
         onLikedServiceButtonClick = onLikedServiceButtonClick,
         onHelpButtonClick = onHelpButtonClick,
-        onLogoutButtonClick = onLogoutButtonClick,
+        onLogoutButtonClick = viewModel::onLogout,
         onWithdrawButtonClick = onWithdrawButtonClick,
         onServiceSummaryClick = onServiceSummaryClick,
     )
@@ -84,6 +88,8 @@ fun MyPageScreen(
     onWithdrawButtonClick: () -> Unit = {},
     onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
     Column(modifier = modifier) {
         ProfileSummary(
             modifier = Modifier.padding(8.dp),
@@ -121,7 +127,7 @@ fun MyPageScreen(
             MyPageSmallItem(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 title = "로그아웃",
-                onClick = onLogoutButtonClick,
+                onClick = { showLogoutDialog = true },
             )
             MyPageSmallItem(
                 icon = Icons.Outlined.PersonOff,
@@ -131,6 +137,38 @@ fun MyPageScreen(
             )
         }
     }
+
+    if (showLogoutDialog) {
+        LogoutAlertDialog(
+            onApply = {
+                showLogoutDialog = false
+                onLogoutButtonClick()
+            },
+            onDismiss = { showLogoutDialog = false },
+        )
+    }
+}
+
+@Composable
+fun LogoutAlertDialog(
+    onApply: () -> Unit = {},
+    onDismiss: () -> Unit = {},
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "경고") },
+        text = { Text(text = "로그아웃 하시겠습니까?") },
+        confirmButton = {
+            Button(onClick = onApply) {
+                Text("확인")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("취소")
+            }
+        },
+    )
 }
 
 @Preview

@@ -10,4 +10,6 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.core.authentication)
+    implementation(libs.kakao.auth)
+    implementation(libs.kakao.user)
 }

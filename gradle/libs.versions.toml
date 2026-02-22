@@ -45,6 +45,7 @@ core = "1.17.0"
 [libraries]
 kakao-map = { module = "com.kakao.maps.open:android", version.ref = "kakaomap" }
 kakao-auth = { module = "com.kakao.sdk:v2-auth", version.ref = "kakaomap" }
+kakao-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakaomap" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
