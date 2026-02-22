@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.ssavice.root) apply false
+    alias(libs.plugins.google.service) apply false
+    alias(libs.plugins.firebase.distribution) apply false
     alias(libs.plugins.ktlint)
 }
 

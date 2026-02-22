@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "178944545990",
+    "project_id": "ssavice-7bed2",
+    "storage_bucket": "ssavice-7bed2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178944545990:android:3d0d1e5cbcc1c6ffd9b3c7",
+        "android_client_info": {
+          "package_name": "com.ssavice.ssavice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXo0QxTZekCf4tmYJJkeDIxRykwCmb5jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178944545990:android:3ea28311a7891186d9b3c7",
+        "android_client_info": {
+          "package_name": "com.ssavice_seller"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXo0QxTZekCf4tmYJJkeDIxRykwCmb5jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
