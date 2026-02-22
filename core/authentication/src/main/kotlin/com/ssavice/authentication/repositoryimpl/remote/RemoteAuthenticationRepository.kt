@@ -33,9 +33,15 @@ class RemoteAuthenticationRepository
         }
 
         override suspend fun userLoginWithAccessToken(accessToken: String): Result<Unit> {
+            Log.d(TAG, "userLoginWithAccessToken: $accessToken")
             val result =
                 processResponseOnResponseData(
-                    authRetrofitService.userLogin(LoginDTO(accessToken)),
+                    authRetrofitService.userLogin(
+                        LoginDTO(
+                            accessToken,
+                            "KAKAO",
+                        ),
+                    ),
                 ).map { it.toJwt() }
 
             return result.fold(
@@ -50,9 +56,15 @@ class RemoteAuthenticationRepository
         }
 
         override suspend fun companyLoginWithAccessToken(accessToken: String): Result<Unit> {
+            Log.d(TAG, "companyLoginWithAccessToken: $accessToken")
             val result =
                 processResponseOnResponseData(
-                    authRetrofitService.companyLogin(LoginDTO(accessToken)),
+                    authRetrofitService.companyLogin(
+                        LoginDTO(
+                            accessToken,
+                            "KAKAO",
+                        ),
+                    ),
                 ).map { it.toJwt() }
 
             return result.fold(

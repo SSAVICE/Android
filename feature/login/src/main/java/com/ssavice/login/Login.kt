@@ -31,7 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,13 +41,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.ssavice.core.network.BuildConfig
 import com.ssavice.designsystem.theme.SsaviceGradientBackground
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.feature.login.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginRoute(
@@ -109,6 +116,11 @@ fun LoginPage(
                         .weight(1f),
                     onLoginButtonClicked = onLoginButtonClicked,
                     uiState = uiState,
+                )
+            }
+            if (BuildConfig.DEBUG) {
+                HashKeySpace(
+                    Modifier.weight(0.5f),
                 )
             }
         }
@@ -265,6 +277,37 @@ fun LoginSpace(
                 style = MaterialTheme.typography.labelSmall,
                 softWrap = true,
             )
+        }
+    }
+}
+
+@Composable
+fun HashKeySpace(modifier: Modifier) {
+    val hashText = KakaoSdk.keyHash
+    val clipboardManager = LocalClipboard.current
+    val context = LocalContext.current
+    Column(modifier = modifier) {
+        Column(
+            Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                ).clickable {
+                    val data = android.content.ClipData.newPlainText("Hash", hashText)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        clipboardManager.setClipEntry(
+                            data.toClipEntry(),
+                        )
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "해시 키가 복사되었습니다.",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
+                    }
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text("해시 키: \n$hashText")
         }
     }
 }
