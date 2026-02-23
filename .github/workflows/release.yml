@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - release
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   apk:
@@ -27,18 +29,18 @@ jobs:
       - name: Generate Keystore file from Github Secrets
         run: |
           echo "${{secrets.ENCODED_KEYSTORE_KEY}}" > ./keystore.b64
-          base64 -d -i ./keystore.b64 > ./$
-          cp ./$ ./app/$
+          base64 -d -i ./keystore.b64 > ./keystore.jks
+          cp ./keystore.jks ./app/keystore.jks
       - name: Build Signed APK
         run: |
           bash ./gradlew :app:assembleRelease \
-            -Pandroid.injected.signing.store.file=keystore \
+            -Pandroid.injected.signing.store.file=keystore.jks \
             -Pandroid.injected.signing.store.password=${{secrets.PASS_KEYSTORE}} \
             -Pandroid.injected.signing.key.alias=${{secrets.ALIAS_KEY}} \
             -Pandroid.injected.signing.key.password=${{secrets.PASS_KEYSTORE_KEY}} \
             --stacktrace
       - name: Upload APK
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: apk
           path: app/build/outputs/apk/release/app-release.apk
@@ -52,24 +54,14 @@ jobs:
         run: |
           echo "now=v$(date +'%Y.%m.%d.%H%M')" >> $GITHUB_ENV
       - name: Download APK from build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: apk
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: $
+      # 4. GitHub Release 생성 및 두 APK 업로드
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: $
-          release_name: Release $
-      - name: Upload Release APK
-        id: upload_release_asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: $
-        with:
-          upload_url: $
-          asset_path: apk/app-release.apk
-          asset_name: $.apk
-          asset_content_type: application/zip
+          # 자동으로 커밋 내역을 바탕으로 릴리스 노트를 생성해 줍니다.
+          generate_release_notes: true
+          files: |
+            app-release.apk
