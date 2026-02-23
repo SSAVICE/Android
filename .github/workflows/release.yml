@@ -31,7 +31,7 @@ jobs:
           echo "${{secrets.ENCODED_KEYSTORE_KEY}}" > ./keystore.b64
           base64 -d -i ./keystore.b64 > ./keystore.jks
           cp ./keystore.jks ./app/keystore.jks
-      - name: Build Signed APK
+      - name: Build User Signed APK
         run: |
           bash ./gradlew :app:assembleRelease \
             -Pandroid.injected.signing.store.file=keystore.jks \
@@ -39,11 +39,28 @@ jobs:
             -Pandroid.injected.signing.key.alias=${{secrets.ALIAS_KEY}} \
             -Pandroid.injected.signing.key.password=${{secrets.PASS_KEYSTORE_KEY}} \
             --stacktrace
+
+      - name: Build Seller Signed APK
+        run: |
+          bash ./gradlew :ssavice-seller:assembleRelease \
+            -Pandroid.injected.signing.store.file=keystore.jks \
+            -Pandroid.injected.signing.store.password=${{secrets.PASS_KEYSTORE}} \
+            -Pandroid.injected.signing.key.alias=${{secrets.ALIAS_KEY}} \
+            -Pandroid.injected.signing.key.password=${{secrets.PASS_KEYSTORE_KEY}} \
+            --stacktrace
+
+      # 3. 보기 좋게 APK 파일 이름 변경 (버전 태그 포함)
+      - name: Rename APK files
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/user-app-release.apk
+          mv ssavice-seller/build/outputs/apk/release/ssavice-seller-release.apk app/build/outputs/apk/release/seller-app-release.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/release/
+
   release:
     permissions: write-all
     name: Release APK
@@ -64,4 +81,5 @@ jobs:
           # 자동으로 커밋 내역을 바탕으로 릴리스 노트를 생성해 줍니다.
           generate_release_notes: true
           files: |
-            app-release.apk
+            user-app-release.apk
+            seller-app-release.apk
