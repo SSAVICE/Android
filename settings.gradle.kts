@@ -1,5 +1,8 @@
 import java.net.URI
 
+include(":core:chat")
+
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
