@@ -9,6 +9,8 @@ import com.ssavice.chat.model.enum.ChatCursorDirection
 import com.ssavice.chat.service.ChatRetrofitService
 import com.ssavice.network.processResponseOnResponseData
 import com.ssavice.room.ChatDatabase
+import com.ssavice.room.dao.ChatDao
+import com.ssavice.room.dao.ChatRoomDao
 import com.ssavice.room.dto.ChatEntity
 
 @OptIn(ExperimentalPagingApi::class)
@@ -16,7 +18,7 @@ class ChatRemoteMediator(
     private val roomId: Long,
     private val initialMessageId: Int?,
     private val chatApi: ChatRetrofitService, // Retrofit 서비스
-    private val chatDatabase: ChatDatabase
+    private val chatDao: ChatDao
 ) : RemoteMediator<Int, ChatEntity>() {
 
     override suspend fun load(
@@ -63,9 +65,7 @@ class ChatRemoteMediator(
             response.fold(
                 onSuccess = { data ->
                     // 3. DB 작업 (트랜잭션)
-                    chatDatabase.withTransaction {
-                        chatDatabase.chatDao().insertAll(data)
-                    }
+                    chatDao.insertAll(data)
                     MediatorResult.Success(endOfPaginationReached = data.isEmpty())
                 },
                 onFailure = {

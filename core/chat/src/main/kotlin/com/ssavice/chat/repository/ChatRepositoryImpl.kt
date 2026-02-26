@@ -4,27 +4,38 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.ssavice.chat.ChatRemoteMediator
 import com.ssavice.chat.service.ChatRetrofitService
-import com.ssavice.room.ChatDatabase
-import com.ssavice.room.dto.ChatEntity
+import com.ssavice.model.chat.Chat
+import com.ssavice.model.chat.ChattingRoomMetadata
+import com.ssavice.network.processResponse
+import com.ssavice.network.processResponseOnResponseData
+import com.ssavice.room.dao.ChatDao
+import com.ssavice.room.dao.ChatRoomDao
+import com.ssavice.room.dto.ChatRoomEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
     private val chatApi: ChatRetrofitService,
-    private val chatDatabase: ChatDatabase
+    private val chatDao: ChatDao,
+    private val chatRoomDao: ChatRoomDao
 ) : ChatRepository {
 
     @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
-    override fun getChatMessages(roomId: Long): Flow<PagingData<ChatEntity>> = flow {
-        val lastChat = chatDatabase.chatDao().getLastChat(roomId)
-        emit(lastChat?.id)
-    }.flatMapLatest {
-        lastMessageId ->
+    override fun getChatMessages(roomId: Long): Flow<PagingData<Chat>> = flow {
+        val lastChat = chatDao.getLastChat(roomId)
+        val lastReadChat = chatRoomDao.getRoomMetadata(roomId)?.lastReadMessageId
+        emit(lastChat?.id?.coerceAtLeast(lastReadChat ?: 0))
+    }.flatMapLatest { lastMessageId ->
         Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -33,13 +44,17 @@ class ChatRepositoryImpl @Inject constructor(
             remoteMediator = ChatRemoteMediator(
                 roomId = roomId,
                 chatApi = chatApi,
-                chatDatabase = chatDatabase,
+                chatDao = chatDao,
                 initialMessageId = lastMessageId
             ),
             pagingSourceFactory = {
-                chatDatabase.chatDao().getChatPagingSource(roomId)
+                chatDao.getChatPagingSource(roomId)
             }
-        ).flow
+        ).flow.map { pagingData ->
+            pagingData.map { entity ->
+                entity.toModel()
+            }
+        }
     }
 
     override fun sendChat(roomId: Long, message: String) {
@@ -47,6 +62,28 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setLastReadMessageId(roomId: Long, messageId: Int) {
-        chatDatabase.chatRoomDao().updateLastReadId(roomId, messageId)
+        chatRoomDao.updateLastReadId(roomId, messageId)
+    }
+
+    override fun getRoomList(): Flow<List<ChattingRoomMetadata>> {
+        CoroutineScope(Dispatchers.IO).launch {
+            processResponseOnResponseData(chatApi.getRoomList()).onSuccess { result ->
+                result.rooms.forEach { room ->
+                    chatRoomDao.upsertRoomMetadata(ChatRoomEntity(
+                        roomId = room.roomId,
+                        lastReadMessageId = 0,
+                        lastMessageId = room.lastChatId?.toInt()?:0,
+                        roomName = room.name,
+                        lastMessage = room.lastMessage?:"",
+                        lastMessageCreatedAt = room.lastChatId?:0
+                    ))
+                }
+            }
+        }
+        return chatRoomDao.getAllRoomsFlow().map {
+            it.map { entity ->
+                entity.toModel()
+            }
+        }
     }
 }
