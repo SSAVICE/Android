@@ -44,6 +44,7 @@ core = "1.17.0"
 firebase = "34.9.0"
 google-service = "4.4.4"
 firebase-distribution = "5.2.1"
+paging = "3.4.0"
 
 [libraries]
 kakao-map = { module = "com.kakao.maps.open:android", version.ref = "kakaomap" }
@@ -108,6 +109,9 @@ okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor",
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 tink = { group = "com.google.crypto.tink", name = "tink-android", version.ref = "tink" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+androidx-paging = { group = "androidx.paging", name = "paging", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 
 # Dependencies of the included build-logic
 android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "androidGradlePlugin" }
