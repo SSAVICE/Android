@@ -4,9 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ssavice.model.chat.Chat
 
-@Entity(tableName = "chat", primaryKeys = ["room_id", "id"])
+@Entity(tableName = "chat", primaryKeys = ["roomId", "id"])
 data class ChatEntity(
-    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val userId: Long,
     val roomId: Long,

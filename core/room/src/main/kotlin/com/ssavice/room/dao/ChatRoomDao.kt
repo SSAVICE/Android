@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChatRoomDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertRoomMetadata(room: ChatRoomEntity)
+    suspend fun insertRoomMetadata(room: ChatRoomEntity): Long
 
     @Query("SELECT * FROM chat_rooms WHERE roomId = :roomId")
     suspend fun getRoomMetadata(roomId: Long): ChatRoomEntity?

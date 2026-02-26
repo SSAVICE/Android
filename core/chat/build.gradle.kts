@@ -16,10 +16,9 @@ dependencies {
     implementation(projects.core.model)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
-    implementation(libs.androidx.paging)
-    implementation(libs.androidx.paging.common)
+    api(libs.androidx.paging.common)
     implementation(libs.room.runtime)
-    annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.util)

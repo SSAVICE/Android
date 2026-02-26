@@ -15,11 +15,11 @@ android {
 }
 
 dependencies {
+    ksp(libs.room.compiler)
+    implementation(libs.room.paging)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.room.runtime)
-    implementation(libs.androidx.paging)
-    implementation(libs.androidx.paging.common)
-    annotationProcessor(libs.room.compiler)
+    api(libs.androidx.paging.common)
     api(projects.core.model)
 }
