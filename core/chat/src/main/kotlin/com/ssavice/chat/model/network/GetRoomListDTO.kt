@@ -1,6 +1,5 @@
 package com.ssavice.chat.model.network
 
-import com.ssavice.chat.model.enum.RoomType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,9 +9,10 @@ data class GetRoomListDTO(
 
 @Serializable
 data class RoomDTO(
+    val roomId: Long,
     val name: String,
     val serviceId: Long,
-    val type: RoomType,
+    val type: String,
     val lastChatId: Long?,
     val lastMessage: String?,
 )

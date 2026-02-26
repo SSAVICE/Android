@@ -4,15 +4,18 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.ssavice.room.dao.ChatDao
 import com.ssavice.room.dao.ChatRemoteKeysDao
-import com.ssavice.room.dto.Chat
+import com.ssavice.room.dao.ChatRoomDao
+import com.ssavice.room.dto.ChatEntity
 import com.ssavice.room.dto.ChatRemoteKeys
+import com.ssavice.room.dto.ChatRoomEntity
 
 @Database(
-    entities = [Chat::class, ChatRemoteKeys::class],
+    entities = [ChatEntity::class, ChatRemoteKeys::class, ChatRoomEntity::class],
     version = 1,
     exportSchema = false
 )
 abstract class ChatDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
     abstract fun remoteKeysDao(): ChatRemoteKeysDao
+    abstract fun chatRoomDao(): ChatRoomDao
 }

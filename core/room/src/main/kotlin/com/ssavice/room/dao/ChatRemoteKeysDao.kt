@@ -16,4 +16,7 @@ interface ChatRemoteKeysDao {
 
     @Query("DELETE FROM chat_remote_keys WHERE roomId = :roomId")
     suspend fun clearRemoteKeys(roomId: String)
+
+    @Query("DELETE FROM chat_remote_keys")
+    suspend fun removeAll()
 }

@@ -1,11 +1,13 @@
 package com.ssavice.chat.repository
 
 import androidx.paging.PagingData
-import com.ssavice.room.dto.Chat
+import com.ssavice.room.dto.ChatEntity
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    fun getChatMessages(roomId: String): Flow<PagingData<Chat>>
+    fun getChatMessages(roomId: Long): Flow<PagingData<ChatEntity>>
 
-    fun sendChat(roomId: String, message: String)
+    fun sendChat(roomId: Long, message: String)
+
+    suspend fun setLastReadMessageId(roomId: Long, messageId: Int)
 }

@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.ssavice.room.ChatDatabase
 import com.ssavice.room.dao.ChatDao
 import com.ssavice.room.dao.ChatRemoteKeysDao
+import com.ssavice.room.dao.ChatRoomDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,5 +43,11 @@ object RoomModule {
     @Singleton
     fun provideChatRemoteKeysDao(database: ChatDatabase): ChatRemoteKeysDao {
         return database.remoteKeysDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomDao(database: ChatDatabase): ChatRoomDao {
+        return database.chatRoomDao()
     }
 }

@@ -1,6 +1,5 @@
 package com.ssavice.chat
 
-import androidx.compose.ui.geometry.isEmpty
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -10,7 +9,7 @@ import com.ssavice.chat.model.enum.ChatCursorDirection
 import com.ssavice.chat.service.ChatRetrofitService
 import com.ssavice.network.processResponseOnResponseData
 import com.ssavice.room.ChatDatabase
-import com.ssavice.room.dto.Chat
+import com.ssavice.room.dto.ChatEntity
 
 @OptIn(ExperimentalPagingApi::class)
 class ChatRemoteMediator(
@@ -18,11 +17,11 @@ class ChatRemoteMediator(
     private val initialMessageId: Int?,
     private val chatApi: ChatRetrofitService, // Retrofit 서비스
     private val chatDatabase: ChatDatabase
-) : RemoteMediator<Int, Chat>() {
+) : RemoteMediator<Int, ChatEntity>() {
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Chat>
+        state: PagingState<Int, ChatEntity>
     ): MediatorResult {
         return try {
             // 1. 페이징 지점 파악 (현재 어느 위치까지 로드했는지)
