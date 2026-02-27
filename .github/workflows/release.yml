@@ -31,6 +31,7 @@ jobs:
           echo "${{secrets.ENCODED_KEYSTORE_KEY}}" > ./keystore.b64
           base64 -d -i ./keystore.b64 > ./keystore.jks
           cp ./keystore.jks ./app/keystore.jks
+          cp ./keystore.jks ./ssavice-seller/keystore.jks
       - name: Build User Signed APK
         run: |
           bash ./gradlew :app:assembleRelease \
@@ -49,7 +50,6 @@ jobs:
             -Pandroid.injected.signing.key.password=${{secrets.PASS_KEYSTORE_KEY}} \
             --stacktrace
 
-      # 3. 보기 좋게 APK 파일 이름 변경 (버전 태그 포함)
       - name: Rename APK files
         run: |
           mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/user-app-release.apk
