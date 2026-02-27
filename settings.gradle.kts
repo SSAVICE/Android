@@ -2,9 +2,6 @@ import java.net.URI
 
 include(":core:room")
 
-
-
-
 pluginManagement {
     includeBuild("build-logic")
     repositories {

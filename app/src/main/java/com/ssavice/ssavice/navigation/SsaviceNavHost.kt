@@ -71,7 +71,7 @@ fun SsaviceNavHost(
             },
             onChattingRoomClick = {
                 navController.navigateToChattingRoom(roomId = it)
-            }
+            },
         )
 
         loginScreen(

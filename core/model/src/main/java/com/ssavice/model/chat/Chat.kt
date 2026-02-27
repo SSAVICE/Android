@@ -6,5 +6,5 @@ data class Chat(
     val roomId: Long,
     val type: String,
     val content: String,
-    val createdAt: Long
+    val createdAt: Long,
 )

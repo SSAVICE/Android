@@ -10,7 +10,7 @@ data class GroupChatDTO(
     val roomId: String,
     val sender: String,
     val message: String,
-    val createdAt: String
+    val createdAt: String,
 )
 
 @Serializable

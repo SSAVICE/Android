@@ -11,38 +11,41 @@ import retrofit2.Response
 
 class FakeChatRetrofitService : ChatRetrofitService {
     val lastId = 500L
+
     override suspend fun getChatList(
         cursor: Long,
         direction: String,
         roomId: Long,
-        size: Int
+        size: Int,
     ): Response<List<ChatEntity>> {
         Log.d("ChatRetrofitService", "getChatList")
-        val ids: List<Long> = when (direction) {
-            "BEFORE" -> {
-                ((cursor - size).fastCoerceAtLeast(0) until cursor).toList()
-            }
+        val ids: List<Long> =
+            when (direction) {
+                "BEFORE" -> {
+                    ((cursor - size).fastCoerceAtLeast(0) until cursor).toList()
+                }
 
-            "AFTER" -> {
-                (cursor + 1..(cursor + size).coerceAtMost(lastId)).toList()
-            }
+                "AFTER" -> {
+                    (cursor + 1..(cursor + size).coerceAtMost(lastId)).toList()
+                }
 
-            else -> {
-                (lastId - size + 1..lastId).toList()
+                else -> {
+                    (lastId - size + 1..lastId).toList()
+                }
             }
-        }
-        val data = ids.map {
-            ChatEntity(
-                id = it.toInt(),
-                userId = 1,
-                roomId = roomId,
-                type = "TEXT",
-                content = "Hello, Chatting ($it)!",
-                createdAt = System.currentTimeMillis() - 86400000L * 10 + it * 60000L
-            )
-        }
+        val data =
+            ids.map {
+                ChatEntity(
+                    id = it.toInt(),
+                    userId = 1,
+                    roomId = roomId,
+                    type = "TEXT",
+                    content = "Hello, Chatting ($it)!",
+                    createdAt = System.currentTimeMillis() - 86400000L * 10 + it * 60000L,
+                )
+            }
         return Response.success(
-            data
+            data,
         )
     }
 
@@ -59,30 +62,31 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         serviceId = 1,
                         type = "DM",
                     )
-                }
-            )
+                },
+            ),
         )
     }
 
-    override suspend fun getRoomInfo(roomId: Long): Response<GetRoomInfoDTO> {
-        return Response.success(
+    override suspend fun getRoomInfo(roomId: Long): Response<GetRoomInfoDTO> =
+        Response.success(
             GetRoomInfoDTO(
                 roomId = roomId,
                 name = "room 1",
                 roomType = "DM",
                 serviceId = 1,
-                participants = listOf(
-                    RoomParticipantDTO(
-                        name = "User 1",
-                        userId = 1,
-                        thumbnail = ""
-                    ), RoomParticipantDTO(
-                        name = "User 2",
-                        userId = 2,
-                        thumbnail = ""
-                    )
-                )
-            )
+                participants =
+                    listOf(
+                        RoomParticipantDTO(
+                            name = "User 1",
+                            userId = 1,
+                            thumbnail = "",
+                        ),
+                        RoomParticipantDTO(
+                            name = "User 2",
+                            userId = 2,
+                            thumbnail = "",
+                        ),
+                    ),
+            ),
         )
-    }
 }

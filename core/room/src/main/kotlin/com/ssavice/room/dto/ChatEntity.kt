@@ -11,14 +11,15 @@ data class ChatEntity(
     val roomId: Long,
     val type: String,
     val content: String,
-    val createdAt: Long
+    val createdAt: Long,
 ) {
-    fun toModel(): Chat = Chat(
-        messageId = id.toLong(),
-        senderId = userId,
-        roomId = roomId,
-        type = type,
-        content = content,
-        createdAt = createdAt
-    )
+    fun toModel(): Chat =
+        Chat(
+            messageId = id.toLong(),
+            senderId = userId,
+            roomId = roomId,
+            type = type,
+            content = content,
+            createdAt = createdAt,
+        )
 }

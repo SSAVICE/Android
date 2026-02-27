@@ -16,38 +16,30 @@ import jakarta.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RoomModule {
-
     private const val DATABASE_NAME = "chat_database"
 
     @Provides
     @Singleton
     fun provideChatDatabase(
-        @ApplicationContext context: Context
-    ): ChatDatabase {
-        return Room.databaseBuilder(
-            context,
-            ChatDatabase::class.java,
-            DATABASE_NAME
-        )
-            .fallbackToDestructiveMigration(false)
+        @ApplicationContext context: Context,
+    ): ChatDatabase =
+        Room
+            .databaseBuilder(
+                context,
+                ChatDatabase::class.java,
+                DATABASE_NAME,
+            ).fallbackToDestructiveMigration(false)
             .build()
-    }
 
     @Provides
     @Singleton
-    fun provideChatDao(database: ChatDatabase): ChatDao {
-        return database.chatDao()
-    }
+    fun provideChatDao(database: ChatDatabase): ChatDao = database.chatDao()
 
     @Provides
     @Singleton
-    fun provideChatRemoteKeysDao(database: ChatDatabase): ChatRemoteKeysDao {
-        return database.remoteKeysDao()
-    }
+    fun provideChatRemoteKeysDao(database: ChatDatabase): ChatRemoteKeysDao = database.remoteKeysDao()
 
     @Provides
     @Singleton
-    fun provideChatRoomDao(database: ChatDatabase): ChatRoomDao {
-        return database.chatRoomDao()
-    }
+    fun provideChatRoomDao(database: ChatDatabase): ChatRoomDao = database.chatRoomDao()
 }

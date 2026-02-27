@@ -27,7 +27,7 @@ fun NavGraphBuilder.mainScreen(
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
     onServiceSummaryClick: (com.ssavice.model.enums.ServiceState) -> Unit = {},
-    onChattingRoomClick: (roomId: Long) -> Unit = {}
+    onChattingRoomClick: (roomId: Long) -> Unit = {},
 ) {
     composable<MainRoute>
     {
@@ -41,7 +41,7 @@ fun NavGraphBuilder.mainScreen(
             onLogoutButtonClick = onLogoutButtonClick,
             onWithdrawButtonClick = onWithdrawButtonClick,
             onServiceSummaryClick = onServiceSummaryClick,
-            onChattingRoomClick = onChattingRoomClick
+            onChattingRoomClick = onChattingRoomClick,
         )
     }
 }

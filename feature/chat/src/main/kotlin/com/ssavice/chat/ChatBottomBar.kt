@@ -13,14 +13,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun ChatBottomBar(
     modifier: Modifier = Modifier,
-    viewModel: ChattingViewModel = hiltViewModel()
+    viewModel: ChattingViewModel = hiltViewModel(),
 ) {
     Row(modifier = modifier) {
         val state = rememberTextFieldState()
 
         TextField(
             state = state,
-            modifier = Modifier.weight(6f)
+            modifier = Modifier.weight(6f),
         )
 
         Button(
@@ -28,7 +28,7 @@ fun ChatBottomBar(
             onClick = {
                 viewModel.sendChat(state.text.toString())
                 state.clearText()
-            }
+            },
         ) {
             Text("전송")
         }

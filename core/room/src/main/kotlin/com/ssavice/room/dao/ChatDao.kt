@@ -39,7 +39,7 @@ interface ChatDao {
     suspend fun insertIfContinuous(chat: ChatEntity) {
         val lastChat = getLastChat(chat.roomId)
 
-        if(lastChat == null || chat.id == lastChat.id + 1) {
+        if (lastChat == null || chat.id == lastChat.id + 1) {
             insertAll(listOf(chat))
         } else {
             Log.d("ChatDao", "(chat ${chat.id}) 채팅이 연속적이지 않습니다. 해당 입력을 무시합니다.")

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetRoomListDTO(
-    val rooms: List<RoomDTO>
+    val rooms: List<RoomDTO>,
 )
 
 @Serializable

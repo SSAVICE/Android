@@ -20,12 +20,11 @@ class ChatRemoteMediator(
     private val initialMessageId: Int?,
     private val chatApi: ChatRetrofitService, // Retrofit 서비스
     private val chatDao: ChatDao,
-    private val chatDatabase: ChatDatabase
+    private val chatDatabase: ChatDatabase,
 ) : RemoteMediator<Int, ChatEntity>() {
-
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, ChatEntity>
+        state: PagingState<Int, ChatEntity>,
     ): MediatorResult {
         return try {
             // 1. 페이징 지점 파악 (현재 어느 위치까지 로드했는지)
@@ -34,17 +33,19 @@ class ChatRemoteMediator(
             val cursorDirection: ChatCursorDirection
             when (loadType) {
                 LoadType.PREPEND -> {
-                    val firstItem = state.firstItemOrNull() ?: return MediatorResult.Success(
-                        endOfPaginationReached = false
-                    )
+                    val firstItem =
+                        state.firstItemOrNull() ?: return MediatorResult.Success(
+                            endOfPaginationReached = false,
+                        )
                     cursorDirection = ChatCursorDirection.AFTER
                     lastId = firstItem.id
                 }
 
                 LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull() ?: return MediatorResult.Success(
-                        endOfPaginationReached = false
-                    )
+                    val lastItem =
+                        state.lastItemOrNull() ?: return MediatorResult.Success(
+                            endOfPaginationReached = false,
+                        )
                     cursorDirection = ChatCursorDirection.BEFORE
                     lastId = lastItem.id
                 }
@@ -57,14 +58,15 @@ class ChatRemoteMediator(
             Log.d("ChatRemoteMediator", "cursor: $lastId, direction: ${cursorDirection.value}, size: ${state.config.pageSize}")
 
             // 2. 네트워크 호출
-            val response = processResponseOnResponseData(
-                chatApi.getChatList(
-                    roomId = roomId,
-                    cursor = lastId.toLong(),
-                    size = state.config.pageSize,
-                    direction = cursorDirection.value
+            val response =
+                processResponseOnResponseData(
+                    chatApi.getChatList(
+                        roomId = roomId,
+                        cursor = lastId.toLong(),
+                        size = state.config.pageSize,
+                        direction = cursorDirection.value,
+                    ),
                 )
-            )
 
             response.fold(
                 onSuccess = { data ->
@@ -75,15 +77,12 @@ class ChatRemoteMediator(
                     Log.d("ChatRemoteMediator", "data insertion Success. count: ${data.size}")
 
                     MediatorResult.Success(endOfPaginationReached = data.isEmpty() && loadType != LoadType.REFRESH)
-
                 },
                 onFailure = {
                     Log.d("ChatRemoteMediator", "data insertion Failed")
                     MediatorResult.Error(it)
-                }
+                },
             )
-
-
         } catch (e: Exception) {
             MediatorResult.Error(e)
         }

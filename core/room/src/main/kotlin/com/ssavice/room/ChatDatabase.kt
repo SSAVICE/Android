@@ -12,10 +12,12 @@ import com.ssavice.room.dto.ChatRoomEntity
 @Database(
     entities = [ChatEntity::class, ChatRemoteKeys::class, ChatRoomEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class ChatDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
+
     abstract fun remoteKeysDao(): ChatRemoteKeysDao
+
     abstract fun chatRoomDao(): ChatRoomDao
 }

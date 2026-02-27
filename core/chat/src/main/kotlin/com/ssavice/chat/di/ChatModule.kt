@@ -16,16 +16,11 @@ import javax.inject.Singleton
 abstract class ChatModule {
     @Binds
     @Singleton
-    abstract fun bindChatRepository(
-        chatRepositoryImpl: ChatRepositoryImpl
-    ): ChatRepository
-
+    abstract fun bindChatRepository(chatRepositoryImpl: ChatRepositoryImpl): ChatRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideChatRetrofitService(): ChatRetrofitService {
-            return FakeChatRetrofitService()
-        }
+        fun provideChatRetrofitService(): ChatRetrofitService = FakeChatRetrofitService()
     }
 }

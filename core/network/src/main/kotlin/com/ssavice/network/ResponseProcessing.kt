@@ -6,7 +6,6 @@ import retrofit2.Response
 private fun <T> isResponseError(response: Response<T>): Boolean = (response.code() in 400 until 500)
 
 fun processResponse(response: Response<Unit>): Result<Unit> {
-
     if (isResponseError(response)) {
         return when (response.code()) {
             500 -> Result.failure(ServerInternalErrorException(response.message()))

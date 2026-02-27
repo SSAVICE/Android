@@ -12,7 +12,10 @@ interface ChatRemoteKeysDao {
     suspend fun insertAll(remoteKey: List<ChatRemoteKeys>)
 
     @Query("SELECT * FROM chat_remote_keys WHERE messageId = :messageId AND roomId = :roomId")
-    suspend fun remoteKeysId(messageId: Int, roomId: String): ChatRemoteKeys?
+    suspend fun remoteKeysId(
+        messageId: Int,
+        roomId: String,
+    ): ChatRemoteKeys?
 
     @Query("DELETE FROM chat_remote_keys WHERE roomId = :roomId")
     suspend fun clearRemoteKeys(roomId: String)

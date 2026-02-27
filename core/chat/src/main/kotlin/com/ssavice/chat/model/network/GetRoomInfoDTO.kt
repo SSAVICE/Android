@@ -8,7 +8,7 @@ data class GetRoomInfoDTO(
     val name: String,
     val roomType: String,
     val serviceId: Long,
-    val participants: List<RoomParticipantDTO>
+    val participants: List<RoomParticipantDTO>,
 )
 
 @Serializable

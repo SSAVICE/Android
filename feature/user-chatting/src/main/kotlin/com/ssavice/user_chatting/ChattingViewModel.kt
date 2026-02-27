@@ -10,16 +10,20 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class ChattingViewModel @Inject constructor(
-    private val chatRepository: ChatRepository
-) : ViewModel() {
-    val chattingRoomState by lazy {
-        chatRepository.getRoomList().map {
-            it.sortedByDescending { room -> room.lastUpdate }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+class ChattingViewModel
+    @Inject
+    constructor(
+        private val chatRepository: ChatRepository,
+    ) : ViewModel() {
+        val chattingRoomState by lazy {
+            chatRepository
+                .getRoomList()
+                .map {
+                    it.sortedByDescending { room -> room.lastUpdate }
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = emptyList(),
+                )
+        }
     }
-}

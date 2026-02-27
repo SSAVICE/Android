@@ -7,5 +7,5 @@ data class ChatRemoteKeys(
     val messageId: Int,
     val roomId: String,
     val prevKey: Int?,
-    val nextKey: Int?
+    val nextKey: Int?,
 )

@@ -29,7 +29,7 @@ import com.ssavice.model.chat.Chat
 @Composable
 fun ChatRoute(
     modifier: Modifier = Modifier,
-    viewModel: ChattingViewModel = hiltViewModel()
+    viewModel: ChattingViewModel = hiltViewModel(),
 ) {
     val chatMessages: LazyPagingItems<Chat> = viewModel.pagingState.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
@@ -42,7 +42,6 @@ fun ChatRoute(
     }
 
     LaunchedEffect(chatMessages.itemCount) {
-
         if (chatMessages.itemCount > 0) {
             if (top) {
                 listState.animateScrollToItem(0)
@@ -60,20 +59,18 @@ fun ChatRoute(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
-        Row(
-
-        ) {
+        Row {
             Text(listState.firstVisibleItemIndex.toString())
         }
         LazyColumn(
             modifier = Modifier.weight(1f),
             state = listState,
-            reverseLayout = true
+            reverseLayout = true,
         ) {
             // 2. items 함수로 페이징 데이터 렌더링
             items(
                 count = chatMessages.itemCount,
-                key = chatMessages.itemKey { it.messageId }
+                key = chatMessages.itemKey { it.messageId },
             ) { index ->
                 val message = chatMessages[index]
                 if (message != null) {
@@ -86,11 +83,15 @@ fun ChatRoute(
 }
 
 @Composable
-fun ChatMessageItem(chat: Chat, roomInfo: ChattingRoomUiState) {
+fun ChatMessageItem(
+    chat: Chat,
+    roomInfo: ChattingRoomUiState,
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
     ) {
         val userName: String
         val userThumbnail: String

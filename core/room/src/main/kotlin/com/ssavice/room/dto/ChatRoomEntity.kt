@@ -11,18 +11,18 @@ data class ChatRoomEntity(
     val lastMessageId: Int,
     val roomName: String,
     val lastMessage: String,
-    val lastMessageCreatedAt: Long
+    val lastMessageCreatedAt: Long,
 ) {
     val unreadCount: Int
         get() = (lastMessageId - lastReadMessageId).coerceAtLeast(0)
 
-    fun toModel(): ChattingRoomMetadata = ChattingRoomMetadata(
-        name = roomName,
-        lastUpdate = lastMessageCreatedAt,
-        lastMessage = lastMessage,
-        lastMessageId = lastMessageId.toLong(),
-        unreadCount = unreadCount,
-        roomId = roomId
-    )
-
+    fun toModel(): ChattingRoomMetadata =
+        ChattingRoomMetadata(
+            name = roomName,
+            lastUpdate = lastMessageCreatedAt,
+            lastMessage = lastMessage,
+            lastMessageId = lastMessageId.toLong(),
+            unreadCount = unreadCount,
+            roomId = roomId,
+        )
 }

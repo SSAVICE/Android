@@ -21,7 +21,7 @@ import com.ssavice.model.chat.ChattingRoomMetadata
 fun UserChattingRoute(
     modifier: Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
-    onRoomClick: (id: Long) -> Unit = {}
+    onRoomClick: (id: Long) -> Unit = {},
 ) {
     val state by viewModel.chattingRoomState.collectAsStateWithLifecycle()
 
@@ -32,14 +32,14 @@ fun UserChattingRoute(
 fun ChatList(
     modifier: Modifier,
     rooms: List<ChattingRoomMetadata>,
-    onRoomClick: (id: Long) -> Unit = {}
+    onRoomClick: (id: Long) -> Unit = {},
 ) {
     LazyColumn(modifier = modifier) {
         items(rooms.size, key = { index -> rooms[index].name }) { index ->
             RoomItem(
                 modifier = Modifier.fillMaxWidth(),
                 room = rooms[index],
-                onClick = onRoomClick
+                onClick = onRoomClick,
             )
             if (index < rooms.size - 1) {
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
@@ -48,21 +48,21 @@ fun ChatList(
     }
 }
 
-
 @Composable
 fun RoomItem(
     modifier: Modifier,
     room: ChattingRoomMetadata,
-    onClick: (id: Long) -> Unit = {}
+    onClick: (id: Long) -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .clickable{
-                onClick(room.roomId)
-            },
-        verticalArrangement = spacedBy(5.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+                .clickable {
+                    onClick(room.roomId)
+                },
+        verticalArrangement = spacedBy(5.dp),
     ) {
         Text(room.name, style = MaterialTheme.typography.titleMedium)
         Text(room.lastMessage)

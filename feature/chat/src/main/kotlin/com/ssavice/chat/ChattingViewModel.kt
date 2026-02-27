@@ -15,59 +15,64 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChattingViewModel @Inject constructor(
-    private val chatRepository: ChatRepository,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+class ChattingViewModel
+    @Inject
+    constructor(
+        private val chatRepository: ChatRepository,
+        private val savedStateHandle: SavedStateHandle,
+    ) : ViewModel() {
+        private val roomId: Long = savedStateHandle[ChatRouteContract.ROOM_ID] ?: 0
 
-    private val roomId: Long = savedStateHandle[ChatRouteContract.ROOM_ID] ?: 0
-
-    val pagingState by lazy {
-        chatRepository.getChatMessages(
-            roomId
-        ).cachedIn(viewModelScope)
-    }
-
-    private val _roomInfoState = MutableStateFlow<ChattingRoomUiState>(
-        ChattingRoomUiState()
-    )
-
-    val roomInfoState = _roomInfoState.asStateFlow()
-
-    fun sendChat(message: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            chatRepository.sendChat(roomId, message)
+        val pagingState by lazy {
+            chatRepository
+                .getChatMessages(
+                    roomId,
+                ).cachedIn(viewModelScope)
         }
-    }
 
-    fun updateLastRead(messageId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            chatRepository.setLastReadMessageId(roomId, messageId)
+        private val _roomInfoState =
+            MutableStateFlow<ChattingRoomUiState>(
+                ChattingRoomUiState(),
+            )
+
+        val roomInfoState = _roomInfoState.asStateFlow()
+
+        fun sendChat(message: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                chatRepository.sendChat(roomId, message)
+            }
         }
-    }
 
-    fun loadChattingRoomInfo() {
-        if(_roomInfoState.value.loadState == ChattingRoomLoadState.Loading) return
-
-        _roomInfoState.update {
-            it.copy(loadState = ChattingRoomLoadState.Loading)
+        fun updateLastRead(messageId: Int) {
+            viewModelScope.launch(Dispatchers.IO) {
+                chatRepository.setLastReadMessageId(roomId, messageId)
+            }
         }
-        viewModelScope.launch(Dispatchers.IO) {
-            chatRepository.getRoomInfo(roomId).onSuccess { info ->
-                _roomInfoState.update {
-                    it.copy(
-                        roomName = info.name,
-                        roomType = info.roomType,
-                        loadState = ChattingRoomLoadState.Success,
-                        userInfo = info.participants.associate { t ->
-                            t.userId to UserInfo(
-                                name = t.name,
-                                thumbnail = t.thumbnail
-                            )
-                        }
-                    )
+
+        fun loadChattingRoomInfo() {
+            if (_roomInfoState.value.loadState == ChattingRoomLoadState.Loading) return
+
+            _roomInfoState.update {
+                it.copy(loadState = ChattingRoomLoadState.Loading)
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                chatRepository.getRoomInfo(roomId).onSuccess { info ->
+                    _roomInfoState.update {
+                        it.copy(
+                            roomName = info.name,
+                            roomType = info.roomType,
+                            loadState = ChattingRoomLoadState.Success,
+                            userInfo =
+                                info.participants.associate { t ->
+                                    t.userId to
+                                        UserInfo(
+                                            name = t.name,
+                                            thumbnail = t.thumbnail,
+                                        )
+                                },
+                        )
+                    }
                 }
             }
         }
     }
-}

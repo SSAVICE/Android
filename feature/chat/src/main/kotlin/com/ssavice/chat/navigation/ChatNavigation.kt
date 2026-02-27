@@ -32,9 +32,7 @@ fun NavController.navigateToChattingRoom(
     }
 }
 
-fun NavGraphBuilder.chattingRoom(
-    onBack: () -> Unit = {},
-) {
+fun NavGraphBuilder.chattingRoom(onBack: () -> Unit = {}) {
     composable<ChattingRoomRoute>(
         popEnterTransition = null,
         enterTransition = {

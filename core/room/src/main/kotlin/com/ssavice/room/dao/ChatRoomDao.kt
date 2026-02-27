@@ -21,32 +21,49 @@ interface ChatRoomDao {
 
     // 내가 메시지를 읽었을 때 업데이트
     @Query("UPDATE chat_rooms SET lastReadMessageId = :messageId WHERE roomId = :roomId")
-    suspend fun updateLastReadId(roomId: Long, messageId: Int)
+    suspend fun updateLastReadId(
+        roomId: Long,
+        messageId: Int,
+    )
 
     // 서버에서 새 메시지가 왔을 때 업데이트
-    @Query("UPDATE chat_rooms SET lastMessageId = :messageId, lastMessage = :lastMessage, lastMessageCreatedAt = :lastMessageCreatedAt WHERE roomId = :roomId")
-    suspend fun updateServerLastId(roomId: Long, messageId: Int, lastMessage: String, lastMessageCreatedAt: Long)
+    @Query(
+        "UPDATE chat_rooms SET lastMessageId = :messageId, lastMessage = :lastMessage, lastMessageCreatedAt = :lastMessageCreatedAt WHERE roomId = :roomId",
+    )
+    suspend fun updateServerLastId(
+        roomId: Long,
+        messageId: Int,
+        lastMessage: String,
+        lastMessageCreatedAt: Long,
+    )
 
-    @Query("UPDATE chat_rooms SET lastReadMessageId = :messageId " +
-            "WHERE roomId = :roomId AND lastReadMessageId < :messageId")
-    suspend fun updateLastReadIdIfGreater(roomId: Long, messageId: Int)
+    @Query(
+        "UPDATE chat_rooms SET lastReadMessageId = :messageId " +
+            "WHERE roomId = :roomId AND lastReadMessageId < :messageId",
+    )
+    suspend fun updateLastReadIdIfGreater(
+        roomId: Long,
+        messageId: Int,
+    )
 
     @Query("DELETE FROM chat_rooms")
     suspend fun removeAll()
 
     // 특정 필드만 업데이트 (중복 시 사용)
-    @Query("""
+    @Query(
+        """
         UPDATE chat_rooms 
         SET lastMessage = :lastMessage, 
             lastMessageId = :lastMessageId, 
             lastMessageCreatedAt = :lastMessageCreatedAt 
         WHERE roomId = :roomId
-    """)
+    """,
+    )
     suspend fun updateRoomLastMessage(
         roomId: Long,
         lastMessage: String,
         lastMessageId: Int,
-        lastMessageCreatedAt: Long
+        lastMessageCreatedAt: Long,
     )
 
     // Upsert 로직 (위의 두 기능을 합친 편리한 함수)
@@ -58,7 +75,7 @@ interface ChatRoomDao {
                 room.roomId,
                 room.lastMessage,
                 room.lastMessageId,
-                room.lastMessageCreatedAt
+                room.lastMessageCreatedAt,
             )
         }
     }
