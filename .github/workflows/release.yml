@@ -83,3 +83,40 @@ jobs:
           files: |
             user-app-release.apk
             seller-app-release.apk
+
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          # 쉘 스크립트와 JSON을 결합해 디스코드 임베드 메시지를 구성합니다.
+          cat <<EOF > discord_payload.json
+          {
+            "content": "🚀 **새로운 앱 빌드가 배포되었습니다!**",
+            "embeds": [
+              {
+                "title": "📦 Release ${{ github.ref_name }}",
+                "url": "https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}",
+                "color": 3447003,
+                "description": "Admin 앱 및 User 앱의 Signed APK가 성공적으로 빌드되어 업로드되었습니다.",
+                "fields": [
+                  {
+                    "name": "📱 판매자 앱 다운로드",
+                    "value": "[👉 Seller APK 클릭](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/user-app-release.apk)",
+                    "inline": true
+                  },
+                  {
+                    "name": "🧑‍💻 유저 앱 다운로드",
+                    "value": "[👉 User APK 클릭](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/seller-app-release.apk)",
+                    "inline": true
+                  }
+                ],
+                "footer": {
+                  "text": "GitHub Actions CD Pipeline"
+                }
+              }
+            ]
+          }
+          EOF
+          
+          # curl을 이용해 디스코드 웹훅으로 JSON 데이터를 전송합니다.
+          curl -H "Content-Type: application/json" -X POST -d @discord_payload.json $DISCORD_WEBHOOK
