@@ -18,7 +18,7 @@ interface ChatDao {
     fun getChatPagingSource(roomId: Long): PagingSource<Int, ChatEntity>
 
     // 2. 네트워크에서 가져온 데이터를 로컬 DB에 삽입 (RemoteMediator에서 사용)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(chats: List<ChatEntity>)
 
     // 3. 특정 채팅방의 데이터만 초기화 (새로고침 시 필요할 수 있음)

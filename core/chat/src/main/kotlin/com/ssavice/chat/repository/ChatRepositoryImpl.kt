@@ -1,5 +1,6 @@
 package com.ssavice.chat.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -9,10 +10,11 @@ import com.ssavice.chat.ChatRemoteMediator
 import com.ssavice.chat.service.ChatRetrofitService
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomMetadata
-import com.ssavice.network.processResponse
 import com.ssavice.network.processResponseOnResponseData
+import com.ssavice.room.ChatDatabase
 import com.ssavice.room.dao.ChatDao
 import com.ssavice.room.dao.ChatRoomDao
+import com.ssavice.room.dto.ChatEntity
 import com.ssavice.room.dto.ChatRoomEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +29,8 @@ import javax.inject.Inject
 class ChatRepositoryImpl @Inject constructor(
     private val chatApi: ChatRetrofitService,
     private val chatDao: ChatDao,
-    private val chatRoomDao: ChatRoomDao
+    private val chatRoomDao: ChatRoomDao,
+    private val chatDatabase: ChatDatabase
 ) : ChatRepository {
 
     @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
@@ -39,13 +42,16 @@ class ChatRepositoryImpl @Inject constructor(
         Pager(
             config = PagingConfig(
                 pageSize = 20,
-                enablePlaceholders = false
+                initialLoadSize = 40,
+                enablePlaceholders = true,
+                prefetchDistance = 5
             ),
             remoteMediator = ChatRemoteMediator(
                 roomId = roomId,
                 chatApi = chatApi,
                 chatDao = chatDao,
-                initialMessageId = lastMessageId
+                initialMessageId = lastMessageId,
+                chatDatabase = chatDatabase
             ),
             pagingSourceFactory = {
                 chatDao.getChatPagingSource(roomId)
@@ -57,8 +63,21 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun sendChat(roomId: Long, message: String) {
-        TODO("Not yet implemented")
+    override suspend fun sendChat(roomId: Long, message: String) {
+        val lastId = chatDao.getLastChat(roomId)?.id ?: -1
+        Log.d("ChatRepositoryImpl", "lastId: $lastId")
+        chatDao.insertAll(
+            listOf(
+                ChatEntity(
+                    id = lastId + 1,
+                    userId = 1,
+                    roomId = roomId,
+                    type = "TEXT",
+                    content = message,
+                    createdAt = System.currentTimeMillis()
+                )
+            )
+        )
     }
 
     override suspend fun setLastReadMessageId(roomId: Long, messageId: Int) {
@@ -69,14 +88,16 @@ class ChatRepositoryImpl @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             processResponseOnResponseData(chatApi.getRoomList()).onSuccess { result ->
                 result.rooms.forEach { room ->
-                    chatRoomDao.upsertRoomMetadata(ChatRoomEntity(
-                        roomId = room.roomId,
-                        lastReadMessageId = 0,
-                        lastMessageId = room.lastChatId?.toInt()?:0,
-                        roomName = room.name,
-                        lastMessage = room.lastMessage?:"",
-                        lastMessageCreatedAt = room.lastChatId?:0
-                    ))
+                    chatRoomDao.upsertRoomMetadata(
+                        ChatRoomEntity(
+                            roomId = room.roomId,
+                            lastReadMessageId = 0,
+                            lastMessageId = room.lastChatId?.toInt() ?: 0,
+                            roomName = room.name,
+                            lastMessage = room.lastMessage ?: "",
+                            lastMessageCreatedAt = room.lastChatId ?: 0
+                        )
+                    )
                 }
             }
         }

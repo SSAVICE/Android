@@ -21,7 +21,8 @@ data class ChatRoomEntity(
         lastUpdate = lastMessageCreatedAt,
         lastMessage = lastMessage,
         lastMessageId = lastMessageId.toLong(),
-        unreadCount = unreadCount
+        unreadCount = unreadCount,
+        roomId = roomId
     )
 
 }

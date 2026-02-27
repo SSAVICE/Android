@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface ChatRepository {
     fun getChatMessages(roomId: Long): Flow<PagingData<Chat>>
 
-    fun sendChat(roomId: Long, message: String)
+    suspend fun sendChat(roomId: Long, message: String)
 
     suspend fun setLastReadMessageId(roomId: Long, messageId: Int)
 

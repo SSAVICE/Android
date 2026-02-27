@@ -1,5 +1,6 @@
 package com.ssavice.chat
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -18,7 +19,8 @@ class ChatRemoteMediator(
     private val roomId: Long,
     private val initialMessageId: Int?,
     private val chatApi: ChatRetrofitService, // Retrofit 서비스
-    private val chatDao: ChatDao
+    private val chatDao: ChatDao,
+    private val chatDatabase: ChatDatabase
 ) : RemoteMediator<Int, ChatEntity>() {
 
     override suspend fun load(
@@ -27,23 +29,24 @@ class ChatRemoteMediator(
     ): MediatorResult {
         return try {
             // 1. 페이징 지점 파악 (현재 어느 위치까지 로드했는지)
+            Log.d("ChatRemoteMediator", "Getting data from backend, loadType: ${loadType.name}, size: ${state.config.pageSize}")
             val lastId: Int
             val cursorDirection: ChatCursorDirection
             when (loadType) {
                 LoadType.PREPEND -> {
                     val firstItem = state.firstItemOrNull() ?: return MediatorResult.Success(
-                        endOfPaginationReached = true
-                    ) // 위쪽(과거)은 나중에 구현
-                    cursorDirection = ChatCursorDirection.BEFORE
-                    lastId = firstItem.id
-                }
-
-                LoadType.APPEND -> { // 아래쪽(더 오래된 데이터)으로 스크롤 시
-                    val lastItem = state.lastItemOrNull() ?: return MediatorResult.Success(
                         endOfPaginationReached = false
                     )
                     cursorDirection = ChatCursorDirection.AFTER
-                    lastId = lastItem.id // 마지막 채팅 ID를 기준으로 다음 페이지 요청
+                    lastId = firstItem.id
+                }
+
+                LoadType.APPEND -> {
+                    val lastItem = state.lastItemOrNull() ?: return MediatorResult.Success(
+                        endOfPaginationReached = false
+                    )
+                    cursorDirection = ChatCursorDirection.BEFORE
+                    lastId = lastItem.id
                 }
 
                 else -> {
@@ -51,6 +54,7 @@ class ChatRemoteMediator(
                     cursorDirection = if (initialMessageId != null) ChatCursorDirection.AFTER else ChatCursorDirection.LATEST
                 }
             }
+            Log.d("ChatRemoteMediator", "cursor: $lastId, direction: ${cursorDirection.value}, size: ${state.config.pageSize}")
 
             // 2. 네트워크 호출
             val response = processResponseOnResponseData(
@@ -65,10 +69,16 @@ class ChatRemoteMediator(
             response.fold(
                 onSuccess = { data ->
                     // 3. DB 작업 (트랜잭션)
-                    chatDao.insertAll(data)
-                    MediatorResult.Success(endOfPaginationReached = data.isEmpty())
+                    chatDatabase.withTransaction {
+                        chatDao.insertAll(data)
+                    }
+                    Log.d("ChatRemoteMediator", "data insertion Success. count: ${data.size}")
+
+                    MediatorResult.Success(endOfPaginationReached = data.isEmpty() && loadType != LoadType.REFRESH)
+
                 },
                 onFailure = {
+                    Log.d("ChatRemoteMediator", "data insertion Failed")
                     MediatorResult.Error(it)
                 }
             )

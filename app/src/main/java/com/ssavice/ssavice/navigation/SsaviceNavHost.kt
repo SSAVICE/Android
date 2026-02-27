@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.ssavice.chat.navigation.chattingRoom
+import com.ssavice.chat.navigation.navigateToChattingRoom
 import com.ssavice.edit_profile.navigation.editProfileScreen
 import com.ssavice.edit_profile.navigation.navigateToEditProfile
 import com.ssavice.login.navigation.LoginRoute
@@ -67,6 +69,9 @@ fun SsaviceNavHost(
             onServiceSummaryClick = {
                 navController.navigateToMyService(searchFilter = it)
             },
+            onChattingRoomClick = {
+                navController.navigateToChattingRoom(roomId = it)
+            }
         )
 
         loginScreen(
@@ -194,6 +199,12 @@ fun SsaviceNavHost(
 
         sellerReviewsScreen(
             onBackClick = {
+                navController.navigateUp()
+            },
+        )
+
+        chattingRoom(
+            onBack = {
                 navController.navigateUp()
             },
         )

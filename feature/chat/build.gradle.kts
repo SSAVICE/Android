@@ -9,4 +9,6 @@ android {
 
 dependencies {
     implementation(projects.core.data)
+    implementation(projects.core.chat)
+    api(libs.androidx.paging.compose)
 }

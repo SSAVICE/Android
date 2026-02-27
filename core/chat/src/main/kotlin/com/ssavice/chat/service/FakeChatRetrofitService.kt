@@ -1,5 +1,6 @@
 package com.ssavice.chat.service
 
+import android.util.Log
 import androidx.compose.ui.util.fastCoerceAtLeast
 import com.ssavice.chat.model.network.GetRoomListDTO
 import com.ssavice.chat.model.network.RoomDTO
@@ -14,6 +15,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
         roomId: Long,
         size: Int
     ): Response<List<ChatEntity>> {
+        Log.d("ChatRetrofitService", "getChatList")
         val ids: List<Long> = when (direction) {
             "BEFORE" -> {
                 ((cursor - size).fastCoerceAtLeast(0) until cursor).toList()
@@ -24,7 +26,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
             }
 
             else -> {
-                (0L until size).toList()
+                (lastId-size+1 .. lastId).toList()
             }
         }
         val data = ids.map {
@@ -43,6 +45,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
     }
 
     override suspend fun getRoomList(): Response<GetRoomListDTO> {
+        Log.d("ChatRetrofitService", "getRoomList")
         return Response.success(
             GetRoomListDTO(
                 (0..10).map { id ->
