@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.ssavice.chat.ChatRemoteMediator
+import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.chat.service.ChatRetrofitService
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomMetadata
@@ -107,4 +108,7 @@ class ChatRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getRoomInfo(roomId: Long): Result<GetRoomInfoDTO> =
+        processResponseOnResponseData(chatApi.getRoomInfo(roomId))
 }

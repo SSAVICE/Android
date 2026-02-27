@@ -19,11 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ssavice.model.chat.Chat
-import kotlin.math.max
 
 @SuppressLint("FrequentlyChangingValue")
 @Composable
@@ -33,6 +33,7 @@ fun ChatRoute(
 ) {
     val chatMessages: LazyPagingItems<Chat> = viewModel.pagingState.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
+    val roomState by viewModel.roomInfoState.collectAsStateWithLifecycle()
 
     val top by remember {
         derivedStateOf {
@@ -40,15 +41,21 @@ fun ChatRoute(
         }
     }
 
-    LaunchedEffect( chatMessages.itemCount) {
+    LaunchedEffect(chatMessages.itemCount) {
 
         if (chatMessages.itemCount > 0) {
             if (top) {
                 listState.animateScrollToItem(0)
             }
-            chatMessages.peek(0)?.let{
+            chatMessages.peek(0)?.let {
                 viewModel.updateLastRead(it.messageId.toInt())
             }
+        }
+    }
+
+    LaunchedEffect(roomState.loadState) {
+        if (roomState.loadState == ChattingRoomLoadState.Initial) {
+            viewModel.loadChattingRoomInfo()
         }
     }
 
@@ -70,7 +77,7 @@ fun ChatRoute(
             ) { index ->
                 val message = chatMessages[index]
                 if (message != null) {
-                    ChatMessageItem(message)
+                    ChatMessageItem(message, roomState)
                 }
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
             }
@@ -79,12 +86,22 @@ fun ChatRoute(
 }
 
 @Composable
-fun ChatMessageItem(chat: Chat) {
+fun ChatMessageItem(chat: Chat, roomInfo: ChattingRoomUiState) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 10.dp)
     ) {
-        Text(text = chat.senderId.toString(), fontWeight = FontWeight.Bold)
+        val userName: String
+        val userThumbnail: String
+        if (roomInfo.loadState == ChattingRoomLoadState.Success) {
+            userName = roomInfo.userInfo[chat.senderId]?.name ?: ""
+            userThumbnail = roomInfo.userInfo[chat.senderId]?.thumbnail ?: ""
+        } else {
+            userName = ""
+            userThumbnail = ""
+        }
+        Text(text = userName, fontWeight = FontWeight.Bold)
         Text(text = chat.content)
     }
 }

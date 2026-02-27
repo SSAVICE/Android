@@ -2,13 +2,15 @@ package com.ssavice.chat.service
 
 import android.util.Log
 import androidx.compose.ui.util.fastCoerceAtLeast
+import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.chat.model.network.GetRoomListDTO
 import com.ssavice.chat.model.network.RoomDTO
+import com.ssavice.chat.model.network.RoomParticipantDTO
 import com.ssavice.room.dto.ChatEntity
 import retrofit2.Response
 
 class FakeChatRetrofitService : ChatRetrofitService {
-    val lastId = 400L
+    val lastId = 500L
     override suspend fun getChatList(
         cursor: Long,
         direction: String,
@@ -58,6 +60,28 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         type = "DM",
                     )
                 }
+            )
+        )
+    }
+
+    override suspend fun getRoomInfo(roomId: Long): Response<GetRoomInfoDTO> {
+        return Response.success(
+            GetRoomInfoDTO(
+                roomId = roomId,
+                name = "room 1",
+                roomType = "DM",
+                serviceId = 1,
+                participants = listOf(
+                    RoomParticipantDTO(
+                        name = "User 1",
+                        userId = 1,
+                        thumbnail = ""
+                    ), RoomParticipantDTO(
+                        name = "User 2",
+                        userId = 2,
+                        thumbnail = ""
+                    )
+                )
             )
         )
     }

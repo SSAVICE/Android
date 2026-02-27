@@ -1,5 +1,6 @@
 package com.ssavice.chat.service
 
+import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.chat.model.network.GetRoomListDTO
 import com.ssavice.room.dto.ChatEntity
 import retrofit2.Response
@@ -17,4 +18,9 @@ interface ChatRetrofitService {
 
     @GET("/chat/room")
     suspend fun getRoomList(): Response<GetRoomListDTO>
+
+    @GET("/chat/room/info")
+    suspend fun getRoomInfo(
+        @Query("roomId") roomId: Long
+    ): Response<GetRoomInfoDTO>
 }
