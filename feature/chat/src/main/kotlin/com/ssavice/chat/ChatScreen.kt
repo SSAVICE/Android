@@ -40,6 +40,18 @@ fun ChatRoute(
         }
     }
 
+    LaunchedEffect( chatMessages.itemCount) {
+
+        if (chatMessages.itemCount > 0) {
+            if (top) {
+                listState.animateScrollToItem(0)
+            }
+            chatMessages.peek(0)?.let{
+                viewModel.updateLastRead(it.messageId.toInt())
+            }
+        }
+    }
+
     Column(modifier = modifier.fillMaxSize()) {
         Row(
 
@@ -62,21 +74,6 @@ fun ChatRoute(
                 }
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
             }
-        }
-
-        // 3. 읽음 처리 로직 (이전 대화에서 논의한 방식)
-        LaunchedEffect( chatMessages.itemCount) {
-            val lastItemIndex = chatMessages.itemSnapshotList.lastOrNull()?.messageId?:0
-            val firstItemIndex = chatMessages.itemSnapshotList.firstOrNull()?.messageId?:0
-            val higher = max(lastItemIndex, firstItemIndex)
-
-            if (chatMessages.itemCount > 0) {
-                if (top) {
-                    listState.animateScrollToItem(0)
-                }
-            }
-
-           viewModel.updateLastRead(higher.toInt())
         }
     }
 }

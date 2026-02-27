@@ -8,7 +8,7 @@ import com.ssavice.room.dto.ChatEntity
 import retrofit2.Response
 
 class FakeChatRetrofitService : ChatRetrofitService {
-    val lastId = 300L
+    val lastId = 400L
     override suspend fun getChatList(
         cursor: Long,
         direction: String,
@@ -26,7 +26,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
             }
 
             else -> {
-                (lastId-size+1 .. lastId).toList()
+                (lastId - size + 1..lastId).toList()
             }
         }
         val data = ids.map {
@@ -53,7 +53,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         roomId = id.toLong(),
                         name = "room $id",
                         lastMessage = "last text ($id)",
-                        lastChatId = 300,
+                        lastChatId = lastId,
                         serviceId = 1,
                         type = "DM",
                     )
