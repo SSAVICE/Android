@@ -9,7 +9,7 @@ data class GetRoomListDTO(
 
 @Serializable
 data class RoomDTO(
-    val roomId: Long,
+    val roomId: String,
     val name: String,
     val serviceId: Long,
     val type: String,

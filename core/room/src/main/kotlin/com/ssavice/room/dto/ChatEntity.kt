@@ -8,7 +8,7 @@ import com.ssavice.model.chat.Chat
 data class ChatEntity(
     val id: Int,
     val userId: Long,
-    val roomId: Long,
+    val roomId: String,
     val type: String,
     val content: String,
     val createdAt: Long,

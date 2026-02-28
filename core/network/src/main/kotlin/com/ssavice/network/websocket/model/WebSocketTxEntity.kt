@@ -10,11 +10,16 @@ sealed interface WebSocketTxEntity {
         val type: String,
         val receiverId: Long,
         val messageType: String,
-        val roomType: String
-    ): WebSocketTxEntity
+    ) : WebSocketTxEntity
 
     data class SendRead(
         val roomId: Long,
         val lastMessageId: Long
-    ): WebSocketTxEntity
+    ) : WebSocketTxEntity
+
+    data class NewDM(
+        val receiverId: Long,
+        val content: String,
+        val type: String,
+    ) : WebSocketTxEntity
 }

@@ -1,4 +1,4 @@
-package com.ssavice.chat.model.enum
+package com.ssavice.model.enums
 
 enum class RoomType(
     val value: String,

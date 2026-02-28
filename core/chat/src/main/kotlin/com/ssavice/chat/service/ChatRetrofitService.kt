@@ -12,7 +12,7 @@ interface ChatRetrofitService {
     suspend fun getChatList(
         @Query("cursor") cursor: Long,
         @Query("direction") direction: String,
-        @Query("roomId") roomId: Long,
+        @Query("roomId") roomId: String,
         @Query("size") size: Int,
     ): Response<List<ChatEntity>>
 
@@ -21,6 +21,6 @@ interface ChatRetrofitService {
 
     @GET("/chat/room/info")
     suspend fun getRoomInfo(
-        @Query("roomId") roomId: Long,
+        @Query("roomId") roomId: String,
     ): Response<GetRoomInfoDTO>
 }

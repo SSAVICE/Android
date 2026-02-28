@@ -16,7 +16,7 @@ import com.ssavice.room.dto.ChatEntity
 
 @OptIn(ExperimentalPagingApi::class)
 class ChatRemoteMediator(
-    private val roomId: Long,
+    private val roomId: String,
     private val initialMessageId: Int?,
     private val chatApi: ChatRetrofitService, // Retrofit 서비스
     private val chatDao: ChatDao,

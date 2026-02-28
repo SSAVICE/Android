@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetRoomInfoDTO(
-    val roomId: Long,
+    val roomId: String,
     val name: String,
     val roomType: String,
     val serviceId: Long,

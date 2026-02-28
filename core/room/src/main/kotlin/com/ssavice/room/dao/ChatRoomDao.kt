@@ -14,7 +14,7 @@ interface ChatRoomDao {
     suspend fun insertRoomMetadata(room: ChatRoomEntity): Long
 
     @Query("SELECT * FROM chat_rooms WHERE roomId = :roomId")
-    suspend fun getRoomMetadata(roomId: Long): ChatRoomEntity?
+    suspend fun getRoomMetadata(roomId: String): ChatRoomEntity?
 
     @Query("SELECT * FROM chat_rooms")
     fun getAllRoomsFlow(): Flow<List<ChatRoomEntity>>
@@ -22,7 +22,7 @@ interface ChatRoomDao {
     // 내가 메시지를 읽었을 때 업데이트
     @Query("UPDATE chat_rooms SET lastReadMessageId = :messageId WHERE roomId = :roomId")
     suspend fun updateLastReadId(
-        roomId: Long,
+        roomId: String,
         messageId: Int,
     )
 
@@ -31,7 +31,7 @@ interface ChatRoomDao {
         "UPDATE chat_rooms SET lastMessageId = :messageId, lastMessage = :lastMessage, lastMessageCreatedAt = :lastMessageCreatedAt WHERE roomId = :roomId",
     )
     suspend fun updateServerLastId(
-        roomId: Long,
+        roomId: String,
         messageId: Int,
         lastMessage: String,
         lastMessageCreatedAt: Long,
@@ -42,7 +42,7 @@ interface ChatRoomDao {
             "WHERE roomId = :roomId AND lastReadMessageId < :messageId",
     )
     suspend fun updateLastReadIdIfGreater(
-        roomId: Long,
+        roomId: String,
         messageId: Int,
     )
 
@@ -60,7 +60,7 @@ interface ChatRoomDao {
     """,
     )
     suspend fun updateRoomLastMessage(
-        roomId: Long,
+        roomId: String,
         lastMessage: String,
         lastMessageId: Int,
         lastMessageCreatedAt: Long,

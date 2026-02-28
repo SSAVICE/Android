@@ -15,7 +15,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
     override suspend fun getChatList(
         cursor: Long,
         direction: String,
-        roomId: Long,
+        roomId: String,
         size: Int,
     ): Response<List<ChatEntity>> {
         Log.d("ChatRetrofitService", "getChatList")
@@ -55,7 +55,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
             GetRoomListDTO(
                 (0..10).map { id ->
                     RoomDTO(
-                        roomId = id.toLong(),
+                        roomId = "room $id",
                         name = "room $id",
                         lastMessage = "last text ($id)",
                         lastChatId = lastId,
@@ -67,7 +67,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
         )
     }
 
-    override suspend fun getRoomInfo(roomId: Long): Response<GetRoomInfoDTO> =
+    override suspend fun getRoomInfo(roomId: String): Response<GetRoomInfoDTO> =
         Response.success(
             GetRoomInfoDTO(
                 roomId = roomId,

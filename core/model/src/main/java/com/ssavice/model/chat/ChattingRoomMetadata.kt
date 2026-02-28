@@ -6,5 +6,5 @@ data class ChattingRoomMetadata(
     val lastMessage: String,
     val lastMessageId: Long,
     val unreadCount: Int,
-    val roomId: Long,
+    val roomId: String,
 )

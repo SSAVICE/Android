@@ -8,19 +8,19 @@ import com.ssavice.room.dto.ChatEntity
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    fun getChatMessages(roomId: Long): Flow<PagingData<Chat>>
+    fun getChatMessages(roomId: String): Flow<PagingData<Chat>>
 
     suspend fun sendChat(
-        roomId: Long,
+        roomId: String,
         message: String,
     )
 
     suspend fun setLastReadMessageId(
-        roomId: Long,
+        roomId: String,
         messageId: Int,
     )
 
     fun getRoomList(): Flow<List<ChattingRoomMetadata>>
 
-    suspend fun getRoomInfo(roomId: Long): Result<GetRoomInfoDTO>
+    suspend fun getRoomInfo(roomId: String): Result<GetRoomInfoDTO>
 }

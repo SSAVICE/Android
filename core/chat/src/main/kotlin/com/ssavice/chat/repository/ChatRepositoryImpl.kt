@@ -36,7 +36,7 @@ class ChatRepositoryImpl
         private val chatDatabase: ChatDatabase,
     ) : ChatRepository {
         @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
-        override fun getChatMessages(roomId: Long): Flow<PagingData<Chat>> =
+        override fun getChatMessages(roomId: String): Flow<PagingData<Chat>> =
             flow {
                 val lastChat = chatDao.getLastChat(roomId)
                 val lastReadChat = chatRoomDao.getRoomMetadata(roomId)?.lastReadMessageId
@@ -69,7 +69,7 @@ class ChatRepositoryImpl
             }
 
         override suspend fun sendChat(
-            roomId: Long,
+            roomId: String,
             message: String,
         ) {
             val lastId = chatDao.getLastChat(roomId)?.id ?: -1
@@ -89,7 +89,7 @@ class ChatRepositoryImpl
         }
 
         override suspend fun setLastReadMessageId(
-            roomId: Long,
+            roomId: String,
             messageId: Int,
         ) {
             chatRoomDao.updateLastReadId(roomId, messageId)
@@ -119,5 +119,5 @@ class ChatRepositoryImpl
             }
         }
 
-        override suspend fun getRoomInfo(roomId: Long): Result<GetRoomInfoDTO> = processResponseOnResponseData(chatApi.getRoomInfo(roomId))
+        override suspend fun getRoomInfo(roomId: String): Result<GetRoomInfoDTO> = processResponseOnResponseData(chatApi.getRoomInfo(roomId))
     }

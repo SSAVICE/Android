@@ -6,7 +6,7 @@ import com.ssavice.model.chat.ChattingRoomMetadata
 
 @Entity(tableName = "chat_rooms")
 data class ChatRoomEntity(
-    @PrimaryKey val roomId: Long,
+    @PrimaryKey val roomId: String,
     val lastReadMessageId: Int,
     val lastMessageId: Int,
     val roomName: String,

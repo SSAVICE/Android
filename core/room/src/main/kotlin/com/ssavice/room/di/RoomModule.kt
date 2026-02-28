@@ -37,9 +37,5 @@ object RoomModule {
 
     @Provides
     @Singleton
-    fun provideChatRemoteKeysDao(database: ChatDatabase): ChatRemoteKeysDao = database.remoteKeysDao()
-
-    @Provides
-    @Singleton
     fun provideChatRoomDao(database: ChatDatabase): ChatRoomDao = database.chatRoomDao()
 }
