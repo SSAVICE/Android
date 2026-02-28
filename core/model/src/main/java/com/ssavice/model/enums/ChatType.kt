@@ -1,7 +1,7 @@
 package com.ssavice.model.enums
 
 enum class ChatType(
-    value: String,
+    val value: String,
 ) {
     TEXT("TEXT"),
     SERVICE("SERVICE"),

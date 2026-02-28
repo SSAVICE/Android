@@ -17,7 +17,7 @@ import com.ssavice.room.dto.ChatEntity
 @OptIn(ExperimentalPagingApi::class)
 class ChatRemoteMediator(
     private val roomId: String,
-    private val initialMessageId: Int?,
+    private val initialMessageId: Long?,
     private val chatApi: ChatRetrofitService, // Retrofit 서비스
     private val chatDao: ChatDao,
     private val chatDatabase: ChatDatabase,
@@ -29,7 +29,7 @@ class ChatRemoteMediator(
         return try {
             // 1. 페이징 지점 파악 (현재 어느 위치까지 로드했는지)
             Log.d("ChatRemoteMediator", "Getting data from backend, loadType: ${loadType.name}, size: ${state.config.pageSize}")
-            val lastId: Int
+            val lastId: Long
             val cursorDirection: ChatCursorDirection
             when (loadType) {
                 LoadType.PREPEND -> {

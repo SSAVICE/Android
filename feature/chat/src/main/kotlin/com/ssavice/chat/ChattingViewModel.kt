@@ -21,7 +21,7 @@ class ChattingViewModel
         private val chatRepository: ChatRepository,
         private val savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
-        private val roomId: Long = savedStateHandle[ChatRouteContract.ROOM_ID] ?: 0
+        private val roomId: String = savedStateHandle[ChatRouteContract.ROOM_ID] ?: ""
 
         val pagingState by lazy {
             chatRepository
@@ -31,7 +31,7 @@ class ChattingViewModel
         }
 
         private val _roomInfoState =
-            MutableStateFlow<ChattingRoomUiState>(
+            MutableStateFlow(
                 ChattingRoomUiState(),
             )
 
@@ -39,7 +39,7 @@ class ChattingViewModel
 
         fun sendChat(message: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                chatRepository.sendChat(roomId, message)
+                chatRepository.sendChat(roomId, message, _roomInfoState.value.roomType)
             }
         }
 

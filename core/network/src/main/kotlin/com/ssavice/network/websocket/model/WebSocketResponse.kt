@@ -1,16 +1,19 @@
 package com.ssavice.network.websocket.model
 
+import com.ssavice.model.enums.RoomType
 import kotlinx.serialization.Serializable
 
 enum class WebSocketMessageType(val value: String) {
-    TEXT("TEXT"), IMAGE("IMAGE"), INFO("INFO"), READ("READ"), UNKNOWN("UNKNOWN")
+    TEXT("TEXT"),
+    IMAGE("IMAGE"),
+    INFO("INFO"),
+    READ("READ"),
+    UNKNOWN("UNKNOWN");
+
+    companion object
 }
 
-enum class RoomType(val value: String) {
-    DM("DM"), GROUP("GROUP")
-}
-
-fun WebSocketMessageType.mapType(value: String): WebSocketMessageType {
+fun WebSocketMessageType.Companion.mapType(value: String): WebSocketMessageType {
     return try {
         WebSocketMessageType.valueOf(value.uppercase())
     } catch (e: IllegalArgumentException) {
@@ -19,12 +22,15 @@ fun WebSocketMessageType.mapType(value: String): WebSocketMessageType {
 }
 
 @Serializable
-data class WebSocketRequest (
+data class WebSocketResponse(
+    val messageId: Long,
     val messageType: String,
-    val roomType: String,
+    val roomType: RoomType,
     val roomId: String,
     val receiver: Long,
+    val sender: Long,
     val message: String,
     val serviceId: Long,
+    val createdAt: String,
     val readMsgId: Long,
 )

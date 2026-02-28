@@ -2,14 +2,30 @@ package com.ssavice.network.websocket.model
 
 import kotlinx.serialization.Serializable
 
+interface WebSocketChatMessage {
+    val roomId: String
+    val messageId: Long
+    val senderId: Long
+    val createdAt: Long
+}
+
 @Serializable
 sealed interface WebSocketRxEntity{
-    data class SendChat(
-        val roomId: Long,
-        val senderId: Long,
+    data class TextChat(
         val content: String,
-        val createdAt: Long,
-        val type: String,
-        val messageId: Long,
-    ): WebSocketRxEntity
+        override val roomId: String,
+        override val senderId: Long,
+        override val createdAt: Long,
+        override val messageId: Long,
+    ): WebSocketRxEntity, WebSocketChatMessage
+
+    data class ServiceInfoChat(
+        val serviceId: Long,
+        override val roomId: String,
+        override val senderId: Long,
+        override val createdAt: Long,
+        override val messageId: Long,
+    ): WebSocketRxEntity, WebSocketChatMessage
+
+    object Ignore: WebSocketRxEntity
 }

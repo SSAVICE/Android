@@ -6,7 +6,7 @@ import com.ssavice.model.chat.Chat
 
 @Entity(tableName = "chat", primaryKeys = ["roomId", "id"])
 data class ChatEntity(
-    val id: Int,
+    val id: Long,
     val userId: Long,
     val roomId: String,
     val type: String,
@@ -15,7 +15,7 @@ data class ChatEntity(
 ) {
     fun toModel(): Chat =
         Chat(
-            messageId = id.toLong(),
+            messageId = id,
             senderId = userId,
             roomId = roomId,
             type = type,

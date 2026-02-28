@@ -1,25 +1,35 @@
 package com.ssavice.network.websocket.model
 
+import com.ssavice.model.enums.RoomType
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface WebSocketTxEntity {
-    data class SendChat(
-        val roomId: Long,
+    data class SendTextChat(
+        val roomId: String,
         val content: String,
-        val type: String,
-        val receiverId: Long,
-        val messageType: String,
+        val roomType: RoomType,
     ) : WebSocketTxEntity
 
     data class SendRead(
-        val roomId: Long,
+        val roomId: String,
+        val roomType: RoomType,
         val lastMessageId: Long
     ) : WebSocketTxEntity
 
-    data class NewDM(
+    data class NewTextDM(
         val receiverId: Long,
         val content: String,
-        val type: String,
+    ) : WebSocketTxEntity
+
+    data class SendServiceInfo(
+        val roomId: String,
+        val serviceId: Long,
+        val roomType: RoomType
+    ) : WebSocketTxEntity
+
+    data class NewServiceInfoDM(
+        val receiverId: Long,
+        val serviceId: Long,
     ) : WebSocketTxEntity
 }

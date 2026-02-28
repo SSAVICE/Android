@@ -3,7 +3,9 @@ package com.ssavice.chat.repository
 import androidx.paging.PagingData
 import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.model.chat.Chat
+import com.ssavice.model.chat.ChattingRoomInfo
 import com.ssavice.model.chat.ChattingRoomMetadata
+import com.ssavice.model.enums.RoomType
 import com.ssavice.room.dto.ChatEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,6 +15,7 @@ interface ChatRepository {
     suspend fun sendChat(
         roomId: String,
         message: String,
+        roomType: RoomType
     )
 
     suspend fun setLastReadMessageId(
@@ -22,5 +25,5 @@ interface ChatRepository {
 
     fun getRoomList(): Flow<List<ChattingRoomMetadata>>
 
-    suspend fun getRoomInfo(roomId: String): Result<GetRoomInfoDTO>
+    suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo>
 }

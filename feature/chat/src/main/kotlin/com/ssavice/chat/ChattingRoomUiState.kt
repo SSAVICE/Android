@@ -1,9 +1,11 @@
 package com.ssavice.chat
 
+import com.ssavice.model.enums.RoomType
+
 data class ChattingRoomUiState(
     val userInfo: Map<Long, UserInfo> = emptyMap(),
     val roomName: String = "",
-    val roomType: String = "DM",
+    val roomType: RoomType = RoomType.DM,
     val loadState: ChattingRoomLoadState = ChattingRoomLoadState.Initial,
 )
 

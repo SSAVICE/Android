@@ -2,6 +2,7 @@ package com.ssavice.network.websocket
 
 import android.util.Log
 import com.ssavice.core.network.BuildConfig
+import com.ssavice.network.websocket.model.WebSocketResponse
 import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.network.websocket.model.WebSocketTxEntity
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 class ChatWebSocketManager @Inject constructor(
     private val okHttpClient: OkHttpClient,
+    private val webSocketDtoMapper: WebSocketMapper,
     private val json: Json
 ) {
     private var webSocket: WebSocket? = null
@@ -30,7 +32,8 @@ class ChatWebSocketManager @Inject constructor(
         webSocket = okHttpClient.newWebSocket(request, object: WebSocketListener() {
             override fun onMessage(webSocket: WebSocket, text: String) {
                 try {
-                    val entity = json.decodeFromString<WebSocketRxEntity>(text)
+                    val dto = json.decodeFromString<WebSocketResponse>(text)
+                    val entity = webSocketDtoMapper.mapWebSocketResponse(dto)
                     _events.tryEmit(entity)
                 } catch (e: Exception) {
                     Log.e("ChatWebSocketManager", "Failed to parse websocket message: $text", e)
@@ -45,7 +48,8 @@ class ChatWebSocketManager @Inject constructor(
 
     fun sendMessage(data: WebSocketTxEntity) {
         try {
-            val json = json.encodeToJsonElement(data)
+            val dto = webSocketDtoMapper.mapWebSocketRequest(data)
+            val json = json.encodeToJsonElement(dto)
             webSocket?.send(json.toString())
         } catch(e: Exception) {
             Log.e("ChatWebSocketManager", "Failed to send websocket message: $data")

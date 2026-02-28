@@ -8,6 +8,7 @@ import com.ssavice.chat.model.network.RoomDTO
 import com.ssavice.chat.model.network.RoomParticipantDTO
 import com.ssavice.room.dto.ChatEntity
 import retrofit2.Response
+import java.time.LocalDateTime
 
 class FakeChatRetrofitService : ChatRetrofitService {
     val lastId = 500L
@@ -36,7 +37,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
         val data =
             ids.map {
                 ChatEntity(
-                    id = it.toInt(),
+                    id = it,
                     userId = 1,
                     roomId = roomId,
                     type = "TEXT",
@@ -61,6 +62,9 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         lastChatId = lastId,
                         serviceId = 1,
                         type = "DM",
+                        lastMessageAt = LocalDateTime.now().toString(),
+                        unReadMsgCnt = 0,
+                        memberCnt = 2,
                     )
                 },
             ),

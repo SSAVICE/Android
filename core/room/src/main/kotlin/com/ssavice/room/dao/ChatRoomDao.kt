@@ -19,24 +19,6 @@ interface ChatRoomDao {
     @Query("SELECT * FROM chat_rooms")
     fun getAllRoomsFlow(): Flow<List<ChatRoomEntity>>
 
-    // 내가 메시지를 읽었을 때 업데이트
-    @Query("UPDATE chat_rooms SET lastReadMessageId = :messageId WHERE roomId = :roomId")
-    suspend fun updateLastReadId(
-        roomId: String,
-        messageId: Int,
-    )
-
-    // 서버에서 새 메시지가 왔을 때 업데이트
-    @Query(
-        "UPDATE chat_rooms SET lastMessageId = :messageId, lastMessage = :lastMessage, lastMessageCreatedAt = :lastMessageCreatedAt WHERE roomId = :roomId",
-    )
-    suspend fun updateServerLastId(
-        roomId: String,
-        messageId: Int,
-        lastMessage: String,
-        lastMessageCreatedAt: Long,
-    )
-
     @Query(
         "UPDATE chat_rooms SET lastReadMessageId = :messageId " +
             "WHERE roomId = :roomId AND lastReadMessageId < :messageId",
@@ -49,24 +31,22 @@ interface ChatRoomDao {
     @Query("DELETE FROM chat_rooms")
     suspend fun removeAll()
 
-    // 특정 필드만 업데이트 (중복 시 사용)
     @Query(
         """
         UPDATE chat_rooms 
         SET lastMessage = :lastMessage, 
             lastMessageId = :lastMessageId, 
             lastMessageCreatedAt = :lastMessageCreatedAt 
-        WHERE roomId = :roomId
+        WHERE roomId = :roomId AND lastReadMessageId < :lastMessageId
     """,
     )
     suspend fun updateRoomLastMessage(
         roomId: String,
         lastMessage: String,
-        lastMessageId: Int,
+        lastMessageId: Long,
         lastMessageCreatedAt: Long,
     )
 
-    // Upsert 로직 (위의 두 기능을 합친 편리한 함수)
     @Transaction
     suspend fun upsertRoomMetadata(room: ChatRoomEntity) {
         val result = insertRoomMetadata(room)

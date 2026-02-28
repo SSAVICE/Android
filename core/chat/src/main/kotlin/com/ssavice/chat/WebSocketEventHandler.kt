@@ -1,6 +1,9 @@
 package com.ssavice.chat
 
+import android.util.Log
+import com.ssavice.model.enums.ChatType
 import com.ssavice.network.websocket.ChatWebSocketManager
+import com.ssavice.network.websocket.model.WebSocketChatMessage
 import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.room.dao.ChatDao
 import com.ssavice.room.dao.ChatRoomDao
@@ -20,36 +23,58 @@ class WebSocketEventHandler @Inject constructor(
     fun startObserving() {
         CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
             webSocketManager.events.collect { event ->
-
+                handleEvent(event)
             }
         }
     }
 
     private suspend fun handleEvent(event: WebSocketRxEntity) {
         when(event) {
-            is WebSocketRxEntity.SendChat -> {
-
+            is WebSocketRxEntity.TextChat -> {
+                getMessage(event)
             }
+            is WebSocketRxEntity.ServiceInfoChat -> {
+                getMessage(event)
+            }
+            else -> { }
         }
     }
 
-    private suspend fun getMessage(event: WebSocketRxEntity.SendChat) {
+    private suspend fun getMessage(event: WebSocketChatMessage) {
+        val content: String
+        val type: String
+        when (event) {
+            is WebSocketRxEntity.TextChat -> {
+                content = event.content
+                type = ChatType.TEXT.value
+            }
+
+            is WebSocketRxEntity.ServiceInfoChat -> {
+                content = event.serviceId.toString()
+                type = ChatType.SERVICE.value
+            }
+
+            else -> {
+                Log.e("WebSocketEventHandler", "Unknown message type: $event")
+                return
+            }
+        }
         chatDao.insertIfContinuous(
             ChatEntity(
-                id = event.messageId.toInt(),
+                id = event.messageId,
                 userId = event.senderId,
                 roomId = event.roomId,
-                content = event.content,
+                content = content,
                 createdAt = event.createdAt,
-                type = event.type
+                type = type
             )
         )
 
         chatRoomDao.updateRoomLastMessage(
             roomId = event.roomId,
-            lastMessage = event.content,
-            lastMessageAt = event.createdAt,
-            lastMessageType = event.type
+            lastMessage = content,
+            lastMessageCreatedAt = event.createdAt,
+            lastMessageId = event.messageId
         )
     }
 }
