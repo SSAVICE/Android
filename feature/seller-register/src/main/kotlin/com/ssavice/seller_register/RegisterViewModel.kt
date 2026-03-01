@@ -36,6 +36,7 @@ class RegisterViewModel
                             registrationStep = 1,
                             sellerName = "",
                             businessOwnerName = "",
+                            businessName = "",
                             businessRegistrationNumber = "",
                             tel = "",
                             detailAddress = "",
@@ -131,6 +132,7 @@ class RegisterViewModel
                         name = _uiState.value.form.businessOwnerName,
                         openDate = Date.parse(_uiState.value.form.companyOpenDate),
                         businessNumber = _uiState.value.form.businessRegistrationNumber,
+                        businessName = _uiState.value.form.businessName,
                     ).fold(
                         onSuccess = { token ->
                             businessVerificationRepository.setToken(
@@ -353,6 +355,8 @@ class RegisterViewModel
                             businessOwnerName = _uiState.value.form.businessOwnerName,
                             accountNumber = _uiState.value.form.accountNumber,
                             accountDepositor = _uiState.value.form.accountDepositor,
+                            businessName = _uiState.value.form.businessName,
+                            companyOpenDate = Date.parse(_uiState.value.form.companyOpenDate),
                             region =
                                 RegionInfo(
                                     address = _uiState.value.form.address.address,
@@ -392,8 +396,8 @@ class RegisterViewModel
         }
 
         fun onFirstPageFormChanged(
-            sellerName: String,
             businessOwnerName: String,
+            businessName: String,
             businessRegistrationNumber: String,
             tel: String,
         ) {
@@ -401,7 +405,7 @@ class RegisterViewModel
                 _uiState.value.copy(
                     form =
                         _uiState.value.form.copy(
-                            sellerName = sellerName,
+                            businessName = businessName,
                             businessOwnerName = businessOwnerName,
                             businessRegistrationNumber = businessRegistrationNumber,
                             tel = tel,
@@ -410,6 +414,7 @@ class RegisterViewModel
         }
 
         fun onSecondPageFormChanged(
+            sellerName: String,
             address: String,
             description: String,
         ) {
@@ -417,6 +422,7 @@ class RegisterViewModel
                 _uiState.value.copy(
                     form =
                         _uiState.value.form.copy(
+                            sellerName = sellerName,
                             detailAddress = address,
                             description = description,
                         ),

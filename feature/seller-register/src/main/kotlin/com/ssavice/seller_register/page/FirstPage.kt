@@ -36,10 +36,12 @@ fun FirstPage(
     modifier: Modifier = Modifier,
     businessRegistrationNumberState: TextFieldState,
     businessOwnerState: TextFieldState,
+    businessNameState: TextFieldState,
     companyOpenDate: TimeStamp,
     companyValidationState: ValidationState,
     businessRegistrationNumberError: Boolean,
     businessOwnerError: Boolean,
+    businessNameError: Boolean,
     tokenRemainingTime: Long,
     onCompanyOpenDateChanged: (TimeStamp) -> Unit,
     onValidateButtonClicked: () -> Unit,
@@ -61,6 +63,15 @@ fun FirstPage(
             enabled = needValidation,
             isError = businessOwnerError,
             errorMessage = if (businessOwnerError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
+        )
+        SsaviceInputField(
+            modifier = Modifier.fillMaxWidth(),
+            state = businessNameState,
+            placeholderText = RegisterScreenDefaults.BUSINESS_NAME_PLACEHOLDER,
+            labelText = RegisterScreenDefaults.BUSINESS_NAME_TEXT,
+            enabled = needValidation,
+            isError = businessNameError,
+            errorMessage = if (businessNameError) RegisterScreenDefaults.FIELD_ERROR_MESSAGE else null,
         )
         SsaviceInputField(
             modifier = Modifier.fillMaxWidth(),

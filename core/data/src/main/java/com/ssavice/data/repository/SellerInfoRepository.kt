@@ -32,6 +32,7 @@ interface SellerInfoRepository {
         name: String,
         openDate: Date,
         businessNumber: String,
+        businessName: String = "",
     ): Result<CompanyVerifyToken>
 
     suspend fun getSellerAddress(): Result<RegionDetail>

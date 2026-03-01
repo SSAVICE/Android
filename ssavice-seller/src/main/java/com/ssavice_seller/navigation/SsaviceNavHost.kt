@@ -32,7 +32,7 @@ fun SsaviceNavHost(
     ) {
         registerScreen(
             onSubmit = {
-                navController.navigateToHome {
+                navController.navigateToMain {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
             },

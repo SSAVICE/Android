@@ -7,6 +7,7 @@ data class ValidateBusinessDTO(
     val name: String,
     val startDate: String,
     val businessNumber: String,
+    val businessName: String,
 )
 
 @Serializable

@@ -154,6 +154,7 @@ internal class DemoSellerInfoRepository
             name: String,
             openDate: Date,
             businessNumber: String,
+            businessName: String,
         ): Result<CompanyVerifyToken> = Result.success(CompanyVerifyToken("token", System.currentTimeMillis()))
 
         override suspend fun getSellerAddress(): Result<RegionDetail> {

@@ -30,6 +30,9 @@ class ErrorInterceptor
                     ErrorCode.FORBIDDEN -> {
                         authEventManager.emit(AuthEvent.Forbidden)
                     }
+                    ErrorCode.COMPANY_NOT_FOUND -> {
+                        authEventManager.emit(AuthEvent.Initial)
+                    }
 
                     else -> {}
                 }
