@@ -1,12 +1,19 @@
 package com.ssavice.chat.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.RemoteMediator.MediatorResult
 import androidx.paging.map
+import androidx.room.withTransaction
 import com.ssavice.chat.ChatRemoteMediator
+import com.ssavice.chat.WebSocketEventHandler
+import com.ssavice.chat.model.enum.ChatCursorDirection
 import com.ssavice.chat.service.ChatRetrofitService
+import com.ssavice.common.DomainFormatter
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomInfo
 import com.ssavice.model.chat.ChattingRoomMetadata
@@ -18,6 +25,7 @@ import com.ssavice.network.websocket.model.WebSocketTxEntity
 import com.ssavice.room.ChatDatabase
 import com.ssavice.room.dao.ChatDao
 import com.ssavice.room.dao.ChatRoomDao
+import com.ssavice.room.dto.ChatEntity
 import com.ssavice.room.dto.ChatRoomEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +44,13 @@ constructor(
     private val chatDao: ChatDao,
     private val chatRoomDao: ChatRoomDao,
     private val chatDatabase: ChatDatabase,
-    private val webSocketManager: ChatWebSocketManager
+    private val webSocketManager: ChatWebSocketManager,
+    private val eventHandler: WebSocketEventHandler
 ) : ChatRepository {
+    init {
+        eventHandler.startObserving()
+    }
+
     @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
     override fun getChatMessages(roomId: String): Flow<PagingData<Chat>> =
         flow {
@@ -56,7 +69,7 @@ constructor(
                 remoteMediator =
                     ChatRemoteMediator(
                         roomId = roomId,
-                        chatApi = chatApi,
+                        chatRepository = this,
                         chatDao = chatDao,
                         initialMessageId = lastMessageId,
                         chatDatabase = chatDatabase,
@@ -85,11 +98,42 @@ constructor(
         )
     }
 
+    override suspend fun startChat(opponentId: Long, message: String) {
+        webSocketManager.sendMessage(
+            WebSocketTxEntity.NewTextDM(
+                receiverId = opponentId,
+                content = message,
+            )
+        )
+    }
+
     override suspend fun setLastReadMessageId(
         roomId: String,
         messageId: Int,
     ) {
         chatRoomDao.updateLastReadIdIfGreater(roomId, messageId)
+    }
+
+    private fun mapLastMessageAtToMilliseconds(lastMessageAt: List<Int>): Long {
+        return try {
+            // 리스트의 각 인덱스: 0:연, 1:월, 2:일, 3:시, 4:분, 5:초
+            if (lastMessageAt.size >= 6) {
+                java.time.LocalDateTime.of(
+                    lastMessageAt[0], // Year
+                    lastMessageAt[1], // Month
+                    lastMessageAt[2], // Day
+                    lastMessageAt[3], // Hour
+                    lastMessageAt[4], // Minute
+                    lastMessageAt[5]  // Second
+                ).toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
+            } else {
+                // 데이터가 불완전할 경우 처리 (예: 현재 시간 반환)
+                System.currentTimeMillis()
+            }
+        } catch (e: Exception) {
+            // 파싱 에러 시 기본값
+            0L
+        }
     }
 
     override fun getRoomList(): Flow<List<ChattingRoomMetadata>> {
@@ -103,8 +147,9 @@ constructor(
                             lastMessageId = room.lastChatId ?: 0,
                             roomName = room.name,
                             lastMessage = room.lastMessage ?: "",
-                            lastMessageCreatedAt = room.lastChatId ?: 0,
-                            roomType = RoomType.getValue(room.type)
+                            lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
+                            roomType = RoomType.getValue(room.type),
+                            serviceId = room.serviceId ?: -1
                         ),
                     )
                 }
@@ -121,4 +166,34 @@ constructor(
         processResponseOnResponseData(chatApi.getRoomInfo(roomId)).map {
             it.toModel()
         }
+
+    override suspend fun getMessages(
+        roomId: String,
+        cursor: Long,
+        size: Int,
+        direction: ChatCursorDirection
+    ): Result<List<ChatEntity>> {
+        val response =
+            processResponseOnResponseData(
+                chatApi.getChatList(
+                    roomId = roomId,
+                    cursor = cursor,
+                    size = size,
+                    direction = direction.value,
+                ),
+            )
+
+        return response.map { data ->
+            data.messages.map {
+                ChatEntity(
+                    id = it.messageId,
+                    userId = it.sender,
+                    roomId = it.roomId,
+                    type = it.messageType,
+                    content = it.message,
+                    createdAt = mapLastMessageAtToMilliseconds(it.createdAt)
+                )
+            }
+        }
+    }
 }

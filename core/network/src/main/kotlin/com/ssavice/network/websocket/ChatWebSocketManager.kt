@@ -24,21 +24,24 @@ class ChatWebSocketManager @Inject constructor(
     private var webSocket: WebSocket? = null
     private val _events = MutableSharedFlow<WebSocketRxEntity>(extraBufferCapacity = 64)
     val events = _events.asSharedFlow()
+    private var intentionalClose = false
 
     fun connect(): ChatWebSocketManager {
-        if(webSocket != null) {
+        if (webSocket != null) {
             Log.w(TAG, "Client already running")
             return this
         }
 
+        intentionalClose = false
         val request = Request.Builder()
             .url(BuildConfig.WEBSOCKET_URL + "/ws/chat")
             .build()
 
-        webSocket = okHttpClient.newWebSocket(request, object: WebSocketListener() {
+        webSocket = okHttpClient.newWebSocket(request, object : WebSocketListener() {
             override fun onMessage(webSocket: WebSocket, text: String) {
                 try {
                     val dto = json.decodeFromString<WebSocketResponse>(text)
+                    Log.d("ChatWebSocketManager", "Got websocket message: $dto.")
                     val entity = webSocketDtoMapper.mapWebSocketResponse(dto)
                     _events.tryEmit(entity)
                 } catch (e: Exception) {
@@ -46,8 +49,17 @@ class ChatWebSocketManager @Inject constructor(
                 }
             }
 
-            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
                 Log.e("ChatWebSocketManager", "Error connecting to websocket", t)
+                webSocket = null
+                if (!intentionalClose) {
+                    reconnect()
+                }
+            }
+
+            override fun onClosed(ws: WebSocket, code: Int, reason: String) {
+                webSocket = null
+                Log.d("ChatWebSocketManager", "Websocket closed: $code, $reason")
             }
         })
 
@@ -58,15 +70,27 @@ class ChatWebSocketManager @Inject constructor(
         try {
             val dto = webSocketDtoMapper.mapWebSocketRequest(data)
             val json = json.encodeToJsonElement(dto)
+            Log.d("ChatWebSocketManager", "Sending websocket message: $json.")
             webSocket?.send(json.toString())
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Log.e("ChatWebSocketManager", "Failed to send websocket message: $data")
         }
     }
 
     fun close() {
+        intentionalClose = true
         webSocket?.close(1000, "Normal Closure")
         webSocket = null
+    }
+
+    private fun reconnect() {
+        println("Attempting to reconnect in 3 seconds...")
+        // 3초 후 재연결 시도 (실제 앱에서는 딜레이를 늘리는 방식 권장)
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            if (webSocket == null) {
+                connect()
+            }
+        }, 3000)
     }
 
     companion object {
@@ -93,8 +117,7 @@ class ChatWebSocketManager @Inject constructor(
             }
 
             fun build(): ChatWebSocketManager {
-                val manager = ChatWebSocketManager(okHttpClient, webSocketDtoMapper, json)
-                manager.connect()
+                val manager = ChatWebSocketManager(okHttpClient, webSocketDtoMapper, json).connect()
                 return manager
             }
         }

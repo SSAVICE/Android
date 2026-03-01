@@ -14,6 +14,10 @@ sealed interface InfoState {
     data class Error(
         val message: Throwable,
     ) : InfoState
+
+    data class StartChat(
+        val id: Long,
+    ) : InfoState
 }
 
 data class ServiceDetailUiState(

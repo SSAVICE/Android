@@ -3,7 +3,6 @@ package com.ssavice.chat.di
 import com.ssavice.chat.repository.ChatRepository
 import com.ssavice.chat.repository.ChatRepositoryImpl
 import com.ssavice.chat.service.ChatRetrofitService
-import com.ssavice.chat.service.FakeChatRetrofitService
 import com.ssavice.network.di.RetrofitModule
 import dagger.Binds
 import dagger.Module
@@ -19,6 +18,7 @@ abstract class ChatModule {
     @Binds
     @Singleton
     abstract fun bindChatRepository(chatRepositoryImpl: ChatRepositoryImpl): ChatRepository
+
 }
 
 @Module

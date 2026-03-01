@@ -32,5 +32,5 @@ data class WebSocketResponse(
     val message: String,
     val serviceId: Long,
     val createdAt: String,
-    val readMsgId: Long,
+    val readMsgId: Long?,
 )

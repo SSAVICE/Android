@@ -42,7 +42,7 @@ class WebSocketMapper {
                     roomType = request.roomType.value,
                     roomId = request.roomId,
                     receiver = 0,
-                    message = "",
+                    message = request.content,
                     serviceId = 0,
                     readMsgId = 0
                 )

@@ -31,7 +31,7 @@ fun ChatRoute(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
 ) {
-    val chatMessages: LazyPagingItems<Chat> = viewModel.pagingState.collectAsLazyPagingItems()
+    val chatMessages: (LazyPagingItems<Chat>)? = viewModel.pagingState?.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
     val roomState by viewModel.roomInfoState.collectAsStateWithLifecycle()
 
@@ -41,6 +41,10 @@ fun ChatRoute(
         }
     }
 
+    if(chatMessages == null) {
+        Text("1:1 채팅")
+        return
+    }
     LaunchedEffect(chatMessages.itemCount) {
         if (chatMessages.itemCount > 0) {
             if (top) {
@@ -93,7 +97,7 @@ fun ChatMessageItem(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
     ) {
-        val userName: String = roomInfo.userInfo[chat.senderId]?.name ?: ""
+        val userName: String = roomInfo.userInfo[chat.senderId]?.name ?: chat.senderId.toString()
         val userThumbnail: String = roomInfo.userInfo[chat.senderId]?.thumbnail ?: ""
         Text(text = userName, fontWeight = FontWeight.Bold)
         Text(text = chat.content)

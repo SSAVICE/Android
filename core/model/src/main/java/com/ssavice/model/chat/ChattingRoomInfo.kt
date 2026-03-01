@@ -7,7 +7,6 @@ data class ChattingRoomInfo(
     val name: String,
     val roomType: RoomType,
     val serviceId: Long,
-    val participants: List<ChattingRoomParticipant>,
 )
 
 data class ChattingRoomParticipant(

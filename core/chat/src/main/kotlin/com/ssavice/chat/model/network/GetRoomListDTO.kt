@@ -15,13 +15,13 @@ data class RoomDTO(
     val name: String,
     @SerialName("roomType")
     val type: String,
-    val serviceId: Long,
+    val serviceId: Long?,
     @SerialName("lastMsgId")
     val lastChatId: Long?,
     @SerialName("lastMsg")
     val lastMessage: String?,
     @SerialName("lastMsgAt")
-    val lastMessageAt: String,
+    val lastMessageAt: List<Int>,
     val unReadMsgCnt: Int,
     val memberCnt: Int,
 )

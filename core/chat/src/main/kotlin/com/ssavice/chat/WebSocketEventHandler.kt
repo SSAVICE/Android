@@ -18,7 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class WebSocketEventHandler @Inject constructor(
     private val webSocketManager: ChatWebSocketManager,
-    private val chatDao: ChatDao, private val chatRoomDao: ChatRoomDao,
+    private val chatDao: ChatDao,
+    private val chatRoomDao: ChatRoomDao,
 ) {
     fun startObserving() {
         CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
@@ -41,6 +42,7 @@ class WebSocketEventHandler @Inject constructor(
     }
 
     private suspend fun getMessage(event: WebSocketChatMessage) {
+        Log.d("WebSocketEventHandler", "Handling message: $event")
         val content: String
         val type: String
         when (event) {

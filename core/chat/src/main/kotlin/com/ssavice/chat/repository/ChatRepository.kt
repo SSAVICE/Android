@@ -1,6 +1,7 @@
 package com.ssavice.chat.repository
 
 import androidx.paging.PagingData
+import com.ssavice.chat.model.enum.ChatCursorDirection
 import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomInfo
@@ -18,6 +19,11 @@ interface ChatRepository {
         roomType: RoomType
     )
 
+    suspend fun startChat(
+        opponentId: Long,
+        message: String
+    )
+
     suspend fun setLastReadMessageId(
         roomId: String,
         messageId: Int,
@@ -26,4 +32,11 @@ interface ChatRepository {
     fun getRoomList(): Flow<List<ChattingRoomMetadata>>
 
     suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo>
+
+    suspend fun getMessages(
+        roomId:String,
+        cursor:Long,
+        size:Int,
+        direction: ChatCursorDirection
+    ): Result<List<ChatEntity>>
 }

@@ -23,11 +23,25 @@ data class ChattingRoomRoute(
     val roomId: String,
 )
 
+@Serializable
+data class OnePerOneChatRoute(
+    val userId: Long,
+)
+
 fun NavController.navigateToChattingRoom(
     navOptions: NavOptionsBuilder.() -> Unit = {},
     roomId: String,
 ) {
     navigate(ChattingRoomRoute(roomId)) {
+        navOptions()
+    }
+}
+
+fun NavController.navigateToOnePerOneChattingRoom(
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+    userId: Long,
+) {
+    navigate(OnePerOneChatRoute(userId)) {
         navOptions()
     }
 }
@@ -72,8 +86,49 @@ fun NavGraphBuilder.chattingRoom(onBack: () -> Unit = {}) {
             )
         }
     }
+
+    composable<OnePerOneChatRoute>(
+        popEnterTransition = null,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                animationSpec = tween(),
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(),
+            )
+        },
+    ) { innerPadding ->
+        val viewModel: ChattingViewModel = hiltViewModel()
+
+        Scaffold(
+            topBar = {
+                SsavicePopUpTopBar(
+                    title = "1:1 채팅",
+                    onBackClicked = onBack,
+                )
+            },
+            bottomBar = {
+                ChatBottomBar(
+                    viewModel = viewModel,
+                )
+            },
+        ) { innerPadding ->
+            ChatRoute(
+                modifier =
+                    Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(innerPadding),
+                viewModel = viewModel,
+            )
+        }
+    }
 }
 
 object ChatRouteContract {
     const val ROOM_ID = "roomId"
+    const val USER_ID = "userId"
 }

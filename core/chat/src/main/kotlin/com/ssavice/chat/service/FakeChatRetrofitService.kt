@@ -2,8 +2,10 @@ package com.ssavice.chat.service
 
 import android.util.Log
 import androidx.compose.ui.util.fastCoerceAtLeast
+import com.ssavice.chat.model.network.GetChatMessageDTO
 import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.chat.model.network.GetRoomListDTO
+import com.ssavice.chat.model.network.MessageDTO
 import com.ssavice.chat.model.network.RoomDTO
 import com.ssavice.chat.model.network.RoomParticipantDTO
 import com.ssavice.room.dto.ChatEntity
@@ -18,7 +20,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
         direction: String,
         roomId: String,
         size: Int,
-    ): Response<List<ChatEntity>> {
+    ): Response<GetChatMessageDTO> {
         Log.d("ChatRetrofitService", "getChatList")
         val ids: List<Long> =
             when (direction) {
@@ -35,16 +37,19 @@ class FakeChatRetrofitService : ChatRetrofitService {
                 }
             }
         val data =
-            ids.map {
-                ChatEntity(
-                    id = it,
-                    userId = 1,
-                    roomId = roomId,
-                    type = "TEXT",
-                    content = "Hello, Chatting ($it)!",
-                    createdAt = System.currentTimeMillis() - 86400000L * 10 + it * 60000L,
-                )
-            }
+            GetChatMessageDTO(
+                ids.map {
+                    MessageDTO(
+                        messageId = it,
+                        sender = 1,
+                        roomId = roomId,
+                        messageType = "TEXT",
+                        message = "Hello, Chatting ($it)!",
+                        createdAt = listOf(),
+                        roomType = "DM",
+                    )
+                }
+            )
         return Response.success(
             data,
         )
@@ -62,7 +67,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         lastChatId = lastId,
                         serviceId = 1,
                         type = "DM",
-                        lastMessageAt = LocalDateTime.now().toString(),
+                        lastMessageAt = listOf(2026, 3, 2, 6, 40, 15),
                         unReadMsgCnt = 0,
                         memberCnt = 2,
                     )
@@ -78,19 +83,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                 name = "room 1",
                 roomType = "DM",
                 serviceId = 1,
-                participants =
-                    listOf(
-                        RoomParticipantDTO(
-                            name = "User 1",
-                            userId = 1,
-                            thumbnail = "",
-                        ),
-                        RoomParticipantDTO(
-                            name = "User 2",
-                            userId = 2,
-                            thumbnail = "",
-                        ),
-                    ),
+                members = mapOf()
             ),
         )
 }

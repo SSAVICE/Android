@@ -7,7 +7,9 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.ssavice.chat.model.enum.ChatCursorDirection
+import com.ssavice.chat.repository.ChatRepository
 import com.ssavice.chat.service.ChatRetrofitService
+import com.ssavice.common.DomainFormatter
 import com.ssavice.network.processResponseOnResponseData
 import com.ssavice.room.ChatDatabase
 import com.ssavice.room.dao.ChatDao
@@ -18,7 +20,7 @@ import com.ssavice.room.dto.ChatEntity
 class ChatRemoteMediator(
     private val roomId: String,
     private val initialMessageId: Long?,
-    private val chatApi: ChatRetrofitService, // Retrofit 서비스
+    private val chatRepository: ChatRepository,
     private val chatDao: ChatDao,
     private val chatDatabase: ChatDatabase,
 ) : RemoteMediator<Int, ChatEntity>() {
@@ -51,7 +53,7 @@ class ChatRemoteMediator(
                 }
 
                 else -> {
-                    lastId = initialMessageId ?: 0
+                    lastId = initialMessageId ?: 1
                     cursorDirection = if (initialMessageId != null) ChatCursorDirection.AFTER else ChatCursorDirection.LATEST
                 }
             }
@@ -59,18 +61,15 @@ class ChatRemoteMediator(
 
             // 2. 네트워크 호출
             val response =
-                processResponseOnResponseData(
-                    chatApi.getChatList(
-                        roomId = roomId,
-                        cursor = lastId.toLong(),
-                        size = state.config.pageSize,
-                        direction = cursorDirection.value,
-                    ),
+                chatRepository.getMessages(
+                    roomId = roomId,
+                    cursor = lastId,
+                    size = state.config.pageSize,
+                    direction = cursorDirection,
                 )
 
             response.fold(
                 onSuccess = { data ->
-                    // 3. DB 작업 (트랜잭션)
                     chatDatabase.withTransaction {
                         chatDao.insertAll(data)
                     }
@@ -84,6 +83,7 @@ class ChatRemoteMediator(
                 },
             )
         } catch (e: Exception) {
+            Log.d("ChatRemoteMediator", "failed", e)
             MediatorResult.Error(e)
         }
     }

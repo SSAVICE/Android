@@ -71,6 +71,9 @@ fun ServiceDetailScreen(
             delay(Constant.ANIMATION_DELAY)
             viewModel.onInit()
         }
+        if(uiState.serviceInfoState is InfoState.StartChat) {
+            onChatClick((uiState.serviceInfoState as InfoState.StartChat).id)
+        }
     }
 
     LaunchedEffect(sellerIdState) {
@@ -87,6 +90,7 @@ fun ServiceDetailScreen(
         onLikeClick = viewModel::onLikeButtonClick,
         onSellerClick = onSellerClick,
         onMoreReviewClick = onMoreReviewClick,
+        onChatToUserClick = viewModel::onChatToUserButtonClick
     )
 }
 
@@ -98,6 +102,7 @@ fun ServiceDetailScreen(
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
     onMoreReviewClick: (Long) -> Unit = {},
+    onChatToUserClick: (Long) -> Unit = {}
 ) {
     val enabled =
         uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
@@ -146,6 +151,7 @@ fun ServiceDetailScreen(
                     lastNotice = account.lastNotice,
                     noticeDate = account.noticeDate,
                     participants = account.participants,
+                    onChatClick = {onChatToUserClick(it.userId)}
                 )
             } else {
                 Loading(400.dp)

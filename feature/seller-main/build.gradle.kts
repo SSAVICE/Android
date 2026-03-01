@@ -10,6 +10,6 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.feature.sellerHome)
-    implementation(projects.feature.sellerChatting)
+    implementation(projects.feature.userChatting)
     implementation(projects.feature.sellerMyPage)
 }

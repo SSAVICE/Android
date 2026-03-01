@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssavice.chat.navigation.chattingRoom
 import com.ssavice.chat.navigation.navigateToChattingRoom
+import com.ssavice.chat.navigation.navigateToOnePerOneChattingRoom
 import com.ssavice.edit_profile.navigation.editProfileScreen
 import com.ssavice.edit_profile.navigation.navigateToEditProfile
 import com.ssavice.login.navigation.LoginRoute
@@ -140,6 +141,9 @@ fun SsaviceNavHost(
             },
             onMoreReviewClick = {
                 navController.navigateToSellerReviews(sellerId = it)
+            },
+            onChatClick = {
+                navController.navigateToOnePerOneChattingRoom(userId = it)
             },
         )
 
