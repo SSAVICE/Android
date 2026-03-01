@@ -93,15 +93,8 @@ fun ChatMessageItem(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
     ) {
-        val userName: String
-        val userThumbnail: String
-        if (roomInfo.loadState == ChattingRoomLoadState.Success) {
-            userName = roomInfo.userInfo[chat.senderId]?.name ?: ""
-            userThumbnail = roomInfo.userInfo[chat.senderId]?.thumbnail ?: ""
-        } else {
-            userName = ""
-            userThumbnail = ""
-        }
+        val userName: String = roomInfo.userInfo[chat.senderId]?.name ?: ""
+        val userThumbnail: String = roomInfo.userInfo[chat.senderId]?.thumbnail ?: ""
         Text(text = userName, fontWeight = FontWeight.Bold)
         Text(text = chat.content)
     }

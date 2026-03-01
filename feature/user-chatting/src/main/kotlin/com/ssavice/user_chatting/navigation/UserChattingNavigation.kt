@@ -22,7 +22,7 @@ fun NavController.navigateToChat(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     }
 }
 
-fun NavGraphBuilder.chat(onRoomClick: (id: Long) -> Unit = {}) {
+fun NavGraphBuilder.chat(onRoomClick: (id: String) -> Unit = {}) {
     composable<UserChattingRoute>(
         enterTransition = {
             val fromLeft =

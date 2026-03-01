@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import com.ssavice.room.ChatDatabase
 import com.ssavice.room.dao.ChatDao
-import com.ssavice.room.dao.ChatRemoteKeysDao
 import com.ssavice.room.dao.ChatRoomDao
 import dagger.Module
 import dagger.Provides

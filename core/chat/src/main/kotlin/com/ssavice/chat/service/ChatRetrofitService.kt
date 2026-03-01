@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ChatRetrofitService {
-    @GET("/chat")
+    @GET("/api/chat/messages")
     suspend fun getChatList(
         @Query("cursor") cursor: Long,
         @Query("direction") direction: String,
@@ -16,10 +16,10 @@ interface ChatRetrofitService {
         @Query("size") size: Int,
     ): Response<List<ChatEntity>>
 
-    @GET("/chat/room")
+    @GET("/api/room/list")
     suspend fun getRoomList(): Response<GetRoomListDTO>
 
-    @GET("/chat/room/info")
+    @GET("/api/room")
     suspend fun getRoomInfo(
         @Query("roomId") roomId: String,
     ): Response<GetRoomInfoDTO>

@@ -9,7 +9,7 @@ import com.ssavice.room.dto.ChatRoomEntity
 
 @Database(
     entities = [ChatEntity::class, ChatRoomEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class ChatDatabase : RoomDatabase() {

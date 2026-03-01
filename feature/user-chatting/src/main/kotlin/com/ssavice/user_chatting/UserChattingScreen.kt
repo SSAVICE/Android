@@ -21,7 +21,7 @@ import com.ssavice.model.chat.ChattingRoomMetadata
 fun UserChattingRoute(
     modifier: Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
-    onRoomClick: (id: Long) -> Unit = {},
+    onRoomClick: (id: String) -> Unit = {},
 ) {
     val state by viewModel.chattingRoomState.collectAsStateWithLifecycle()
 
@@ -32,7 +32,7 @@ fun UserChattingRoute(
 fun ChatList(
     modifier: Modifier,
     rooms: List<ChattingRoomMetadata>,
-    onRoomClick: (id: Long) -> Unit = {},
+    onRoomClick: (id: String) -> Unit = {},
 ) {
     LazyColumn(modifier = modifier) {
         items(rooms.size, key = { index -> rooms[index].name }) { index ->
@@ -52,7 +52,7 @@ fun ChatList(
 fun RoomItem(
     modifier: Modifier,
     room: ChattingRoomMetadata,
-    onClick: (id: Long) -> Unit = {},
+    onClick: (id: String) -> Unit = {},
 ) {
     Column(
         modifier =

@@ -20,12 +20,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChattingRoomRoute(
-    val roomId: Long,
+    val roomId: String,
 )
 
 fun NavController.navigateToChattingRoom(
     navOptions: NavOptionsBuilder.() -> Unit = {},
-    roomId: Long,
+    roomId: String,
 ) {
     navigate(ChattingRoomRoute(roomId)) {
         navOptions()

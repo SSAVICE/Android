@@ -25,10 +25,16 @@ class ChatWebSocketManager @Inject constructor(
     private val _events = MutableSharedFlow<WebSocketRxEntity>(extraBufferCapacity = 64)
     val events = _events.asSharedFlow()
 
-    fun connect() {
+    fun connect(): ChatWebSocketManager {
+        if(webSocket != null) {
+            Log.w(TAG, "Client already running")
+            return this
+        }
+
         val request = Request.Builder()
-            .url(BuildConfig.WEBSOCKET_URL)
+            .url(BuildConfig.WEBSOCKET_URL + "/ws/chat")
             .build()
+
         webSocket = okHttpClient.newWebSocket(request, object: WebSocketListener() {
             override fun onMessage(webSocket: WebSocket, text: String) {
                 try {
@@ -41,9 +47,11 @@ class ChatWebSocketManager @Inject constructor(
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                // 에러 처리 로직
+                Log.e("ChatWebSocketManager", "Error connecting to websocket", t)
             }
         })
+
+        return this
     }
 
     fun sendMessage(data: WebSocketTxEntity) {
@@ -59,5 +67,38 @@ class ChatWebSocketManager @Inject constructor(
     fun close() {
         webSocket?.close(1000, "Normal Closure")
         webSocket = null
+    }
+
+    companion object {
+        fun builder(): WebSocketBuilder = WebSocketBuilder()
+
+        class WebSocketBuilder {
+            private lateinit var okHttpClient: OkHttpClient
+            private lateinit var webSocketDtoMapper: WebSocketMapper
+            private lateinit var json: Json
+
+            fun addClient(client: OkHttpClient): WebSocketBuilder {
+                okHttpClient = client
+                return this
+            }
+
+            fun addMapper(mapper: WebSocketMapper): WebSocketBuilder {
+                webSocketDtoMapper = mapper
+                return this
+            }
+
+            fun addJson(json: Json): WebSocketBuilder {
+                this.json = json
+                return this
+            }
+
+            fun build(): ChatWebSocketManager {
+                val manager = ChatWebSocketManager(okHttpClient, webSocketDtoMapper, json)
+                manager.connect()
+                return manager
+            }
+        }
+
+        private const val TAG = "ChatWebSocketManager"
     }
 }

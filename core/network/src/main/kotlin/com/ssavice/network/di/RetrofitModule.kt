@@ -35,6 +35,10 @@ object RetrofitModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
+    annotation class ChatRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
     annotation class ImageRetrofit
 
     @Qualifier
@@ -58,6 +62,17 @@ object RetrofitModule {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
+            .client(okHttpClient)
+            .build()
+
+    @Provides
+    @Singleton
+    @ChatRetrofit
+    fun provideChatRetrofitBuilder(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.WEBSOCKET_URL)
             .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
             .build()
