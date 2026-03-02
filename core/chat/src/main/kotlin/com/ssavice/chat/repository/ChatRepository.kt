@@ -16,13 +16,13 @@ interface ChatRepository {
     suspend fun sendChat(
         roomId: String,
         message: String,
-        roomType: RoomType
+        roomType: RoomType,
     )
 
     suspend fun startChat(
         opponentId: Long,
         serviceId: Long,
-        message: String
+        message: String,
     )
 
     suspend fun setLastReadMessageId(
@@ -35,11 +35,14 @@ interface ChatRepository {
     suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo>
 
     suspend fun getMessages(
-        roomId:String,
-        cursor:Long,
-        size:Int,
-        direction: ChatCursorDirection
+        roomId: String,
+        cursor: Long,
+        size: Int,
+        direction: ChatCursorDirection,
     ): Result<List<ChatEntity>>
 
-    suspend fun readyForAck(serviceId: Long, userId: Long): Flow<Result<String>>
+    suspend fun readyForAck(
+        serviceId: Long,
+        userId: Long,
+    ): Flow<Result<String>>
 }

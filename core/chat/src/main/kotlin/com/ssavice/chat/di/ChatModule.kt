@@ -18,7 +18,6 @@ abstract class ChatModule {
     @Binds
     @Singleton
     abstract fun bindChatRepository(chatRepositoryImpl: ChatRepositoryImpl): ChatRepository
-
 }
 
 @Module

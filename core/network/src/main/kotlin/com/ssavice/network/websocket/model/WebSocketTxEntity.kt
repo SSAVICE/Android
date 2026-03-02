@@ -14,7 +14,7 @@ sealed interface WebSocketTxEntity {
     data class SendRead(
         val roomId: String,
         val roomType: RoomType,
-        val lastMessageId: Long
+        val lastMessageId: Long,
     ) : WebSocketTxEntity
 
     data class NewTextDM(
@@ -25,7 +25,7 @@ sealed interface WebSocketTxEntity {
     data class SendServiceInfo(
         val roomId: String,
         val serviceId: Long,
-        val roomType: RoomType
+        val roomType: RoomType,
     ) : WebSocketTxEntity
 
     data class NewServiceInfoDM(

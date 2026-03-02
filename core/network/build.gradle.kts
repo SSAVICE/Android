@@ -35,7 +35,6 @@ val kakaoRestURL =
 val webSocketURL =
     localProps.map { it.getProperty("WEBSOCKET_URL") }.orElse("ws://example.com")
 
-
 dependencies {
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)

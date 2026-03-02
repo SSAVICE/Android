@@ -16,67 +16,71 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WebSocketEventHandler @Inject constructor(
-    private val webSocketManager: ChatWebSocketManager,
-    private val chatDao: ChatDao,
-    private val chatRoomDao: ChatRoomDao,
-) {
-    fun startObserving() {
-        CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
-            webSocketManager.events.collect { event ->
-                handleEvent(event)
+class WebSocketEventHandler
+    @Inject
+    constructor(
+        private val webSocketManager: ChatWebSocketManager,
+        private val chatDao: ChatDao,
+        private val chatRoomDao: ChatRoomDao,
+    ) {
+        fun startObserving() {
+            CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+                webSocketManager.events.collect { event ->
+                    handleEvent(event)
+                }
             }
         }
-    }
 
-    private suspend fun handleEvent(event: WebSocketRxEntity) {
-        when(event) {
-            is WebSocketRxEntity.TextChat -> {
-                getMessage(event)
-            }
-            is WebSocketRxEntity.ServiceInfoChat -> {
-                getMessage(event)
-            }
-            else -> { }
-        }
-    }
+        private suspend fun handleEvent(event: WebSocketRxEntity) {
+            when (event) {
+                is WebSocketRxEntity.TextChat -> {
+                    getMessage(event)
+                }
 
-    private suspend fun getMessage(event: WebSocketChatMessage) {
-        Log.d("WebSocketEventHandler", "Handling message: $event")
-        val content: String
-        val type: String
-        when (event) {
-            is WebSocketRxEntity.TextChat -> {
-                content = event.content
-                type = ChatType.TEXT.value
-            }
+                is WebSocketRxEntity.ServiceInfoChat -> {
+                    getMessage(event)
+                }
 
-            is WebSocketRxEntity.ServiceInfoChat -> {
-                content = event.serviceId.toString()
-                type = ChatType.SERVICE.value
-            }
-
-            else -> {
-                Log.e("WebSocketEventHandler", "Unknown message type: $event")
-                return
+                else -> { }
             }
         }
-        chatDao.insertIfContinuous(
-            ChatEntity(
-                id = event.messageId,
-                userId = event.senderId,
-                roomId = event.roomId,
-                content = content,
-                createdAt = event.createdAt,
-                type = type
+
+        private suspend fun getMessage(event: WebSocketChatMessage) {
+            Log.d("WebSocketEventHandler", "Handling message: $event")
+            val content: String
+            val type: String
+            when (event) {
+                is WebSocketRxEntity.TextChat -> {
+                    content = event.content
+                    type = ChatType.TEXT.value
+                }
+
+                is WebSocketRxEntity.ServiceInfoChat -> {
+                    content = event.serviceId.toString()
+                    type = ChatType.SERVICE.value
+                }
+
+                else -> {
+                    Log.e("WebSocketEventHandler", "Unknown message type: $event")
+                    return
+                }
+            }
+            chatDao.insertIfContinuous(
+                ChatEntity(
+                    id = event.messageId,
+                    userId = event.senderId,
+                    roomId = event.roomId,
+                    content = content,
+                    createdAt = event.createdAt,
+                    type = type,
+                ),
             )
-        )
 
-        chatRoomDao.updateRoomLastMessage(
-            roomId = event.roomId,
-            lastMessage = content,
-            lastMessageCreatedAt = event.createdAt,
-            lastMessageId = event.messageId
-        )
+            chatRoomDao.updateRoomLastMessage(
+                roomId = event.roomId,
+                lastMessage = content,
+                lastMessageCreatedAt = event.createdAt,
+                lastMessageId = event.messageId,
+            )
+        }
     }
-}

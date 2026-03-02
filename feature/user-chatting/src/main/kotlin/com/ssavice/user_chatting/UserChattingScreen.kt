@@ -39,11 +39,13 @@ fun ChatList(
     onRoomClick: (id: String) -> Unit = {},
 ) {
     val context = LocalContext.current
-    val imageRequestBuilder = remember {
-        ImageRequest.Builder(context)
-            .crossfade(true)
-            .placeholder(android.R.drawable.ic_menu_info_details)
-    }
+    val imageRequestBuilder =
+        remember {
+            ImageRequest
+                .Builder(context)
+                .crossfade(true)
+                .placeholder(android.R.drawable.ic_menu_info_details)
+        }
 
     LazyColumn(modifier = modifier) {
         items(rooms.size, key = { index -> rooms[index].name }) { index ->
@@ -51,7 +53,7 @@ fun ChatList(
                 modifier = Modifier.fillMaxWidth(),
                 room = rooms[index],
                 onClick = onRoomClick,
-                imageRequestBuilder = imageRequestBuilder
+                imageRequestBuilder = imageRequestBuilder,
             )
             if (index < rooms.size - 1) {
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
@@ -65,7 +67,7 @@ fun RoomItem(
     modifier: Modifier,
     room: ChattingRoomItem,
     onClick: (id: String) -> Unit = {},
-    imageRequestBuilder: ImageRequest.Builder
+    imageRequestBuilder: ImageRequest.Builder,
 ) {
     Column(
         modifier =
@@ -78,12 +80,12 @@ fun RoomItem(
     ) {
         ChattingRoomItem(
             title = room.name,
-            lastMessage = room.lastMessage?:"",
+            lastMessage = room.lastMessage ?: "",
             thumbnailUrl = null,
             updatedAt = room.lastUpdate.dateToSimpleString(),
             unreadCount = room.unreadCount,
-            onClick = {onClick(room.roomId)},
-            requestBuilder = imageRequestBuilder
+            onClick = { onClick(room.roomId) },
+            requestBuilder = imageRequestBuilder,
         )
     }
 }

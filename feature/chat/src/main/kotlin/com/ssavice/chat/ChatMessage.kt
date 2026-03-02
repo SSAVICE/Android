@@ -13,14 +13,14 @@ sealed interface ChatMessage {
         val text: String,
         override val userId: Long,
         override val time: DateTime,
-        override val messageId: Long
-    ): ChatMessage
+        override val messageId: Long,
+    ) : ChatMessage
 
     data class ServiceMessage(
         val you: Boolean,
         val serviceId: Long,
         override val userId: Long,
         override val time: DateTime,
-        override val messageId: Long
-    ): ChatMessage
+        override val messageId: Long,
+    ) : ChatMessage
 }

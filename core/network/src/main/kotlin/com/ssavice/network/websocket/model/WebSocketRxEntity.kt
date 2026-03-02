@@ -10,14 +10,15 @@ interface WebSocketChatMessage {
 }
 
 @Serializable
-sealed interface WebSocketRxEntity{
+sealed interface WebSocketRxEntity {
     data class TextChat(
         val content: String,
         override val roomId: String,
         override val senderId: Long,
         override val createdAt: Long,
         override val messageId: Long,
-    ): WebSocketRxEntity, WebSocketChatMessage
+    ) : WebSocketRxEntity,
+        WebSocketChatMessage
 
     data class ServiceInfoChat(
         val serviceId: Long,
@@ -25,7 +26,8 @@ sealed interface WebSocketRxEntity{
         override val senderId: Long,
         override val createdAt: Long,
         override val messageId: Long,
-    ): WebSocketRxEntity, WebSocketChatMessage
+    ) : WebSocketRxEntity,
+        WebSocketChatMessage
 
-    object Ignore: WebSocketRxEntity
+    object Ignore : WebSocketRxEntity
 }

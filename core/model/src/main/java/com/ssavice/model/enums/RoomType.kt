@@ -8,15 +8,15 @@ enum class RoomType(
 ) {
     DM("DM"),
     GROUP("GROUP"),
-    UNKNOWN("");
+    UNKNOWN(""),
+    ;
 
     companion object
 }
 
-fun RoomType.Companion.getValue(value: String): RoomType {
-    return try {
+fun RoomType.Companion.getValue(value: String): RoomType =
+    try {
         RoomType.valueOf(value.uppercase())
-        } catch (e: IllegalArgumentException) {
+    } catch (e: IllegalArgumentException) {
         RoomType.UNKNOWN
     }
-}

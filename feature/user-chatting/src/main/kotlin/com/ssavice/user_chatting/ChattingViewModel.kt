@@ -20,7 +20,8 @@ class ChattingViewModel
             chatRepository
                 .getRoomList()
                 .map {
-                    it.sortedByDescending { room -> room.lastUpdate }
+                    it
+                        .sortedByDescending { room -> room.lastUpdate }
                         .map { room ->
                             ChattingRoomItem(
                                 name = room.name,
@@ -29,7 +30,7 @@ class ChattingViewModel
                                 lastUpdate = DateTime.fromTimeStamp(room.lastUpdate),
                                 unreadCount = room.unreadCount,
                                 roomId = room.roomId,
-                                lastMessage = room.lastMessage
+                                lastMessage = room.lastMessage,
                             )
                         }
                 }.stateIn(

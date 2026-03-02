@@ -26,7 +26,7 @@ data class ChattingRoomRoute(
 @Serializable
 data class OnePerOneChatRoute(
     val userId: Long,
-    val serviceId: Long? = null
+    val serviceId: Long? = null,
 )
 
 fun NavController.navigateToChattingRoom(
@@ -41,7 +41,7 @@ fun NavController.navigateToChattingRoom(
 fun NavController.navigateToOnePerOneChattingRoom(
     navOptions: NavOptionsBuilder.() -> Unit = {},
     userId: Long,
-    serviceId: Long
+    serviceId: Long,
 ) {
     navigate(OnePerOneChatRoute(userId, serviceId)) {
         navOptions()

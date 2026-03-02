@@ -12,7 +12,7 @@ data class ChattingRoomUiState(
     val chattingRoomState: ChattingRoomState,
     val sendingService: Boolean = false,
     val waitingForRedirection: Boolean = false,
-    val serviceIdToSend: Long = -1
+    val serviceIdToSend: Long = -1,
 )
 
 sealed interface ChattingRoomInfoLoadState {
@@ -24,11 +24,11 @@ sealed interface ChattingRoomInfoLoadState {
 }
 
 sealed interface ChattingRoomState {
-    object Pending: ChattingRoomState
+    object Pending : ChattingRoomState
 
     object Initial : ChattingRoomState
 
-    object Ready: ChattingRoomState
+    object Ready : ChattingRoomState
 }
 
 data class UserInfo(

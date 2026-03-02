@@ -14,7 +14,7 @@ data class GetRoomInfoDTO(
     val name: String,
     val roomType: String,
     val serviceId: Long?,
-    val members: Map<String, Long>
+    val members: Map<String, Long>,
 ) {
     fun toModel(): ChattingRoomInfo =
         ChattingRoomInfo(
@@ -30,11 +30,11 @@ data class RoomParticipantDTO(
     val name: String,
     val userId: Long,
     val thumbnail: String?,
-){
+) {
     fun toModel(): ChattingRoomParticipant =
         ChattingRoomParticipant(
             name = name,
             userId = userId,
-            thumbnail = thumbnail?:""
+            thumbnail = thumbnail ?: "",
         )
 }

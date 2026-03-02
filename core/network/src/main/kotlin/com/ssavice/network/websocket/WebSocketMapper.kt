@@ -11,32 +11,36 @@ import com.ssavice.network.websocket.model.mapType
 
 class WebSocketMapper {
     fun mapWebSocketResponse(response: WebSocketResponse): WebSocketRxEntity {
-       return when(WebSocketMessageType.mapType(response.messageType)) {
+        return when (WebSocketMessageType.mapType(response.messageType)) {
             WebSocketMessageType.TEXT -> {
-                 WebSocketRxEntity.TextChat(
+                WebSocketRxEntity.TextChat(
                     roomId = response.roomId,
                     senderId = response.sender,
                     content = response.message,
                     createdAt = DomainFormatter.formatTimeToMilliseconds(response.createdAt),
-                    messageId = response.messageId
+                    messageId = response.messageId,
                 )
             }
+
             WebSocketMessageType.INFO -> {
                 WebSocketRxEntity.ServiceInfoChat(
                     roomId = response.roomId,
                     senderId = response.sender,
                     serviceId = response.serviceId,
                     createdAt = DomainFormatter.formatTimeToMilliseconds(response.createdAt),
-                    messageId = response.messageId
+                    messageId = response.messageId,
                 )
             }
-           else -> return WebSocketRxEntity.Ignore
+
+            else -> {
+                return WebSocketRxEntity.Ignore
+            }
         }
     }
 
-    fun mapWebSocketRequest(request: WebSocketTxEntity): WebSocketRequest{
-        return when(request){
-            is WebSocketTxEntity.SendTextChat ->
+    fun mapWebSocketRequest(request: WebSocketTxEntity): WebSocketRequest =
+        when (request) {
+            is WebSocketTxEntity.SendTextChat -> {
                 WebSocketRequest(
                     messageType = WebSocketMessageType.TEXT.value,
                     roomType = request.roomType.value,
@@ -44,11 +48,11 @@ class WebSocketMapper {
                     receiver = 0,
                     message = request.content,
                     serviceId = 0,
-                    readMsgId = 0
+                    readMsgId = 0,
                 )
+            }
 
-
-            is WebSocketTxEntity.SendRead ->
+            is WebSocketTxEntity.SendRead -> {
                 WebSocketRequest(
                     messageType = WebSocketMessageType.READ.value,
                     roomType = request.roomType.value,
@@ -56,11 +60,11 @@ class WebSocketMapper {
                     receiver = 0,
                     message = "",
                     serviceId = 0,
-                    readMsgId = request.lastMessageId
+                    readMsgId = request.lastMessageId,
                 )
+            }
 
-
-            is WebSocketTxEntity.SendServiceInfo ->
+            is WebSocketTxEntity.SendServiceInfo -> {
                 WebSocketRequest(
                     messageType = WebSocketMessageType.INFO.value,
                     roomType = request.roomType.value,
@@ -68,10 +72,11 @@ class WebSocketMapper {
                     receiver = 0,
                     message = "",
                     serviceId = request.serviceId,
-                    readMsgId = 0
+                    readMsgId = 0,
                 )
+            }
 
-            is WebSocketTxEntity.NewTextDM ->
+            is WebSocketTxEntity.NewTextDM -> {
                 WebSocketRequest(
                     messageType = WebSocketMessageType.TEXT.value,
                     roomType = RoomType.DM.value,
@@ -79,9 +84,11 @@ class WebSocketMapper {
                     receiver = request.receiverId,
                     message = request.content,
                     serviceId = 0,
-                    readMsgId = 0
+                    readMsgId = 0,
                 )
-            is WebSocketTxEntity.NewServiceInfoDM ->
+            }
+
+            is WebSocketTxEntity.NewServiceInfoDM -> {
                 WebSocketRequest(
                     messageType = WebSocketMessageType.INFO.value,
                     roomType = RoomType.DM.value,
@@ -89,8 +96,8 @@ class WebSocketMapper {
                     receiver = request.receiverId,
                     message = "",
                     serviceId = request.serviceId,
-                    readMsgId = 0
+                    readMsgId = 0,
                 )
+            }
         }
-    }
 }

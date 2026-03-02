@@ -26,6 +26,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject lateinit var authEventManager: AuthEventManager
+
     @Inject lateinit var webSocketManager: ChatWebSocketManager
 
     override fun onCreate(savedInstanceState: Bundle?) {

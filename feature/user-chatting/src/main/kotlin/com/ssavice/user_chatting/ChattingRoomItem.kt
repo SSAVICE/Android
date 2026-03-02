@@ -9,5 +9,5 @@ data class ChattingRoomItem(
     val lastUpdate: DateTime,
     val unreadCount: Int,
     val roomId: String,
-    val lastMessage: String? = null
+    val lastMessage: String? = null,
 )

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetChatMessageDTO(
-    val messages: List<MessageDTO>
+    val messages: List<MessageDTO>,
 )
 
 @Serializable
@@ -15,5 +15,5 @@ data class MessageDTO(
     val messageType: String,
     val roomId: String,
     val roomType: String,
-    val sender: Long
+    val sender: Long,
 )

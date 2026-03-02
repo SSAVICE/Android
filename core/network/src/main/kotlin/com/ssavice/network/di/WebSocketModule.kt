@@ -15,15 +15,12 @@ import javax.inject.Singleton
 object WebSocketModule {
     @Provides
     @Singleton
-    fun provideChatWebSocketManager(
-        okHttpClient: OkHttpClient
-    ): ChatWebSocketManager =
+    fun provideChatWebSocketManager(okHttpClient: OkHttpClient): ChatWebSocketManager =
         ChatWebSocketManager
             .builder()
             .addJson(Json { ignoreUnknownKeys = true })
             .addClient(okHttpClient)
             .addMapper(
-                WebSocketMapper()
-            )
-            .build()
+                WebSocketMapper(),
+            ).build()
 }

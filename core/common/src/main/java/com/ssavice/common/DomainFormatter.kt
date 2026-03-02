@@ -10,8 +10,8 @@ object DomainFormatter {
 
     fun formatPrice(price: Long): String = "₩%,d".format(price)
 
-    fun formatTimeToMilliseconds(time: String): Long {
-        return try {
+    fun formatTimeToMilliseconds(time: String): Long =
+        try {
             // ISO_OFFSET_DATE_TIME은 "2024-03-27T10:15:30+09:00" 형식을 지원합니다.
             // 서버 응답 형식이 "2024-03-27T10:15:30" (Z가 없는 Local)일 경우 LocalDateTime을 써야 할 수도 있습니다.
             OffsetDateTime.parse(time).toInstant().toEpochMilli()
@@ -20,5 +20,4 @@ object DomainFormatter {
         } catch (e: Exception) {
             0
         }
-    }
 }

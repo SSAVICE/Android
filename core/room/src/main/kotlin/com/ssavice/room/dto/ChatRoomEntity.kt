@@ -15,7 +15,7 @@ data class ChatRoomEntity(
     val lastMessage: String,
     val lastMessageCreatedAt: Long,
     val roomType: RoomType,
-    val serviceId: Long
+    val serviceId: Long,
 ) {
     val unreadCount: Long
         get() = (lastMessageId - lastReadMessageId).coerceAtLeast(0L)
@@ -28,6 +28,6 @@ data class ChatRoomEntity(
             lastMessageId = lastMessageId,
             unreadCount = unreadCount.toInt(),
             roomId = roomId,
-            roomType = roomType
+            roomType = roomType,
         )
 }

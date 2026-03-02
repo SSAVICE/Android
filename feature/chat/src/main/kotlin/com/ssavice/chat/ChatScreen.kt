@@ -56,12 +56,13 @@ fun ChatRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    val imageRequestBuilder = remember {
-        ImageRequest
-            .Builder(context)
-            .decoderFactory(SvgDecoder.Factory())
-            .crossfade(true)
-    }
+    val imageRequestBuilder =
+        remember {
+            ImageRequest
+                .Builder(context)
+                .decoderFactory(SvgDecoder.Factory())
+                .crossfade(true)
+        }
 
     Box(modifier = modifier.fillMaxSize()) {
         if (uiState.sendingService) {
@@ -69,11 +70,12 @@ fun ChatRoute(
             SendServicePreviewItem(
                 serviceInfo = uiState.serviceInfo[uiState.serviceIdToSend],
                 imageRequestBuilder = imageRequestBuilder,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .align(
-                        Alignment.BottomCenter
-                    )
+                modifier =
+                    Modifier
+                        .padding(10.dp)
+                        .align(
+                            Alignment.BottomCenter,
+                        ),
             )
         }
 
@@ -82,7 +84,7 @@ fun ChatRoute(
                 modifier = Modifier,
                 viewModel = viewModel,
                 uiState = uiState,
-                imageRequestBuilder = imageRequestBuilder
+                imageRequestBuilder = imageRequestBuilder,
             )
         }
     }
@@ -93,7 +95,7 @@ fun ChattingScreen(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel,
     uiState: ChattingRoomUiState,
-    imageRequestBuilder: ImageRequest.Builder
+    imageRequestBuilder: ImageRequest.Builder,
 ) {
     val chatMessages: (LazyPagingItems<ChatMessage>) =
         viewModel.pagingState.collectAsLazyPagingItems()
@@ -138,23 +140,25 @@ fun ChattingScreen(
 
                 if (message == null) return@items
 
-                val full = if (before == null) true else {
-                    (message.userId != before.userId)
-                            || message.time != before.time
-                }
+                val full =
+                    if (before == null) {
+                        true
+                    } else {
+                        (message.userId != before.userId) ||
+                            message.time != before.time
+                    }
 
                 when (val t = message) {
                     is ChatMessage.ServiceMessage -> {
                         val service = uiState.serviceInfo[t.serviceId]
 
-                        if(service == null) {
+                        if (service == null) {
                             ChatServiceShimmerBubble(
                                 direction = if (t.you) ChatBubbleDirection.SENT else ChatBubbleDirection.RECEIVED,
                                 timestamp = t.time.timeToSimpleString(),
-                                isEnd = true
+                                isEnd = true,
                             )
-                        }
-                        else {
+                        } else {
                             ChatServiceBubble(
                                 serviceTitle = service.name,
                                 sellerName = service.seller,
@@ -177,13 +181,12 @@ fun ChattingScreen(
                             profile = "",
                             isYou = t.you,
                             end = t.first,
-                            imageRequestBuilder = imageRequestBuilder
+                            imageRequestBuilder = imageRequestBuilder,
                         )
                     }
 
                     else -> {}
                 }
-
             }
         }
     }
@@ -193,50 +196,59 @@ fun ChattingScreen(
 fun SendServicePreviewItem(
     serviceInfo: ServiceInfo?,
     imageRequestBuilder: ImageRequest.Builder,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val isDataLoading = serviceInfo == null
     val brush = shimmerBrush(showShimmer = isDataLoading)
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(
-                RoundedCornerShape(
-                    topStart = 16.dp,
-                    topEnd = 16.dp
-                )
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                    ),
+                ),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f),
     ) {
         Column(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text("다음 상품에 대해 물어보세요!")
             Spacer(Modifier.height(5.dp))
             Row(
                 modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // 1. 상품 썸네일 영역
                 if (isDataLoading) {
                     Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                            .background(brush)
+                        modifier =
+                            Modifier
+                                .size(48.dp)
+                                .clip(
+                                    androidx.compose.foundation.shape
+                                        .RoundedCornerShape(8.dp),
+                                ).background(brush),
                     )
                 } else {
                     AsyncImage(
                         model = imageRequestBuilder.data(serviceInfo.thumbnail).build(),
                         contentDescription = null,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
+                        modifier =
+                            Modifier
+                                .size(48.dp)
+                                .clip(
+                                    androidx.compose.foundation.shape
+                                        .RoundedCornerShape(8.dp),
+                                ),
+                        contentScale = ContentScale.Crop,
                     )
                 }
 
@@ -244,29 +256,32 @@ fun SendServicePreviewItem(
 
                 // 2. 정보 영역 (판매자, 제목, 가격)
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     if (isDataLoading) {
                         // Shimmering Placeholders
                         Box(
-                            modifier = Modifier
-                                .width(60.dp)
-                                .height(12.dp)
-                                .background(brush)
+                            modifier =
+                                Modifier
+                                    .width(60.dp)
+                                    .height(12.dp)
+                                    .background(brush),
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth(0.7f)
-                                .height(16.dp)
-                                .background(brush)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth(0.7f)
+                                    .height(16.dp)
+                                    .background(brush),
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Box(
-                            modifier = Modifier
-                                .width(80.dp)
-                                .height(14.dp)
-                                .background(brush)
+                            modifier =
+                                Modifier
+                                    .width(80.dp)
+                                    .height(14.dp)
+                                    .background(brush),
                         )
                     } else {
                         serviceInfo?.let { info ->
@@ -275,19 +290,19 @@ fun SendServicePreviewItem(
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
                             )
                             Text(
                                 text = info.name,
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
                             )
                             Text(
                                 text = "%,d원".format(info.discountPrice),
                                 style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
@@ -306,7 +321,7 @@ fun ChatMessageItem(
     profile: String,
     end: Boolean,
     isYou: Boolean,
-    imageRequestBuilder: ImageRequest.Builder
+    imageRequestBuilder: ImageRequest.Builder,
 ) {
     ChatBubble(
         message = text,
@@ -316,6 +331,6 @@ fun ChatMessageItem(
         type = if (simple) ChatBubbleType.SIMPLE else ChatBubbleType.ALL,
         direction = if (!isYou) ChatBubbleDirection.RECEIVED else ChatBubbleDirection.SENT,
         isEnd = end,
-        imageRequest = imageRequestBuilder
+        imageRequest = imageRequestBuilder,
     )
 }

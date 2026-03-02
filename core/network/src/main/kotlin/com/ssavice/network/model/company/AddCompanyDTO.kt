@@ -36,9 +36,12 @@ class AddCompanyDTO(
                 depositor = sellerInfo.accountDepositor,
                 region = RegionPostDTO.Companion.fromModel(sellerInfo.region),
                 businessName = sellerInfo.businessName,
-                startDate = "%04d%02d%02d".format(sellerInfo.companyOpenDate.year,
-                    sellerInfo.companyOpenDate.month,
-                    sellerInfo.companyOpenDate.day),
+                startDate =
+                    "%04d%02d%02d".format(
+                        sellerInfo.companyOpenDate.year,
+                        sellerInfo.companyOpenDate.month,
+                        sellerInfo.companyOpenDate.day,
+                    ),
             )
     }
 }

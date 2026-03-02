@@ -23,7 +23,7 @@ data class DateTime(
     val month: Int,
     val day: Int,
     val hour: Int,
-    val minute: Int
+    val minute: Int,
 ) {
     fun toTimeStamp(): TimeStamp {
         val calendar =
@@ -79,21 +79,24 @@ data class DateTime(
                 month = ldt.monthValue,
                 day = ldt.dayOfMonth,
                 hour = ldt.hour,
-                minute = ldt.minute
+                minute = ldt.minute,
             )
         }
 
         @Suppress("ConstantLocale")
         val chatTimeFormatter: java.time.format.DateTimeFormatter =
-            java.time.format.DateTimeFormatter.ofPattern("a h:mm", Locale.getDefault())
+            java.time.format.DateTimeFormatter
+                .ofPattern("a h:mm", Locale.getDefault())
 
         @Suppress("ConstantLocale")
         val monthDayFormatter: java.time.format.DateTimeFormatter =
-            java.time.format.DateTimeFormatter.ofPattern("M월 d일", Locale.getDefault())
+            java.time.format.DateTimeFormatter
+                .ofPattern("M월 d일", Locale.getDefault())
 
         @Suppress("ConstantLocale")
         val yearMonthDayFormatter: java.time.format.DateTimeFormatter =
-            java.time.format.DateTimeFormatter.ofPattern("yyyy. M. d.", Locale.getDefault())
+            java.time.format.DateTimeFormatter
+                .ofPattern("yyyy. M. d.", Locale.getDefault())
     }
 }
 

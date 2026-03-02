@@ -48,7 +48,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         createdAt = listOf(),
                         roomType = "DM",
                     )
-                }
+                },
             )
         return Response.success(
             data,
@@ -83,7 +83,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                 name = "room 1",
                 roomType = "DM",
                 serviceId = 1,
-                members = mapOf()
+                members = mapOf(),
             ),
         )
 }

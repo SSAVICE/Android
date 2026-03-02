@@ -48,7 +48,7 @@ fun ChatBottomBar(
                 viewModel.sendChat(state.text.toString())
                 state.clearText()
             }
-        }
+        },
     )
 }
 
@@ -56,52 +56,56 @@ fun ChatBottomBar(
 fun ChatBottomBar(
     modifier: Modifier = Modifier,
     inputText: TextFieldState,
-    onSendClick: () -> Unit = {}
+    onSendClick: () -> Unit = {},
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = Color.Transparent,
-        tonalElevation = 3.dp // 하단 바를 살짝 띄워줌
+        tonalElevation = 3.dp, // 하단 바를 살짝 띄워줌
     ) {
         Row(
-            modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-                .navigationBarsPadding() // 네비게이션 바 영역 확보
-                .imePadding(), // 키보드가 올라올 때 여백 확보
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .navigationBarsPadding() // 네비게이션 바 영역 확보
+                    .imePadding(),
+            // 키보드가 올라올 때 여백 확보
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // [라운드 렉트 입력창]
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(
-                        MaterialTheme.colorScheme.primaryContainer.copy(
-                            alpha = 0.5f
-                        )
-                    )
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer.copy(
+                                alpha = 0.5f,
+                            ),
+                        ).padding(horizontal = 16.dp, vertical = 10.dp),
             ) {
                 BasicTextField(
                     state = inputText,
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 16.sp
-                    ),
+                    textStyle =
+                        TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                        ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     decorator = { innerTextField ->
                         if (inputText.text.isEmpty()) {
                             Text(
                                 text = "메시지를 입력하세요...",
-                                style = TextStyle(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                    fontSize = 16.sp
-                                )
+                                style =
+                                    TextStyle(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                        fontSize = 16.sp,
+                                    ),
                             )
                         }
                         innerTextField()
-                    }
+                    },
                 )
             }
 
@@ -111,17 +115,18 @@ fun ChatBottomBar(
             IconButton(
                 onClick = onSendClick,
                 enabled = inputText.text.isNotBlank(),
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContentColor = MaterialTheme.colorScheme.outline,
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContentColor = MaterialTheme.colorScheme.outline,
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = "전송",
-                    modifier = Modifier.size(28.dp).padding(horizontal = 4.dp)
+                    modifier = Modifier.size(28.dp).padding(horizontal = 4.dp),
                 )
             }
         }
