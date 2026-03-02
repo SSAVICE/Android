@@ -36,7 +36,7 @@ fun NavController.navigateToServiceDetail(
 
 fun NavGraphBuilder.serviceDetailScreen(
     onBackClick: () -> Unit = {},
-    onChatClick: (Long) -> Unit = {},
+    onChatClick: (Long, Long) -> Unit = {_, _ ->},
     onParticipateClick: (Long) -> Unit = {},
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},

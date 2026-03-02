@@ -1,19 +1,14 @@
 package com.ssavice.chat.repository
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.RemoteMediator.MediatorResult
 import androidx.paging.map
-import androidx.room.withTransaction
 import com.ssavice.chat.ChatRemoteMediator
 import com.ssavice.chat.WebSocketEventHandler
 import com.ssavice.chat.model.enum.ChatCursorDirection
 import com.ssavice.chat.service.ChatRetrofitService
-import com.ssavice.common.DomainFormatter
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomInfo
 import com.ssavice.model.chat.ChattingRoomMetadata
@@ -21,6 +16,7 @@ import com.ssavice.model.enums.RoomType
 import com.ssavice.model.enums.getValue
 import com.ssavice.network.processResponseOnResponseData
 import com.ssavice.network.websocket.ChatWebSocketManager
+import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.network.websocket.model.WebSocketTxEntity
 import com.ssavice.room.ChatDatabase
 import com.ssavice.room.dao.ChatDao
@@ -30,11 +26,16 @@ import com.ssavice.room.dto.ChatRoomEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 class ChatRepositoryImpl
@@ -98,7 +99,14 @@ constructor(
         )
     }
 
-    override suspend fun startChat(opponentId: Long, message: String) {
+    override suspend fun startChat(opponentId: Long, serviceId: Long, message: String) {
+        webSocketManager.sendMessage(
+            WebSocketTxEntity.NewServiceInfoDM(
+                serviceId = serviceId,
+                receiverId = opponentId,
+            )
+        )
+        delay(100)
         webSocketManager.sendMessage(
             WebSocketTxEntity.NewTextDM(
                 receiverId = opponentId,
@@ -195,5 +203,30 @@ constructor(
                 )
             }
         }
+    }
+
+    override suspend fun readyForAck(serviceId: Long, userId: Long): Flow<Result<String>> {
+        return webSocketManager.events
+            .filterIsInstance<WebSocketRxEntity.ServiceInfoChat>()
+            .filter { event ->
+                event.serviceId == serviceId && event.senderId == userId
+            }
+            .map { event ->
+                Result.success(event.roomId)
+            }
+            .take(1)
+            .let { flow ->
+                flow {
+                    try {
+                        withTimeout(10000L) {
+                            flow.collect { emit(it) }
+                        }
+                    } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+                        emit(Result.failure(Exception("Ack 타임아웃: 서버 응답이 없습니다.")))
+                    } catch (e: Exception) {
+                        emit(Result.failure(e))
+                    }
+                }
+            }
     }
 }

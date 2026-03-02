@@ -111,8 +111,8 @@ fun SsaviceNavHost(
 
         serviceDetailScreen(
             onBack = { navController.navigateUp() },
-            onChatClick = {
-                navController.navigateToOnePerOneChattingRoom(userId = it)
+            onChatClick = { userId, serviceId ->
+                navController.navigateToOnePerOneChattingRoom(userId = userId, serviceId = serviceId)
             }
         )
 

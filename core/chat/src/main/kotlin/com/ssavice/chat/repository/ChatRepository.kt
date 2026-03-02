@@ -21,6 +21,7 @@ interface ChatRepository {
 
     suspend fun startChat(
         opponentId: Long,
+        serviceId: Long,
         message: String
     )
 
@@ -39,4 +40,6 @@ interface ChatRepository {
         size:Int,
         direction: ChatCursorDirection
     ): Result<List<ChatEntity>>
+
+    suspend fun readyForAck(serviceId: Long, userId: Long): Flow<Result<String>>
 }

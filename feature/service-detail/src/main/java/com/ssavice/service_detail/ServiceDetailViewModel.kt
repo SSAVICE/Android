@@ -129,6 +129,13 @@ constructor(
         }
     }
 
+    fun onChatScreenOpened() {
+        _uiState.value =
+            _uiState.value.copy(
+                serviceInfoState = InfoState.Done,
+            )
+    }
+
     private fun loadService(
         id: Long,
         isSeller: Boolean = false,

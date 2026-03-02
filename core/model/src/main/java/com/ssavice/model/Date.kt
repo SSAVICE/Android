@@ -1,5 +1,6 @@
 package com.ssavice.model
 
+import com.ssavice.model.Date.Companion.DEFAULT_TIME_ZONE
 import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -14,6 +15,85 @@ value class TimeStamp(
 ) {
     init {
         require(timeInMillis >= 0)
+    }
+}
+
+data class DateTime(
+    val year: Int,
+    val month: Int,
+    val day: Int,
+    val hour: Int,
+    val minute: Int
+) {
+    fun toTimeStamp(): TimeStamp {
+        val calendar =
+            Calendar.getInstance(DEFAULT_TIME_ZONE).apply {
+                set(Calendar.YEAR, year)
+                // Calendar months are 0-indexed (January is 0), so we subtract 1.
+                set(Calendar.MONTH, month - 1)
+                set(Calendar.DAY_OF_MONTH, day)
+                // Set time to the beginning of the day to avoid time-of-day discrepancies.
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+        return TimeStamp(calendar.timeInMillis)
+    }
+
+    fun timeToSimpleString(): String {
+        val localDateTime = LocalDateTime.of(year, month, day, hour, minute)
+        return localDateTime.format(chatTimeFormatter)
+    }
+
+    fun dateToSimpleString(): String {
+        val now = LocalDateTime.now(DEFAULT_TIME_ZONE.toZoneId())
+        val target = LocalDateTime.of(year, month, day, hour, minute)
+
+        val nowDay = now.toLocalDate()
+        val targetDay = target.toLocalDate()
+
+        return when {
+            // 1. 오늘인 경우 (이미 만든 시:분 포맷 사용)
+            nowDay == targetDay -> "오늘"
+
+            // 2. 어제인 경우
+            nowDay.minusDays(1) == targetDay -> "어제"
+
+            // 3. 같은 연도인 경우 (3월 2일)
+            nowDay.year == targetDay.year -> target.format(monthDayFormatter)
+
+            // 4. 연도가 다른 경우 (2024. 3. 2.)
+            else -> target.format(yearMonthDayFormatter)
+        }
+    }
+
+    companion object {
+        fun fromTimeStamp(timeStamp: Long): DateTime {
+            val instant = java.time.Instant.ofEpochMilli(timeStamp)
+            // KST(Asia/Seoul) 또는 설정된 DEFAULT_TIME_ZONE에 맞춰 변환
+            val ldt = LocalDateTime.ofInstant(instant, DEFAULT_TIME_ZONE.toZoneId())
+
+            return DateTime(
+                year = ldt.year,
+                month = ldt.monthValue,
+                day = ldt.dayOfMonth,
+                hour = ldt.hour,
+                minute = ldt.minute
+            )
+        }
+
+        @Suppress("ConstantLocale")
+        val chatTimeFormatter: java.time.format.DateTimeFormatter =
+            java.time.format.DateTimeFormatter.ofPattern("a h:mm", Locale.getDefault())
+
+        @Suppress("ConstantLocale")
+        val monthDayFormatter: java.time.format.DateTimeFormatter =
+            java.time.format.DateTimeFormatter.ofPattern("M월 d일", Locale.getDefault())
+
+        @Suppress("ConstantLocale")
+        val yearMonthDayFormatter: java.time.format.DateTimeFormatter =
+            java.time.format.DateTimeFormatter.ofPattern("yyyy. M. d.", Locale.getDefault())
     }
 }
 

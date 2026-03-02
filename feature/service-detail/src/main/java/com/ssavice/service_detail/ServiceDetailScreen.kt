@@ -58,7 +58,7 @@ import kotlinx.coroutines.delay
 fun ServiceDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: ServiceDetailViewModel = hiltViewModel(),
-    onChatClick: (Long) -> Unit = {},
+    onChatClick: (Long, Long) -> Unit = {_, _ ->},
     onParticipateClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
     onMoreReviewClick: (Long) -> Unit = {},
@@ -72,7 +72,8 @@ fun ServiceDetailScreen(
             viewModel.onInit()
         }
         if(uiState.serviceInfoState is InfoState.StartChat) {
-            onChatClick((uiState.serviceInfoState as InfoState.StartChat).id)
+            viewModel.onChatScreenOpened()
+            onChatClick((uiState.serviceInfoState as InfoState.StartChat).id, uiState.service?.id?:-1)
         }
     }
 

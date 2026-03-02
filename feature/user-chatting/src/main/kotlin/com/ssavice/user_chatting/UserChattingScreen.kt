@@ -11,11 +11,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.request.ImageRequest
 import com.ssavice.model.chat.ChattingRoomMetadata
+import com.ssavice.user_chatting.ui.ChattingRoomItem
 
 @Composable
 fun UserChattingRoute(
@@ -31,15 +35,23 @@ fun UserChattingRoute(
 @Composable
 fun ChatList(
     modifier: Modifier,
-    rooms: List<ChattingRoomMetadata>,
+    rooms: List<ChattingRoomItem>,
     onRoomClick: (id: String) -> Unit = {},
 ) {
+    val context = LocalContext.current
+    val imageRequestBuilder = remember {
+        ImageRequest.Builder(context)
+            .crossfade(true)
+            .placeholder(android.R.drawable.ic_menu_info_details)
+    }
+
     LazyColumn(modifier = modifier) {
         items(rooms.size, key = { index -> rooms[index].name }) { index ->
             RoomItem(
                 modifier = Modifier.fillMaxWidth(),
                 room = rooms[index],
                 onClick = onRoomClick,
+                imageRequestBuilder = imageRequestBuilder
             )
             if (index < rooms.size - 1) {
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
@@ -51,21 +63,27 @@ fun ChatList(
 @Composable
 fun RoomItem(
     modifier: Modifier,
-    room: ChattingRoomMetadata,
+    room: ChattingRoomItem,
     onClick: (id: String) -> Unit = {},
+    imageRequestBuilder: ImageRequest.Builder
 ) {
     Column(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
                 .clickable {
                     onClick(room.roomId)
                 },
         verticalArrangement = spacedBy(5.dp),
     ) {
-        Text(room.name, style = MaterialTheme.typography.titleMedium)
-        Text(room.lastMessage)
-        Text(("읽지 않은 메시지: ${room.unreadCount}"), style = MaterialTheme.typography.labelMedium)
+        ChattingRoomItem(
+            title = room.name,
+            lastMessage = room.lastMessage?:"",
+            thumbnailUrl = null,
+            updatedAt = room.lastUpdate.dateToSimpleString(),
+            unreadCount = room.unreadCount,
+            onClick = {onClick(room.roomId)},
+            requestBuilder = imageRequestBuilder
+        )
     }
 }

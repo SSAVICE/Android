@@ -142,8 +142,8 @@ fun SsaviceNavHost(
             onMoreReviewClick = {
                 navController.navigateToSellerReviews(sellerId = it)
             },
-            onChatClick = {
-                navController.navigateToOnePerOneChattingRoom(userId = it)
+            onChatClick = { userId, serviceId ->
+                navController.navigateToOnePerOneChattingRoom(userId = userId, serviceId = serviceId)
             },
         )
 
