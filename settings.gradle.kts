@@ -1,5 +1,7 @@
 import java.net.URI
 
+include(":core:room")
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -47,6 +49,7 @@ include(":feature:service-detail")
 include(":feature:user-my-page")
 include(":feature:edit-profile")
 include(":feature:user-my-service")
+include(":feature:chat")
 include(":core:datastore")
 include(":core:addresspicker")
 include(":core:authentication")
@@ -62,3 +65,4 @@ include(":feature:seller-edit-profile")
 include(":feature:seller-detail")
 include(":feature:seller-reviews")
 include(":core:kakaomap")
+include(":core:chat")

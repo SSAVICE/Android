@@ -9,6 +9,8 @@ class AddCompanyDTO(
     val verifyToken: String,
     val companyName: String,
     val ownerName: String,
+    val businessName: String,
+    val startDate: String,
     val phoneNumber: String,
     val businessNumber: String,
     val description: String,
@@ -33,6 +35,13 @@ class AddCompanyDTO(
                 detail = sellerInfo.detail,
                 depositor = sellerInfo.accountDepositor,
                 region = RegionPostDTO.Companion.fromModel(sellerInfo.region),
+                businessName = sellerInfo.businessName,
+                startDate =
+                    "%04d%02d%02d".format(
+                        sellerInfo.companyOpenDate.year,
+                        sellerInfo.companyOpenDate.month,
+                        sellerInfo.companyOpenDate.day,
+                    ),
             )
     }
 }

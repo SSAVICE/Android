@@ -40,11 +40,13 @@ dependencies {
     implementation(projects.feature.sellerReviews)
     implementation(projects.feature.userMain)
     implementation(projects.feature.userLiked)
+    implementation(projects.feature.chat)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)
     implementation(projects.core.model)
     implementation(projects.core.datastore)
+    implementation(projects.core.chat)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

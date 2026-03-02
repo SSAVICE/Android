@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.ssavice.chat.navigation.chattingRoom
+import com.ssavice.chat.navigation.navigateToChattingRoom
+import com.ssavice.chat.navigation.navigateToOnePerOneChattingRoom
 import com.ssavice.login.navigation.loginScreen
 import com.ssavice.post_service.navigation.addServiceScreen
 import com.ssavice.post_service.navigation.navigateToAddService
@@ -32,7 +35,7 @@ fun SsaviceNavHost(
     ) {
         registerScreen(
             onSubmit = {
-                navController.navigateToHome {
+                navController.navigateToMain {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
             },
@@ -78,6 +81,11 @@ fun SsaviceNavHost(
                     isSeller = true,
                 )
             },
+            onChattingRoomClick = {
+                navController.navigateToChattingRoom(
+                    roomId = it,
+                )
+            },
         )
 
         myServiceScreen(
@@ -102,6 +110,13 @@ fun SsaviceNavHost(
         )
 
         serviceDetailScreen(
+            onBack = { navController.navigateUp() },
+            onChatClick = { userId, serviceId ->
+                navController.navigateToOnePerOneChattingRoom(userId = userId, serviceId = serviceId)
+            },
+        )
+
+        chattingRoom(
             onBack = { navController.navigateUp() },
         )
     }

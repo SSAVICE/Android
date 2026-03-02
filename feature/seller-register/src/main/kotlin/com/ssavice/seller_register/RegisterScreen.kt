@@ -48,6 +48,7 @@ fun RegisterScreen(
 
     val sellerNameState = rememberTextFieldState(state.form.sellerName)
     val businessOwnerState = rememberTextFieldState(state.form.businessOwnerName)
+    val businessNameState = rememberTextFieldState(state.form.businessName)
     val businessRegistrationNumberState =
         rememberTextFieldState(state.form.businessRegistrationNumber)
     val telState = rememberTextFieldState(state.form.tel)
@@ -65,8 +66,8 @@ fun RegisterScreen(
     LaunchedEffect(sellerNameState, businessRegistrationNumberState, telState) {
         snapshotFlow {
             Quadruple(
-                sellerNameState.text.toString(),
                 businessOwnerState.text.toString(),
+                businessNameState.text.toString(),
                 businessRegistrationNumberState.text.toString(),
                 telState.text.toString(),
             )
@@ -82,7 +83,8 @@ fun RegisterScreen(
 
     LaunchedEffect(addressState, descriptionState) {
         snapshotFlow {
-            Pair(
+            Triple(
+                sellerNameState.text.toString(),
                 addressState.text.toString(),
                 descriptionState.text.toString(),
             )
@@ -90,6 +92,7 @@ fun RegisterScreen(
             viewModel.onSecondPageFormChanged(
                 it.first,
                 it.second,
+                it.third,
             )
         }
     }
@@ -124,6 +127,7 @@ fun RegisterScreen(
         page = state.form.registrationStep,
         sellerNameState = sellerNameState,
         businessOwnerState = businessOwnerState,
+        businessNameState = businessNameState,
         businessRegistrationNumberState = businessRegistrationNumberState,
         companyOpenDate = state.form.companyOpenDate,
         companyValidationState = state.companyValidationState,
@@ -138,6 +142,7 @@ fun RegisterScreen(
         accountNumberState = accountNumberState,
         sellerNameErrorState = state.form.sellerNameErrorState,
         businessOwnerErrorState = state.form.businessOwnerNameErrorState,
+        businessNameErrorState = state.form.businessNameErrorState,
         businessRegistrationNumberErrorState = state.form.businessRegistrationNumberErrorState,
         companyOpenDateErrorState = state.form.companyOpenDateErrorState,
         telErrorState = state.form.telErrorState,
@@ -158,6 +163,7 @@ fun RegisterScreen(
     page: Int,
     sellerNameState: TextFieldState,
     businessOwnerState: TextFieldState,
+    businessNameState: TextFieldState,
     businessRegistrationNumberState: TextFieldState,
     companyOpenDate: TimeStamp,
     onCompanyOpenDateChanged: (TimeStamp) -> Unit,
@@ -173,6 +179,7 @@ fun RegisterScreen(
     sellerNameErrorState: FormError,
     companyOpenDateErrorState: FormError,
     businessOwnerErrorState: FormError,
+    businessNameErrorState: FormError,
     businessRegistrationNumberErrorState: FormError,
     telErrorState: FormError,
     addressErrorState: FormError,
@@ -204,11 +211,13 @@ fun RegisterScreen(
             page = page,
             sellerNameState = sellerNameState,
             businessOwnerState = businessOwnerState,
+            businessNameState = businessNameState,
             businessRegistrationNumberState = businessRegistrationNumberState,
             telState = telState,
             companyValidationState = companyValidationState,
             sellerNameError = sellerNameErrorState != FormError.None,
             businessOwnerError = businessOwnerErrorState != FormError.None,
+            businessNameError = businessNameErrorState != FormError.None,
             businessRegistrationNumberError = businessRegistrationNumberErrorState != FormError.None,
             telError = telErrorState != FormError.None,
             detailAddressState = detailAddressState,
@@ -273,7 +282,8 @@ internal object RegisterScreenDefaults {
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_TEXT = "사업자번호"
 
     const val LABEL_SECOND_PAGE = "기본 정보"
-    const val SELLER_NAME_TEXT = "업체명"
+    const val SELLER_NAME_TEXT = "이름"
+    const val BUSINESS_NAME_TEXT = "상호명"
     const val ADDRESS_TEXT = "주소"
     const val DETAIL_ADDRESS_TEXT = "상세 주소"
     const val SELLER_TEL_TEXT = "전화번호"
@@ -283,7 +293,8 @@ internal object RegisterScreenDefaults {
     const val ACCOUNT_NAME_TEXT = "예금주"
     const val ACCOUNT_NUMBER_TEXT = "계좌번호"
 
-    const val SELLER_NAME_PLACEHOLDER = "예: 주식회사 싸비스"
+    const val SELLER_NAME_PLACEHOLDER = "예: 싸비스"
+    const val BUSINESS_NAME_PLACEHOLDER = "예: 주식회사 싸비스"
     const val BUSINESS_OWNER_PLACEHOLDER = "예: 권성찬"
     const val SELLER_BUSINESS_REGISTRATION_NUMBER_PLACEHOLDER = "123-45-67890"
     const val SELLER_TEL_PLACEHOLDER = "010-1234-5678"

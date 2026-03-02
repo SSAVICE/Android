@@ -58,7 +58,7 @@ import kotlinx.coroutines.delay
 fun ServiceDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: ServiceDetailViewModel = hiltViewModel(),
-    onChatClick: (Long) -> Unit = {},
+    onChatClick: (Long, Long) -> Unit = { _, _ -> },
     onParticipateClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
     onMoreReviewClick: (Long) -> Unit = {},
@@ -70,6 +70,10 @@ fun ServiceDetailScreen(
         if (uiState.serviceInfoState is InfoState.Initial) {
             delay(Constant.ANIMATION_DELAY)
             viewModel.onInit()
+        }
+        if (uiState.serviceInfoState is InfoState.StartChat) {
+            viewModel.onChatScreenOpened()
+            onChatClick((uiState.serviceInfoState as InfoState.StartChat).id, uiState.service?.id ?: -1)
         }
     }
 
@@ -87,6 +91,7 @@ fun ServiceDetailScreen(
         onLikeClick = viewModel::onLikeButtonClick,
         onSellerClick = onSellerClick,
         onMoreReviewClick = onMoreReviewClick,
+        onChatToUserClick = viewModel::onChatToUserButtonClick,
     )
 }
 
@@ -98,6 +103,7 @@ fun ServiceDetailScreen(
     onLikeClick: (Long) -> Unit = {},
     onSellerClick: (Long) -> Unit = {},
     onMoreReviewClick: (Long) -> Unit = {},
+    onChatToUserClick: (Long) -> Unit = {},
 ) {
     val enabled =
         uiState.serviceInfoState == InfoState.Done && uiState.sellerInfoState == InfoState.Done
@@ -146,6 +152,7 @@ fun ServiceDetailScreen(
                     lastNotice = account.lastNotice,
                     noticeDate = account.noticeDate,
                     participants = account.participants,
+                    onChatClick = { onChatToUserClick(it.userId) },
                 )
             } else {
                 Loading(400.dp)

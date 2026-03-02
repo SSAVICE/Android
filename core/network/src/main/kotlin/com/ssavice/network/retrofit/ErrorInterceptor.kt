@@ -31,6 +31,10 @@ class ErrorInterceptor
                         authEventManager.emit(AuthEvent.Forbidden)
                     }
 
+                    ErrorCode.COMPANY_NOT_FOUND -> {
+                        authEventManager.emit(AuthEvent.Initial)
+                    }
+
                     else -> {}
                 }
                 return@runBlocking response

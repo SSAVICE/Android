@@ -11,10 +11,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
+import com.ssavice.chat.WebSocketEventHandler
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.login.navigation.navigateToLogin
 import com.ssavice.network.AuthEvent
 import com.ssavice.network.AuthEventManager
+import com.ssavice.network.websocket.ChatWebSocketManager
 import com.ssavice.ssavice.navigation.SsaviceNavHost
 import com.ssavice.ui.common.collectAsEffect
 import com.ssavice.user_main.navigation.MainRoute
@@ -24,6 +26,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject lateinit var authEventManager: AuthEventManager
+
+    @Inject lateinit var webSocketManager: ChatWebSocketManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,16 @@ class MainActivity : ComponentActivity() {
         }
         KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
         KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+    }
+
+    override fun onStart() {
+        webSocketManager.connect()
+        super.onStart()
+    }
+
+    override fun onStop() {
+        webSocketManager.close()
+        super.onStop()
     }
 }
 

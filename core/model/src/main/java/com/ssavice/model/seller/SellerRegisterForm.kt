@@ -1,5 +1,6 @@
 package com.ssavice.model.seller
 
+import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
 
 data class SellerRegisterForm(
@@ -11,5 +12,7 @@ data class SellerRegisterForm(
     val accountNumber: String,
     val description: String,
     val detail: String,
+    val businessName: String,
+    val companyOpenDate: Date,
     val region: RegionInfo,
 )

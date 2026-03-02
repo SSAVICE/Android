@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ssavice.seller_chatting.navigation.chat
 import com.ssavice.seller_home.navigation.HomeRoute
 import com.ssavice.seller_home.navigation.home
 import com.ssavice.seller_my_page.ProfileState
 import com.ssavice.seller_my_page.navigation.myPage
+import com.ssavice.user_chatting.navigation.chat
 
 @Composable
 fun SellerMainContainer(
@@ -22,6 +22,7 @@ fun SellerMainContainer(
     onHelpButtonClick: () -> Unit = {},
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
+    onChattingRoomClick: (roomId: String) -> Unit = {},
 ) {
     val mainNavController = rememberNavController()
 
@@ -48,7 +49,9 @@ fun SellerMainContainer(
                 onServiceClick = onServiceClick,
             )
 
-            chat()
+            chat(
+                onRoomClick = onChattingRoomClick,
+            )
         }
     }
 }

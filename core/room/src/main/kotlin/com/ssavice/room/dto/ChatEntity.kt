@@ -1,0 +1,25 @@
+package com.ssavice.room.dto
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.ssavice.model.chat.Chat
+
+@Entity(tableName = "chat", primaryKeys = ["roomId", "id"])
+data class ChatEntity(
+    val id: Long,
+    val userId: Long,
+    val roomId: String,
+    val type: String,
+    val content: String,
+    val createdAt: Long,
+) {
+    fun toModel(): Chat =
+        Chat(
+            messageId = id,
+            senderId = userId,
+            roomId = roomId,
+            type = type,
+            content = content,
+            createdAt = createdAt,
+        )
+}

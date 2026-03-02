@@ -32,6 +32,9 @@ val kakaoRestURL =
         .map { it.getProperty("KAKAO_REST_URL") }
         .orElse("http://example.com")
 
+val webSocketURL =
+    localProps.map { it.getProperty("WEBSOCKET_URL") }.orElse("ws://example.com")
+
 dependencies {
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
@@ -52,6 +55,12 @@ androidComponents {
         it.buildConfigFields!!.put(
             "KAKAO_REST_URL",
             kakaoRestURL.map { value ->
+                BuildConfigField(type = "String", value = """"$value"""", comment = null)
+            },
+        )
+        it.buildConfigFields!!.put(
+            "WEBSOCKET_URL",
+            webSocketURL.map { value ->
                 BuildConfigField(type = "String", value = """"$value"""", comment = null)
             },
         )

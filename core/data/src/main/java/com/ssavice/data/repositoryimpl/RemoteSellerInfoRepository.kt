@@ -96,15 +96,17 @@ internal class RemoteSellerInfoRepository
             name: String,
             openDate: Date,
             businessNumber: String,
+            businessName: String,
         ): Result<CompanyVerifyToken> {
             val now = System.currentTimeMillis()
-            val formattedDate = "%04d%02d%02d".format(openDate.year, openDate.month, openDate.day)
+            val formattedDate = mapOpenDate(openDate)
             return processResponseOnResponseData(
                 companyRetrofitService.validateBusinessInfo(
                     ValidateBusinessDTO(
                         name = name,
                         startDate = formattedDate,
                         businessNumber = businessNumber,
+                        businessName = businessName,
                     ),
                 ),
             ).map {
@@ -245,4 +247,6 @@ internal class RemoteSellerInfoRepository
                 getMySellerInformation()
                 Unit
             }
+
+        private fun mapOpenDate(date: Date): String = "%04d%02d%02d".format(date.year, date.month, date.day)
     }

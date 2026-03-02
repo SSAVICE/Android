@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.login.navigation.navigateToLogin
@@ -49,6 +50,7 @@ class MainActivity : ComponentActivity() {
                 SsaviceSellerApp(navController)
             }
         }
+        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY_SELLER)
         KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY_SELLER)
     }
 }

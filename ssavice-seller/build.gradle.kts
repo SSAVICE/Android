@@ -36,6 +36,7 @@ dependencies {
     implementation(projects.feature.sellerMyService)
     implementation(projects.feature.sellerEditProfile)
     implementation(projects.feature.serviceDetail)
+    implementation(projects.feature.chat)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.data)

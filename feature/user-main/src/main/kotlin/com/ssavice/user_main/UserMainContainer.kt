@@ -25,6 +25,7 @@ fun UserMainContainer(
     onLogoutButtonClick: () -> Unit = {},
     onWithdrawButtonClick: () -> Unit = {},
     onServiceSummaryClick: (com.ssavice.model.enums.ServiceState) -> Unit = {},
+    onChattingRoomClick: (roomId: String) -> Unit = {},
 ) {
     val mainNavController = rememberNavController()
     val homeViewModel: UserHomeViewModel = hiltViewModel()
@@ -58,7 +59,9 @@ fun UserMainContainer(
                 viewModel = homeViewModel,
             )
 
-            chat()
+            chat(
+                onRoomClick = onChattingRoomClick,
+            )
         }
     }
 }

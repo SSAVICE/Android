@@ -92,6 +92,30 @@ class ServiceDetailViewModel
         }
 
         fun onChatButtonClick() {
+            _uiState.update { state ->
+                if (state.serviceInfoState is InfoState.Done) {
+                    val id = state.service?.companyId ?: return
+                    state.copy(
+                        serviceInfoState =
+                            InfoState.StartChat(
+                                id = id,
+                            ),
+                    )
+                } else {
+                    state
+                }
+            }
+        }
+
+        fun onChatToUserButtonClick(userId: Long) {
+            _uiState.update { state ->
+                state.copy(
+                    serviceInfoState =
+                        InfoState.StartChat(
+                            id = userId,
+                        ),
+                )
+            }
         }
 
         fun onInit() {
@@ -107,6 +131,13 @@ class ServiceDetailViewModel
                     loadParticipants(id)
                 }
             }
+        }
+
+        fun onChatScreenOpened() {
+            _uiState.value =
+                _uiState.value.copy(
+                    serviceInfoState = InfoState.Done,
+                )
         }
 
         private fun loadService(
