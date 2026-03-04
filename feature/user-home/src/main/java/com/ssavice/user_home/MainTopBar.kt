@@ -26,7 +26,7 @@ fun UserHomeTopBar(viewModel: UserHomeViewModel) {
     TopAppBar(
         title = {
             TextButton(
-                onClick = viewModel::onSetLocationClick,
+                onClick = viewModel::onLocationClick,
                 colors =
                     ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onSurface,

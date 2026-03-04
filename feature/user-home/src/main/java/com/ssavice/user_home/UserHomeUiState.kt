@@ -20,7 +20,6 @@ data class UserHomeUiState(
             latitude = 0.0,
             longitude = 0.0,
         ),
-    val showAddressPicker: Boolean = false,
     val addressState: RegionState = RegionState.Initial,
 )
 
@@ -41,4 +40,10 @@ sealed interface RegionState {
     data class Error(
         val message: Throwable,
     ) : RegionState
+}
+
+sealed interface HomeUiEvent {
+    object ShowAddressPicker : HomeUiEvent
+
+    object ShowSearchScreen : HomeUiEvent
 }
