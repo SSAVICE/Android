@@ -7,8 +7,10 @@ import com.ssavice.model.RegionInfo
 import com.ssavice.model.enums.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,9 +27,17 @@ class UserHomeViewModel
                     categories = Category.entries,
                 ),
             )
+
+        private val _uiEvent = MutableSharedFlow<HomeUiEvent>(extraBufferCapacity = 64)
+        val uiEvent = _uiEvent.asSharedFlow()
+
         val uiState: StateFlow<UserHomeUiState> = _uiState
 
         fun onCategorySelect(index: Int) {
+            if (_uiState.value.addressState is RegionState.Error) {
+                _uiEvent.tryEmit(HomeUiEvent.ShowAddressPicker)
+                return
+            }
             if ((index !in 0 until _uiState.value.categories.size) || index == _uiState.value.selected) return
             _uiState.value =
                 _uiState.value.copy(
@@ -39,14 +49,22 @@ class UserHomeViewModel
                 )
         }
 
-        fun onNotificationButtonClick() {
+        fun onSearchBarClick() {
+            if (_uiState.value.addressState is RegionState.Error) {
+                viewModelScope.launch {
+                    refreshUserAddress()
+                    if (_uiState.value.addressState is RegionState.Error) {
+                        _uiEvent.tryEmit(HomeUiEvent.ShowAddressPicker)
+                    } else {
+                        _uiEvent.tryEmit(HomeUiEvent.ShowSearchScreen)
+                    }
+                }
+            } else {
+                _uiEvent.tryEmit(HomeUiEvent.ShowSearchScreen)
+            }
         }
 
-        fun onSetLocationClick() {
-            showAddressSelector()
-        }
-
-        fun initUserAddress() {
+        private suspend fun refreshUserAddress() {
             if (_uiState.value.addressState is RegionState.Loading) return
 
             _uiState.update {
@@ -54,31 +72,42 @@ class UserHomeViewModel
                     addressState = RegionState.Loading,
                 )
             }
+
+            userRepository.getUserAddress().fold(
+                onSuccess = { address ->
+                    _uiState.update {
+                        it.copy(
+                            addressState =
+                                RegionState.Showing(
+                                    address = address.regionInfo.address,
+                                    detailAddress = address.regionInfo.detailAddress,
+                                    latitude = address.regionInfo.latitude,
+                                    longitude = address.regionInfo.longitude,
+                                    postCode = address.regionInfo.postCode,
+                                    regionCode = address.regionInfo.regionCode,
+                                ),
+                        )
+                    }
+                },
+                onFailure = { e ->
+                    _uiState.update {
+                        it.copy(
+                            addressState = RegionState.Error(e),
+                        )
+                    }
+                },
+            )
+        }
+
+        fun initUserAddress() {
+            if (_uiState.value.addressState is RegionState.Loading) return
+
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.getUserAddress().fold(
-                    onSuccess = { address ->
-                        _uiState.update {
-                            it.copy(
-                                addressState =
-                                    RegionState.Showing(
-                                        address = address.regionInfo.address,
-                                        detailAddress = address.regionInfo.detailAddress,
-                                        latitude = address.regionInfo.latitude,
-                                        longitude = address.regionInfo.longitude,
-                                        postCode = address.regionInfo.postCode,
-                                        regionCode = address.regionInfo.regionCode,
-                                    ),
-                            )
-                        }
-                    },
-                    onFailure = { e ->
-                        _uiState.update {
-                            it.copy(
-                                addressState = RegionState.Error(e),
-                            )
-                        }
-                    },
-                )
+                refreshUserAddress()
+
+                if (_uiState.value.addressState is RegionState.Error) {
+                    _uiEvent.tryEmit(HomeUiEvent.ShowAddressPicker)
+                }
             }
         }
 
@@ -86,7 +115,6 @@ class UserHomeViewModel
             _uiState.update {
                 it.copy(
                     addressState = RegionState.Loading,
-                    showAddressPicker = false,
                 )
             }
             viewModelScope.launch(Dispatchers.IO) {
@@ -120,19 +148,10 @@ class UserHomeViewModel
             }
         }
 
-        private fun showAddressSelector() {
-            _uiState.update {
-                it.copy(
-                    showAddressPicker = true,
-                )
-            }
+        fun onLocationClick() {
+            _uiEvent.tryEmit(HomeUiEvent.ShowAddressPicker)
         }
 
-        fun onAddressSelectorDismiss() {
-            _uiState.update {
-                it.copy(
-                    showAddressPicker = false,
-                )
-            }
+        fun onNotificationButtonClick() {
         }
     }

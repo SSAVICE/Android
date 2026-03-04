@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class NetworkEventManagerImpl
     @Inject
     constructor() : NetworkEventManager {
-        private val _event = MutableSharedFlow<NetworkEvent>(10)
+        private val _event = MutableSharedFlow<NetworkEvent>(extraBufferCapacity = 64)
         override val event = _event.asSharedFlow()
 
         override fun tryEmit(event: NetworkEvent) {

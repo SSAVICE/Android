@@ -29,6 +29,7 @@ import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.ui.common.collectAsEffect
 import com.ssavice.ui.searchresult.SearchResultScreen
 
 @Composable
@@ -39,6 +40,18 @@ fun UserHomeScreen(
     onServiceClick: (Long) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var showAddressPicker by remember { mutableStateOf(false) }
+    viewModel.uiEvent.collectAsEffect {
+        when (it) {
+            is HomeUiEvent.ShowAddressPicker -> {
+                showAddressPicker = true
+            }
+
+            is HomeUiEvent.ShowSearchScreen -> {
+                onSearchBarClicked()
+            }
+        }
+    }
     LaunchedEffect(state.addressState) {
         if (state.addressState is RegionState.Initial) {
             viewModel.initUserAddress()
@@ -49,10 +62,16 @@ fun UserHomeScreen(
         modifier = modifier,
         state = state,
         onCategoryClicked = viewModel::onCategorySelect,
-        onSearchBarClicked = onSearchBarClicked,
+        onSearchBarClicked = viewModel::onSearchBarClick,
         onServiceClick = onServiceClick,
-        onAddressUpdate = viewModel::updateUserAddress,
-        onAddressDismiss = viewModel::onAddressSelectorDismiss,
+        onAddressUpdate = { address ->
+            viewModel.updateUserAddress(address)
+            showAddressPicker = false
+        },
+        onAddressDismiss = {
+            showAddressPicker = false
+        },
+        showAddressPicker = showAddressPicker,
     )
 }
 
@@ -66,6 +85,7 @@ fun UserHomeScreen(
     onServiceClick: (Long) -> Unit = {},
     onAddressUpdate: (RegionState.Showing) -> Unit = {},
     onAddressDismiss: () -> Unit = {},
+    showAddressPicker: Boolean = false,
 ) {
     Column(modifier = modifier) {
         OutlinedTextFieldButton(
@@ -100,7 +120,7 @@ fun UserHomeScreen(
                 )
             }
         }
-        if (state.showAddressPicker) {
+        if (showAddressPicker) {
             ModalBottomSheet(
                 onDismissRequest = onAddressDismiss,
             ) {
