@@ -58,11 +58,13 @@ class RemoteUserInfoRepository
 
         override fun getUserProfile(): StateFlow<UserProfile> {
             CoroutineScope(Dispatchers.IO).launch {
-                userRetrofitService.getUserProfile().map {
-                    it.toModel()
-                }.onSuccess {
-                    userProfileFlow.emit(it)
-                }
+                userRetrofitService
+                    .getUserProfile()
+                    .map {
+                        it.toModel()
+                    }.onSuccess {
+                        userProfileFlow.emit(it)
+                    }
             }
             return userProfileFlow
         }
@@ -73,13 +75,14 @@ class RemoteUserInfoRepository
             sortingOrder: SortingOrder,
             serviceState: ServiceState,
         ): Result<UserServiceParticipation> =
-            userRetrofitService.getUserBook(
-                page = page ?: 0,
-                size = searchCount,
-                status = serviceState.name,
-            ).map {
-                it.toModel()
-            }
+            userRetrofitService
+                .getUserBook(
+                    page = page ?: 0,
+                    size = searchCount,
+                    status = serviceState.name,
+                ).map {
+                    it.toModel()
+                }
 
         override suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit> =
             userRetrofitService.updateUserProfile(UpdateUserProfileDTO.fromModel(profile)).map { newData ->
@@ -130,17 +133,18 @@ class RemoteUserInfoRepository
                             .onSuccess { key ->
                                 send(ImageUploadProgress.Progress(100))
 
-                                userRetrofitService.confirmProfileUpload(
-                                    body =
-                                        ConfirmImageDTO(
-                                            objectKey = url.objectKey,
-                                        ),
-                                ).onSuccess { _ ->
-                                    send(ImageUploadProgress.Done(url.objectKey))
-                                    getUserProfile()
-                                }.onFailure { e ->
-                                    send(ImageUploadProgress.Error(e))
-                                }
+                                userRetrofitService
+                                    .confirmProfileUpload(
+                                        body =
+                                            ConfirmImageDTO(
+                                                objectKey = url.objectKey,
+                                            ),
+                                    ).onSuccess { _ ->
+                                        send(ImageUploadProgress.Done(url.objectKey))
+                                        getUserProfile()
+                                    }.onFailure { e ->
+                                        send(ImageUploadProgress.Error(e))
+                                    }
                             }.onFailure { e ->
                                 send(ImageUploadProgress.Error(e))
                             }
@@ -182,10 +186,11 @@ class RemoteUserInfoRepository
             searchCount: Int,
             page: Int?,
         ): Result<WishList> =
-            userRetrofitService.getWish(
-                page = page ?: 0,
-                size = searchCount,
-            ).map {
-                it.toModel()
-            }
+            userRetrofitService
+                .getWish(
+                    page = page ?: 0,
+                    size = searchCount,
+                ).map {
+                    it.toModel()
+                }
     }

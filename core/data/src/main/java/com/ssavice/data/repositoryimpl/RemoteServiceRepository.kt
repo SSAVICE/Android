@@ -32,7 +32,8 @@ internal class RemoteServiceRepository
     ) : ServiceRepository {
         override suspend fun postService(service: ServiceAddForm): Result<Long> =
             serviceRetrofitService
-                .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys)).map { it.serviceId }
+                .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys))
+                .map { it.serviceId }
 
         override suspend fun searchService(
             query: SearchQuery,
@@ -49,8 +50,8 @@ internal class RemoteServiceRepository
                             searchCount = searchCount,
                         ).toMap(),
                 ).map {
-                it.toModel()
-            }
+                    it.toModel()
+                }
 
         override suspend fun searchService(
             query: SearchQuery,
@@ -66,11 +67,10 @@ internal class RemoteServiceRepository
                             searchCount = searchCount,
                         ).toMap(),
                 ).map {
-                it.toModel()
-            }
+                    it.toModel()
+                }
 
-        override suspend fun getService(id: Long): Result<ServiceDetail> =
-            serviceRetrofitService.getService(id).map { it.toModel() }
+        override suspend fun getService(id: Long): Result<ServiceDetail> = serviceRetrofitService.getService(id).map { it.toModel() }
 
         override fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress> =
             channelFlow {
@@ -121,8 +121,7 @@ internal class RemoteServiceRepository
                     }
             }
 
-        override suspend fun applyService(id: Long): Result<Unit> =
-            serviceRetrofitService.applyService(id).map {}
+        override suspend fun applyService(id: Long): Result<Unit> = serviceRetrofitService.applyService(id).map {}
 
         override suspend fun cancelService(id: Long): Result<Unit> = serviceRetrofitService.cancelService(id)
 
@@ -138,11 +137,12 @@ internal class RemoteServiceRepository
             size: Int,
             page: Int,
         ): Result<ServiceParticipantResponse> =
-            serviceRetrofitService.getParticipant(
-                id = id,
-                size = size,
-                page = page,
-            ).map {
-                it.toModel()
-            }
+            serviceRetrofitService
+                .getParticipant(
+                    id = id,
+                    size = size,
+                    page = page,
+                ).map {
+                    it.toModel()
+                }
     }

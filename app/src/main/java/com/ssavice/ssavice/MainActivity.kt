@@ -40,22 +40,22 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var webSocketManager: ChatWebSocketManager
 
-    private fun sendSnackBar(text: String,
-                             snackbarHostState: SnackbarHostState,
-                             duration: SnackbarDuration = SnackbarDuration.Short,
-                             lastCollectedUiEventTime: MutableLongState,
-                             hasDismissButton: Boolean = false,
+    private fun sendSnackBar(
+        text: String,
+        snackbarHostState: SnackbarHostState,
+        duration: SnackbarDuration = SnackbarDuration.Short,
+        lastCollectedUiEventTime: MutableLongState,
+        hasDismissButton: Boolean = false,
     ) {
         if (System.currentTimeMillis() - lastCollectedUiEventTime.longValue < 3000L) return
         lifecycleScope.launch {
             snackbarHostState.showSnackbar(
                 message = text,
                 withDismissAction = hasDismissButton,
-                duration = duration
+                duration = duration,
             )
         }
         lastCollectedUiEventTime.longValue = System.currentTimeMillis()
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,7 +93,6 @@ class MainActivity : ComponentActivity() {
                     }
 
                     else -> {
-
                     }
                 }
             }

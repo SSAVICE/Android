@@ -17,6 +17,6 @@ fun SsaviceScaffold(
         topBar = topBar,
         bottomBar = bottomBar,
         content = content,
-        snackbarHost = { SnackbarHost(hostState = globalSnackBarHostState) }
+        snackbarHost = { SnackbarHost(hostState = globalSnackBarHostState) },
     )
 }

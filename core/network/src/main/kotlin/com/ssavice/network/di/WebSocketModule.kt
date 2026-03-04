@@ -17,15 +17,19 @@ import javax.inject.Singleton
 object WebSocketModule {
     @Provides
     @Singleton
-    fun provideChatWebSocketManager(builder: OkHttpClient.Builder, networkEventManager: NetworkEventManager): ChatWebSocketManager =
+    fun provideChatWebSocketManager(
+        builder: OkHttpClient.Builder,
+        networkEventManager: NetworkEventManager,
+    ): ChatWebSocketManager =
         ChatWebSocketManager
             .builder()
             .addJson(Json { ignoreUnknownKeys = true })
-            .addClient(builder
-                .pingInterval(30, TimeUnit.SECONDS)
-                .build())
-            .addMapper(
+            .addClient(
+                builder
+                    .pingInterval(30, TimeUnit.SECONDS)
+                    .build(),
+            ).addMapper(
                 WebSocketMapper(),
-            )
-            .addNetworkEventManager(networkEventManager).build()
+            ).addNetworkEventManager(networkEventManager)
+            .build()
 }

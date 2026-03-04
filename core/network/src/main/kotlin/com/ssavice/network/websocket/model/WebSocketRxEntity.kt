@@ -31,7 +31,7 @@ sealed interface WebSocketRxEntity {
 
     data class WebSocketError(
         val e: Throwable,
-        val message: String
+        val message: String,
     ) : WebSocketRxEntity
 
     object Ignore : WebSocketRxEntity

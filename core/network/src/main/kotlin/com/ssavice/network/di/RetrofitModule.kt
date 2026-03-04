@@ -48,18 +48,14 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideResultCallAdaptorFactory(
-        networkEventManager: NetworkEventManager
-    ): ResultCallAdapterFactory = ResultCallAdapterFactory(
-        networkEventManager
-    )
-
+    fun provideResultCallAdaptorFactory(networkEventManager: NetworkEventManager): ResultCallAdapterFactory =
+        ResultCallAdapterFactory(
+            networkEventManager,
+        )
 
     @Provides
     @Singleton
-    fun provideRetrofitBuilder(
-        callAdapterFactory: ResultCallAdapterFactory
-    ): Retrofit.Builder =
+    fun provideRetrofitBuilder(callAdapterFactory: ResultCallAdapterFactory): Retrofit.Builder =
         Retrofit
             .Builder()
             .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
@@ -76,7 +72,10 @@ object RetrofitModule {
     @Provides
     @Singleton
     @ServiceRetrofit
-    fun provideServiceRetrofitBuilder(okHttpClient: OkHttpClient, builder: Retrofit.Builder): Retrofit =
+    fun provideServiceRetrofitBuilder(
+        okHttpClient: OkHttpClient,
+        builder: Retrofit.Builder,
+    ): Retrofit =
         builder
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(okHttpClient)
@@ -85,7 +84,10 @@ object RetrofitModule {
     @Provides
     @Singleton
     @ChatRetrofit
-    fun provideChatRetrofitBuilder(okHttpClient: OkHttpClient, builder: Retrofit.Builder): Retrofit =
+    fun provideChatRetrofitBuilder(
+        okHttpClient: OkHttpClient,
+        builder: Retrofit.Builder,
+    ): Retrofit =
         builder
             .baseUrl(BuildConfig.WEBSOCKET_URL)
             .client(okHttpClient)
@@ -102,7 +104,10 @@ object RetrofitModule {
     @Provides
     @Singleton
     @KakaoRestRetrofit
-    fun provideKakaoRetrofitBuilder(interceptor: HttpLoggingInterceptor, builder: Retrofit.Builder): Retrofit =
+    fun provideKakaoRetrofitBuilder(
+        interceptor: HttpLoggingInterceptor,
+        builder: Retrofit.Builder,
+    ): Retrofit =
         builder
             .baseUrl(BuildConfig.KAKAO_REST_URL)
             .client(
@@ -145,10 +150,7 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
-        builder: OkHttpClient.Builder
-    ): OkHttpClient =
-        builder.build()
+    fun provideOkHttpClient(builder: OkHttpClient.Builder): OkHttpClient = builder.build()
 
     @Provides
     @Singleton
