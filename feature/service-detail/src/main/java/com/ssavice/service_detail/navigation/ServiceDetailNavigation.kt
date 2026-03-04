@@ -73,7 +73,6 @@ fun NavGraphBuilder.serviceDetailScreen(
                 )
             },
         ) { innerPadding ->
-
             ServiceDetailScreen(
                 modifier =
                     Modifier

@@ -3,8 +3,8 @@ package com.ssavice.network.retrofit
 import ErrorCode
 import android.util.Log
 import com.ssavice.datastore.repository.JwtRepository
-import com.ssavice.network.AuthEvent
-import com.ssavice.network.AuthEventManager
+import com.ssavice.network.NetworkEvent
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.parseAuthError
 import errorCodeMap
@@ -30,7 +30,7 @@ class AuthInterceptor
     constructor(
         private val tokenRepository: JwtRepository,
         private val authRepository: AuthenticationRepository,
-        private val authEventManager: AuthEventManager,
+        private val networkEventManager: NetworkEventManager,
     ) : Authenticator {
         override fun authenticate(
             route: Route?,
@@ -45,7 +45,7 @@ class AuthInterceptor
                     if (!refreshFlag &&
                         errorCodeMap[errorResponse?.errorProperties?.errorCode] != ErrorCode.EXPIRED_TOKEN
                     ) {
-                        authEventManager.emit(AuthEvent.Unauthorized)
+                        networkEventManager.emit(NetworkEvent.Unauthorized)
                         return@runBlocking null
                     }
 
@@ -59,7 +59,7 @@ class AuthInterceptor
                             .addHeader(AUTH_HEADER_KEY, "Bearer ${token.accessToken}")
                             .build()
                     } else {
-                        authEventManager.emit(AuthEvent.Unauthorized)
+                        networkEventManager.emit(NetworkEvent.Unauthorized)
                         null
                     }
                 }

@@ -13,8 +13,8 @@ import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.login.navigation.navigateToLogin
-import com.ssavice.network.AuthEvent
-import com.ssavice.network.AuthEventManager
+import com.ssavice.network.NetworkEvent
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.seller_main.navigation.MainRoute
 import com.ssavice.seller_register.navigation.navigateToRegister
 import com.ssavice.ui.common.collectAsEffect
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var authEventManager: AuthEventManager
+    @Inject lateinit var networkEventManager: NetworkEventManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,13 +32,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            authEventManager.event.collectAsEffect {
+            networkEventManager.event.collectAsEffect {
                 when (it) {
-                    is AuthEvent.Unauthorized -> {
+                    is NetworkEvent.Unauthorized -> {
                         navController.navigateToLogin(isUser = false)
                     }
 
-                    is AuthEvent.Forbidden -> {
+                    is NetworkEvent.Forbidden -> {
                         navController.navigateToRegister()
                     }
 

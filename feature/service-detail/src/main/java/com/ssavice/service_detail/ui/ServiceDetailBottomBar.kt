@@ -22,7 +22,7 @@ fun ServiceDetailBottomBar(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     if (!state.showUserInfo) return
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OutlinedButton(

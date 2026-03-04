@@ -2,14 +2,13 @@ name: release apk
 
 on:
   push:
-    branches:
-      - release
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   apk:
     name: Generate APK
+    if: github.ref_type == 'tag' && github.event.base_ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -101,12 +100,12 @@ jobs:
                 "fields": [
                   {
                     "name": "📱 판매자 앱 다운로드 ",
-                    "value": "[👉 User APK 클릭](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/seller-app-release.apk)",
+                    "value": "[👉 Seller App](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/seller-app-release.apk)",
                     "inline": true
                   },
                   {
                     "name": "🧑‍💻 유저 앱 다운로드 ",
-                    "value": "[👉 Seller APK 클릭](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/user-app-release.apk)",
+                    "value": "[👉 User App](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/user-app-release.apk)",
                     "inline": true
                   }
                 ],

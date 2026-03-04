@@ -15,13 +15,13 @@ interface ChatRetrofitService {
         @Query("direction") direction: String,
         @Query("roomId") roomId: String,
         @Query("size") size: Int,
-    ): Response<GetChatMessageDTO>
+    ): Result<GetChatMessageDTO>
 
     @GET("/api/room/list")
-    suspend fun getRoomList(): Response<GetRoomListDTO>
+    suspend fun getRoomList(): Result<GetRoomListDTO>
 
     @GET("/api/room")
     suspend fun getRoomInfo(
         @Query("room-id") roomId: String,
-    ): Response<GetRoomInfoDTO>
+    ): Result<GetRoomInfoDTO>
 }

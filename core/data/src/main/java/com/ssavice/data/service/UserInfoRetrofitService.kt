@@ -12,7 +12,6 @@ import com.ssavice.network.model.user.UpdateUserProfileResponseDTO
 import com.ssavice.network.model.user.UserBookSummaryDTO
 import com.ssavice.network.model.user.UserProfileDTO
 import com.ssavice.network.model.user.WishListDTO
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -22,50 +21,50 @@ import retrofit2.http.Query
 
 interface UserInfoRetrofitService {
     @GET("/api/user/profile")
-    suspend fun getUserProfile(): Response<UserProfileDTO>
+    suspend fun getUserProfile(): Result<UserProfileDTO>
 
     @GET("/api/book/user")
     suspend fun getUserBook(
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("status") status: String,
-    ): Response<UserBookDTO>
+    ): Result<UserBookDTO>
 
     @POST("/api/user/profile")
     suspend fun updateUserProfile(
         @Body body: UpdateUserProfileDTO,
-    ): Response<UpdateUserProfileResponseDTO>
+    ): Result<UpdateUserProfileResponseDTO>
 
     @GET("/api/book/user/summary")
-    suspend fun getUserParticipationSummary(): Response<UserBookSummaryDTO>
+    suspend fun getUserParticipationSummary(): Result<UserBookSummaryDTO>
 
     @POST("/api/user/profile/image")
     suspend fun requestProfileUploadUrl(
         @Body contentType: ContentTypeDTO,
-    ): Response<PresignedUrlDTO>
+    ): Result<PresignedUrlDTO>
 
     @POST("/api/user/profile/image/confirm")
     suspend fun confirmProfileUpload(
         @Body body: ConfirmImageDTO,
-    ): Response<Unit>
+    ): Result<Unit>
 
     @PATCH("/api/user/address")
     suspend fun updateUserAddress(
         @Body body: RegionPostDTO,
-    ): Response<Unit>
+    ): Result<Unit>
 
     @GET("/api/user/address")
-    suspend fun getUserAddress(): Response<GetAddressDTO>
+    suspend fun getUserAddress(): Result<GetAddressDTO>
 
     @POST("/api/user/wish/{id}")
     suspend fun wishService(
         @Path(value = "id") id: Long,
         @Body body: WishServiceDTO,
-    ): Response<Unit>
+    ): Result<Unit>
 
     @GET("/api/user/wish")
     suspend fun getWish(
         @Query("page") page: Int,
         @Query("size") size: Int,
-    ): Response<WishListDTO>
+    ): Result<WishListDTO>
 }

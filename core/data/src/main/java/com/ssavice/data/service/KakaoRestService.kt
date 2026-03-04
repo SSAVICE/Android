@@ -14,5 +14,5 @@ interface KakaoRestService {
         @Path("format") format: String,
         @Query("query") query: String,
         @Query("analyze_type") analyzeType: String = "exact",
-    ): Response<KakaoGetCoordinateDTO>
+    ): Result<KakaoGetCoordinateDTO>
 }

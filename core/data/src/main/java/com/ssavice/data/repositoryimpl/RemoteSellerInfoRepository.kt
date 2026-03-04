@@ -27,8 +27,6 @@ import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.company.AddCompanyDTO
 import com.ssavice.network.model.company.UpdateCompanyProfileDTO
 import com.ssavice.network.model.company.ValidateBusinessDTO
-import com.ssavice.network.processResponse
-import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -70,17 +68,13 @@ internal class RemoteSellerInfoRepository
             sellerInfo: SellerRegisterForm,
             token: CompanyVerifyToken,
         ): Result<Unit> =
-            processResponse(
-                companyRetrofitService.registerSeller(
-                    AddCompanyDTO.fromModel(sellerInfo, token.token),
-                ),
+            companyRetrofitService.registerSeller(
+                AddCompanyDTO.fromModel(sellerInfo, token.token),
             )
 
         override fun getMySellerInformation(): StateFlow<SellerMainInfo> {
             CoroutineScope(Dispatchers.IO).launch {
-                processResponseOnResponseData(
-                    companyRetrofitService.getCompanyInfo(),
-                ).map {
+                companyRetrofitService.getCompanyInfo().map {
                     sellerInfoFlow.emit(it.toSellerMainInfoModel())
                 }
             }
@@ -88,9 +82,7 @@ internal class RemoteSellerInfoRepository
         }
 
         override suspend fun getSellerSummary(id: Long): Result<SellerSummary> =
-            processResponseOnResponseData(
-                companyRetrofitService.getCompanySummary(id),
-            ).map { it.toModel() }
+            companyRetrofitService.getCompanySummary(id).map { it.toModel() }
 
         override suspend fun verifyBusinessInfo(
             name: String,
@@ -100,27 +92,24 @@ internal class RemoteSellerInfoRepository
         ): Result<CompanyVerifyToken> {
             val now = System.currentTimeMillis()
             val formattedDate = mapOpenDate(openDate)
-            return processResponseOnResponseData(
-                companyRetrofitService.validateBusinessInfo(
+            return companyRetrofitService
+                .validateBusinessInfo(
                     ValidateBusinessDTO(
                         name = name,
                         startDate = formattedDate,
                         businessNumber = businessNumber,
                         businessName = businessName,
                     ),
-                ),
-            ).map {
-                CompanyVerifyToken(
-                    it.verifyToken,
-                    now,
-                )
-            }
+                ).map {
+                    CompanyVerifyToken(
+                        it.verifyToken,
+                        now,
+                    )
+                }
         }
 
         override suspend fun getSellerAddress(): Result<RegionDetail> =
-            processResponseOnResponseData(
-                companyRetrofitService.getCompanyAddress(),
-            ).map {
+            companyRetrofitService.getCompanyAddress().map {
                 RegionDetail(
                     regionInfo =
                         RegionInfo(
@@ -137,9 +126,7 @@ internal class RemoteSellerInfoRepository
             }
 
         override suspend fun getSellerParticipationSummary(): Result<ParticipationSummary> =
-            processResponseOnResponseData(
-                companyRetrofitService.getCompanyParticipationSummary(),
-            ).map { it.toModel() }
+            companyRetrofitService.getCompanyParticipationSummary().map { it.toModel() }
 
         override suspend fun getMyService(
             searchCount: Int,
@@ -147,15 +134,14 @@ internal class RemoteSellerInfoRepository
             sortingOrder: SortingOrder,
             serviceState: ServiceState,
         ): Result<SellerServiceParticipation> =
-            processResponseOnResponseData(
-                companyRetrofitService.getCompanyBook(
+            companyRetrofitService
+                .getCompanyBook(
                     page = page ?: 0,
                     size = searchCount,
                     status = serviceState.name,
-                ),
-            ).map {
-                it.toModel()
-            }
+                ).map {
+                    it.toModel()
+                }
 
         override fun updateSellerProfileImage(image: ResizableImage): Flow<ImageUploadProgress> =
             channelFlow {
@@ -165,11 +151,9 @@ internal class RemoteSellerInfoRepository
                 )
 
                 val fetchUrlRequest =
-                    processResponseOnResponseData(
-                        companyRetrofitService.requestProfileUploadUrl(
-                            ContentTypeDTO(
-                                contentType = image.mimeType,
-                            ),
+                    companyRetrofitService.requestProfileUploadUrl(
+                        ContentTypeDTO(
+                            contentType = image.mimeType,
                         ),
                     )
 
@@ -193,23 +177,22 @@ internal class RemoteSellerInfoRepository
                                 body = body,
                             )
                         send(ImageUploadProgress.Progress(0))
-                        processResponse(imageResponse)
+                        imageResponse
                             .onSuccess { key ->
                                 send(ImageUploadProgress.Progress(100))
 
-                                processResponse(
-                                    companyRetrofitService.confirmProfileUpload(
+                                companyRetrofitService
+                                    .confirmProfileUpload(
                                         body =
                                             ConfirmImageDTO(
                                                 objectKey = url.objectKey,
                                             ),
-                                    ),
-                                ).onSuccess { _ ->
-                                    send(ImageUploadProgress.Done(url.objectKey))
-                                    getMySellerInformation()
-                                }.onFailure { e ->
-                                    send(ImageUploadProgress.Error(e))
-                                }
+                                    ).onSuccess { _ ->
+                                        send(ImageUploadProgress.Done(url.objectKey))
+                                        getMySellerInformation()
+                                    }.onFailure { e ->
+                                        send(ImageUploadProgress.Error(e))
+                                    }
                             }.onFailure { e ->
                                 send(ImageUploadProgress.Error(e))
                             }
@@ -217,9 +200,7 @@ internal class RemoteSellerInfoRepository
             }
 
         override suspend fun getSellerDetail(id: Long): Result<SellerDetail> =
-            processResponseOnResponseData(
-                companyRetrofitService.getCompanyDetail(id),
-            ).map {
+            companyRetrofitService.getCompanyDetail(id).map {
                 it.toModel()
             }
 
@@ -228,25 +209,23 @@ internal class RemoteSellerInfoRepository
             page: Int,
             searchCount: Int,
         ): Result<SellerReviews> =
-            processResponseOnResponseData(
-                companyRetrofitService.getCompanyReview(
+            companyRetrofitService
+                .getCompanyReview(
                     id = id,
                     page = page,
                     size = searchCount,
-                ),
-            ).map {
-                it.toModel()
-            }
+                ).map {
+                    it.toModel()
+                }
 
         override suspend fun updateSellerProfile(profile: SellerProfileUpdateForm): Result<Unit> =
-            processResponse(
-                companyRetrofitService.putCompanyProfile(
+            companyRetrofitService
+                .putCompanyProfile(
                     body = UpdateCompanyProfileDTO.fromModel(profile),
-                ),
-            ).onSuccess {
-                getMySellerInformation()
-                Unit
-            }
+                ).onSuccess {
+                    getMySellerInformation()
+                    Unit
+                }
 
         private fun mapOpenDate(date: Date): String = "%04d%02d%02d".format(date.year, date.month, date.day)
     }

@@ -8,8 +8,6 @@ import com.ssavice.datastore.repository.JwtRepository
 import com.ssavice.model.auth.Jwt
 import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.model.LoginDTO
-import com.ssavice.network.processResponse
-import com.ssavice.network.processResponseOnResponseData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -22,7 +20,7 @@ class RemoteAuthenticationRepository
     ) : AuthenticationRepository {
         override suspend fun refreshToken(jwt: Jwt): Result<Unit> {
             val response = authRetrofitService.refreshToken(jwt.refreshToken)
-            val result = processResponseOnResponseData(response).map { it.toJwt() }
+            val result = response.map { it.toJwt() }
             result.fold(
                 onSuccess = {
                     jwtRepository.setJwt(it)
@@ -35,14 +33,13 @@ class RemoteAuthenticationRepository
         override suspend fun userLoginWithAccessToken(accessToken: String): Result<Unit> {
             Log.d(TAG, "userLoginWithAccessToken: $accessToken")
             val result =
-                processResponseOnResponseData(
-                    authRetrofitService.userLogin(
+                authRetrofitService
+                    .userLogin(
                         LoginDTO(
                             accessToken,
                             "KAKAO",
                         ),
-                    ),
-                ).map { it.toJwt() }
+                    ).map { it.toJwt() }
 
             return result.fold(
                 onSuccess = {
@@ -58,14 +55,13 @@ class RemoteAuthenticationRepository
         override suspend fun companyLoginWithAccessToken(accessToken: String): Result<Unit> {
             Log.d(TAG, "companyLoginWithAccessToken: $accessToken")
             val result =
-                processResponseOnResponseData(
-                    authRetrofitService.companyLogin(
+                authRetrofitService
+                    .companyLogin(
                         LoginDTO(
                             accessToken,
                             "KAKAO",
                         ),
-                    ),
-                ).map { it.toJwt() }
+                    ).map { it.toJwt() }
 
             return result.fold(
                 onSuccess = {
@@ -81,11 +77,9 @@ class RemoteAuthenticationRepository
         override suspend fun logout(): Result<Unit> {
             val jwt = jwtRepository.getJwt()
             val result =
-                processResponse(
-                    authRetrofitService.logout(
-                        accessToken = "Bearer ${jwt.accessToken}",
-                        refreshToken = "Bearer ${jwt.refreshToken}",
-                    ),
+                authRetrofitService.logout(
+                    accessToken = "Bearer ${jwt.accessToken}",
+                    refreshToken = "Bearer ${jwt.refreshToken}",
                 )
 
             result.onSuccess {
