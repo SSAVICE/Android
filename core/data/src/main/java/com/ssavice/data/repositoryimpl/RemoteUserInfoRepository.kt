@@ -22,8 +22,6 @@ import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.RegionPostDTO
 import com.ssavice.network.model.service.WishServiceDTO
 import com.ssavice.network.model.user.UpdateUserProfileDTO
-import com.ssavice.network.processResponse
-import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -56,15 +54,11 @@ class RemoteUserInfoRepository
             )
 
         override suspend fun getUserParticipationSummary(): Result<ParticipationSummary> =
-            processResponseOnResponseData(
-                userRetrofitService.getUserParticipationSummary(),
-            ).map { it.toModel() }
+            userRetrofitService.getUserParticipationSummary().map { it.toModel() }
 
         override fun getUserProfile(): StateFlow<UserProfile> {
             CoroutineScope(Dispatchers.IO).launch {
-                processResponseOnResponseData(
-                    userRetrofitService.getUserProfile(),
-                ).map {
+                userRetrofitService.getUserProfile().map {
                     it.toModel()
                 }.onSuccess {
                     userProfileFlow.emit(it)
@@ -79,20 +73,16 @@ class RemoteUserInfoRepository
             sortingOrder: SortingOrder,
             serviceState: ServiceState,
         ): Result<UserServiceParticipation> =
-            processResponseOnResponseData(
-                userRetrofitService.getUserBook(
-                    page = page ?: 0,
-                    size = searchCount,
-                    status = serviceState.name,
-                ),
+            userRetrofitService.getUserBook(
+                page = page ?: 0,
+                size = searchCount,
+                status = serviceState.name,
             ).map {
                 it.toModel()
             }
 
         override suspend fun updateUserProfile(profile: UserProfileUpdateForm): Result<Unit> =
-            processResponseOnResponseData(
-                userRetrofitService.updateUserProfile(UpdateUserProfileDTO.fromModel(profile)),
-            ).map { newData ->
+            userRetrofitService.updateUserProfile(UpdateUserProfileDTO.fromModel(profile)).map { newData ->
                 userProfileFlow.update {
                     it.copy(
                         name = newData.name,
@@ -110,11 +100,9 @@ class RemoteUserInfoRepository
                 )
 
                 val fetchUrlRequest =
-                    processResponseOnResponseData(
-                        userRetrofitService.requestProfileUploadUrl(
-                            ContentTypeDTO(
-                                contentType = image.mimeType,
-                            ),
+                    userRetrofitService.requestProfileUploadUrl(
+                        ContentTypeDTO(
+                            contentType = image.mimeType,
                         ),
                     )
 
@@ -138,17 +126,15 @@ class RemoteUserInfoRepository
                                 body = body,
                             )
                         send(ImageUploadProgress.Progress(0))
-                        processResponse(imageResponse)
+                        imageResponse
                             .onSuccess { key ->
                                 send(ImageUploadProgress.Progress(100))
 
-                                processResponse(
-                                    userRetrofitService.confirmProfileUpload(
-                                        body =
-                                            ConfirmImageDTO(
-                                                objectKey = url.objectKey,
-                                            ),
-                                    ),
+                                userRetrofitService.confirmProfileUpload(
+                                    body =
+                                        ConfirmImageDTO(
+                                            objectKey = url.objectKey,
+                                        ),
                                 ).onSuccess { _ ->
                                     send(ImageUploadProgress.Done(url.objectKey))
                                     getUserProfile()
@@ -162,9 +148,7 @@ class RemoteUserInfoRepository
             }
 
         override suspend fun getUserAddress(): Result<RegionDetail> =
-            processResponseOnResponseData(
-                userRetrofitService.getUserAddress(),
-            ).map {
+            userRetrofitService.getUserAddress().map {
                 RegionDetail(
                     regionInfo =
                         RegionInfo(
@@ -181,32 +165,26 @@ class RemoteUserInfoRepository
             }
 
         override suspend fun updateUserAddress(region: RegionInfo): Result<Unit> =
-            processResponse(
-                userRetrofitService.updateUserAddress(
-                    RegionPostDTO.fromModel(region),
-                ),
+            userRetrofitService.updateUserAddress(
+                RegionPostDTO.fromModel(region),
             )
 
         override suspend fun wishService(
             id: Long,
             toEnable: Boolean,
         ): Result<Unit> =
-            processResponse(
-                userRetrofitService.wishService(
-                    id,
-                    WishServiceDTO(targetStatus = toEnable),
-                ),
+            userRetrofitService.wishService(
+                id,
+                WishServiceDTO(targetStatus = toEnable),
             )
 
         override suspend fun getWishList(
             searchCount: Int,
             page: Int?,
         ): Result<WishList> =
-            processResponseOnResponseData(
-                userRetrofitService.getWish(
-                    page = page ?: 0,
-                    size = searchCount,
-                ),
+            userRetrofitService.getWish(
+                page = page ?: 0,
+                size = searchCount,
             ).map {
                 it.toModel()
             }

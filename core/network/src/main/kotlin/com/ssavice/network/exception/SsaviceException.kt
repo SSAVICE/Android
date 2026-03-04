@@ -21,3 +21,7 @@ class DuplicateCompanyException(
 class ServerInternalErrorException(
     message: String? = null,
 ) : SsaviceException()
+
+class NetworkUnavailableException(
+    message: String? = null,
+) : SsaviceException()

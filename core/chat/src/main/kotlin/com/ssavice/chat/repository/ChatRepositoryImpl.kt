@@ -14,7 +14,6 @@ import com.ssavice.model.chat.ChattingRoomInfo
 import com.ssavice.model.chat.ChattingRoomMetadata
 import com.ssavice.model.enums.RoomType
 import com.ssavice.model.enums.getValue
-import com.ssavice.network.processResponseOnResponseData
 import com.ssavice.network.websocket.ChatWebSocketManager
 import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.network.websocket.model.WebSocketTxEntity
@@ -151,7 +150,7 @@ class ChatRepositoryImpl
 
         override fun getRoomList(): Flow<List<ChattingRoomMetadata>> {
             CoroutineScope(Dispatchers.IO).launch {
-                processResponseOnResponseData(chatApi.getRoomList()).onSuccess { result ->
+                chatApi.getRoomList().onSuccess { result ->
                     result.rooms.forEach { room ->
                         chatRoomDao.upsertRoomMetadata(
                             ChatRoomEntity(
@@ -176,7 +175,7 @@ class ChatRepositoryImpl
         }
 
         override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
-            processResponseOnResponseData(chatApi.getRoomInfo(roomId)).map {
+            chatApi.getRoomInfo(roomId).map {
                 it.toModel()
             }
 
@@ -187,13 +186,11 @@ class ChatRepositoryImpl
             direction: ChatCursorDirection,
         ): Result<List<ChatEntity>> {
             val response =
-                processResponseOnResponseData(
-                    chatApi.getChatList(
-                        roomId = roomId,
-                        cursor = cursor,
-                        size = size,
-                        direction = direction.value,
-                    ),
+                chatApi.getChatList(
+                    roomId = roomId,
+                    cursor = cursor,
+                    size = size,
+                    direction = direction.value,
                 )
 
             return response.map { data ->

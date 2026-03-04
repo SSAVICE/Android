@@ -21,5 +21,5 @@ interface ImageUploadService {
         @Url url: String,
         @Header("Content-Type") contentType: String,
         @Body body: RequestBody,
-    ): Response<Unit>
+    ): Result<Unit>
 }

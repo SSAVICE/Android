@@ -19,8 +19,6 @@ import com.ssavice.network.model.ImageUploadDTO
 import com.ssavice.network.model.review.PostReviewDTO
 import com.ssavice.network.model.service.AddServiceDTO
 import com.ssavice.network.model.service.SearchServiceDTO
-import com.ssavice.network.processResponse
-import com.ssavice.network.processResponseOnResponseData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -33,10 +31,8 @@ internal class RemoteServiceRepository
         private val imageUploadService: ImageUploadService,
     ) : ServiceRepository {
         override suspend fun postService(service: ServiceAddForm): Result<Long> =
-            processResponseOnResponseData(
-                serviceRetrofitService
-                    .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys)),
-            ).map { it.serviceId }
+            serviceRetrofitService
+                .postService(AddServiceDTO.fromModel(service, service.imageObjectKeys)).map { it.serviceId }
 
         override suspend fun searchService(
             query: SearchQuery,
@@ -44,17 +40,15 @@ internal class RemoteServiceRepository
             searchCount: Int,
             startIndex: Int,
         ): Result<SearchResult> =
-            processResponseOnResponseData(
-                serviceRetrofitService
-                    .searchService(
-                        SearchServiceDTO
-                            .fromModel(
-                                query = query,
-                                nextId = nextId,
-                                searchCount = searchCount,
-                            ).toMap(),
-                    ),
-            ).map {
+            serviceRetrofitService
+                .searchService(
+                    SearchServiceDTO
+                        .fromModel(
+                            query = query,
+                            nextId = nextId,
+                            searchCount = searchCount,
+                        ).toMap(),
+                ).map {
                 it.toModel()
             }
 
@@ -63,24 +57,20 @@ internal class RemoteServiceRepository
             searchCount: Int,
             startIndex: Int,
         ): Result<SearchResult> =
-            processResponseOnResponseData(
-                serviceRetrofitService
-                    .searchService(
-                        SearchServiceDTO
-                            .fromModel(
-                                query = query,
-                                nextId = null,
-                                searchCount = searchCount,
-                            ).toMap(),
-                    ),
-            ).map {
+            serviceRetrofitService
+                .searchService(
+                    SearchServiceDTO
+                        .fromModel(
+                            query = query,
+                            nextId = null,
+                            searchCount = searchCount,
+                        ).toMap(),
+                ).map {
                 it.toModel()
             }
 
         override suspend fun getService(id: Long): Result<ServiceDetail> =
-            processResponseOnResponseData(
-                serviceRetrofitService.getService(id),
-            ).map { it.toModel() }
+            serviceRetrofitService.getService(id).map { it.toModel() }
 
         override fun addServiceImage(image: ResizableImage): Flow<ImageUploadProgress> =
             channelFlow {
@@ -90,11 +80,9 @@ internal class RemoteServiceRepository
                 )
 
                 val fetchUrlRequest =
-                    processResponseOnResponseData(
-                        serviceRetrofitService.requestServiceImageUploadUrl(
-                            ImageUploadDTO(
-                                add = listOf(ContentTypeDTO(contentType = image.mimeType)),
-                            ),
+                    serviceRetrofitService.requestServiceImageUploadUrl(
+                        ImageUploadDTO(
+                            add = listOf(ContentTypeDTO(contentType = image.mimeType)),
                         ),
                     )
 
@@ -124,7 +112,7 @@ internal class RemoteServiceRepository
                                 body = body,
                             )
                         send(ImageUploadProgress.Progress(0))
-                        processResponse(imageResponse)
+                        imageResponse
                             .onSuccess { key ->
                                 send(ImageUploadProgress.Done(url.list[0].objectKey))
                             }.onFailure { e ->
@@ -134,30 +122,26 @@ internal class RemoteServiceRepository
             }
 
         override suspend fun applyService(id: Long): Result<Unit> =
-            processResponseOnResponseData(serviceRetrofitService.applyService(id)).map {}
+            serviceRetrofitService.applyService(id).map {}
 
-        override suspend fun cancelService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.cancelService(id))
+        override suspend fun cancelService(id: Long): Result<Unit> = serviceRetrofitService.cancelService(id)
 
         override suspend fun reviewService(review: ReviewForm): Result<Unit> =
-            processResponse(
-                serviceRetrofitService.postReview(
-                    PostReviewDTO.fromModel(review),
-                ),
+            serviceRetrofitService.postReview(
+                PostReviewDTO.fromModel(review),
             )
 
-        override suspend fun deleteService(id: Long): Result<Unit> = processResponse(serviceRetrofitService.deleteService(id))
+        override suspend fun deleteService(id: Long): Result<Unit> = serviceRetrofitService.deleteService(id)
 
         override suspend fun getServiceParticipant(
             id: Long,
             size: Int,
             page: Int,
         ): Result<ServiceParticipantResponse> =
-            processResponseOnResponseData(
-                serviceRetrofitService.getParticipant(
-                    id = id,
-                    size = size,
-                    page = page,
-                ),
+            serviceRetrofitService.getParticipant(
+                id = id,
+                size = size,
+                page = page,
             ).map {
                 it.toModel()
             }

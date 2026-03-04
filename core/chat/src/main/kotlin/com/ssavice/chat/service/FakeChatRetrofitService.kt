@@ -20,7 +20,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
         direction: String,
         roomId: String,
         size: Int,
-    ): Response<GetChatMessageDTO> {
+    ): Result<GetChatMessageDTO> {
         Log.d("ChatRetrofitService", "getChatList")
         val ids: List<Long> =
             when (direction) {
@@ -50,14 +50,14 @@ class FakeChatRetrofitService : ChatRetrofitService {
                     )
                 },
             )
-        return Response.success(
+        return Result.success(
             data,
         )
     }
 
-    override suspend fun getRoomList(): Response<GetRoomListDTO> {
+    override suspend fun getRoomList(): Result<GetRoomListDTO> {
         Log.d("ChatRetrofitService", "getRoomList")
-        return Response.success(
+        return Result.success(
             GetRoomListDTO(
                 (0..10).map { id ->
                     RoomDTO(
@@ -76,8 +76,8 @@ class FakeChatRetrofitService : ChatRetrofitService {
         )
     }
 
-    override suspend fun getRoomInfo(roomId: String): Response<GetRoomInfoDTO> =
-        Response.success(
+    override suspend fun getRoomInfo(roomId: String): Result<GetRoomInfoDTO> =
+        Result.success(
             GetRoomInfoDTO(
                 roomId = roomId,
                 name = "room 1",

@@ -12,23 +12,23 @@ interface AuthRetrofitService {
     @POST("/api/user/login")
     suspend fun userLogin(
         @Body body: LoginDTO,
-    ): Response<JwtDTO>
+    ): Result<JwtDTO>
 
     @POST("/api/company/login")
     suspend fun companyLogin(
         @Body body: LoginDTO,
-    ): Response<JwtDTO>
+    ): Result<JwtDTO>
 
     @GET("/api/auth/token/refresh")
     suspend fun refreshToken(
         @Header(REFRESH_TOKEN_HEADER_KEY) refreshToken: String,
-    ): Response<JwtDTO>
+    ): Result<JwtDTO>
 
     @GET("/api/auth/logout")
     suspend fun logout(
         @Header(AUTHORIZATION_HEADER_KEY) accessToken: String,
         @Header(REFRESH_TOKEN_HEADER_KEY) refreshToken: String,
-    ): Response<Unit>
+    ): Result<Unit>
 
     companion object {
         const val AUTHORIZATION_HEADER_KEY = "Authorization"

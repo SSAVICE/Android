@@ -28,63 +28,63 @@ interface CompanyRetrofitService {
     @POST("/api/company")
     suspend fun registerSeller(
         @Body body: AddCompanyDTO,
-    ): Response<Unit>
+    ): Result<Unit>
 
     @POST("/api/company/login")
     suspend fun loginSeller(
         @Body body: LoginDTO,
-    ): Response<JwtDTO>
+    ): Result<JwtDTO>
 
     @GET("/api/company")
-    suspend fun getCompanyInfo(): Response<GetCompanyInfoDTO>
+    suspend fun getCompanyInfo(): Result<GetCompanyInfoDTO>
 
     @GET("/api/company/{id}/summary")
     suspend fun getCompanySummary(
         @Path(value = "id") id: Long,
-    ): Response<GetCompanySummaryDTO>
+    ): Result<GetCompanySummaryDTO>
 
     @POST("/api/company/validate")
     suspend fun validateBusinessInfo(
         @Body body: ValidateBusinessDTO,
-    ): Response<ValidateBusinessResponseDTO>
+    ): Result<ValidateBusinessResponseDTO>
 
     @GET("/api/service/company/summary")
-    suspend fun getCompanyParticipationSummary(): Response<CompanyBookSummaryDTO>
+    suspend fun getCompanyParticipationSummary(): Result<CompanyBookSummaryDTO>
 
     @GET("/api/company/address")
-    suspend fun getCompanyAddress(): Response<GetAddressDTO>
+    suspend fun getCompanyAddress(): Result<GetAddressDTO>
 
     @GET("/api/service/company/my")
     suspend fun getCompanyBook(
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("status") status: String,
-    ): Response<CompanyBookDTO>
+    ): Result<CompanyBookDTO>
 
     @POST("/api/company/image")
     suspend fun requestProfileUploadUrl(
         @Body contentType: ContentTypeDTO,
-    ): Response<PresignedUrlDTO>
+    ): Result<PresignedUrlDTO>
 
     @POST("/api/company/image/confirm")
     suspend fun confirmProfileUpload(
         @Body body: ConfirmImageDTO,
-    ): Response<Unit>
+    ): Result<Unit>
 
     @PUT("/api/company")
     suspend fun putCompanyProfile(
         @Body body: UpdateCompanyProfileDTO,
-    ): Response<Unit>
+    ): Result<Unit>
 
     @GET("/api/company/{id}")
     suspend fun getCompanyDetail(
         @Path(value = "id") id: Long,
-    ): Response<CompanyDetailDTO>
+    ): Result<CompanyDetailDTO>
 
     @GET("/api/review/company/{id}")
     suspend fun getCompanyReview(
         @Path(value = "id") id: Long,
         @Query("page") page: Int,
         @Query("size") size: Int,
-    ): Response<GetCompanyReviewDTO>
+    ): Result<GetCompanyReviewDTO>
 }

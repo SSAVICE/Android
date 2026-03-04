@@ -7,6 +7,7 @@ import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.retrofit.AuthInterceptor
 import com.ssavice.network.retrofit.ErrorInterceptor
 import com.ssavice.network.retrofit.HeaderInterceptor
+import com.ssavice.network.retrofit.adapter.ResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,54 +48,52 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    @ServiceAuthRetrofit
-    fun provideServiceAuthRetrofitBuilder(): Retrofit =
+    fun provideRetrofitBuilder(): Retrofit.Builder =
         Retrofit
             .Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
+            .addCallAdapterFactory(ResultCallAdapterFactory())
+
+    @Provides
+    @Singleton
+    @ServiceAuthRetrofit
+    fun provideServiceAuthRetrofitBuilder(builder: Retrofit.Builder): Retrofit =
+        builder
+            .baseUrl(BuildConfig.BACKEND_URL)
             .build()
 
     @Provides
     @Singleton
     @ServiceRetrofit
-    fun provideServiceRetrofitBuilder(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit
-            .Builder()
+    fun provideServiceRetrofitBuilder(okHttpClient: OkHttpClient, builder: Retrofit.Builder): Retrofit =
+        builder
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
             .build()
 
     @Provides
     @Singleton
     @ChatRetrofit
-    fun provideChatRetrofitBuilder(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit
-            .Builder()
+    fun provideChatRetrofitBuilder(okHttpClient: OkHttpClient, builder: Retrofit.Builder): Retrofit =
+        builder
             .baseUrl(BuildConfig.WEBSOCKET_URL)
-            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
             .build()
 
     @Provides
     @Singleton
     @ImageRetrofit
-    fun provideImageRetrofitBuilder(): Retrofit =
-        Retrofit
-            .Builder()
+    fun provideImageRetrofitBuilder(builder: Retrofit.Builder): Retrofit =
+        builder
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides
     @Singleton
     @KakaoRestRetrofit
-    fun provideKakaoRetrofitBuilder(interceptor: HttpLoggingInterceptor): Retrofit =
-        Retrofit
-            .Builder()
+    fun provideKakaoRetrofitBuilder(interceptor: HttpLoggingInterceptor, builder: Retrofit.Builder): Retrofit =
+        builder
             .baseUrl(BuildConfig.KAKAO_REST_URL)
-            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
             .client(
                 OkHttpClient
                     .Builder()
@@ -120,19 +119,25 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
+    fun provideOkHttpBuilder(
         headerInterceptor: HeaderInterceptor,
         authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
         errorInterceptor: ErrorInterceptor,
-    ): OkHttpClient =
+    ): OkHttpClient.Builder =
         OkHttpClient
             .Builder()
             .addInterceptor(headerInterceptor)
             .addInterceptor(errorInterceptor)
             .addInterceptor(loggingInterceptor)
             .authenticator(authInterceptor)
-            .build()
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        builder: OkHttpClient.Builder
+    ): OkHttpClient =
+        builder.build()
 
     @Provides
     @Singleton
