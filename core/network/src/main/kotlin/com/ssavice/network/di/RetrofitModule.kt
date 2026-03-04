@@ -2,7 +2,7 @@ package com.ssavice.network.di
 
 import com.ssavice.core.network.BuildConfig
 import com.ssavice.datastore.repository.JwtRepository
-import com.ssavice.network.AuthEventManager
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
 import com.ssavice.network.retrofit.AuthInterceptor
 import com.ssavice.network.retrofit.ErrorInterceptor
@@ -48,11 +48,22 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitBuilder(): Retrofit.Builder =
+    fun provideResultCallAdaptorFactory(
+        networkEventManager: NetworkEventManager
+    ): ResultCallAdapterFactory = ResultCallAdapterFactory(
+        networkEventManager
+    )
+
+
+    @Provides
+    @Singleton
+    fun provideRetrofitBuilder(
+        callAdapterFactory: ResultCallAdapterFactory
+    ): Retrofit.Builder =
         Retrofit
             .Builder()
             .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
-            .addCallAdapterFactory(ResultCallAdapterFactory())
+            .addCallAdapterFactory(callAdapterFactory)
 
     @Provides
     @Singleton
@@ -107,15 +118,15 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideErrorInterceptor(eventManager: AuthEventManager) = ErrorInterceptor(eventManager)
+    fun provideErrorInterceptor(eventManager: NetworkEventManager) = ErrorInterceptor(eventManager)
 
     @Provides
     @Singleton
     fun provideAuthInterceptor(
         tokenRepository: JwtRepository,
         authRepository: AuthenticationRepository,
-        authEventManager: AuthEventManager,
-    ) = AuthInterceptor(tokenRepository, authRepository, authEventManager)
+        networkEventManager: NetworkEventManager,
+    ) = AuthInterceptor(tokenRepository, authRepository, networkEventManager)
 
     @Provides
     @Singleton

@@ -2,6 +2,8 @@ package com.ssavice.network.websocket
 
 import android.util.Log
 import com.ssavice.core.network.BuildConfig
+import com.ssavice.network.NetworkEvent
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.websocket.model.WebSocketResponse
 import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.network.websocket.model.WebSocketTxEntity
@@ -22,6 +24,7 @@ constructor(
     private val okHttpClient: OkHttpClient,
     private val webSocketDtoMapper: WebSocketMapper,
     private val json: Json,
+    private val networkEventManager: NetworkEventManager?
 ) {
     private var webSocket: WebSocket? = null
     private val _events = MutableSharedFlow<WebSocketRxEntity>(extraBufferCapacity = 64)
@@ -144,6 +147,7 @@ constructor(
     }
 
     private fun sendWebsocketNotAvailableEvent() {
+        networkEventManager?.tryEmit(NetworkEvent.ChatServerUnavailable)
         _events.tryEmit(WebSocketRxEntity.WebSocketError(Throwable(), "웹소켓 연결이 원활하지 않습니다."))
     }
 
@@ -155,6 +159,7 @@ constructor(
             private lateinit var okHttpClient: OkHttpClient
             private lateinit var webSocketDtoMapper: WebSocketMapper
             private lateinit var json: Json
+            private var networkEventManager: NetworkEventManager? = null
 
             fun addClient(client: OkHttpClient): WebSocketBuilder {
                 okHttpClient = client
@@ -171,8 +176,13 @@ constructor(
                 return this
             }
 
+            fun addNetworkEventManager(networkEventManager: NetworkEventManager): WebSocketBuilder {
+                this.networkEventManager = networkEventManager
+                return this
+            }
+
             fun build(): ChatWebSocketManager {
-                val manager = ChatWebSocketManager(okHttpClient, webSocketDtoMapper, json)
+                val manager = ChatWebSocketManager(okHttpClient, webSocketDtoMapper, json, networkEventManager)
                 return manager
             }
         }

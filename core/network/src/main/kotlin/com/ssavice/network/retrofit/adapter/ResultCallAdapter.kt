@@ -1,17 +1,22 @@
 package com.ssavice.network.retrofit.adapter
 
+import com.ssavice.network.NetworkEventManager
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import javax.inject.Inject
 
-class ResultCallAdapter<T>(private val responseType: Type) : CallAdapter<T, Call<Result<T>>> {
+class ResultCallAdapter<T> (
+    private val responseType: Type,
+    private val networkEventManager: NetworkEventManager) : CallAdapter<T, Call<Result<T>>> {
     override fun responseType(): Type = responseType
-    override fun adapt(call: Call<T>): Call<Result<T>> = ResultCall(call)
+    override fun adapt(call: Call<T>): Call<Result<T>> = ResultCall(call, networkEventManager)
 }
 
-class ResultCallAdapterFactory : CallAdapter.Factory() {
+class ResultCallAdapterFactory @Inject constructor
+    (private val networkEventManager: NetworkEventManager): CallAdapter.Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<Annotation>,
@@ -26,6 +31,6 @@ class ResultCallAdapterFactory : CallAdapter.Factory() {
 
         // Result의 제네릭 타입 추출 (T)
         val responseType = getParameterUpperBound(0, resultType as ParameterizedType)
-        return ResultCallAdapter<Any>(responseType)
+        return ResultCallAdapter<Any>(responseType, networkEventManager)
     }
 }

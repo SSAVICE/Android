@@ -1,8 +1,9 @@
 package com.ssavice.network.retrofit.adapter
 
+import com.ssavice.network.NetworkEvent
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.exception.NetworkUnavailableException
 import com.ssavice.network.exception.ServerInternalErrorException
-import com.ssavice.network.exception.SsaviceException
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -10,8 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ResultCall<T>(private val delegate: Call<T>) : Call<Result<T>> {
-
+class ResultCall<T>(private val delegate: Call<T>, private val networkEventManager: NetworkEventManager) : Call<Result<T>> {
     override fun enqueue(callback: Callback<Result<T>>) {
         delegate.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
@@ -38,9 +38,11 @@ class ResultCall<T>(private val delegate: Call<T>) : Call<Result<T>> {
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                // [핵심] 네트워크 접속 오류 등을 Result.failure로 변환
                 val error = when (t) {
-                    is IOException -> NetworkUnavailableException("네트워크 연결 실패: ${t.localizedMessage}")
+                    is IOException -> {
+                        networkEventManager.tryEmit(NetworkEvent.NetworkUnavailable)
+                        NetworkUnavailableException("네트워크 연결 실패: ${t.localizedMessage}")
+                    }
                     else -> t
                 }
                 callback.onResponse(this@ResultCall, Response.success(Result.failure(error)))
@@ -54,5 +56,5 @@ class ResultCall<T>(private val delegate: Call<T>) : Call<Result<T>> {
     override fun isCanceled(): Boolean = delegate.isCanceled
     override fun request(): Request = delegate.request()
     override fun timeout(): Timeout = delegate.timeout()
-    override fun clone(): Call<Result<T>> = ResultCall(delegate.clone())
+    override fun clone(): Call<Result<T>> = ResultCall(delegate.clone(), networkEventManager)
 }

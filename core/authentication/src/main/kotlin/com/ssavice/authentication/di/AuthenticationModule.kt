@@ -1,8 +1,8 @@
 package com.ssavice.authentication.di
 
-import com.ssavice.authentication.event.AuthEventManagerImpl
+import com.ssavice.authentication.event.NetworkEventManagerImpl
 import com.ssavice.authentication.repositoryimpl.remote.RemoteAuthenticationRepository
-import com.ssavice.network.AuthEventManager
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.authentication.AuthenticationRepository
 import dagger.Binds
 import dagger.Module
@@ -19,5 +19,5 @@ internal interface AuthenticationModule {
 
     @Binds
     @Singleton
-    fun bindAuthEventManager(impl: AuthEventManagerImpl): AuthEventManager
+    fun bindAuthEventManager(impl: NetworkEventManagerImpl): NetworkEventManager
 }

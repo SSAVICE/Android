@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.ssavice.ui.navigation.SsaviceScaffold
 import com.ssavice.user_chatting.navigation.chat
 import com.ssavice.user_home.UserHomeViewModel
 import com.ssavice.user_home.navigation.HomeRoute
@@ -30,7 +31,7 @@ fun UserMainContainer(
     val mainNavController = rememberNavController()
     val homeViewModel: UserHomeViewModel = hiltViewModel()
 
-    Scaffold(
+    SsaviceScaffold(
         bottomBar = {
             MainBottomBar(mainNavController)
         },

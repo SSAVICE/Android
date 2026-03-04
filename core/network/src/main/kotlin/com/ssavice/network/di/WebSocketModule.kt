@@ -1,5 +1,6 @@
 package com.ssavice.network.di
 
+import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.websocket.ChatWebSocketManager
 import com.ssavice.network.websocket.WebSocketMapper
 import dagger.Module
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 object WebSocketModule {
     @Provides
     @Singleton
-    fun provideChatWebSocketManager(builder: OkHttpClient.Builder): ChatWebSocketManager =
+    fun provideChatWebSocketManager(builder: OkHttpClient.Builder, networkEventManager: NetworkEventManager): ChatWebSocketManager =
         ChatWebSocketManager
             .builder()
             .addJson(Json { ignoreUnknownKeys = true })
@@ -25,5 +26,6 @@ object WebSocketModule {
                 .build())
             .addMapper(
                 WebSocketMapper(),
-            ).build()
+            )
+            .addNetworkEventManager(networkEventManager).build()
 }
