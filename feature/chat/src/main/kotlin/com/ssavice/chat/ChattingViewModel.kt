@@ -12,11 +12,12 @@ import com.ssavice.model.DateTime
 import com.ssavice.model.enums.ChatType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,25 +30,43 @@ class ChattingViewModel
         private val savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
         private val opponentId: Long? = savedStateHandle[ChatRouteContract.USER_ID]
-        private val yourId: Long = 3L
-
-        private val _uiState by lazy {
+        val chattingUiState by lazy {
+            chatRepository
+                .getChatServiceSummaryMap()
+                .combine(
+                    chatRepository.getUserInfoMap(),
+                ) { serviceSummary, userInfo ->
+                    ChattingDataUiState(
+                        userInfo = userInfo,
+                        serviceInfo = serviceSummary,
+                    )
+                }.stateIn(
+                    scope = viewModelScope,
+                    started =
+                        kotlinx.coroutines.flow.SharingStarted
+                            .WhileSubscribed(5000L),
+                    initialValue = ChattingDataUiState(),
+                )
+        }
+        private val _roomUiState by lazy {
             val roomId: String? = savedStateHandle[ChatRouteContract.ROOM_ID]
             MutableStateFlow(
-                ChattingRoomUiState(
-                    chattingRoomState = if (roomId != null) ChattingRoomState.Ready else ChattingRoomState.Pending,
+                RoomUiState(
+                    chattingRoomState = ChattingRoomState.Initial,
                     roomId = roomId ?: "",
                     serviceIdToSend = savedStateHandle[ChatRouteContract.SERVICE_ID] ?: -1L,
                     sendingService = (savedStateHandle.contains(ChatRouteContract.SERVICE_ID)),
+                    yourId = -1L,
                 ),
             )
         }
-        val uiState = _uiState.asStateFlow()
+
+        val roomUiState = _roomUiState.asStateFlow()
 
         val pagingState by lazy {
             chatRepository
                 .getChatMessages(
-                    _uiState.value.roomId,
+                    _roomUiState.value.roomId,
                 ).map {
                     var lastTime = DateTime.fromTimeStamp(0)
                     var lastSender = -1L
@@ -57,17 +76,19 @@ class ChattingViewModel
                             if (message.type == ChatType.TEXT.value) {
                                 ChatMessage.TextMessage(
                                     userId = message.senderId,
-                                    you = message.senderId == yourId,
+                                    you = message.senderId == roomUiState.value.yourId,
                                     first = lastTime != time || lastSender != message.senderId,
                                     text = message.content,
                                     time = time,
                                     messageId = message.messageId,
                                 )
                             } else {
-                                collectServiceInfoIfNotExist(message.content.toLongOrNull() ?: -1L)
+                                message.content.toLongOrNull()?.let { id ->
+                                    chatRepository.updateServiceSummaryIfNeed(id)
+                                }
                                 ChatMessage.ServiceMessage(
                                     userId = message.senderId,
-                                    you = message.senderId == yourId,
+                                    you = message.senderId == roomUiState.value.yourId,
                                     serviceId = message.content.toLongOrNull() ?: 0L,
                                     time = time,
                                     messageId = message.messageId,
@@ -80,45 +101,22 @@ class ChattingViewModel
                 }.cachedIn(viewModelScope)
         }
 
-        private fun collectServiceInfoIfNotExist(serviceId: Long) {
-            if (serviceId == -1L) return
-            if (_uiState.value.serviceInfo.containsKey(serviceId)) return
-
-            viewModelScope.launch(Dispatchers.IO) {
-                delay(500)
-                _uiState.update {
-                    val t = it.serviceInfo.toMutableMap()
-                    t[serviceId] =
-                        ServiceInfo(
-                            name = "Info For Test",
-                            thumbnail = "https://picsum.photos/200",
-                            basicPrice = 10000,
-                            discountPrice = 9000,
-                            seller = "Seller",
-                        )
-                    it.copy(
-                        serviceInfo = t,
-                    )
-                }
-            }
-        }
-
-        fun requestServiceInfo(serviceId: Long) {
-            collectServiceInfoIfNotExist(serviceId)
-        }
-
         fun sendChat(message: String) {
-            if (_uiState.value.roomId == "" &&
+            if (_roomUiState.value.roomId == "" &&
                 opponentId != null &&
-                uiState.value.serviceIdToSend != -1L
+                _roomUiState.value.serviceIdToSend != -1L
             ) {
-                readyToRedirect(yourId, uiState.value.serviceIdToSend)
+                readyToRedirect(roomUiState.value.yourId, _roomUiState.value.serviceIdToSend)
                 viewModelScope.launch(Dispatchers.IO) {
-                    chatRepository.startChat(opponentId, uiState.value.serviceIdToSend, message)
+                    chatRepository.startChat(opponentId, _roomUiState.value.serviceIdToSend, message)
                 }
-            } else if (_uiState.value.roomId.isNotEmpty()) {
+            } else if (_roomUiState.value.roomId.isNotEmpty()) {
                 viewModelScope.launch(Dispatchers.IO) {
-                    chatRepository.sendChat(_uiState.value.roomId, message, _uiState.value.roomType)
+                    chatRepository.sendChat(
+                        _roomUiState.value.roomId,
+                        message,
+                        _roomUiState.value.roomType,
+                    )
                 }
             }
         }
@@ -127,7 +125,7 @@ class ChattingViewModel
             yourId: Long,
             serviceId: Long,
         ) {
-            _uiState.update {
+            _roomUiState.update {
                 it.copy(
                     sendingService = false,
                     waitingForRedirection = true,
@@ -148,37 +146,116 @@ class ChattingViewModel
         }
 
         private fun redirectChattingRoom(roomId: String) {
-            _uiState.update {
+            _roomUiState.update {
                 it.copy(
                     roomId = roomId,
-                    chattingRoomState = ChattingRoomState.Ready,
+                    chattingRoomState = ChattingRoomState.Initial,
                 )
+            }
+        }
+
+        fun initRoom() {
+            val roomId: String? = savedStateHandle[ChatRouteContract.ROOM_ID]
+            if (roomId == null) {
+                _roomUiState.update {
+                    it.copy(
+                        chattingRoomState = ChattingRoomState.Pending,
+                        roomId = "",
+                        serviceIdToSend = savedStateHandle[ChatRouteContract.SERVICE_ID] ?: -1L,
+                        sendingService = (savedStateHandle.contains(ChatRouteContract.SERVICE_ID)),
+                    )
+                }
+            } else {
+                _roomUiState.update {
+                    it.copy(
+                        roomId = roomId,
+                        serviceIdToSend = savedStateHandle[ChatRouteContract.SERVICE_ID] ?: -1L,
+                        sendingService = (savedStateHandle.contains(ChatRouteContract.SERVICE_ID)),
+                    )
+                }
+                loadChattingRoomInfo()
             }
         }
 
         fun updateLastRead(messageId: Int) {
             viewModelScope.launch(Dispatchers.IO) {
-                chatRepository.setLastReadMessageId(_uiState.value.roomId, messageId)
+                chatRepository.setLastReadMessageId(_roomUiState.value.roomId, messageId)
+            }
+        }
+
+        fun getYourId() {
+            if (_roomUiState.value.yourId != -1L ||
+                _roomUiState.value.chattingRoomState != ChattingRoomState.Initial
+            ) {
+                return
+            }
+            _roomUiState.update {
+                it.copy(
+                    chattingRoomState = ChattingRoomState.FetchingId,
+                )
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                var isSuccess = false
+                var retryCount = 0
+                val maxRetries = 5
+
+                while (retryCount < 5 && !isSuccess) {
+                    chatRepository
+                        .getMyId()
+                        .onSuccess { id ->
+                            _roomUiState.update {
+                                it.copy(yourId = id) // it.yourId가 아닌 받아온 id를 넣어야 함
+                            }
+                            initRoom()
+                            isSuccess = true
+                        }.onFailure { error ->
+                            retryCount++
+                            Log.e(TAG, "getMyId 실패 ($retryCount/$maxRetries): ${error.message}")
+
+                            if (retryCount < maxRetries) {
+                                kotlinx.coroutines.delay(1000L * retryCount)
+                            } else {
+                                // 최종 실패 시 처리 (예: 에러 상태 업데이트)
+                                Log.e(TAG, "최대 재시도 횟수 초과")
+                            }
+                        }
+                }
             }
         }
 
         fun loadChattingRoomInfo() {
-            if (_uiState.value.roomInfoLoadState == ChattingRoomInfoLoadState.Loading) return
+            if (_roomUiState.value.roomInfoLoadState == ChattingRoomInfoLoadState.Loading) return
 
-            _uiState.update {
-                it.copy(roomInfoLoadState = ChattingRoomInfoLoadState.Loading)
+            _roomUiState.update {
+                it.copy(
+                    roomInfoLoadState = ChattingRoomInfoLoadState.Loading,
+                    chattingRoomState = ChattingRoomState.Loading,
+                )
             }
             viewModelScope.launch(Dispatchers.IO) {
-                chatRepository.getRoomInfo(_uiState.value.roomId).onSuccess { info ->
-                    _uiState.update {
-                        it.copy(
-                            roomName = info.name,
-                            roomType = info.roomType,
-                            roomInfoLoadState = ChattingRoomInfoLoadState.Success,
-                            userInfo = mapOf(), // TODO: 따로 받아와서 처리
+                chatRepository.getMyId().onSuccess {
+                    _roomUiState.update {
+                        it.copy(yourId = it.yourId)
+                    }
+
+                    chatRepository.getRoomInfo(_roomUiState.value.roomId).onSuccess { info ->
+                        _roomUiState.update {
+                            it.copy(
+                                roomName = info.name,
+                                roomType = info.roomType,
+                                roomInfoLoadState = ChattingRoomInfoLoadState.Success,
+                                chattingRoomState = ChattingRoomState.Ready,
+                            )
+                        }
+                        chatRepository.updateUserInfoIfNeed(
+                            info.participantIds,
                         )
                     }
                 }
             }
+        }
+
+        companion object {
+            const val TAG = "ChattingViewModel"
         }
     }

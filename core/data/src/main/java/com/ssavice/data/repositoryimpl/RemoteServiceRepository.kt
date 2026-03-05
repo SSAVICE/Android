@@ -2,8 +2,6 @@ package com.ssavice.data.repositoryimpl
 
 import android.util.Log
 import com.ssavice.data.repository.ServiceRepository
-import com.ssavice.data.service.ImageUploadService
-import com.ssavice.data.service.ServiceRetrofitService
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.ResizableImage
 import com.ssavice.model.service.ReviewForm
@@ -19,6 +17,8 @@ import com.ssavice.network.model.ImageUploadDTO
 import com.ssavice.network.model.review.PostReviewDTO
 import com.ssavice.network.model.service.AddServiceDTO
 import com.ssavice.network.model.service.SearchServiceDTO
+import com.ssavice.network.retrofit.service.ImageUploadService
+import com.ssavice.network.retrofit.service.ServiceRetrofitService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

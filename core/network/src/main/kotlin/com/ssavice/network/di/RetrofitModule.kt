@@ -96,8 +96,11 @@ object RetrofitModule {
     @Provides
     @Singleton
     @ImageRetrofit
-    fun provideImageRetrofitBuilder(builder: Retrofit.Builder): Retrofit =
-        builder
+    fun provideImageRetrofitBuilder(callAdapterFactory: ResultCallAdapterFactory): Retrofit =
+        Retrofit
+            .Builder()
+            .addConverterFactory(retroJson.asConverterFactory("application/json".toMediaType()))
+            .addCallAdapterFactory(callAdapterFactory)
             .baseUrl(BuildConfig.BACKEND_URL)
             .build()
 

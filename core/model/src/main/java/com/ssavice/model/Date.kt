@@ -46,6 +46,22 @@ data class DateTime(
         return localDateTime.format(chatTimeFormatter)
     }
 
+    fun absoluteDateSimpleString(): String {
+        val now = LocalDateTime.now(DEFAULT_TIME_ZONE.toZoneId())
+
+        return if (now.year == this.year) {
+            // 올해인 경우: M월 d일
+            this.toTimeStamp().let {
+                val ldt = LocalDateTime.of(year, month, day, hour, minute)
+                ldt.format(absoluteMonthDayFormatter)
+            }
+        } else {
+            // 올해가 아닌 경우: yyyy년 M월 d일
+            val ldt = LocalDateTime.of(year, month, day, hour, minute)
+            ldt.format(absoluteYearMonthDayFormatter)
+        }
+    }
+
     fun dateToSimpleString(): String {
         val now = LocalDateTime.now(DEFAULT_TIME_ZONE.toZoneId())
         val target = LocalDateTime.of(year, month, day, hour, minute)
@@ -97,6 +113,16 @@ data class DateTime(
         val yearMonthDayFormatter: java.time.format.DateTimeFormatter =
             java.time.format.DateTimeFormatter
                 .ofPattern("yyyy. M. d.", Locale.getDefault())
+
+        @Suppress("ConstantLocale")
+        val absoluteMonthDayFormatter: java.time.format.DateTimeFormatter =
+            java.time.format.DateTimeFormatter
+                .ofPattern("M월 d일", Locale.getDefault())
+
+        @Suppress("ConstantLocale")
+        val absoluteYearMonthDayFormatter: java.time.format.DateTimeFormatter =
+            java.time.format.DateTimeFormatter
+                .ofPattern("yyyy년 M월 d일", Locale.getDefault())
     }
 }
 

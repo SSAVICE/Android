@@ -1,7 +1,6 @@
 package com.ssavice.chat.model.network
 
 import com.ssavice.model.chat.ChattingRoomInfo
-import com.ssavice.model.chat.ChattingRoomParticipant
 import com.ssavice.model.enums.RoomType
 import com.ssavice.model.enums.getValue
 import kotlinx.serialization.SerialName
@@ -22,19 +21,6 @@ data class GetRoomInfoDTO(
             name = name,
             roomType = RoomType.getValue(roomType),
             serviceId = serviceId ?: 0,
-        )
-}
-
-@Serializable
-data class RoomParticipantDTO(
-    val name: String,
-    val userId: Long,
-    val thumbnail: String?,
-) {
-    fun toModel(): ChattingRoomParticipant =
-        ChattingRoomParticipant(
-            name = name,
-            userId = userId,
-            thumbnail = thumbnail ?: "",
+            participantIds = members.values.toList(),
         )
 }

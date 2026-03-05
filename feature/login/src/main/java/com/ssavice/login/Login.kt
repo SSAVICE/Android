@@ -80,7 +80,7 @@ fun LoginRoute(
     LoginPage(
         modifier = modifier,
         onLoginButtonClicked = {
-            loginWithKakaoTalk(
+            loginWithKakaoAccount(
                 context = context,
                 onSuccess = viewModel::onKakaoLoginSuccess,
                 onError = viewModel::onKakaoLoginError,
@@ -107,13 +107,13 @@ fun LoginPage(
             TitleSpace(
                 Modifier
                     .fillMaxWidth()
-                    .weight(2f),
+                    .height(600.dp),
             )
             if (uiState.loginState == LoginState.NeedLogin) {
                 LoginSpace(
                     Modifier
                         .fillMaxWidth()
-                        .weight(1f),
+                        .height(300.dp),
                     onLoginButtonClicked = onLoginButtonClicked,
                     uiState = uiState,
                 )
@@ -188,12 +188,34 @@ private fun loginWithKakaoTalk(
 
             if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                 return@loginWithKakaoTalk
+            } else if (
+                error is ClientError &&
+                error.reason == ClientErrorCause.NotSupported
+            ) {
+                loginWithKakaoAccount(context, onSuccess, onError)
             } else {
                 onError(error)
             }
         } else if (token != null) {
             Log.d(TAG, "로그인 성공 ${token.accessToken}")
             onSuccess(token.accessToken)
+        }
+    }
+}
+
+private fun loginWithKakaoAccount(
+    context: Context,
+    onSuccess: (String) -> Unit,
+    onError: (Throwable) -> Unit,
+) {
+    UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
+        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+            return@loginWithKakaoAccount
+        } else if (token != null) {
+            Log.d(TAG, "로그인 성공 ${token.accessToken}")
+            onSuccess(token.accessToken)
+        } else if (error != null) {
+            onError(error)
         }
     }
 }

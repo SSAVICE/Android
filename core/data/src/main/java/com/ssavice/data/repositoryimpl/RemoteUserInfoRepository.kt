@@ -2,8 +2,6 @@ package com.ssavice.data.repositoryimpl
 
 import android.util.Log
 import com.ssavice.data.repository.UserInfoRepository
-import com.ssavice.data.service.ImageUploadService
-import com.ssavice.data.service.UserInfoRetrofitService
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionDetail
@@ -22,6 +20,8 @@ import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.RegionPostDTO
 import com.ssavice.network.model.service.WishServiceDTO
 import com.ssavice.network.model.user.UpdateUserProfileDTO
+import com.ssavice.network.retrofit.service.ImageUploadService
+import com.ssavice.network.retrofit.service.UserInfoRetrofitService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

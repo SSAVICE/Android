@@ -1,4 +1,4 @@
-package com.ssavice.data.service
+package com.ssavice.network.retrofit.service
 
 import GetCompanyInfoDTO
 import com.ssavice.network.model.ConfirmImageDTO
@@ -16,7 +16,6 @@ import com.ssavice.network.model.company.UpdateCompanyProfileDTO
 import com.ssavice.network.model.company.ValidateBusinessDTO
 import com.ssavice.network.model.company.ValidateBusinessResponseDTO
 import com.ssavice.network.model.review.GetCompanyReviewDTO
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

@@ -7,10 +7,5 @@ data class ChattingRoomInfo(
     val name: String,
     val roomType: RoomType,
     val serviceId: Long,
-)
-
-data class ChattingRoomParticipant(
-    val name: String,
-    val userId: Long,
-    val thumbnail: String,
+    val participantIds: List<Long>,
 )

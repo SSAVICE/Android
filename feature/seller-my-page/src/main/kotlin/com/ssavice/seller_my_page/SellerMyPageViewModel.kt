@@ -3,6 +3,8 @@ package com.ssavice.seller_my_page
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.SellerInfoRepository
+import com.ssavice.data.repository.UserInfoRepository
+import com.ssavice.network.authentication.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,8 @@ class SellerMyPageViewModel
     @Inject
     constructor(
         private val sellerInfoRepository: SellerInfoRepository,
+        private val authRepository: AuthenticationRepository,
+        private val userInfoRepository: UserInfoRepository,
     ) : ViewModel() {
         private val _uiState by lazy {
             val mf =
@@ -82,6 +86,20 @@ class SellerMyPageViewModel
                             )
                     },
                 )
+            }
+        }
+
+        fun onLogout() {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepository
+                    .logout()
+                    .onSuccess {
+                        _uiState.value =
+                            _uiState.value.copy(
+                                participationState = MyPageState.Done,
+                            )
+                        userInfoRepository.getUserAddress()
+                    }
             }
         }
     }

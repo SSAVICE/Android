@@ -9,11 +9,16 @@ import com.ssavice.chat.ChatRemoteMediator
 import com.ssavice.chat.WebSocketEventHandler
 import com.ssavice.chat.model.enum.ChatCursorDirection
 import com.ssavice.chat.service.ChatRetrofitService
+import com.ssavice.datastore.repository.ChattingMetadataRepository
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomInfo
 import com.ssavice.model.chat.ChattingRoomMetadata
+import com.ssavice.model.chat.ChattingServiceSummary
+import com.ssavice.model.chat.ChattingUserInfo
 import com.ssavice.model.enums.RoomType
 import com.ssavice.model.enums.getValue
+import com.ssavice.network.retrofit.service.ServiceRetrofitService
+import com.ssavice.network.retrofit.service.UserInfoRetrofitService
 import com.ssavice.network.websocket.ChatWebSocketManager
 import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.network.websocket.model.WebSocketTxEntity
@@ -36,6 +41,7 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
+import kotlin.collections.filter
 
 class ChatRepositoryImpl
     @Inject
@@ -46,6 +52,9 @@ class ChatRepositoryImpl
         private val chatDatabase: ChatDatabase,
         private val webSocketManager: ChatWebSocketManager,
         private val eventHandler: WebSocketEventHandler,
+        private val userRetrofitService: UserInfoRetrofitService,
+        private val serviceRetrofitSummary: ServiceRetrofitService,
+        private val metadataRepository: ChattingMetadataRepository,
     ) : ChatRepository {
         init {
             eventHandler.startObserving()
@@ -231,4 +240,41 @@ class ChatRepositoryImpl
                         }
                     }
                 }
+
+        override fun getUserInfoMap(): Flow<Map<Long, ChattingUserInfo>> = metadataRepository.getUserInfoFlow()
+
+        override suspend fun getMyId(): Result<Long> = userRetrofitService.getMyUserId().map { it.id }
+
+        override fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>> = metadataRepository.getServiceSummaryFlow()
+
+        private suspend fun getIfUserInfoNeedUpdate(userId: Long): Boolean {
+            val data = metadataRepository.getUserInfo(userId)
+            data.onSuccess {
+                return it.needRefresh()
+            }
+            return true
+        }
+
+        private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
+            val result = userRetrofitService.getUserInfoSummary(userId)
+            return result
+                .map { it.toModel() }
+                .onSuccess { data ->
+                    metadataRepository.setUserInfos(data)
+                }.map { Unit }
+        }
+
+        override suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit> {
+            val updateList = userIds.filter { getIfUserInfoNeedUpdate(it) }
+            return getUserInfoFromRemoteAndUpdate(updateList)
+        }
+
+        override suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit> {
+            val result = serviceRetrofitSummary.getServiceSummary(serviceId)
+            return result
+                .map { it.toModel(serviceId) }
+                .onSuccess { data ->
+                    metadataRepository.setServiceSummary(data)
+                }.map { Unit }
+        }
     }
