@@ -1,6 +1,6 @@
 package com.ssavice.data.di
 
-import com.ssavice.data.service.KakaoRestService
+import com.ssavice.network.retrofit.service.KakaoRestService
 import com.ssavice.network.di.RetrofitModule
 import dagger.Module
 import dagger.Provides

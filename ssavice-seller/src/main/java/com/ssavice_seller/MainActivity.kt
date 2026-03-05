@@ -59,6 +59,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY_SELLER)
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY_SELLER)
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
@@ -105,8 +107,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY_SELLER)
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY_SELLER)
     }
 
     override fun onStart() {
