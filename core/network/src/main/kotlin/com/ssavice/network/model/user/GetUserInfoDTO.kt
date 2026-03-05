@@ -5,22 +5,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetUserInfoDTO(
-    val list: List<UserInfoDTO>
+    val list: List<UserInfoDTO>,
 ) {
-    fun toModel(): List<ChattingUserInfo> {
-        return list.map {
+    fun toModel(): List<ChattingUserInfo> =
+        list.map {
             ChattingUserInfo(
                 name = it.name,
                 id = it.id,
-                thumbnail = it.thumbnail
+                thumbnail = it.thumbnail,
             )
         }
-    }
 }
 
 @Serializable
 data class UserInfoDTO(
     val name: String,
     val id: Long,
-    val thumbnail: String
+    val thumbnail: String,
 )

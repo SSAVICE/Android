@@ -54,7 +54,7 @@ class ChatRepositoryImpl
         private val eventHandler: WebSocketEventHandler,
         private val userRetrofitService: UserInfoRetrofitService,
         private val serviceRetrofitSummary: ServiceRetrofitService,
-        private val metadataRepository: ChattingMetadataRepository
+        private val metadataRepository: ChattingMetadataRepository,
     ) : ChatRepository {
         init {
             eventHandler.startObserving()
@@ -241,42 +241,40 @@ class ChatRepositoryImpl
                     }
                 }
 
-    override fun getUserInfoMap(): Flow<Map<Long, ChattingUserInfo>> {
-        return metadataRepository.getUserInfoFlow()
-    }
+        override fun getUserInfoMap(): Flow<Map<Long, ChattingUserInfo>> = metadataRepository.getUserInfoFlow()
 
-    override suspend fun getMyId(): Result<Long> {
-        return userRetrofitService.getMyUserId().map { it.id }
-    }
+        override suspend fun getMyId(): Result<Long> = userRetrofitService.getMyUserId().map { it.id }
 
-    override fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>> {
-        return metadataRepository.getServiceSummaryFlow()
-    }
+        override fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>> = metadataRepository.getServiceSummaryFlow()
 
-    private suspend fun getIfUserInfoNeedUpdate(userId: Long): Boolean {
-        val data = metadataRepository.getUserInfo(userId)
-        data.onSuccess {
-            return it.needRefresh()
+        private suspend fun getIfUserInfoNeedUpdate(userId: Long): Boolean {
+            val data = metadataRepository.getUserInfo(userId)
+            data.onSuccess {
+                return it.needRefresh()
+            }
+            return true
         }
-        return true
-    }
 
-    private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
-        val result = userRetrofitService.getUserInfoSummary(userId)
-        return result.map { it.toModel() }.onSuccess { data ->
-            metadataRepository.setUserInfos(data)
-        }.map { Unit }
-    }
+        private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
+            val result = userRetrofitService.getUserInfoSummary(userId)
+            return result
+                .map { it.toModel() }
+                .onSuccess { data ->
+                    metadataRepository.setUserInfos(data)
+                }.map { Unit }
+        }
 
-    override suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit> {
-        val updateList = userIds.filter { getIfUserInfoNeedUpdate(it) }
-        return getUserInfoFromRemoteAndUpdate(updateList)
-    }
+        override suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit> {
+            val updateList = userIds.filter { getIfUserInfoNeedUpdate(it) }
+            return getUserInfoFromRemoteAndUpdate(updateList)
+        }
 
-    override suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit> {
-        val result = serviceRetrofitSummary.getServiceSummary(serviceId)
-        return result.map { it.toModel(serviceId) }.onSuccess { data ->
-            metadataRepository.setServiceSummary(data)
-        }.map { Unit }
+        override suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit> {
+            val result = serviceRetrofitSummary.getServiceSummary(serviceId)
+            return result
+                .map { it.toModel(serviceId) }
+                .onSuccess { data ->
+                    metadataRepository.setServiceSummary(data)
+                }.map { Unit }
+        }
     }
-}

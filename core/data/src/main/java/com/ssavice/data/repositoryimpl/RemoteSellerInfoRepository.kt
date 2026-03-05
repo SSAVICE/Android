@@ -2,8 +2,6 @@ package com.ssavice.data.repositoryimpl
 
 import android.util.Log
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.network.retrofit.service.CompanyRetrofitService
-import com.ssavice.network.retrofit.service.ImageUploadService
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
@@ -27,6 +25,8 @@ import com.ssavice.network.model.ContentTypeDTO
 import com.ssavice.network.model.company.AddCompanyDTO
 import com.ssavice.network.model.company.UpdateCompanyProfileDTO
 import com.ssavice.network.model.company.ValidateBusinessDTO
+import com.ssavice.network.retrofit.service.CompanyRetrofitService
+import com.ssavice.network.retrofit.service.ImageUploadService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

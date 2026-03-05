@@ -38,7 +38,7 @@ sealed interface ChattingRoomState {
 
     object Ready : ChattingRoomState
 
-    object FETCHING_ID : ChattingRoomState
+    object FetchingId : ChattingRoomState
 }
 
 data class UserInfo(

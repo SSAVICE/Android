@@ -28,8 +28,9 @@ import javax.inject.Singleton
 abstract class ChattingMetadataModule {
     @Binds
     @Singleton
-    internal abstract fun bindChattingMetadataRepository
-                (localChattingMetadataRepository: LocalChattingMetadataRepository): ChattingMetadataRepository
+    internal abstract fun bindChattingMetadataRepository(
+        localChattingMetadataRepository: LocalChattingMetadataRepository,
+    ): ChattingMetadataRepository
 }
 
 @Module

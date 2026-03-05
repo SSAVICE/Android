@@ -22,5 +22,4 @@ interface ChattingMetadataRepository {
     fun getUserInfoFlow(): Flow<Map<Long, ChattingUserInfo>>
 
     fun getServiceSummaryFlow(): Flow<Map<Long, ChattingServiceSummary>>
-
 }

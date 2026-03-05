@@ -89,17 +89,17 @@ class SellerMyPageViewModel
             }
         }
 
-    fun onLogout() {
-        viewModelScope.launch(Dispatchers.IO) {
-            authRepository
-                .logout()
-                .onSuccess {
-                    _uiState.value =
-                        _uiState.value.copy(
-                            participationState = MyPageState.Done,
-                        )
-                    userInfoRepository.getUserAddress()
-                }
+        fun onLogout() {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepository
+                    .logout()
+                    .onSuccess {
+                        _uiState.value =
+                            _uiState.value.copy(
+                                participationState = MyPageState.Done,
+                            )
+                        userInfoRepository.getUserAddress()
+                    }
+            }
         }
-    }
     }

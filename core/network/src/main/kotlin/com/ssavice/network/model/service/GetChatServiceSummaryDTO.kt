@@ -8,13 +8,14 @@ data class GetChatServiceSummaryDTO(
     val serviceName: String,
     val servicePrice: Int,
     val serviceThumbnail: String,
-    val serviceSeller: String
+    val serviceSeller: String,
 ) {
-    fun toModel(id: Long) = ChattingServiceSummary(
-        serviceId = id,
-        serviceName = serviceName,
-        servicePrice = servicePrice,
-        serviceThumbnail = serviceThumbnail,
-        serviceSeller = serviceSeller
-    )
+    fun toModel(id: Long) =
+        ChattingServiceSummary(
+            serviceId = id,
+            serviceName = serviceName,
+            servicePrice = servicePrice,
+            serviceThumbnail = serviceThumbnail,
+            serviceSeller = serviceSeller,
+        )
 }

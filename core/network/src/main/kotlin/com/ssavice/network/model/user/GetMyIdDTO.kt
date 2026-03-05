@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetMyIdDTO(
-    val id: Long
+    val id: Long,
 )

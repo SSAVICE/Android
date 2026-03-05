@@ -72,7 +72,7 @@ interface UserInfoRetrofitService {
 
     @GET("/api/user/info")
     suspend fun getUserInfoSummary(
-        @Query("ids")userIds: List<Long>
+        @Query("ids")userIds: List<Long>,
     ): Result<GetUserInfoDTO>
 
     @GET("/api/user/id")

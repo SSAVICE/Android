@@ -9,11 +9,9 @@ data class ChattingServiceSummary(
     val servicePrice: Int,
     val serviceThumbnail: String,
     val serviceSeller: String,
-    val lastUpdate: Long = System.currentTimeMillis()
+    val lastUpdate: Long = System.currentTimeMillis(),
 ) {
-    fun needRefresh(): Boolean {
-        return (System.currentTimeMillis() - lastUpdate) > SERVICE_SUMMARY_REFRESH_CYCLE
-    }
+    fun needRefresh(): Boolean = (System.currentTimeMillis() - lastUpdate) > SERVICE_SUMMARY_REFRESH_CYCLE
 
     companion object {
         const val SERVICE_SUMMARY_REFRESH_CYCLE = 1000 * 3600 * 6

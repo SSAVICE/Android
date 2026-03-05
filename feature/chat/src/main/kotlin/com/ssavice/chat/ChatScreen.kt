@@ -49,10 +49,13 @@ fun ChatRoute(
         }
 
     LaunchedEffect(
-        roomUiState
+        roomUiState,
     ) {
-        when(roomUiState.chattingRoomState) {
-            ChattingRoomState.Initial -> viewModel.getYourId()
+        when (roomUiState.chattingRoomState) {
+            ChattingRoomState.Initial -> {
+                viewModel.getYourId()
+            }
+
             else -> {}
         }
     }
@@ -141,17 +144,21 @@ fun ChattingScreen(
                             true
                         } else {
                             (message.userId != before.userId) ||
-                                    message.time != before.time
+                                message.time != before.time
                         }
 
                     val insertDayDivider =
-                        if (before == null) false
-                        else (before.time.day != message.time.day ||
-                                before.time.month != message.time.month ||
-                                before.time.year != message.time.year
-                                )
+                        if (before == null) {
+                            false
+                        } else {
+                            (
+                                before.time.day != message.time.day ||
+                                    before.time.month != message.time.month ||
+                                    before.time.year != message.time.year
+                            )
+                        }
 
-                    if(last||insertDayDivider) {
+                    if (last || insertDayDivider) {
                         ChatDivider(
                             message = message.time.absoluteDateSimpleString(),
                         )

@@ -17,35 +17,36 @@ import androidx.compose.ui.unit.dp
 fun ChatDivider(
     message: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.outlineVariant, // 기본 색상
-    textColor: Color = MaterialTheme.colorScheme.outline // 텍스트 색상
+    color: Color = MaterialTheme.colorScheme.outlineVariant,
+    textColor: Color = MaterialTheme.colorScheme.outline,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 16.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         // 왼쪽 선
         HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
-            color = color
+            color = color,
         )
 
         // 중앙 메시지 (날짜 또는 "마지막으로 읽은 메시지")
         Text(
             text = message,
             style = MaterialTheme.typography.labelMedium,
-            color = textColor
+            color = textColor,
         )
 
         // 오른쪽 선
         HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
-            color = color
+            color = color,
         )
     }
 }

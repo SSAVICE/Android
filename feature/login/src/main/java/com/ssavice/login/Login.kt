@@ -206,14 +206,15 @@ private fun loginWithKakaoTalk(
 private fun loginWithKakaoAccount(
     context: Context,
     onSuccess: (String) -> Unit,
-    onError: (Throwable) -> Unit) {
+    onError: (Throwable) -> Unit,
+) {
     UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
         if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
             return@loginWithKakaoAccount
         } else if (token != null) {
             Log.d(TAG, "로그인 성공 ${token.accessToken}")
             onSuccess(token.accessToken)
-        }else if (error != null) {
+        } else if (error != null) {
             onError(error)
         }
     }
@@ -312,8 +313,7 @@ fun HashKeySpace(modifier: Modifier) {
             Modifier
                 .background(
                     color = MaterialTheme.colorScheme.background,
-                )
-                .clickable {
+                ).clickable {
                     val data = android.content.ClipData.newPlainText("Hash", hashText)
                     CoroutineScope(Dispatchers.Main).launch {
                         clipboardManager.setClipEntry(
@@ -362,12 +362,12 @@ fun LoginPageErrorPreview() {
             loginState =
                 LoginState.Error(
                     "ErrorThisisLongErrorThisisVeryLongError\n" +
-                            "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
-                            "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
-                            "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
-                            "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
-                            "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
-                            "ongErrorErrorThisisLongErrorThisisVeryLongError",
+                        "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
+                        "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
+                        "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
+                        "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
+                        "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
+                        "ongErrorErrorThisisLongErrorThisisVeryLongError",
                 ),
             isUser = true,
         )

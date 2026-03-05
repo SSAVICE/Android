@@ -45,7 +45,7 @@ data class DateTime(
         val localDateTime = LocalDateTime.of(year, month, day, hour, minute)
         return localDateTime.format(chatTimeFormatter)
     }
-    
+
     fun absoluteDateSimpleString(): String {
         val now = LocalDateTime.now(DEFAULT_TIME_ZONE.toZoneId())
 

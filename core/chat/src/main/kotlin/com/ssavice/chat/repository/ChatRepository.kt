@@ -54,11 +54,7 @@ interface ChatRepository {
 
     fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>>
 
-    suspend fun updateUserInfoIfNeed(
-        userIds: List<Long>
-    ): Result<Unit>
+    suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit>
 
-    suspend fun updateServiceSummaryIfNeed(
-        serviceId: Long
-    ): Result<Unit>
+    suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit>
 }

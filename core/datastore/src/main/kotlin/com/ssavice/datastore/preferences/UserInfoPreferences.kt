@@ -10,30 +10,32 @@ import java.io.OutputStream
 
 @Serializable
 data class UserInfoPreferences(
-    val infos: Map<Long,ChattingUserInfo> = emptyMap(),
+    val infos: Map<Long, ChattingUserInfo> = emptyMap(),
 )
 
 object UserInfoPreferencesSerializer : Serializer<UserInfoPreferences> {
-
     override val defaultValue: UserInfoPreferences = UserInfoPreferences()
 
-    override suspend fun readFrom(input: InputStream): UserInfoPreferences {
-        return try {
+    override suspend fun readFrom(input: InputStream): UserInfoPreferences =
+        try {
             Json.decodeFromString(
                 deserializer = UserInfoPreferences.serializer(),
-                string = input.readBytes().decodeToString()
+                string = input.readBytes().decodeToString(),
             )
         } catch (e: SerializationException) {
             defaultValue
         }
-    }
 
-    override suspend fun writeTo(t: UserInfoPreferences, output: OutputStream) {
+    override suspend fun writeTo(
+        t: UserInfoPreferences,
+        output: OutputStream,
+    ) {
         output.write(
-            Json.encodeToString(
-                serializer = UserInfoPreferences.serializer(),
-                value = t
-            ).encodeToByteArray()
+            Json
+                .encodeToString(
+                    serializer = UserInfoPreferences.serializer(),
+                    value = t,
+                ).encodeToByteArray(),
         )
     }
 }

@@ -2,9 +2,9 @@ package com.ssavice.datastore.preferences
 
 import androidx.datastore.core.Serializer
 import com.ssavice.model.chat.ChattingServiceSummary
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.Serializable
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -14,26 +14,28 @@ data class ServiceMetadataPreferences(
 )
 
 object ServiceMetadataPreferencesSerializer : Serializer<ServiceMetadataPreferences> {
-
     override val defaultValue: ServiceMetadataPreferences = ServiceMetadataPreferences()
 
-    override suspend fun readFrom(input: InputStream): ServiceMetadataPreferences {
-        return try {
+    override suspend fun readFrom(input: InputStream): ServiceMetadataPreferences =
+        try {
             Json.decodeFromString(
                 deserializer = ServiceMetadataPreferences.serializer(),
-                string = input.readBytes().decodeToString()
+                string = input.readBytes().decodeToString(),
             )
         } catch (e: SerializationException) {
             defaultValue
         }
-    }
 
-    override suspend fun writeTo(t: ServiceMetadataPreferences, output: OutputStream) {
+    override suspend fun writeTo(
+        t: ServiceMetadataPreferences,
+        output: OutputStream,
+    ) {
         output.write(
-            Json.encodeToString(
-                serializer = ServiceMetadataPreferences.serializer(),
-                value = t
-            ).encodeToByteArray()
+            Json
+                .encodeToString(
+                    serializer = ServiceMetadataPreferences.serializer(),
+                    value = t,
+                ).encodeToByteArray(),
         )
     }
 }
