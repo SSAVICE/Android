@@ -26,10 +26,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssavice.chat.ServiceInfo
 import com.ssavice.designsystem.theme.shimmerBrush
+import com.ssavice.model.chat.ChattingServiceSummary
 
 @Composable
 fun SendServicePreviewItem(
-    serviceInfo: ServiceInfo?,
+    serviceInfo: ChattingServiceSummary?,
     imageRequestBuilder: ImageRequest.Builder,
     modifier: Modifier = Modifier.Companion,
 ) {
@@ -74,7 +75,7 @@ fun SendServicePreviewItem(
                     )
                 } else {
                     AsyncImage(
-                        model = imageRequestBuilder.data(serviceInfo.thumbnail).build(),
+                        model = imageRequestBuilder.data(serviceInfo.serviceThumbnail).build(),
                         contentDescription = null,
                         modifier =
                             Modifier.Companion
@@ -121,21 +122,21 @@ fun SendServicePreviewItem(
                     } else {
                         serviceInfo?.let { info ->
                             Text(
-                                text = info.seller,
+                                text = info.serviceSeller,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Companion.Ellipsis,
                             )
                             Text(
-                                text = info.name,
+                                text = info.serviceName,
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Companion.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 overflow = TextOverflow.Companion.Ellipsis,
                             )
                             Text(
-                                text = "%,d원".format(info.discountPrice),
+                                text = "%,d원".format(info.servicePrice),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

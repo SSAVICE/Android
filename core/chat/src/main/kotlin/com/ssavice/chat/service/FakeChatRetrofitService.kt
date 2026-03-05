@@ -7,10 +7,6 @@ import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.chat.model.network.GetRoomListDTO
 import com.ssavice.chat.model.network.MessageDTO
 import com.ssavice.chat.model.network.RoomDTO
-import com.ssavice.chat.model.network.RoomParticipantDTO
-import com.ssavice.room.dto.ChatEntity
-import retrofit2.Response
-import java.time.LocalDateTime
 
 class FakeChatRetrofitService : ChatRetrofitService {
     val lastId = 500L

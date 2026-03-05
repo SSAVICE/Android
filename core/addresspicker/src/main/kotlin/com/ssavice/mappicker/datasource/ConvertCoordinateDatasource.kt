@@ -1,7 +1,7 @@
 package com.ssavice.mappicker.datasource
 
 import com.ssavice.core.mappicker.BuildConfig
-import com.ssavice.data.service.KakaoRestService
+import com.ssavice.network.retrofit.service.KakaoRestService
 import com.ssavice.mappicker.model.CoordinateConvertResult
 import javax.inject.Inject
 

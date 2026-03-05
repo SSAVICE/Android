@@ -1,9 +1,8 @@
 package com.ssavice.data.di
 
 import com.ssavice.data.repository.ServiceRepository
-import com.ssavice.data.repositoryimpl.DemoServiceRepository
 import com.ssavice.data.repositoryimpl.RemoteServiceRepository
-import com.ssavice.data.service.ServiceRetrofitService
+import com.ssavice.network.retrofit.service.ServiceRetrofitService
 import com.ssavice.network.di.RetrofitModule
 import dagger.Binds
 import dagger.Module

@@ -1,4 +1,4 @@
-package com.ssavice.data.service
+package com.ssavice.network.retrofit.service
 
 import com.ssavice.network.model.ConfirmImageDTO
 import com.ssavice.network.model.ContentTypeDTO
@@ -7,6 +7,8 @@ import com.ssavice.network.model.PresignedUrlDTO
 import com.ssavice.network.model.RegionPostDTO
 import com.ssavice.network.model.service.UserBookDTO
 import com.ssavice.network.model.service.WishServiceDTO
+import com.ssavice.network.model.user.GetMyIdDTO
+import com.ssavice.network.model.user.GetUserInfoDTO
 import com.ssavice.network.model.user.UpdateUserProfileDTO
 import com.ssavice.network.model.user.UpdateUserProfileResponseDTO
 import com.ssavice.network.model.user.UserBookSummaryDTO
@@ -67,4 +69,12 @@ interface UserInfoRetrofitService {
         @Query("page") page: Int,
         @Query("size") size: Int,
     ): Result<WishListDTO>
+
+    @GET("/api/user/info")
+    suspend fun getUserInfoSummary(
+        @Query("ids")userIds: List<Long>
+    ): Result<GetUserInfoDTO>
+
+    @GET("/api/user/id")
+    suspend fun getMyUserId(): Result<GetMyIdDTO>
 }

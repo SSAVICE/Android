@@ -6,6 +6,8 @@ import com.ssavice.chat.model.network.GetRoomInfoDTO
 import com.ssavice.model.chat.Chat
 import com.ssavice.model.chat.ChattingRoomInfo
 import com.ssavice.model.chat.ChattingRoomMetadata
+import com.ssavice.model.chat.ChattingServiceSummary
+import com.ssavice.model.chat.ChattingUserInfo
 import com.ssavice.model.enums.RoomType
 import com.ssavice.room.dto.ChatEntity
 import kotlinx.coroutines.flow.Flow
@@ -45,4 +47,18 @@ interface ChatRepository {
         serviceId: Long,
         userId: Long,
     ): Flow<Result<String>>
+
+    fun getUserInfoMap(): Flow<Map<Long, ChattingUserInfo>>
+
+    suspend fun getMyId(): Result<Long>
+
+    fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>>
+
+    suspend fun updateUserInfoIfNeed(
+        userIds: List<Long>
+    ): Result<Unit>
+
+    suspend fun updateServiceSummaryIfNeed(
+        serviceId: Long
+    ): Result<Unit>
 }

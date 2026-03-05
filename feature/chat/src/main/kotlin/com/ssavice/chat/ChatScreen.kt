@@ -36,7 +36,8 @@ fun ChatRoute(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val roomUiState by viewModel.roomUiState.collectAsStateWithLifecycle()
+    val chattingState by viewModel.chattingUiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val imageRequestBuilder =
@@ -47,11 +48,19 @@ fun ChatRoute(
                 .crossfade(true)
         }
 
+    LaunchedEffect(
+        roomUiState
+    ) {
+        when(roomUiState.chattingRoomState) {
+            ChattingRoomState.Initial -> viewModel.getYourId()
+            else -> {}
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
-        if (uiState.sendingService) {
-            viewModel.requestServiceInfo(uiState.serviceIdToSend)
+        if (roomUiState.sendingService) {
             SendServicePreviewItem(
-                serviceInfo = uiState.serviceInfo[uiState.serviceIdToSend],
+                serviceInfo = chattingState.serviceInfo[roomUiState.serviceIdToSend],
                 imageRequestBuilder = imageRequestBuilder,
                 modifier =
                     Modifier
@@ -62,11 +71,12 @@ fun ChatRoute(
             )
         }
 
-        if (uiState.chattingRoomState != ChattingRoomState.Pending) {
+        if (roomUiState.chattingRoomState == ChattingRoomState.Ready) {
             ChattingScreen(
                 modifier = Modifier,
                 viewModel = viewModel,
-                uiState = uiState,
+                roomUiState = roomUiState,
+                chattingUiState = chattingState,
                 imageRequestBuilder = imageRequestBuilder,
             )
         }
@@ -77,7 +87,8 @@ fun ChatRoute(
 fun ChattingScreen(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel,
-    uiState: ChattingRoomUiState,
+    chattingUiState: ChattingDataUiState,
+    roomUiState: RoomUiState,
     imageRequestBuilder: ImageRequest.Builder,
 ) {
     val chatMessages: (LazyPagingItems<ChatMessage>) =
@@ -100,8 +111,8 @@ fun ChattingScreen(
         }
     }
 
-    LaunchedEffect(uiState.roomInfoLoadState) {
-        if (uiState.roomInfoLoadState == ChattingRoomInfoLoadState.Initial) {
+    LaunchedEffect(roomUiState.roomInfoLoadState) {
+        if (roomUiState.roomInfoLoadState == ChattingRoomInfoLoadState.Initial) {
             viewModel.loadChattingRoomInfo()
         }
     }
@@ -147,7 +158,7 @@ fun ChattingScreen(
                     }
                     when (val t = message) {
                         is ChatMessage.ServiceMessage -> {
-                            val service = uiState.serviceInfo[t.serviceId]
+                            val service = chattingUiState.serviceInfo[t.serviceId]
 
                             if (service == null) {
                                 ChatServiceShimmerBubble(
@@ -157,10 +168,10 @@ fun ChattingScreen(
                                 )
                             } else {
                                 ChatServiceBubble(
-                                    serviceTitle = service.name,
-                                    sellerName = service.seller,
-                                    price = "₩%,d".format(service.discountPrice),
-                                    thumbnailUrl = service.thumbnail,
+                                    serviceTitle = service.serviceName,
+                                    sellerName = service.serviceSeller,
+                                    price = "₩%,d".format(service.servicePrice),
+                                    thumbnailUrl = service.serviceThumbnail,
                                     direction = if (t.you) ChatBubbleDirection.SENT else ChatBubbleDirection.RECEIVED,
                                     timestamp = t.time.timeToSimpleString(),
                                     imageRequest = imageRequestBuilder,

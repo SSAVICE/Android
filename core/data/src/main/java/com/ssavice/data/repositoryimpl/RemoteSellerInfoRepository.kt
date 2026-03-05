@@ -2,8 +2,8 @@ package com.ssavice.data.repositoryimpl
 
 import android.util.Log
 import com.ssavice.data.repository.SellerInfoRepository
-import com.ssavice.data.service.CompanyRetrofitService
-import com.ssavice.data.service.ImageUploadService
+import com.ssavice.network.retrofit.service.CompanyRetrofitService
+import com.ssavice.network.retrofit.service.ImageUploadService
 import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
