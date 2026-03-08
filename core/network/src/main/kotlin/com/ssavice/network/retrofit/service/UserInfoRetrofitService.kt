@@ -70,11 +70,11 @@ interface UserInfoRetrofitService {
         @Query("size") size: Int,
     ): Result<WishListDTO>
 
-    @GET("/api/user/info")
+    @GET("/api/chat-members")
     suspend fun getUserInfoSummary(
         @Query("ids")userIds: List<Long>,
     ): Result<GetUserInfoDTO>
 
-    @GET("/api/user/id")
+    @GET("/api/auth/id")
     suspend fun getMyUserId(): Result<GetMyIdDTO>
 }

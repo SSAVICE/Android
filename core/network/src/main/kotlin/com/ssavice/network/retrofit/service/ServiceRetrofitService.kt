@@ -66,7 +66,7 @@ interface ServiceRetrofitService {
         @Query("page") page: Int,
     ): Result<GetServiceParticipantDTO>
 
-    @GET("/api/service/book/{id}")
+    @GET("/api/service/{id}/summary")
     suspend fun getServiceSummary(
         @Path(value = "id") id: Long,
     ): Result<GetChatServiceSummaryDTO>
