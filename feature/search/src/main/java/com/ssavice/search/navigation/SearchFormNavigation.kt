@@ -95,4 +95,6 @@ object SearchFormRouteContract {
     const val START_PRICE = "startPrice"
     const val END_PRICE = "endPrice"
     const val SORT_BY = "sortBy"
+    const val REGION1 = "region1"
+    const val REGION2 = "region2"
 }

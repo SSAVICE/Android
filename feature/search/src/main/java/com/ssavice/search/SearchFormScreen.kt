@@ -82,6 +82,7 @@ fun SearchFormScreen(
     // 화면이 처음 그려질 때 포커스를 요청
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+        viewModel.initiateRegion()
     }
 
     LaunchedEffect(shouldRenderContent) {
@@ -106,6 +107,8 @@ fun SearchFormScreen(
         },
         focusRequester = focusRequester,
         readyToRenderContent = shouldRenderContent,
+        region1 = state.region1String,
+        region2 = state.region2String,
     )
 }
 
@@ -121,6 +124,8 @@ fun SearchFormScreen(
     onSearchClick: (query: String) -> Unit = {},
     focusRequester: FocusRequester? = null,
     readyToRenderContent: Boolean = true,
+    region1: String = "",
+    region2: String = "",
 ) {
     Column(modifier = modifier) {
         Row(
@@ -215,7 +220,7 @@ fun SearchFormScreen(
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
                             verticalArrangement = spacedBy(10.dp),
                         ) {
-                            listOf("대구광역시", "달서구").forEachIndexed { index, category ->
+                            listOf(region1, region2, "1.5km", "3km").forEachIndexed { index, category ->
                                 SsaviceChip(
                                     text = category,
                                     selected = form.searchRange == index,
