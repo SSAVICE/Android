@@ -1,8 +1,10 @@
 package com.ssavice.user_my_page
 
-import androidx.compose.animation.core.copy
+import android.content.ClipData
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +52,9 @@ import com.ssavice.user_my_page.ui.MyPageItem
 import com.ssavice.user_my_page.ui.MyPageSmallItem
 import com.ssavice.user_my_page.ui.ParticipationSummary
 import com.ssavice.user_my_page.ui.ProfileSummary
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyPageRoute(
@@ -100,6 +110,11 @@ fun MyPageScreen(
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showWithdrawDialog by remember { mutableStateOf(false) }
+    var showHelpDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+    val clipboardManager = LocalClipboard.current
 
     Column(modifier = modifier) {
         ProfileSummary(
@@ -131,7 +146,7 @@ fun MyPageScreen(
                 icon = Icons.AutoMirrored.Outlined.HelpOutline,
                 title = "문의",
                 description = "고객지원",
-                onClick = onHelpButtonClick,
+                onClick = { showHelpDialog = true },
             )
             Spacer(modifier = Modifier.height(6.dp))
 
@@ -159,13 +174,55 @@ fun MyPageScreen(
         )
     }
 
-    if(showWithdrawDialog) {
+    if (showWithdrawDialog) {
         UnregisterAlertDialog(
             onConfirm = {
                 showWithdrawDialog = false
                 onUnregister()
             },
-            onDismiss = { showWithdrawDialog  = false}
+            onDismiss = { showWithdrawDialog = false }
+        )
+    }
+
+    if (showHelpDialog) {
+        HelpInquiryDialog(
+            onDismiss = { showHelpDialog = false },
+            onCopyEmail = { email ->
+                val data = ClipData.newPlainText("문의 메일", email)
+                CoroutineScope(Dispatchers.Main).launch {
+                    clipboardManager.setClipEntry(
+                        data.toClipEntry(),
+                    )
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "이메일이 복사되었습니다.",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
+                }
+                showHelpDialog = false
+            },
+            onOpenForm = { url ->
+                try {
+                    uriHandler.openUri(url)
+                } catch (e: Exception) {
+                    val data = ClipData.newPlainText("문의 폼", url)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        clipboardManager.setClipEntry(
+                            data.toClipEntry(),
+                        )
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "URL 열기에 실패했습니다.\n문의 폼 주소가 복사되었습니다.",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
+                    }
+
+                } finally {
+                    showHelpDialog = false
+                }
+            }
         )
     }
 }
@@ -265,6 +322,86 @@ fun UnregisterAlertDialog(
                 )
             ) {
                 Text("취소")
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
+    )
+}
+
+@Composable
+fun HelpInquiryDialog(
+    onDismiss: () -> Unit,
+    onCopyEmail: (String) -> Unit,
+    onOpenForm: (String) -> Unit,
+) {
+    val developerEmail = "ssavice.contact@gmail.com" // 실제 이메일로 변경하세요
+    val inquiryFormUrl =
+        "https://docs.google.com/forms/d/e/1FAIpQLSc3rhcaLfT3zhwiTrsBJ3L6DNh21WS4WGAqfh6cLnVHXFO46A/viewform?usp=publish-editor" // 실제 URL로 변경하세요
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "문의하기",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = spacedBy(16.dp)) {
+                Column(verticalArrangement = spacedBy(4.dp)) {
+                    Text(
+                        text = "이메일 문의",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCopyEmail(developerEmail) }
+                            .background(
+                                MaterialTheme.colorScheme.surfaceDim,
+                                shape = MaterialTheme.shapes.small
+                            )
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = developerEmail,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "복사",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                }
+
+                Column(verticalArrangement = spacedBy(4.dp)) {
+                    Text(
+                        text = "문의 폼 접수",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Button(
+                        onClick = { onOpenForm(inquiryFormUrl) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceDim,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    ) {
+                        Text("문의 폼 열기", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("닫기")
             }
         },
         containerColor = MaterialTheme.colorScheme.background
