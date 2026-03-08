@@ -14,7 +14,7 @@ enum class ServiceState(
     USER_CANCELED("취소함"),
     FAILED("모집 실패"),
     UNKNOWN("알 수 없음"),
-    FULLED("모집 마감")
+    FULLED("모집 마감"),
     ;
 
     companion object

@@ -5,7 +5,7 @@ import com.ssavice.model.enums.SortingOrder
 data class SearchFormUiState(
     val form: SearchForm,
     val region1String: String,
-    val region2String: String
+    val region2String: String,
 )
 
 data class SearchForm(

@@ -150,7 +150,7 @@ class DemoUserInfoRepository
             TODO("Not yet implemented")
         }
 
-    override suspend fun unregisterAccount(): Result<Unit> {
-        TODO("Not yet implemented")
+        override suspend fun unregisterAccount(): Result<Unit> {
+            TODO("Not yet implemented")
+        }
     }
-}

@@ -53,26 +53,26 @@ fun ChatList(
     LazyColumn(
         modifier = modifier.fillMaxSize(), // 중앙 배치를 위해 fillMaxSize 추가
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (rooms.isEmpty()) Arrangement.Center else Arrangement.Top
+        verticalArrangement = if (rooms.isEmpty()) Arrangement.Center else Arrangement.Top,
     ) {
         if (rooms.isEmpty()) {
             item {
                 Column(
                     modifier = Modifier.fillParentMaxSize(), // 부모 크기만큼 차지
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
                         text = "참여 중인 채팅방이 없습니다.",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.outline
+                        color = MaterialTheme.colorScheme.outline,
                     )
                 }
             }
         } else {
             items(
                 count = rooms.size,
-                key = { index -> rooms[index].roomId } // name 대신 고유한 roomId를 key로 권장
+                key = { index -> rooms[index].roomId }, // name 대신 고유한 roomId를 key로 권장
             ) { index ->
                 RoomItem(
                     modifier = Modifier.fillMaxWidth(),
@@ -83,7 +83,7 @@ fun ChatList(
                 if (index < rooms.size - 1) {
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
+                        color = MaterialTheme.colorScheme.outlineVariant,
                     )
                 }
             }

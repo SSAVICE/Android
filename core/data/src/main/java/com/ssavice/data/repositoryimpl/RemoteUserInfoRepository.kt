@@ -194,7 +194,5 @@ class RemoteUserInfoRepository
                     it.toModel()
                 }
 
-    override suspend fun unregisterAccount(): Result<Unit> {
-        return userRetrofitService.unregisterAccount()
+        override suspend fun unregisterAccount(): Result<Unit> = userRetrofitService.unregisterAccount()
     }
-}

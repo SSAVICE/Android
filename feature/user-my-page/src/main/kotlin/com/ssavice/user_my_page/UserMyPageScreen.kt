@@ -180,7 +180,7 @@ fun MyPageScreen(
                 showWithdrawDialog = false
                 onUnregister()
             },
-            onDismiss = { showWithdrawDialog = false }
+            onDismiss = { showWithdrawDialog = false },
         )
     }
 
@@ -218,11 +218,10 @@ fun MyPageScreen(
                                 android.widget.Toast.LENGTH_SHORT,
                             ).show()
                     }
-
                 } finally {
                     showHelpDialog = false
                 }
-            }
+            },
         )
     }
 }
@@ -244,15 +243,16 @@ fun LogoutAlertDialog(
         dismissButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
             ) {
                 Text("취소")
             }
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
     )
 }
 
@@ -270,31 +270,32 @@ fun UnregisterAlertDialog(
                 text = "회원 탈퇴",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         },
         text = {
             Column(verticalArrangement = spacedBy(12.dp)) {
                 Text(
                     text = "정말로 탈퇴하시겠습니까?\n탈퇴 시 모든 회원 정보 및 서비스 이용 기록이 삭제되며, 이 작업은 복구하거나 철회할 수 없습니다.",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { checked = !checked }
-                        .padding(vertical = 4.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { checked = !checked }
+                            .padding(vertical = 4.dp),
                 ) {
                     Checkbox(
                         checked = checked,
-                        onCheckedChange = { checked = it }
+                        onCheckedChange = { checked = it },
                     )
                     Text(
                         text = "위 내용을 충분히 이해하였으며, 이에 동의합니다.",
                         style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
                     )
                 }
             }
@@ -303,12 +304,13 @@ fun UnregisterAlertDialog(
             Button(
                 onClick = onConfirm,
                 enabled = checked,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = Color.White,
-                    disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
-                    disabledContentColor = Color.White.copy(alpha = 0.5f)
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = Color.White,
+                        disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
+                        disabledContentColor = Color.White.copy(alpha = 0.5f),
+                    ),
             ) {
                 Text("탈퇴", fontWeight = FontWeight.Bold)
             }
@@ -316,15 +318,16 @@ fun UnregisterAlertDialog(
         dismissButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
             ) {
                 Text("취소")
             }
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
     )
 }
 
@@ -334,9 +337,11 @@ fun HelpInquiryDialog(
     onCopyEmail: (String) -> Unit,
     onOpenForm: (String) -> Unit,
 ) {
-    val developerEmail = "ssavice.contact@gmail.com" // 실제 이메일로 변경하세요
+    val developerEmail = "ssavice.contact@gmail.com"
     val inquiryFormUrl =
-        "https://docs.google.com/forms/d/e/1FAIpQLSc3rhcaLfT3zhwiTrsBJ3L6DNh21WS4WGAqfh6cLnVHXFO46A/viewform?usp=publish-editor" // 실제 URL로 변경하세요
+        "https://docs.google.com/forms/d/e/1FAIpQLSc3rhc" +
+            "aLfT3zhwiTrsBJ3L6DNh21WS4WGAqfh6cLnVHXF" +
+            "O46A/viewform?usp=publish-editor"
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -344,7 +349,7 @@ fun HelpInquiryDialog(
             Text(
                 text = "문의하기",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         },
         text = {
@@ -353,28 +358,28 @@ fun HelpInquiryDialog(
                     Text(
                         text = "이메일 문의",
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onCopyEmail(developerEmail) }
-                            .background(
-                                MaterialTheme.colorScheme.surfaceDim,
-                                shape = MaterialTheme.shapes.small
-                            )
-                            .padding(12.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { onCopyEmail(developerEmail) }
+                                .background(
+                                    MaterialTheme.colorScheme.surfaceDim,
+                                    shape = MaterialTheme.shapes.small,
+                                ).padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = developerEmail,
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
                             text = "복사",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.secondary,
                         )
                     }
                 }
@@ -383,16 +388,17 @@ fun HelpInquiryDialog(
                     Text(
                         text = "문의 폼 접수",
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Button(
                         onClick = { onOpenForm(inquiryFormUrl) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.small,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceDim,
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        )
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceDim,
+                                contentColor = MaterialTheme.colorScheme.onSurface,
+                            ),
                     ) {
                         Text("문의 폼 열기", fontWeight = FontWeight.Bold)
                     }
@@ -404,7 +410,7 @@ fun HelpInquiryDialog(
                 Text("닫기")
             }
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
     )
 }
 

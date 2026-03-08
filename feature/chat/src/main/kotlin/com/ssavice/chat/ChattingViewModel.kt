@@ -160,7 +160,7 @@ class ChattingViewModel
         fun initRoom() {
             val roomId: String? = savedStateHandle[ChatRouteContract.ROOM_ID]
             if (roomId == null) {
-                savedStateHandle.get<Long>(ChatRouteContract.SERVICE_ID)?.let { id->
+                savedStateHandle.get<Long>(ChatRouteContract.SERVICE_ID)?.let { id ->
                     viewModelScope.launch {
                         chatRepository.updateServiceSummaryIfNeed(id)
                     }
