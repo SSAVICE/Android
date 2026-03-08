@@ -1,10 +1,14 @@
 package com.ssavice.user_my_page
 
+import androidx.compose.animation.core.copy
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,16 +19,22 @@ import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -70,8 +80,8 @@ fun MyPageRoute(
         onParticipatedServiceButtonClick = onParticipatedServiceButtonClick,
         onLikedServiceButtonClick = onLikedServiceButtonClick,
         onHelpButtonClick = onHelpButtonClick,
-        onLogoutButtonClick = viewModel::onLogout,
-        onWithdrawButtonClick = onWithdrawButtonClick,
+        onLogout = viewModel::onLogout,
+        onUnregister = viewModel::onUnregister,
         onServiceSummaryClick = onServiceSummaryClick,
     )
 }
@@ -84,11 +94,12 @@ fun MyPageScreen(
     onParticipatedServiceButtonClick: () -> Unit = {},
     onLikedServiceButtonClick: () -> Unit = {},
     onHelpButtonClick: () -> Unit = {},
-    onLogoutButtonClick: () -> Unit = {},
-    onWithdrawButtonClick: () -> Unit = {},
+    onLogout: () -> Unit = {},
+    onUnregister: () -> Unit = {},
     onServiceSummaryClick: (ServiceState) -> Unit = {},
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showWithdrawDialog by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         ProfileSummary(
@@ -132,7 +143,7 @@ fun MyPageScreen(
             MyPageSmallItem(
                 icon = Icons.Outlined.PersonOff,
                 title = "회원 탈퇴",
-                onClick = onWithdrawButtonClick,
+                onClick = { showWithdrawDialog = true },
                 red = true,
             )
         }
@@ -142,9 +153,19 @@ fun MyPageScreen(
         LogoutAlertDialog(
             onApply = {
                 showLogoutDialog = false
-                onLogoutButtonClick()
+                onLogout()
             },
             onDismiss = { showLogoutDialog = false },
+        )
+    }
+
+    if(showWithdrawDialog) {
+        UnregisterAlertDialog(
+            onConfirm = {
+                showWithdrawDialog = false
+                onUnregister()
+            },
+            onDismiss = { showWithdrawDialog  = false}
         )
     }
 }
@@ -164,10 +185,89 @@ fun LogoutAlertDialog(
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
                 Text("취소")
             }
         },
+        containerColor = MaterialTheme.colorScheme.background
+    )
+}
+
+@Composable
+fun UnregisterAlertDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var checked by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "회원 탈퇴",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.error,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = spacedBy(12.dp)) {
+                Text(
+                    text = "정말로 탈퇴하시겠습니까?\n탈퇴 시 모든 회원 정보 및 서비스 이용 기록이 삭제되며, 이 작업은 복구하거나 철회할 수 없습니다.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { checked = !checked }
+                        .padding(vertical = 4.dp)
+                ) {
+                    Checkbox(
+                        checked = checked,
+                        onCheckedChange = { checked = it }
+                    )
+                    Text(
+                        text = "위 내용을 충분히 이해하였으며, 이에 동의합니다.",
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                enabled = checked,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = Color.White,
+                    disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
+                    disabledContentColor = Color.White.copy(alpha = 0.5f)
+                )
+            ) {
+                Text("탈퇴", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                Text("취소")
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     )
 }
 

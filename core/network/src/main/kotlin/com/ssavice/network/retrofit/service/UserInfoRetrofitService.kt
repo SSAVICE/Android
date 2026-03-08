@@ -15,6 +15,7 @@ import com.ssavice.network.model.user.UserBookSummaryDTO
 import com.ssavice.network.model.user.UserProfileDTO
 import com.ssavice.network.model.user.WishListDTO
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -77,4 +78,7 @@ interface UserInfoRetrofitService {
 
     @GET("/api/auth/id")
     suspend fun getMyUserId(): Result<GetMyIdDTO>
+
+    @DELETE("/api/account")
+    suspend fun unregisterAccount(): Result<Unit>
 }

@@ -44,4 +44,6 @@ interface UserInfoRepository {
         searchCount: Int,
         page: Int?,
     ): Result<WishList>
+
+    suspend fun unregisterAccount(): Result<Unit>
 }

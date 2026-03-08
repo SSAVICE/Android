@@ -193,4 +193,8 @@ class RemoteUserInfoRepository
                 ).map {
                     it.toModel()
                 }
+
+    override suspend fun unregisterAccount(): Result<Unit> {
+        return userRetrofitService.unregisterAccount()
     }
+}
