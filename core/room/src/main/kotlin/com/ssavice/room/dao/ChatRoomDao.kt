@@ -1,5 +1,6 @@
 package com.ssavice.room.dao
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -37,7 +38,7 @@ interface ChatRoomDao {
         SET lastMessage = :lastMessage, 
             lastMessageId = :lastMessageId, 
             lastMessageCreatedAt = :lastMessageCreatedAt 
-        WHERE roomId = :roomId AND lastReadMessageId < :lastMessageId
+        WHERE roomId = :roomId AND lastReadMessageId <= :lastMessageId
     """,
     )
     suspend fun updateRoomLastMessage(
@@ -49,14 +50,26 @@ interface ChatRoomDao {
 
     @Transaction
     suspend fun upsertRoomMetadata(room: ChatRoomEntity) {
+        Log.d(
+            "ChatRoomDao",
+            "upsertRoomMetadata: roomId=${room.roomId}, lastMessage=${room.lastMessage}",
+        )
         val result = insertRoomMetadata(room)
         if (result == -1L) { // -1은 IGNORE되어 삽입되지 않았음을 의미
-            updateRoomLastMessage(
-                room.roomId,
-                room.lastMessage,
-                room.lastMessageId,
-                room.lastMessageCreatedAt,
+            Log.d(
+                "ChatRoomDao",
+                "Room duplicate. Updating Room info: roomId=${room.roomId}, lastMessage=${room.lastMessage}",
             )
+            try {
+                updateRoomLastMessage(
+                    room.roomId,
+                    room.lastMessage,
+                    room.lastMessageId,
+                    room.lastMessageCreatedAt,
+                )
+            } catch (e: Exception) {
+                Log.e("ChatRoomDao", "Error updating room last message", e)
+            }
         }
     }
 }

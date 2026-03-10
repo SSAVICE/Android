@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -35,6 +36,7 @@ import com.ssavice.designsystem.component.ChatServiceShimmerBubble
 fun ChatRoute(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val roomUiState by viewModel.roomUiState.collectAsStateWithLifecycle()
     val chattingState by viewModel.chattingUiState.collectAsStateWithLifecycle()
@@ -81,6 +83,7 @@ fun ChatRoute(
                 roomUiState = roomUiState,
                 chattingUiState = chattingState,
                 imageRequestBuilder = imageRequestBuilder,
+                onServiceClick = onServiceClick,
             )
         }
     }
@@ -93,10 +96,28 @@ fun ChattingScreen(
     chattingUiState: ChattingDataUiState,
     roomUiState: RoomUiState,
     imageRequestBuilder: ImageRequest.Builder,
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val chatMessages: (LazyPagingItems<ChatMessage>) =
         viewModel.pagingState.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
+                    chatMessages.refresh()
+                }
+            }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        // Composable이 파괴될 때 옵저버를 제거합니다.
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     val top by remember {
         derivedStateOf {
@@ -182,7 +203,7 @@ fun ChattingScreen(
                                     direction = if (t.you) ChatBubbleDirection.SENT else ChatBubbleDirection.RECEIVED,
                                     timestamp = t.time.timeToSimpleString(),
                                     imageRequest = imageRequestBuilder,
-                                    onDetailClick = {},
+                                    onDetailClick = { onServiceClick(t.serviceId) },
                                 )
                             }
                         }

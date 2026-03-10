@@ -109,7 +109,7 @@ class ChattingViewModel
                 opponentId != null &&
                 _roomUiState.value.serviceIdToSend != -1L
             ) {
-                readyToRedirect(roomUiState.value.yourId, _roomUiState.value.serviceIdToSend)
+                readyToRedirect(roomUiState.value.yourId, roomUiState.value.serviceIdToSend)
                 viewModelScope.launch(Dispatchers.IO) {
                     chatRepository.startChat(opponentId, _roomUiState.value.serviceIdToSend, message)
                 }
@@ -128,6 +128,7 @@ class ChattingViewModel
             yourId: Long,
             serviceId: Long,
         ) {
+            Log.d(TAG, "ready to redirect. Your id = $yourId, serviceId = $serviceId")
             _roomUiState.update {
                 it.copy(
                     sendingService = false,
@@ -139,8 +140,9 @@ class ChattingViewModel
                     .readyForAck(
                         serviceId = serviceId,
                         userId = yourId,
-                    ).catch { e -> Log.e("ChattingViewModel", "Error while waiting for ack", e) }
+                    ).catch { e -> Log.e(TAG, "Error while waiting for ack", e) }
                     .collect { roomId ->
+                        Log.d(TAG, "received Ack. redirecting")
                         roomId.onSuccess { roomId ->
                             redirectChattingRoom(roomId)
                         }
@@ -152,9 +154,9 @@ class ChattingViewModel
             _roomUiState.update {
                 it.copy(
                     roomId = roomId,
-                    chattingRoomState = ChattingRoomState.Initial,
                 )
             }
+            loadChattingRoomInfo()
         }
 
         fun initRoom() {
@@ -177,8 +179,8 @@ class ChattingViewModel
                 _roomUiState.update {
                     it.copy(
                         roomId = roomId,
-                        serviceIdToSend = savedStateHandle[ChatRouteContract.SERVICE_ID] ?: -1L,
-                        sendingService = (savedStateHandle.contains(ChatRouteContract.SERVICE_ID)),
+                        serviceIdToSend = -1L,
+                        sendingService = false,
                     )
                 }
                 loadChattingRoomInfo()

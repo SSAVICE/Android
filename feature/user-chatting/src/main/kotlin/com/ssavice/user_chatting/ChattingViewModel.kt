@@ -39,4 +39,8 @@ class ChattingViewModel
                     initialValue = emptyList(),
                 )
         }
+
+        fun onRefresh() {
+            chatRepository.refreshRoomList()
+        }
     }

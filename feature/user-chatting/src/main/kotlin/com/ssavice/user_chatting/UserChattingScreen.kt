@@ -12,6 +12,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,7 +33,12 @@ fun UserChattingRoute(
 ) {
     val state by viewModel.chattingRoomState.collectAsStateWithLifecycle()
 
-    ChatList(modifier, state, onRoomClick)
+    ChatList(
+        modifier = modifier,
+        rooms = state,
+        onRoomClick,
+        onRefresh = viewModel::onRefresh,
+    )
 }
 
 @Composable
@@ -40,6 +46,7 @@ fun ChatList(
     modifier: Modifier,
     rooms: List<ChattingRoomItem>,
     onRoomClick: (id: String) -> Unit = {},
+    onRefresh: () -> Unit,
 ) {
     val context = LocalContext.current
     val imageRequestBuilder =
@@ -50,26 +57,42 @@ fun ChatList(
                 .placeholder(android.R.drawable.ic_menu_info_details)
         }
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize(), // 중앙 배치를 위해 fillMaxSize 추가
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (rooms.isEmpty()) Arrangement.Center else Arrangement.Top,
-    ) {
-        if (rooms.isEmpty()) {
-            item {
-                Column(
-                    modifier = Modifier.fillParentMaxSize(), // 부모 크기만큼 차지
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "참여 중인 채팅방이 없습니다.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.outline,
-                    )
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
+                    onRefresh()
                 }
             }
-        } else {
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        // Composable이 파괴될 때 옵저버를 제거합니다.
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    if (rooms.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(), // 부모 크기만큼 차지
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = "참여 중인 채팅방이 없습니다.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier.fillMaxSize(), // 중앙 배치를 위해 fillMaxSize 추가
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = if (rooms.isEmpty()) Arrangement.Center else Arrangement.Top,
+        ) {
             items(
                 count = rooms.size,
                 key = { index -> rooms[index].roomId }, // name 대신 고유한 roomId를 key로 권장

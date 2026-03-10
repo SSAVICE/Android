@@ -21,7 +21,7 @@ data class RoomDTO(
     @SerialName("lastMsg")
     val lastMessage: String?,
     @SerialName("lastMsgAt")
-    val lastMessageAt: List<Int>,
+    val lastMessageAt: List<Int>?,
     val unReadMsgCnt: Int,
     val memberCnt: Int,
 )

@@ -16,7 +16,15 @@ class ResultCall<T>(
     private val networkEventManager: NetworkEventManager,
 ) : Call<Result<T>> {
     override fun enqueue(callback: Callback<Result<T>>) {
-        delegate.enqueue(
+        enqueueWithRetry(delegate, callback, 0)
+    }
+
+    private fun enqueueWithRetry(
+        callToEnqueue: Call<T>,
+        callback: Callback<Result<T>>,
+        retryCount: Int,
+    ) {
+        callToEnqueue.enqueue(
             object : Callback<T> {
                 override fun onResponse(
                     call: Call<T>,
@@ -50,18 +58,27 @@ class ResultCall<T>(
                     call: Call<T>,
                     t: Throwable,
                 ) {
-                    val error =
-                        when (t) {
-                            is IOException -> {
-                                networkEventManager.tryEmit(NetworkEvent.NetworkUnavailable)
-                                NetworkUnavailableException("네트워크 연결 실패: ${t.localizedMessage}")
-                            }
+                    if (t is IOException && retryCount < MAX_RETRIES) {
+                        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                            enqueueWithRetry(delegate.clone(), callback, retryCount + 1)
+                        }, 150)
+                    } else {
+                        val error =
+                            when (t) {
+                                is IOException -> {
+                                    networkEventManager.tryEmit(NetworkEvent.NetworkUnavailable)
+                                    NetworkUnavailableException("네트워크 연결 실패: ${t.localizedMessage}")
+                                }
 
-                            else -> {
-                                t
+                                else -> {
+                                    t
+                                }
                             }
-                        }
-                    callback.onResponse(this@ResultCall, Response.success(Result.failure(error)))
+                        callback.onResponse(
+                            this@ResultCall,
+                            Response.success(Result.failure(error)),
+                        )
+                    }
                 }
             },
         )
@@ -80,4 +97,8 @@ class ResultCall<T>(
     override fun timeout(): Timeout = delegate.timeout()
 
     override fun clone(): Call<Result<T>> = ResultCall(delegate.clone(), networkEventManager)
+
+    companion object {
+        const val MAX_RETRIES = 3
+    }
 }

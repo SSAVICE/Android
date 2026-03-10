@@ -211,6 +211,9 @@ fun SsaviceNavHost(
             onBack = {
                 navController.navigateUp()
             },
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it, isSeller = false)
+            },
         )
     }
 }
