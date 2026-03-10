@@ -15,5 +15,6 @@ data class MessageDTO(
     val messageType: String,
     val roomId: String,
     val roomType: String,
+    val serviceId: Long,
     val sender: Long,
 )

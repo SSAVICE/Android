@@ -43,6 +43,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         message = "Hello, Chatting ($it)!",
                         createdAt = listOf(),
                         roomType = "DM",
+                        serviceId = 1,
                     )
                 },
             )
