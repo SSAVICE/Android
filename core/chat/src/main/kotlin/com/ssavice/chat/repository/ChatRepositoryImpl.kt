@@ -62,7 +62,7 @@ class ChatRepositoryImpl
             eventHandler.startObserving()
         }
 
-    var refreshJob: Job? = null
+        var refreshJob: Job? = null
 
         @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
         override fun getChatMessages(roomId: String): Flow<PagingData<Chat>> =
@@ -140,11 +140,9 @@ class ChatRepositoryImpl
 
         private fun mapLastMessageAtToMilliseconds(lastMessageAt: List<Int>?): Long =
             try {
-                if(lastMessageAt == null) {
+                if (lastMessageAt == null) {
                     0L
-                }
-                // 리스트의 각 인덱스: 0:연, 1:월, 2:일, 3:시, 4:분, 5:초
-                else if (lastMessageAt.size >= 6) {
+                } else if (lastMessageAt.size >= 6) {
                     java.time.LocalDateTime
                         .of(
                             lastMessageAt[0], // Year
@@ -164,41 +162,42 @@ class ChatRepositoryImpl
                 0L
             }
 
-        override fun getRoomList(): Flow<List<ChattingRoomMetadata>> {
-            return chatRoomDao.getAllRoomsFlow().map {
+        override fun getRoomList(): Flow<List<ChattingRoomMetadata>> =
+            chatRoomDao.getAllRoomsFlow().map {
                 it.map { entity ->
                     entity.toModel()
                 }
             }
+
+        override fun refreshRoomList() {
+            refreshJob?.cancel()
+            refreshJob =
+                CoroutineScope(Dispatchers.IO).launch {
+                    chatApi
+                        .getRoomList()
+                        .onSuccess { result ->
+                            Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
+                            result.rooms.forEach { room ->
+                                chatRoomDao.upsertRoomMetadata(
+                                    ChatRoomEntity(
+                                        roomId = room.roomId,
+                                        lastReadMessageId = 0,
+                                        lastMessageId = room.lastChatId ?: 0,
+                                        roomName = room.name,
+                                        lastMessage = room.lastMessage ?: "",
+                                        lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
+                                        roomType = RoomType.getValue(room.type),
+                                        serviceId = room.serviceId ?: -1,
+                                    ),
+                                )
+                            }
+                        }.onFailure {
+                            Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
+                        }
+                }
         }
 
-    override fun refreshRoomList() {
-        refreshJob?.cancel()
-        refreshJob = CoroutineScope(Dispatchers.IO).launch {
-            chatApi.getRoomList().onSuccess { result ->
-                Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
-                result.rooms.forEach { room ->
-                    chatRoomDao.upsertRoomMetadata(
-                        ChatRoomEntity(
-                            roomId = room.roomId,
-                            lastReadMessageId = 0,
-                            lastMessageId = room.lastChatId ?: 0,
-                            roomName = room.name,
-                            lastMessage = room.lastMessage ?: "",
-                            lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
-                            roomType = RoomType.getValue(room.type),
-                            serviceId = room.serviceId ?: -1,
-                        ),
-                    )
-                }
-            }
-                .onFailure {
-                    Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
-                }
-        }
-    }
-
-    override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
+        override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
             chatApi.getRoomInfo(roomId).map {
                 it.toModel()
             }
@@ -219,7 +218,7 @@ class ChatRepositoryImpl
 
             return response.map { data ->
                 data.messages.map {
-                    val content = if(it.messageType == "INFO") it.serviceId.toString() else it.message
+                    val content = if (it.messageType == "INFO") it.serviceId.toString() else it.message
                     ChatEntity(
                         id = it.messageId,
                         userId = it.sender,

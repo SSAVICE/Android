@@ -13,7 +13,7 @@ fun ChatTopBar(
     onBack: () -> Unit = {},
 ) {
     val state = viewModel.roomUiState.collectAsStateWithLifecycle()
-    val title = if(state.value.roomName != "") state.value.roomName else  defaultTitle
+    val title = if (state.value.roomName != "") state.value.roomName else defaultTitle
 
     SsavicePopUpTopBar(
         title = title,

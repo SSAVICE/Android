@@ -12,35 +12,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChattingViewModel
-@Inject
-constructor(
-    private val chatRepository: ChatRepository,
-) : ViewModel() {
-    val chattingRoomState by lazy {
-        chatRepository
-            .getRoomList()
-            .map {
-                it
-                    .sortedByDescending { room -> room.lastUpdate }
-                    .map { room ->
-                        ChattingRoomItem(
-                            name = room.name,
-                            serviceId = null,
-                            serviceName = "",
-                            lastUpdate = DateTime.fromTimeStamp(room.lastUpdate),
-                            unreadCount = room.unreadCount,
-                            roomId = room.roomId,
-                            lastMessage = room.lastMessage,
-                        )
-                    }
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyList(),
-            )
-    }
+    @Inject
+    constructor(
+        private val chatRepository: ChatRepository,
+    ) : ViewModel() {
+        val chattingRoomState by lazy {
+            chatRepository
+                .getRoomList()
+                .map {
+                    it
+                        .sortedByDescending { room -> room.lastUpdate }
+                        .map { room ->
+                            ChattingRoomItem(
+                                name = room.name,
+                                serviceId = null,
+                                serviceName = "",
+                                lastUpdate = DateTime.fromTimeStamp(room.lastUpdate),
+                                unreadCount = room.unreadCount,
+                                roomId = room.roomId,
+                                lastMessage = room.lastMessage,
+                            )
+                        }
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = emptyList(),
+                )
+        }
 
-    fun onRefresh() {
-        chatRepository.refreshRoomList()
+        fun onRefresh() {
+            chatRepository.refreshRoomList()
+        }
     }
-}

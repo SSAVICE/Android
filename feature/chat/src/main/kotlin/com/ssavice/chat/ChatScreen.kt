@@ -36,7 +36,7 @@ import com.ssavice.designsystem.component.ChatServiceShimmerBubble
 fun ChatRoute(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
-    onServiceClick: (Long) -> Unit = {}
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val roomUiState by viewModel.roomUiState.collectAsStateWithLifecycle()
     val chattingState by viewModel.chattingUiState.collectAsStateWithLifecycle()
@@ -83,7 +83,7 @@ fun ChatRoute(
                 roomUiState = roomUiState,
                 chattingUiState = chattingState,
                 imageRequestBuilder = imageRequestBuilder,
-                onServiceClick = onServiceClick
+                onServiceClick = onServiceClick,
             )
         }
     }
@@ -96,7 +96,7 @@ fun ChattingScreen(
     chattingUiState: ChattingDataUiState,
     roomUiState: RoomUiState,
     imageRequestBuilder: ImageRequest.Builder,
-    onServiceClick: (Long) -> Unit = {}
+    onServiceClick: (Long) -> Unit = {},
 ) {
     val chatMessages: (LazyPagingItems<ChatMessage>) =
         viewModel.pagingState.collectAsLazyPagingItems()
@@ -104,11 +104,12 @@ fun ChattingScreen(
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
     DisposableEffect(lifecycleOwner) {
-        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-            if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
-                chatMessages.refresh()
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
+                    chatMessages.refresh()
+                }
             }
-        }
 
         lifecycleOwner.lifecycle.addObserver(observer)
 
@@ -164,7 +165,7 @@ fun ChattingScreen(
                             true
                         } else {
                             (message.userId != before.userId) ||
-                                    message.time != before.time
+                                message.time != before.time
                         }
 
                     val insertDayDivider =
@@ -172,10 +173,10 @@ fun ChattingScreen(
                             false
                         } else {
                             (
-                                    before.time.day != message.time.day ||
-                                            before.time.month != message.time.month ||
-                                            before.time.year != message.time.year
-                                    )
+                                before.time.day != message.time.day ||
+                                    before.time.month != message.time.month ||
+                                    before.time.year != message.time.year
+                            )
                         }
 
                     if (last || insertDayDivider) {
