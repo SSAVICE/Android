@@ -31,6 +31,7 @@ import com.ssavice.room.dto.ChatRoomEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -60,6 +61,8 @@ class ChatRepositoryImpl
         init {
             eventHandler.startObserving()
         }
+
+    var refreshJob: Job? = null
 
         @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
         override fun getChatMessages(roomId: String): Flow<PagingData<Chat>> =
@@ -162,28 +165,6 @@ class ChatRepositoryImpl
             }
 
         override fun getRoomList(): Flow<List<ChattingRoomMetadata>> {
-            CoroutineScope(Dispatchers.IO).launch {
-                chatApi.getRoomList().onSuccess { result ->
-                    Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
-                    result.rooms.forEach { room ->
-                        chatRoomDao.upsertRoomMetadata(
-                            ChatRoomEntity(
-                                roomId = room.roomId,
-                                lastReadMessageId = 0,
-                                lastMessageId = room.lastChatId ?: 0,
-                                roomName = room.name,
-                                lastMessage = room.lastMessage ?: "",
-                                lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
-                                roomType = RoomType.getValue(room.type),
-                                serviceId = room.serviceId ?: -1,
-                            ),
-                        )
-                    }
-                }
-                    .onFailure {
-                        Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
-                    }
-            }
             return chatRoomDao.getAllRoomsFlow().map {
                 it.map { entity ->
                     entity.toModel()
@@ -191,7 +172,33 @@ class ChatRepositoryImpl
             }
         }
 
-        override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
+    override fun refreshRoomList() {
+        refreshJob?.cancel()
+        refreshJob = CoroutineScope(Dispatchers.IO).launch {
+            chatApi.getRoomList().onSuccess { result ->
+                Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
+                result.rooms.forEach { room ->
+                    chatRoomDao.upsertRoomMetadata(
+                        ChatRoomEntity(
+                            roomId = room.roomId,
+                            lastReadMessageId = 0,
+                            lastMessageId = room.lastChatId ?: 0,
+                            roomName = room.name,
+                            lastMessage = room.lastMessage ?: "",
+                            lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
+                            roomType = RoomType.getValue(room.type),
+                            serviceId = room.serviceId ?: -1,
+                        ),
+                    )
+                }
+            }
+                .onFailure {
+                    Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
+                }
+        }
+    }
+
+    override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
             chatApi.getRoomInfo(roomId).map {
                 it.toModel()
             }

@@ -1,17 +1,13 @@
 package com.ssavice.user_chatting
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.chat.repository.ChatRepository
 import com.ssavice.model.DateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,9 +41,6 @@ constructor(
     }
 
     fun onRefresh() {
-        Log.d("ChattingViewModel", "onRefresh")
-        viewModelScope.launch {
-            chatRepository.getRoomList()
-        }
+        chatRepository.refreshRoomList()
     }
 }
