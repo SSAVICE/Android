@@ -149,4 +149,8 @@ class DemoUserInfoRepository
         ): Result<WishList> {
             TODO("Not yet implemented")
         }
+
+        override suspend fun unregisterAccount(): Result<Unit> {
+            TODO("Not yet implemented")
+        }
     }

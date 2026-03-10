@@ -2,11 +2,15 @@ package com.ssavice.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.Category
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.search.navigation.SearchFormRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,6 +18,7 @@ class SearchFormViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
+        private val userInfoRepository: UserInfoRepository,
     ) : ViewModel() {
         private val _uiState =
             MutableStateFlow(
@@ -25,14 +30,18 @@ class SearchFormViewModel
                             selectedCategory =
                                 savedStateHandle.get<Int>(SearchFormRouteContract.SELECTED_CATEGORY)
                                     ?: 0,
-                            searchRange = savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE) ?: 0,
+                            searchRange =
+                                savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE)
+                                    ?: 0,
                             priceRange =
                                 savedStateHandle
                                     .get<Int>(SearchFormRouteContract.START_PRICE)
                                     ?.let { start ->
-                                        savedStateHandle.get<Int>(SearchFormRouteContract.END_PRICE)?.let { end ->
-                                            start..end
-                                        } ?: run { start..10_000_000 }
+                                        savedStateHandle
+                                            .get<Int>(SearchFormRouteContract.END_PRICE)
+                                            ?.let { end ->
+                                                start..end
+                                            } ?: run { start..10_000_000 }
                                     } ?: run { 0..10_000_000 },
                             sortBy =
                                 (
@@ -43,6 +52,10 @@ class SearchFormViewModel
                                     )
                                 ) ?: SortingOrder.POPULARITY,
                         ),
+                    region1String =
+                        savedStateHandle.get<String>(SearchFormRouteContract.REGION1) ?: "",
+                    region2String =
+                        savedStateHandle.get<String>(SearchFormRouteContract.REGION2) ?: "",
                 ),
             )
 
@@ -71,7 +84,7 @@ class SearchFormViewModel
         }
 
         fun onSearchRangeSelect(index: Int) {
-            if (index in 0..1) {
+            if (index in 0..3) {
                 _uiState.value =
                     _uiState.value.copy(
                         form =
@@ -101,6 +114,20 @@ class SearchFormViewModel
                                 sortBy = SortingOrder.entries[index],
                             ),
                     )
+            }
+        }
+
+        fun initiateRegion() {
+            if (_uiState.value.region1String.isEmpty() || _uiState.value.region2String.isEmpty()) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    userInfoRepository.getUserAddress().onSuccess {
+                        _uiState.value =
+                            _uiState.value.copy(
+                                region1String = it.region1,
+                                region2String = it.region2,
+                            )
+                    }
+                }
             }
         }
     }

@@ -80,7 +80,7 @@ fun LoginRoute(
     LoginPage(
         modifier = modifier,
         onLoginButtonClicked = {
-            loginWithKakaoAccount(
+            loginWithKakaoTalk(
                 context = context,
                 onSuccess = viewModel::onKakaoLoginSuccess,
                 onError = viewModel::onKakaoLoginError,

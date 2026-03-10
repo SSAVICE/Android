@@ -266,10 +266,15 @@ class ChatRepositoryImpl
 
         override suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit> {
             val updateList = userIds.filter { getIfUserInfoNeedUpdate(it) }
+            if (updateList.isEmpty()) return Result.success(Unit)
             return getUserInfoFromRemoteAndUpdate(updateList)
         }
 
         override suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit> {
+            metadataRepository.getServiceSummary(serviceId).onSuccess {
+                if (!it.needRefresh()) return Result.success(Unit)
+            }
+
             val result = serviceRetrofitSummary.getServiceSummary(serviceId)
             return result
                 .map { it.toModel(serviceId) }

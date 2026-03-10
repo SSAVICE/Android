@@ -83,8 +83,11 @@ class ChattingViewModel
                                     messageId = message.messageId,
                                 )
                             } else {
+                                Log.d(TAG, message.toString())
                                 message.content.toLongOrNull()?.let { id ->
-                                    chatRepository.updateServiceSummaryIfNeed(id)
+                                    viewModelScope.launch(Dispatchers.IO) {
+                                        chatRepository.updateServiceSummaryIfNeed(id)
+                                    }
                                 }
                                 ChatMessage.ServiceMessage(
                                     userId = message.senderId,
@@ -157,6 +160,11 @@ class ChattingViewModel
         fun initRoom() {
             val roomId: String? = savedStateHandle[ChatRouteContract.ROOM_ID]
             if (roomId == null) {
+                savedStateHandle.get<Long>(ChatRouteContract.SERVICE_ID)?.let { id ->
+                    viewModelScope.launch {
+                        chatRepository.updateServiceSummaryIfNeed(id)
+                    }
+                }
                 _roomUiState.update {
                     it.copy(
                         chattingRoomState = ChattingRoomState.Pending,

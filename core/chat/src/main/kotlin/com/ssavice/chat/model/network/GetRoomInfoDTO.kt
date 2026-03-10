@@ -21,6 +21,6 @@ data class GetRoomInfoDTO(
             name = name,
             roomType = RoomType.getValue(roomType),
             serviceId = serviceId ?: 0,
-            participantIds = members.values.toList(),
+            participantIds = members.keys.toList().mapNotNull { it.toLongOrNull() },
         )
 }

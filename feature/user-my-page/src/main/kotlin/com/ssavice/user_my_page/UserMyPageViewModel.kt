@@ -101,4 +101,11 @@ class UserMyPageViewModel
                     }
             }
         }
+
+        fun onUnregister() {
+            viewModelScope.launch(Dispatchers.IO) {
+                userInfoRepository.unregisterAccount().onFailure { return@launch }
+                onLogout()
+            }
+        }
     }
