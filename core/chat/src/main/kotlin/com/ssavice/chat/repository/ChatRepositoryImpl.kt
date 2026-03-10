@@ -219,12 +219,13 @@ class ChatRepositoryImpl
 
             return response.map { data ->
                 data.messages.map {
+                    val content = if(it.messageType == "INFO") it.serviceId.toString() else it.message
                     ChatEntity(
                         id = it.messageId,
                         userId = it.sender,
                         roomId = it.roomId,
                         type = it.messageType,
-                        content = it.message,
+                        content = content,
                         createdAt = mapLastMessageAtToMilliseconds(it.createdAt),
                     )
                 }
