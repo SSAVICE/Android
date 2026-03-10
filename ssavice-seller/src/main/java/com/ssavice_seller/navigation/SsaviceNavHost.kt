@@ -118,6 +118,9 @@ fun SsaviceNavHost(
 
         chattingRoom(
             onBack = { navController.navigateUp() },
+            onServiceClick = {
+                navController.navigateToServiceDetail(serviceId = it, isSeller = true)
+            }
         )
     }
 }

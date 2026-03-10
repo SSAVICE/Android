@@ -36,6 +36,7 @@ import com.ssavice.designsystem.component.ChatServiceShimmerBubble
 fun ChatRoute(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = hiltViewModel(),
+    onServiceClick: (Long) -> Unit = {}
 ) {
     val roomUiState by viewModel.roomUiState.collectAsStateWithLifecycle()
     val chattingState by viewModel.chattingUiState.collectAsStateWithLifecycle()
@@ -82,6 +83,7 @@ fun ChatRoute(
                 roomUiState = roomUiState,
                 chattingUiState = chattingState,
                 imageRequestBuilder = imageRequestBuilder,
+                onServiceClick = onServiceClick
             )
         }
     }
@@ -94,6 +96,7 @@ fun ChattingScreen(
     chattingUiState: ChattingDataUiState,
     roomUiState: RoomUiState,
     imageRequestBuilder: ImageRequest.Builder,
+    onServiceClick: (Long) -> Unit = {}
 ) {
     val chatMessages: (LazyPagingItems<ChatMessage>) =
         viewModel.pagingState.collectAsLazyPagingItems()
@@ -199,7 +202,7 @@ fun ChattingScreen(
                                     direction = if (t.you) ChatBubbleDirection.SENT else ChatBubbleDirection.RECEIVED,
                                     timestamp = t.time.timeToSimpleString(),
                                     imageRequest = imageRequestBuilder,
-                                    onDetailClick = {},
+                                    onDetailClick = { onServiceClick(t.serviceId) },
                                 )
                             }
                         }
