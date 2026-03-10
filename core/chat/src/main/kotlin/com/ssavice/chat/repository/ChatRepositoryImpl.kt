@@ -1,5 +1,6 @@
 package com.ssavice.chat.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -134,10 +135,13 @@ class ChatRepositoryImpl
             chatRoomDao.updateLastReadIdIfGreater(roomId, messageId)
         }
 
-        private fun mapLastMessageAtToMilliseconds(lastMessageAt: List<Int>): Long =
+        private fun mapLastMessageAtToMilliseconds(lastMessageAt: List<Int>?): Long =
             try {
+                if(lastMessageAt == null) {
+                    0L
+                }
                 // 리스트의 각 인덱스: 0:연, 1:월, 2:일, 3:시, 4:분, 5:초
-                if (lastMessageAt.size >= 6) {
+                else if (lastMessageAt.size >= 6) {
                     java.time.LocalDateTime
                         .of(
                             lastMessageAt[0], // Year
@@ -160,6 +164,7 @@ class ChatRepositoryImpl
         override fun getRoomList(): Flow<List<ChattingRoomMetadata>> {
             CoroutineScope(Dispatchers.IO).launch {
                 chatApi.getRoomList().onSuccess { result ->
+                    Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
                     result.rooms.forEach { room ->
                         chatRoomDao.upsertRoomMetadata(
                             ChatRoomEntity(
@@ -175,6 +180,9 @@ class ChatRepositoryImpl
                         )
                     }
                 }
+                    .onFailure {
+                        Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
+                    }
             }
             return chatRoomDao.getAllRoomsFlow().map {
                 it.map { entity ->

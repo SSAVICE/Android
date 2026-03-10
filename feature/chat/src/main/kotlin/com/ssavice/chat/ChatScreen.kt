@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -97,6 +98,22 @@ fun ChattingScreen(
     val chatMessages: (LazyPagingItems<ChatMessage>) =
         viewModel.pagingState.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
+                chatMessages.refresh()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        // Composable이 파괴될 때 옵저버를 제거합니다.
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     val top by remember {
         derivedStateOf {
@@ -144,7 +161,7 @@ fun ChattingScreen(
                             true
                         } else {
                             (message.userId != before.userId) ||
-                                message.time != before.time
+                                    message.time != before.time
                         }
 
                     val insertDayDivider =
@@ -152,10 +169,10 @@ fun ChattingScreen(
                             false
                         } else {
                             (
-                                before.time.day != message.time.day ||
-                                    before.time.month != message.time.month ||
-                                    before.time.year != message.time.year
-                            )
+                                    before.time.day != message.time.day ||
+                                            before.time.month != message.time.month ||
+                                            before.time.year != message.time.year
+                                    )
                         }
 
                     if (last || insertDayDivider) {
