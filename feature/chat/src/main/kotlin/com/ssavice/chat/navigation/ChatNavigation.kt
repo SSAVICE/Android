@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import com.ssavice.chat.ChatBottomBar
 import com.ssavice.chat.ChatRoute
 import com.ssavice.chat.ChattingViewModel
+import com.ssavice.chat.ui.ChatTopBar
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
 import kotlinx.serialization.Serializable
 
@@ -34,6 +35,9 @@ fun NavController.navigateToChattingRoom(
     roomId: String,
 ) {
     navigate(ChattingRoomRoute(roomId)) {
+        launchSingleTop = true
+        popUpTo<ChattingRoomRoute> { inclusive = true }
+        popUpTo<OnePerOneChatRoute> { inclusive = true }
         navOptions()
     }
 }
@@ -44,11 +48,17 @@ fun NavController.navigateToOnePerOneChattingRoom(
     serviceId: Long,
 ) {
     navigate(OnePerOneChatRoute(userId, serviceId)) {
+        launchSingleTop = true
+        popUpTo<ChattingRoomRoute> { inclusive = true }
+        popUpTo<OnePerOneChatRoute> { inclusive = true }
         navOptions()
     }
 }
 
-fun NavGraphBuilder.chattingRoom(onBack: () -> Unit = {}) {
+fun NavGraphBuilder.chattingRoom(
+    onBack: () -> Unit = {},
+    onServiceClick: (serviceId: Long) -> Unit = {},
+) {
     composable<ChattingRoomRoute>(
         popEnterTransition = null,
         enterTransition = {
@@ -68,9 +78,10 @@ fun NavGraphBuilder.chattingRoom(onBack: () -> Unit = {}) {
 
         Scaffold(
             topBar = {
-                SsavicePopUpTopBar(
-                    title = "채팅",
-                    onBackClicked = onBack,
+                ChatTopBar(
+                    defaultTitle = "새 채팅",
+                    viewModel = viewModel,
+                    onBack = onBack,
                 )
             },
             bottomBar = {
@@ -85,6 +96,7 @@ fun NavGraphBuilder.chattingRoom(onBack: () -> Unit = {}) {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(innerPadding),
                 viewModel = viewModel,
+                onServiceClick = onServiceClick,
             )
         }
     }
