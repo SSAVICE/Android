@@ -34,6 +34,8 @@ interface ChatRepository {
 
     fun getRoomList(): Flow<List<ChattingRoomMetadata>>
 
+    fun refreshRoomList(): Unit
+
     suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo>
 
     suspend fun getMessages(
