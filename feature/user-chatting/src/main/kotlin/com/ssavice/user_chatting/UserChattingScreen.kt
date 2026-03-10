@@ -35,8 +35,10 @@ fun UserChattingRoute(
 
     ChatList(
         modifier = modifier,
-        rooms = state, onRoomClick,
-        onRefresh = viewModel::onRefresh)
+        rooms = state,
+        onRoomClick,
+        onRefresh = viewModel::onRefresh,
+    )
 }
 
 @Composable
@@ -44,7 +46,7 @@ fun ChatList(
     modifier: Modifier,
     rooms: List<ChattingRoomItem>,
     onRoomClick: (id: String) -> Unit = {},
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
 ) {
     val context = LocalContext.current
     val imageRequestBuilder =
@@ -58,11 +60,12 @@ fun ChatList(
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
     DisposableEffect(lifecycleOwner) {
-        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-            if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
-                onRefresh()
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
+                    onRefresh()
+                }
             }
-        }
 
         lifecycleOwner.lifecycle.addObserver(observer)
 
@@ -72,7 +75,7 @@ fun ChatList(
         }
     }
 
-    if(rooms.isEmpty()) {
+    if (rooms.isEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize(), // 부모 크기만큼 차지
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,8 +87,7 @@ fun ChatList(
                 color = MaterialTheme.colorScheme.outline,
             )
         }
-    }
-    else{
+    } else {
         LazyColumn(
             modifier = modifier.fillMaxSize(), // 중앙 배치를 위해 fillMaxSize 추가
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -110,7 +112,6 @@ fun ChatList(
             }
         }
     }
-
 }
 
 @Composable

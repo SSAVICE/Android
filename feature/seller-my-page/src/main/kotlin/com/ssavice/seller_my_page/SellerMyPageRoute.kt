@@ -140,7 +140,6 @@ fun MyPageScreen(
                 title = "문의",
                 description = "고객지원",
                 onClick = {
-
                     showWithdrawMessageInHelpDialog = false
                     showHelpDialog = true
                 },
@@ -212,7 +211,7 @@ fun MyPageScreen(
                     showHelpDialog = false
                 }
             },
-            showWithdrawMessage = showWithdrawMessageInHelpDialog
+            showWithdrawMessage = showWithdrawMessageInHelpDialog,
         )
     }
 }
@@ -247,19 +246,18 @@ fun LogoutAlertDialog(
     )
 }
 
-
 @Composable
 fun HelpInquiryDialog(
     onDismiss: () -> Unit,
     onCopyEmail: (String) -> Unit,
     onOpenForm: (String) -> Unit,
-    showWithdrawMessage: Boolean = false
+    showWithdrawMessage: Boolean = false,
 ) {
     val developerEmail = "ssavice.contact@gmail.com"
     val inquiryFormUrl =
         "https://docs.google.com/forms/d/e/1FAIpQLSc3rhc" +
-                "aLfT3zhwiTrsBJ3L6DNh21WS4WGAqfh6cLnVHXF" +
-                "O46A/viewform?usp=publish-editor"
+            "aLfT3zhwiTrsBJ3L6DNh21WS4WGAqfh6cLnVHXF" +
+            "O46A/viewform?usp=publish-editor"
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -274,25 +272,25 @@ fun HelpInquiryDialog(
             Column(verticalArrangement = spacedBy(16.dp)) {
                 if (showWithdrawMessage) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
-                                shape = MaterialTheme.shapes.small
-                            )
-                            .padding(12.dp),
-                        verticalArrangement = spacedBy(4.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
+                                    shape = MaterialTheme.shapes.small,
+                                ).padding(12.dp),
+                        verticalArrangement = spacedBy(4.dp),
                     ) {
                         Text(
                             text = "⚠️ 탈퇴 문의 안내",
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.error,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = "판매자 탈퇴는 정산 및 진행 중인 서비스 확인이 필요합니다. 아래 '문의 폼'을 통해 접수해 주시면 확인 후 처리를 도와드리겠습니다.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -310,8 +308,7 @@ fun HelpInquiryDialog(
                                 .background(
                                     MaterialTheme.colorScheme.surfaceDim,
                                     shape = MaterialTheme.shapes.small,
-                                )
-                                .padding(12.dp),
+                                ).padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {

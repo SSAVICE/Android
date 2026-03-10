@@ -22,7 +22,7 @@ class ResultCall<T>(
     private fun enqueueWithRetry(
         callToEnqueue: Call<T>,
         callback: Callback<Result<T>>,
-        retryCount: Int
+        retryCount: Int,
     ) {
         callToEnqueue.enqueue(
             object : Callback<T> {
@@ -70,11 +70,13 @@ class ResultCall<T>(
                                     NetworkUnavailableException("네트워크 연결 실패: ${t.localizedMessage}")
                                 }
 
-                                else -> t
+                                else -> {
+                                    t
+                                }
                             }
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(Result.failure(error))
+                            Response.success(Result.failure(error)),
                         )
                     }
                 }
@@ -84,8 +86,7 @@ class ResultCall<T>(
 
     override fun isExecuted(): Boolean = delegate.isExecuted
 
-    override fun execute(): Response<Result<T>> =
-        throw UnsupportedOperationException("ResultCall does not support synchronous execution")
+    override fun execute(): Response<Result<T>> = throw UnsupportedOperationException("ResultCall does not support synchronous execution")
 
     override fun cancel() = delegate.cancel()
 

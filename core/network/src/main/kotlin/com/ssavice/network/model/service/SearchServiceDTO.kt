@@ -38,7 +38,7 @@ data class SearchServiceDTO(
                 "size" to size.toString(),
                 "userLatitude" to latitude.toString(),
                 "userLongitude" to longitude.toString(),
-                "onSale" to onSale.toString()
+                "onSale" to onSale.toString(),
             )
         } else {
             mapOf(
@@ -53,7 +53,7 @@ data class SearchServiceDTO(
                 "size" to size.toString(),
                 "userLatitude" to latitude.toString(),
                 "userLongitude" to longitude.toString(),
-                "onSale" to onSale.toString()
+                "onSale" to onSale.toString(),
             )
         }
 
