@@ -21,6 +21,7 @@ data class SearchServiceDTO(
     val sortBy: Int,
     val lastId: Long?,
     val size: Int,
+    val onSale: Boolean = true,
 ) {
     fun toMap(): Map<String, String> =
         if (lastId != null) {
@@ -37,6 +38,7 @@ data class SearchServiceDTO(
                 "size" to size.toString(),
                 "userLatitude" to latitude.toString(),
                 "userLongitude" to longitude.toString(),
+                "onSale" to onSale.toString()
             )
         } else {
             mapOf(
@@ -51,6 +53,7 @@ data class SearchServiceDTO(
                 "size" to size.toString(),
                 "userLatitude" to latitude.toString(),
                 "userLongitude" to longitude.toString(),
+                "onSale" to onSale.toString()
             )
         }
 
