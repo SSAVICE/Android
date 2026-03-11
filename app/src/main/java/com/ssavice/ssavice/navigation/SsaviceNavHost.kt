@@ -102,6 +102,7 @@ fun SsaviceNavHost(
                             sortBy = searchForm.sortBy,
                             latitude = 0.0,
                             longitude = 0.0,
+                            onSaleOnly = searchForm.onSaleOnly,
                         ),
                 )
             },
@@ -121,6 +122,7 @@ fun SsaviceNavHost(
                             searchRange = query.searchRange,
                             priceRange = query.minPrice..query.maxPrice,
                             sortBy = query.sortBy,
+                            onSaleOnly = query.onSaleOnly,
                         ),
                 )
             },

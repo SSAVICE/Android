@@ -24,6 +24,7 @@ data class SearchResultRoute(
     val startPrice: Int = 0,
     val endPrice: Int = 10_000_000,
     val sortBy: Int = 0,
+    val onSaleOnly: Boolean = false,
 )
 
 fun NavController.navigateToSearchResult(
@@ -38,6 +39,7 @@ fun NavController.navigateToSearchResult(
             startPrice = searchQuery.minPrice,
             endPrice = searchQuery.maxPrice,
             sortBy = searchQuery.sortBy.ordinal,
+            onSaleOnly = searchQuery.onSaleOnly,
         ),
     ) {
         launchSingleTop = true
@@ -83,4 +85,5 @@ object SearchResultRouteContract {
     const val START_PRICE = "startPrice"
     const val END_PRICE = "endPrice"
     const val SORT_BY = "sortBy"
+    const val ON_SALE_ONLY = "onSaleOnly"
 }

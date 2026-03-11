@@ -16,4 +16,5 @@ data class SearchForm(
     val searchRange: Int,
     val priceRange: IntRange,
     val sortBy: SortingOrder,
+    val onSaleOnly: Boolean,
 )

@@ -18,14 +18,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchFormViewModel
-    @Inject
-    constructor(
-        savedStateHandle: SavedStateHandle,
-        private val userInfoRepository: UserInfoRepository,
-    ) : ViewModel() {
-        private val _uiState: MutableStateFlow<SearchFormUiState> by lazy {
+@Inject
+constructor(
+    savedStateHandle: SavedStateHandle,
+    private val userInfoRepository: UserInfoRepository,
+) : ViewModel() {
+    private val _uiState: MutableStateFlow<SearchFormUiState> by lazy {
         val categories = Category.entries.filter { it.showInUser }
-        val categorySelectionName = savedStateHandle.get<String>(SearchFormRouteContract.SELECTED_CATEGORY)
+        val categorySelectionName =
+            savedStateHandle.get<String>(SearchFormRouteContract.SELECTED_CATEGORY)
         MutableStateFlow(
             SearchFormUiState(
                 form =
@@ -33,7 +34,7 @@ class SearchFormViewModel
                         query = savedStateHandle.get<String>(SearchFormRouteContract.QUERY) ?: "",
                         categories = categories,
                         selectedCategory =
-                            Category.mapCategoryByName(categorySelectionName?:"ALL"),
+                            Category.mapCategoryByName(categorySelectionName ?: "ALL"),
                         searchRange =
                             savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE)
                                 ?: 0,
@@ -55,6 +56,9 @@ class SearchFormViewModel
                                         ) ?: -1,
                                     )
                                     ) ?: SortingOrder.entries[0],
+                        onSaleOnly =
+                            savedStateHandle.get<Boolean>(SearchFormRouteContract.ON_SALE_ONLY)
+                                ?: false
                     ),
                 region1String =
                     savedStateHandle.get<String>(SearchFormRouteContract.REGION1) ?: "",
@@ -64,72 +68,83 @@ class SearchFormViewModel
         )
     }
 
-        val uiState = _uiState
+    val uiState = _uiState
 
-        fun onQuery(query: String) {
+    fun onQuery(query: String) {
+        _uiState.value =
+            _uiState.value.copy(
+                form =
+                    _uiState.value.form.copy(
+                        query = query,
+                    ),
+            )
+    }
+
+    fun onCategorySelect(category: Category) {
+        _uiState.update {
+            _uiState.value.copy(
+                form =
+                    _uiState.value.form.copy(
+                        selectedCategory = category,
+                    ),
+            )
+        }
+    }
+
+    fun onSearchRangeSelect(index: Int) {
+        if (index in 0..3) {
             _uiState.value =
                 _uiState.value.copy(
                     form =
                         _uiState.value.form.copy(
-                            query = query,
+                            searchRange = index,
                         ),
                 )
         }
+    }
 
-        fun onCategorySelect(category: Category) {
-            _uiState.update {
-                _uiState.value.copy(
-                    form =
-                        _uiState.value.form.copy(
-                            selectedCategory = category,
-                        ),
-                )
-            }
-        }
+    fun onPriceRangeChange(range: IntRange) {
+        _uiState.value =
+            _uiState.value.copy(
+                form =
+                    _uiState.value.form.copy(
+                        priceRange = range,
+                    ),
+            )
+    }
 
-        fun onSearchRangeSelect(index: Int) {
-            if (index in 0..3) {
-                _uiState.value =
-                    _uiState.value.copy(
-                        form =
-                            _uiState.value.form.copy(
-                                searchRange = index,
-                            ),
-                    )
-            }
-        }
+    fun onSortByChange(order: SortingOrder) {
+        _uiState.value =
+            _uiState.value.copy(
+                form =
+                    _uiState.value.form.copy(
+                        sortBy = order,
+                    ),
+            )
+    }
 
-        fun onPriceRangeChange(range: IntRange) {
-            _uiState.value =
-                _uiState.value.copy(
-                    form =
-                        _uiState.value.form.copy(
-                            priceRange = range,
-                        ),
-                )
-        }
-
-        fun onSortByChange(order: SortingOrder) {
-            _uiState.value =
-                _uiState.value.copy(
-                    form =
-                        _uiState.value.form.copy(
-                            sortBy = order,
-                        ),
-                )
-        }
-
-        fun initiateRegion() {
-            if (_uiState.value.region1String.isEmpty() || _uiState.value.region2String.isEmpty()) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    userInfoRepository.getUserAddress().onSuccess {
-                        _uiState.value =
-                            _uiState.value.copy(
-                                region1String = it.region1,
-                                region2String = it.region2,
-                            )
-                    }
+    fun initiateRegion() {
+        if (_uiState.value.region1String.isEmpty() || _uiState.value.region2String.isEmpty()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                userInfoRepository.getUserAddress().onSuccess {
+                    _uiState.value =
+                        _uiState.value.copy(
+                            region1String = it.region1,
+                            region2String = it.region2,
+                        )
                 }
             }
         }
     }
+
+    fun onSaleOnlyChanged(onSale: Boolean) {
+        _uiState.update {
+            it.copy(
+                form =
+                    it.form.copy(
+                        onSaleOnly = onSale,
+                    ),
+            )
+        }
+    }
+}

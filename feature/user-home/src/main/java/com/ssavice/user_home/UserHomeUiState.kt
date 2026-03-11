@@ -19,6 +19,7 @@ data class UserHomeUiState(
             sortBy = SortingOrder.entries[0],
             latitude = 0.0,
             longitude = 0.0,
+            onSaleOnly = true,
         ),
     val addressState: RegionState = RegionState.Initial,
 )

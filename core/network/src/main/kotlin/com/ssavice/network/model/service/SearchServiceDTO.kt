@@ -76,6 +76,7 @@ data class SearchServiceDTO(
                 size = searchCount,
                 latitude = query.latitude,
                 longitude = query.longitude,
+                onSale = query.onSaleOnly
             )
     }
 }

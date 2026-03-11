@@ -33,6 +33,7 @@ class SearchResultViewModel
                     savedStateHandle.getStateFlow(END_PRICE, 10_000_000),
                     savedStateHandle.getStateFlow(SORT_BY, 0),
                     savedStateHandle.getStateFlow(QUERY, ""),
+                    savedStateHandle.getStateFlow(ON_SALE_ONLY, false)
                 ) { params ->
                     val category = params[0] as Int
                     val searchRange = params[1] as Int
@@ -40,6 +41,7 @@ class SearchResultViewModel
                     val endPrice = params[3] as Int
                     val sortBy = params[4] as Int
                     val query = params[5] as String
+                    val onSaleOnly = params[6] as Boolean
 
                     val region = userRepository.getUserAddress().getOrNull()
                     val q =
@@ -54,6 +56,7 @@ class SearchResultViewModel
                             sortBy = SortingOrder.entries.getOrElse(sortBy) { SortingOrder.entries[0] },
                             latitude = region?.regionInfo?.latitude ?: 0.0,
                             longitude = region?.regionInfo?.longitude ?: 0.0,
+                            onSaleOnly = onSaleOnly,
                         )
                     q
                 }.stateIn(
@@ -71,6 +74,7 @@ class SearchResultViewModel
                             sortBy = SortingOrder.entries[0],
                             latitude = 0.0,
                             longitude = 0.0,
+                            onSaleOnly = true,
                         ),
                 )
             }

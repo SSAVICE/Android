@@ -46,6 +46,7 @@ class SearchResultViewModel
                             category = Category.entries[0],
                             latitude = 0.0,
                             longitude = 0.0,
+                            onSaleOnly = true,
                         ),
                 ),
             )
@@ -86,6 +87,7 @@ class SearchResultViewModel
                                     sortBy = query.sortBy,
                                     latitude = address.regionInfo.latitude,
                                     longitude = address.regionInfo.longitude,
+                                    onSaleOnly = query.onSaleOnly,
                                 ),
                             searchCount = SEARCH_COUNT,
                             startIndex = uiState.value.items.size,
@@ -120,6 +122,7 @@ class SearchResultViewModel
                             sortBy = query.sortBy,
                             latitude = address.regionInfo.latitude,
                             longitude = address.regionInfo.longitude,
+                            onSaleOnly = query.onSaleOnly,
                         ),
                     nextId = uiState.value.nextId,
                     searchCount = SEARCH_COUNT,

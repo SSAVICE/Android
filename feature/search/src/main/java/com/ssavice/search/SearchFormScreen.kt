@@ -1,6 +1,8 @@
 package com.ssavice.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -24,12 +26,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -106,6 +110,7 @@ fun SearchFormScreen(
         onSearchClick = {
             onSearch(state.form)
         },
+        onSaleOnlyChange = viewModel::onSaleOnlyChanged,
         focusRequester = focusRequester,
         readyToRenderContent = shouldRenderContent,
         region1 = state.region1String,
@@ -123,6 +128,7 @@ fun SearchFormScreen(
     onPriceRangeChange: (IntRange) -> Unit = {},
     onSortByChange: (SortingOrder) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
+    onSaleOnlyChange: (Boolean) -> Unit = {},
     focusRequester: FocusRequester? = null,
     readyToRenderContent: Boolean = true,
     region1: String = "",
@@ -229,6 +235,27 @@ fun SearchFormScreen(
                                 )
                             }
                         }
+
+                        Spacer(modifier = Modifier.padding(vertical = 5.dp))
+
+                        val checkboxInteractionSource = remember { MutableInteractionSource() }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth().clickable(
+                                interactionSource = checkboxInteractionSource,
+                                indication = null,
+                                onClick = { onSaleOnlyChange(!form.onSaleOnly) },
+                            ),
+                        ) {
+                            Text(text = "참여 가능한 서비스만 조회",
+                                style = MaterialTheme.typography.bodyMedium)
+                            Checkbox(
+                                checked = form.onSaleOnly,
+                                onCheckedChange = { onSaleOnlyChange(it) },
+                                modifier = Modifier.padding(0.dp),
+                                interactionSource = checkboxInteractionSource)
+                        }
+
                     }
 
                     InnerFieldWithLabel("가격") {
@@ -357,6 +384,7 @@ fun SearchFormPreview() {
                         searchRange = 1,
                         priceRange = priceRange,
                         sortBy = SortingOrder.entries[0],
+                        onSaleOnly = false,
                     ),
                 query = query,
                 onSearchClick = {

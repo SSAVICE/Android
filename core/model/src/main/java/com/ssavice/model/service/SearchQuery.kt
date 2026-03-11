@@ -16,4 +16,5 @@ data class SearchQuery(
     val sortBy: SortingOrder,
     val latitude: Double,
     val longitude: Double,
+    val onSaleOnly: Boolean,
 )
