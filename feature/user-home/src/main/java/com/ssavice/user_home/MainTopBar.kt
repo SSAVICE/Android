@@ -42,7 +42,7 @@ fun UserHomeTopBar(viewModel: UserHomeViewModel) {
                     Icon(
                         modifier = Modifier.size(28.dp),
                         imageVector = Icons.Default.LocationOn,
-                        contentDescription = "위치 아이콘"
+                        contentDescription = "위치 아이콘",
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(

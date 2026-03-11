@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class SearchRange(
     val index: Int,
-    val value: String
+    val value: String,
 ) {
     GUGUN(index = 0, value = ""),
     DONG(index = 1, value = ""),

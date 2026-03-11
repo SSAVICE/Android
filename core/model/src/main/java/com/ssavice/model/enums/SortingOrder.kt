@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class SortingOrder(
     val index: Int,
-    val value: String
+    val value: String,
 ) {
     LATEST(index = 0, value = "최신 순"),
     PRICE_ASC(index = 1, value = "가격 낮은 순"),

@@ -420,7 +420,7 @@ class AddServiceViewModel
                 value: Category,
                 errorMessage: String,
             ): String? =
-                if(value == Category.UNKNOWN) {
+                if (value == Category.UNKNOWN) {
                     hasError = true
                     errorMessage
                 } else {
@@ -450,7 +450,7 @@ class AddServiceViewModel
             val categoryMessage: String? =
                 validateAndGetMessage(
                     uiState.value.form.category,
-                    "잘못된 카테고리 값입니다."
+                    "잘못된 카테고리 값입니다.",
                 )
             val deadLineMessage: String?
             val startDateMessage: String?

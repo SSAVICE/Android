@@ -48,7 +48,10 @@ import java.text.NumberFormat
 import java.util.Locale
 
 enum class ServiceItemState {
-    FINISHED, CANCELED, FULLED, AVAILABLE
+    FINISHED,
+    CANCELED,
+    FULLED,
+    AVAILABLE,
 }
 
 @Composable
@@ -69,12 +72,13 @@ fun ServiceListElement(
     onServiceClick: (Long) -> Unit,
     thumbnail: @Composable (String) -> Unit = {},
 ) {
-    val serviceItemState = when(state) {
-        ServiceState.COMPLETED, ServiceState.FAILED -> ServiceItemState.FINISHED
-        ServiceState.CANCELED, ServiceState.USER_CANCELED, ServiceState.SERVICE_CANCELED -> ServiceItemState.CANCELED
-        ServiceState.FULLED -> ServiceItemState.FULLED
-        ServiceState.ALL, ServiceState.UNKNOWN, ServiceState.RECRUITING, ServiceState.SUCCEEDED -> ServiceItemState.AVAILABLE
-    }
+    val serviceItemState =
+        when (state) {
+            ServiceState.COMPLETED, ServiceState.FAILED -> ServiceItemState.FINISHED
+            ServiceState.CANCELED, ServiceState.USER_CANCELED, ServiceState.SERVICE_CANCELED -> ServiceItemState.CANCELED
+            ServiceState.FULLED -> ServiceItemState.FULLED
+            ServiceState.ALL, ServiceState.UNKNOWN, ServiceState.RECRUITING, ServiceState.SUCCEEDED -> ServiceItemState.AVAILABLE
+        }
     ServiceListElement(
         id,
         imageUrl,
@@ -90,7 +94,7 @@ fun ServiceListElement(
         isBooked,
         serviceItemState,
         onServiceClick,
-        thumbnail
+        thumbnail,
     )
 }
 
@@ -129,23 +133,25 @@ fun ServiceListElement(
                 thumbnail(imageUrl)
                 if (state != ServiceItemState.AVAILABLE) {
                     Box(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color.Black.copy(alpha = 0.4f))
+                        modifier =
+                            Modifier
+                                .matchParentSize()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.Black.copy(alpha = 0.4f)),
                     )
                 }
 
                 // 3. 우측 상단 인디케이터 모음 (할인율, 마감, 예약상태)
                 Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(4.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(4.dp),
                     horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     // 모집 마감 표시
-                    if(state != ServiceItemState.AVAILABLE) {
+                    if (state != ServiceItemState.AVAILABLE) {
                         ServiceStateBadge(state)
                     }
 
@@ -154,7 +160,7 @@ fun ServiceListElement(
                         ServiceBadge(
                             text = "이용 중",
                             containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = Color.White
+                            contentColor = Color.White,
                         )
                     }
                 }
@@ -290,15 +296,17 @@ fun ServiceListElement(
         }
     }
 }
+
 @Composable
 private fun ServiceBadge(
     text: String,
     containerColor: Color,
-    contentColor: Color
+    contentColor: Color,
 ) {
     Surface(
         color = containerColor,
-        shape = RoundedCornerShape(4.dp),        modifier = Modifier.wrapContentWidth()
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier.wrapContentWidth(),
     ) {
         Text(
             text = text,
@@ -313,30 +321,32 @@ private fun ServiceBadge(
 }
 
 @Composable
-private fun ServiceStateBadge(
-    state: ServiceItemState
-) {
-    when(state) {ServiceItemState.FINISHED -> {
-        ServiceBadge(
-            text = "판매 종료",
-            containerColor = Color.Gray,
-            contentColor = Color.White
-        )
-    }
+private fun ServiceStateBadge(state: ServiceItemState) {
+    when (state) {
+        ServiceItemState.FINISHED -> {
+            ServiceBadge(
+                text = "판매 종료",
+                containerColor = Color.Gray,
+                contentColor = Color.White,
+            )
+        }
+
         ServiceItemState.CANCELED -> {
             ServiceBadge(
                 text = "취소됨",
                 containerColor = Color.Gray,
-                contentColor = Color.White
+                contentColor = Color.White,
             )
         }
+
         ServiceItemState.FULLED -> {
             ServiceBadge(
                 text = "모집 완료",
                 containerColor = Color.Gray,
-                contentColor = Color.White
+                contentColor = Color.White,
             )
         }
+
         ServiceItemState.AVAILABLE -> {} // no badge
     }
 }
@@ -402,7 +412,7 @@ private fun ServiceListElementPreview() {
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
                     onServiceClick = {},
-                    state = ServiceItemState.CANCELED
+                    state = ServiceItemState.CANCELED,
                 )
                 ServiceListElement(
                     id = 1L,
@@ -418,7 +428,7 @@ private fun ServiceListElementPreview() {
                     participationInfo = "8/15명 참여중",
                     onServiceClick = {},
                     isBooked = true,
-                    state = ServiceItemState.FULLED
+                    state = ServiceItemState.FULLED,
                 )
             }
         }

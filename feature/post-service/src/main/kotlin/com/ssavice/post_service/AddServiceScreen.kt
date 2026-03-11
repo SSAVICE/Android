@@ -312,7 +312,7 @@ fun AddServiceScreen(
     val enabled =
         state.imageState.pictureList.fastAll {
             it.progress is ImageUploadProgress.Done ||
-                    it.progress is ImageUploadProgress.Error
+                it.progress is ImageUploadProgress.Error
         }
 
     Column(
@@ -502,8 +502,7 @@ fun ImageSelector(
                                 .background(
                                     color = MaterialTheme.colorScheme.error,
                                     shape = CircleShape,
-                                )
-                                .graphicsLayer(clip = false)
+                                ).graphicsLayer(clip = false)
                                 .padding(2.dp),
                     ) {
                         Icon(
@@ -673,7 +672,7 @@ fun AddServiceForm(
                     InputTransformations.numberFormatInputTransformation.then(
                         InputTransformations
                             .minMaxInputTransformation
-                                (0, priceTextState.text.toString().toLongOrNull() ?: 0L),
+                            (0, priceTextState.text.toString().toLongOrNull() ?: 0L),
                     ),
                 ),
             outputTransformation = OutputTransformations.formatNumberWithCommas,

@@ -27,7 +27,7 @@ data class SearchResultItemUiState(
     val discountRatio: Int,
     val memberStatus: String,
     val booked: Boolean,
-    val state: ServiceState
+    val state: ServiceState,
 )
 
 sealed interface SearchStatus {

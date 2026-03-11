@@ -21,7 +21,7 @@ data class SearchResultItem(
     val region: Region,
     val booked: Boolean,
     val distance: Double,
-    val state: ServiceState
+    val state: ServiceState,
 )
 
 data class SearchResult(

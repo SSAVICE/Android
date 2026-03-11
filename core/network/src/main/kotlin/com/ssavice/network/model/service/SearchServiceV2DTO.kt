@@ -27,20 +27,21 @@ data class SearchServiceV2DTO(
     val onSale: Boolean = true,
 ) {
     fun toMap(): Map<String, Any?> {
-        val params = mutableMapOf<String, Any?>(
-            "category" to category,
-            "query" to query,
-            "gugun" to region1,
-            "region" to region2,
-            "range" to range,
-            "minPrice" to minPrice.toString(),
-            "maxPrice" to maxPrice.toString(),
-            "sortBy" to sortBy,
-            "size" to size.toString(),
-            "userLatitude" to latitude.toString(),
-            "userLongitude" to longitude.toString(),
-            "onSale" to onSale.toString(),
-        )
+        val params =
+            mutableMapOf<String, Any?>(
+                "category" to category,
+                "query" to query,
+                "gugun" to region1,
+                "region" to region2,
+                "range" to range,
+                "minPrice" to minPrice.toString(),
+                "maxPrice" to maxPrice.toString(),
+                "sortBy" to sortBy,
+                "size" to size.toString(),
+                "userLatitude" to latitude.toString(),
+                "userLongitude" to longitude.toString(),
+                "onSale" to onSale.toString(),
+            )
         lastId?.let { params["lastId"] = it }
         searchAfter?.let { params["searchAfter"] = it }
         return params
@@ -51,7 +52,7 @@ data class SearchServiceV2DTO(
             query: SearchQuery,
             nextId: Long?,
             searchCount: Int,
-            searchAfter: List<String>? = null
+            searchAfter: List<String>? = null,
         ): SearchServiceV2DTO =
             SearchServiceV2DTO(
                 category = query.category.name,
@@ -67,7 +68,7 @@ data class SearchServiceV2DTO(
                 latitude = query.latitude,
                 longitude = query.longitude,
                 onSale = query.onSaleOnly,
-                searchAfter = searchAfter
+                searchAfter = searchAfter,
             )
     }
 }
@@ -84,6 +85,6 @@ data class SearchServiceV2ResponseDTO(
             items = content.map { it.toModel() },
             hasNext = hasNext,
             nextCursor = nextCursor ?: -1,
-            searchAfter = nextSearchAfter?:emptyList()
+            searchAfter = nextSearchAfter ?: emptyList(),
         )
 }

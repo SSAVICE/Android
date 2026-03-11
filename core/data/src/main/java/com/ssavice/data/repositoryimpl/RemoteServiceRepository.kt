@@ -147,41 +147,40 @@ internal class RemoteServiceRepository
                     it.toModel()
                 }
 
+        override suspend fun searchServiceV2(
+            query: SearchQuery,
+            nextId: Long,
+            searchCount: Int,
+            startIndex: Int,
+            searchAfter: List<String>,
+        ): Result<SearchResult> =
+            serviceRetrofitService
+                .searchServiceV2(
+                    SearchServiceV2DTO
+                        .fromModel(
+                            query = query,
+                            nextId = nextId,
+                            searchCount = searchCount,
+                            searchAfter = searchAfter,
+                        ).toMap(),
+                ).map {
+                    it.toModel()
+                }
 
-    override suspend fun searchServiceV2(
-        query: SearchQuery,
-        nextId: Long,
-        searchCount: Int,
-        startIndex: Int,
-        searchAfter: List<String>
-    ): Result<SearchResult> =
-        serviceRetrofitService
-            .searchServiceV2(
-                SearchServiceV2DTO
-                    .fromModel(
-                        query = query,
-                        nextId = nextId,
-                        searchCount = searchCount,
-                        searchAfter = searchAfter
-                    ).toMap(),
-            ).map {
-                it.toModel()
-            }
-
-    override suspend fun searchServiceV2(
-        query: SearchQuery,
-        searchCount: Int,
-        startIndex: Int,
-    ): Result<SearchResult> =
-        serviceRetrofitService
-            .searchServiceV2(
-                SearchServiceV2DTO
-                    .fromModel(
-                        query = query,
-                        nextId = null,
-                        searchCount = searchCount,
-                    ).toMap(),
-            ).map {
-                it.toModel()
-            }
+        override suspend fun searchServiceV2(
+            query: SearchQuery,
+            searchCount: Int,
+            startIndex: Int,
+        ): Result<SearchResult> =
+            serviceRetrofitService
+                .searchServiceV2(
+                    SearchServiceV2DTO
+                        .fromModel(
+                            query = query,
+                            nextId = null,
+                            searchCount = searchCount,
+                        ).toMap(),
+                ).map {
+                    it.toModel()
+                }
     }

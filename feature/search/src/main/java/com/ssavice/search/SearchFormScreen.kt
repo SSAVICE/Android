@@ -244,21 +244,24 @@ fun SearchFormScreen(
                         val checkboxInteractionSource = remember { MutableInteractionSource() }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth().clickable(
-                                interactionSource = checkboxInteractionSource,
-                                indication = null,
-                                onClick = { onSaleOnlyChange(!form.onSaleOnly) },
-                            ),
+                            modifier =
+                                Modifier.fillMaxWidth().clickable(
+                                    interactionSource = checkboxInteractionSource,
+                                    indication = null,
+                                    onClick = { onSaleOnlyChange(!form.onSaleOnly) },
+                                ),
                         ) {
-                            Text(text = "참여 가능한 서비스만 조회",
-                                style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                text = "참여 가능한 서비스만 조회",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
                             Checkbox(
                                 checked = form.onSaleOnly,
                                 onCheckedChange = { onSaleOnlyChange(it) },
                                 modifier = Modifier.padding(0.dp),
-                                interactionSource = checkboxInteractionSource)
+                                interactionSource = checkboxInteractionSource,
+                            )
                         }
-
                     }
 
                     InnerFieldWithLabel("가격") {

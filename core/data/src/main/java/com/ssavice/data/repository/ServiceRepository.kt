@@ -49,7 +49,7 @@ interface ServiceRepository {
         nextId: Long,
         searchCount: Int,
         startIndex: Int,
-        searchAfter: List<String>
+        searchAfter: List<String>,
     ): Result<SearchResult>
 
     suspend fun searchServiceV2(
