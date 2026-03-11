@@ -70,7 +70,7 @@ class MyServiceViewModel
                         .getMyService(
                             page = null,
                             searchCount = 10,
-                            sortingOrder = SortingOrder.POPULARITY,
+                            sortingOrder = SortingOrder.entries[0],
                             serviceState = _uiState.value.searchingState.getOrElse(uiState.value.searchTypeSelection) { ServiceState.ALL },
                         ).fold(
                             onSuccess = {
@@ -113,7 +113,7 @@ class MyServiceViewModel
                     .getMyService(
                         page = uiState.value.nextPage,
                         searchCount = 10,
-                        sortingOrder = SortingOrder.POPULARITY,
+                        sortingOrder = SortingOrder.entries[0],
                         serviceState = ServiceState.ALL,
                     ).fold(
                         onSuccess = {
