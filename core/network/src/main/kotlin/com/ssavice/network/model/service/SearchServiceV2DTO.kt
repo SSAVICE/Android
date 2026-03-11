@@ -74,7 +74,7 @@ data class SearchServiceV2DTO(
 data class SearchServiceV2ResponseDTO(
     val content: List<SearchServiceItemDTO>,
     val hasNext: Boolean,
-    val searchAfter: List<String>,
+    val nextSearchAfter: List<String>?,
     val nextCursor: Long? = null,
 ) {
     fun toModel(): SearchResult =
@@ -82,7 +82,7 @@ data class SearchServiceV2ResponseDTO(
             items = content.map { it.toModel() },
             hasNext = hasNext,
             nextCursor = nextCursor ?: -1,
-            searchAfter = searchAfter
+            searchAfter = nextSearchAfter?:emptyList()
         )
 }
 

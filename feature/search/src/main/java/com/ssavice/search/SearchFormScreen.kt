@@ -232,7 +232,7 @@ fun SearchFormScreen(
                                 SearchRange.entries.getOrNull(index)?.run {
                                     SsaviceChip(
                                         text = range,
-                                        selected = this.ordinal == index,
+                                        selected = this == form.searchRange,
                                         onSelectedChange = { onSearchRangeChange(this) },
                                     )
                                 }

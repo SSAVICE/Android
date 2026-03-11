@@ -32,7 +32,7 @@ interface ServiceRetrofitService {
 
     @GET("/api/service/search/v2")
     suspend fun searchServiceV2(
-        @QueryMap options: Map<String, Any?>,
+        @QueryMap options: Map<String, @JvmSuppressWildcards Any?>,
     ): Result<SearchServiceV2ResponseDTO>
 
     @GET("/api/service/{id}")

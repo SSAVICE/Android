@@ -74,26 +74,8 @@ constructor(
                         return@launch
                     }
 
-                val query = uiState.value.searchQuery
-                serviceRepository
-                    .searchService(
-                        query =
-                            SearchQuery(
-                                category = query.category,
-                                query = query.query,
-                                region1 = address.region1,
-                                region2 = address.region2,
-                                searchRange = query.searchRange,
-                                minPrice = query.minPrice,
-                                maxPrice = query.maxPrice,
-                                sortBy = query.sortBy,
-                                latitude = address.regionInfo.latitude,
-                                longitude = address.regionInfo.longitude,
-                                onSaleOnly = query.onSaleOnly,
-                            ),
-                        searchCount = SEARCH_COUNT,
-                        startIndex = uiState.value.items.size,
-                    ).fold(
+                val query = getNewSearchQuery(uiState.value.searchQuery, address)
+                getNewSearchResult(query, V2).fold(
                         onSuccess = {
                             updateSearchResult(it)
                         },
@@ -104,13 +86,42 @@ constructor(
             }
     }
 
+    private fun getNewSearchQuery(baseQuery: SearchQuery, region: RegionDetail): SearchQuery =
+        baseQuery.copy(
+            region1 = region.region1,
+            region2 = region.region2,
+            latitude = region.regionInfo.latitude,
+            longitude = region.regionInfo.longitude,
+        )
+
+    private suspend fun getNewSearchResult(query: SearchQuery, v2: Boolean): Result<SearchResult> =
+        if (v2) newSearchV2(query) else newSearchV1(query)
+
+    private suspend fun newSearchV1(query: SearchQuery): Result<SearchResult> =
+        serviceRepository
+            .searchService(
+                query = query,
+                searchCount = SEARCH_COUNT,
+                startIndex = uiState.value.items.size,
+            )
+
+    private suspend fun newSearchV2(query: SearchQuery): Result<SearchResult> =
+        serviceRepository
+            .searchServiceV2(
+                query = query,
+                searchCount = SEARCH_COUNT,
+                startIndex = uiState.value.items.size,
+            )
+
+
     private suspend fun search() {
         val address =
             userInfoRepository.getUserAddress().getOrElse {
                 return
             }
-        val query = uiState.value.searchQuery
-        (if (V2) searchV2(query, address) else searchV1(query, address)).fold(
+        val query = getNewSearchQuery(uiState.value.searchQuery, address)
+
+        getSearchResult(query, V2).fold(
             onSuccess = {
                 updateSearchResult(it)
             },
@@ -120,45 +131,22 @@ constructor(
         )
     }
 
-    private suspend fun searchV1(query: SearchQuery, address: RegionDetail): Result<SearchResult> =
+    private suspend fun getSearchResult(query: SearchQuery, v2: Boolean): Result<SearchResult> =
+        if (v2) searchV2(query) else searchV1(query)
+
+    private suspend fun searchV1(query: SearchQuery): Result<SearchResult> =
         serviceRepository
             .searchService(
-                query =
-                    SearchQuery(
-                        category = query.category,
-                        query = query.query,
-                        region1 = address.region1,
-                        region2 = address.region2,
-                        searchRange = query.searchRange,
-                        minPrice = query.minPrice,
-                        maxPrice = query.maxPrice,
-                        sortBy = query.sortBy,
-                        latitude = address.regionInfo.latitude,
-                        longitude = address.regionInfo.longitude,
-                        onSaleOnly = query.onSaleOnly,
-                    ),
+                query = query,
                 nextId = uiState.value.nextId,
                 searchCount = SEARCH_COUNT,
                 startIndex = uiState.value.items.size,
             )
 
-    private suspend fun searchV2(query: SearchQuery, address: RegionDetail): Result<SearchResult> =
+    private suspend fun searchV2(query: SearchQuery): Result<SearchResult> =
         serviceRepository
             .searchServiceV2(
-                query =
-                    SearchQuery(
-                        category = query.category,
-                        query = query.query,
-                        region1 = address.region1,
-                        region2 = address.region2,
-                        searchRange = query.searchRange,
-                        minPrice = query.minPrice,
-                        maxPrice = query.maxPrice,
-                        sortBy = query.sortBy,
-                        latitude = address.regionInfo.latitude,
-                        longitude = address.regionInfo.longitude,
-                        onSaleOnly = query.onSaleOnly,
-                    ),
+                query = query,
                 nextId = uiState.value.nextId,
                 searchCount = SEARCH_COUNT,
                 startIndex = uiState.value.items.size,
