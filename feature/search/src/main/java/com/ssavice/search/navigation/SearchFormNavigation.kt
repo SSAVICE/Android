@@ -35,7 +35,7 @@ fun NavController.navigateToSearchForm(
         SearchFormRoute(
             query = searchForm.query,
             selectedCategory = searchForm.selectedCategory.name,
-            searchRange = searchForm.searchRange,
+            searchRange = searchForm.searchRange.ordinal,
             startPrice = searchForm.priceRange.first,
             endPrice = searchForm.priceRange.last,
             sortBy = searchForm.sortBy.ordinal,

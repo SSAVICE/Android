@@ -57,6 +57,7 @@ import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay
@@ -124,7 +125,7 @@ fun SearchFormScreen(
     form: SearchForm,
     query: TextFieldState,
     onCategoryChange: (Category) -> Unit = {},
-    onSearchRangeChange: (Int) -> Unit = {},
+    onSearchRangeChange: (SearchRange) -> Unit = {},
     onPriceRangeChange: (IntRange) -> Unit = {},
     onSortByChange: (SortingOrder) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
@@ -227,12 +228,14 @@ fun SearchFormScreen(
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
                             verticalArrangement = spacedBy(10.dp),
                         ) {
-                            listOf(region1, region2, "1.5km", "3km").forEachIndexed { index, category ->
-                                SsaviceChip(
-                                    text = category,
-                                    selected = form.searchRange == index,
-                                    onSelectedChange = { onSearchRangeChange(index) },
-                                )
+                            listOf(region1, region2, "1.5km", "3km").forEachIndexed { index, range ->
+                                SearchRange.entries.getOrNull(index)?.run {
+                                    SsaviceChip(
+                                        text = range,
+                                        selected = this.ordinal == index,
+                                        onSelectedChange = { onSearchRangeChange(this) },
+                                    )
+                                }
                             }
                         }
 
@@ -381,7 +384,7 @@ fun SearchFormPreview() {
                         query = query.text.toString(),
                         categories = Category.entries,
                         selectedCategory = Category.entries.filter { it.showInUser }[0],
-                        searchRange = 1,
+                        searchRange = SearchRange.entries[0],
                         priceRange = priceRange,
                         sortBy = SortingOrder.entries[0],
                         onSaleOnly = false,

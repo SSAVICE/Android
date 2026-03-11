@@ -1,6 +1,7 @@
 package com.ssavice.user_home
 
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.service.SearchQuery
 
@@ -13,7 +14,7 @@ data class UserHomeUiState(
             region1 = "",
             region2 = "",
             category = Category.entries[0],
-            searchRange = 1,
+            searchRange = SearchRange.entries[0],
             minPrice = 0,
             maxPrice = Int.MAX_VALUE,
             sortBy = SortingOrder.entries[0],

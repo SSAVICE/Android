@@ -298,4 +298,22 @@ class DemoServiceRepository
         ): Result<ServiceParticipantResponse> {
             TODO("Not yet implemented")
         }
+
+    override suspend fun searchServiceV2(
+        query: SearchQuery,
+        nextId: Long,
+        searchCount: Int,
+        startIndex: Int,
+        searchAfter: List<String>
+    ): Result<SearchResult> {
+        TODO("Not yet implemented")
     }
+
+    override suspend fun searchServiceV2(
+        query: SearchQuery,
+        searchCount: Int,
+        startIndex: Int
+    ): Result<SearchResult> {
+        TODO("Not yet implemented")
+    }
+}

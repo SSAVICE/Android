@@ -35,7 +35,7 @@ fun NavController.navigateToSearchResult(
         SearchResultRoute(
             query = searchQuery.query,
             selectedCategory = searchQuery.category.index,
-            searchRange = searchQuery.searchRange,
+            searchRange = searchQuery.searchRange.ordinal,
             startPrice = searchQuery.minPrice,
             endPrice = searchQuery.maxPrice,
             sortBy = searchQuery.sortBy.ordinal,

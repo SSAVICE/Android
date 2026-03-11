@@ -25,4 +25,5 @@ data class SearchResult(
     val items: List<SearchResultItem>,
     val hasNext: Boolean,
     val nextCursor: Long,
+    val searchAfter: List<String> = emptyList(),
 )

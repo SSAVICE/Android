@@ -8,6 +8,7 @@ data class SearchResultUiState(
     val searchQuery: SearchQuery,
     val hasNext: Boolean,
     val nextId: Long,
+    val searchAfter: List<String> = emptyList(),
 )
 
 data class SearchResultItemUiState(

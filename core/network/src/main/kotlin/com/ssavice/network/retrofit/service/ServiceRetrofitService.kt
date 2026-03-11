@@ -10,6 +10,7 @@ import com.ssavice.network.model.service.GetChatServiceSummaryDTO
 import com.ssavice.network.model.service.GetServiceDetailDTO
 import com.ssavice.network.model.service.GetServiceParticipantDTO
 import com.ssavice.network.model.service.SearchServiceResponseDTO
+import com.ssavice.network.model.service.SearchServiceV2ResponseDTO
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -28,6 +29,11 @@ interface ServiceRetrofitService {
     suspend fun searchService(
         @QueryMap options: Map<String, String>,
     ): Result<SearchServiceResponseDTO>
+
+    @GET("/api/service/search/v2")
+    suspend fun searchServiceV2(
+        @QueryMap options: Map<String, Any?>,
+    ): Result<SearchServiceV2ResponseDTO>
 
     @GET("/api/service/{id}")
     suspend fun getService(

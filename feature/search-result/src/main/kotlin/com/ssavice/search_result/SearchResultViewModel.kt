@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.search_result.navigation.SearchResultRouteContract
@@ -50,7 +51,8 @@ class SearchResultViewModel
                             region1 = region?.regionInfo?.regionCode ?: "",
                             region2 = region?.regionInfo?.regionCode ?: "",
                             category = Category.entries.getOrElse(category) { Category.entries[0] },
-                            searchRange = searchRange,
+                            searchRange = SearchRange.entries.getOrElse(searchRange
+                            ) { SearchRange.entries[0] },
                             minPrice = startPrice,
                             maxPrice = endPrice,
                             sortBy = SortingOrder.entries.getOrElse(sortBy) { SortingOrder.entries[0] },
@@ -68,7 +70,7 @@ class SearchResultViewModel
                             region1 = "region1",
                             region2 = "region2",
                             category = Category.entries[0],
-                            searchRange = 0,
+                            searchRange = SearchRange.entries[0],
                             minPrice = 0,
                             maxPrice = 10_000_000,
                             sortBy = SortingOrder.entries[0],

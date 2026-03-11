@@ -8,83 +8,73 @@ import com.ssavice.network.model.RegionDTO
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchServiceDTO(
+data class SearchServiceV2DTO(
     val category: String,
     val query: String,
     val region1: String,
     val region2: String,
     val latitude: Double,
     val longitude: Double,
-    val range: Int,
+    val range: String,
     val minPrice: Long,
     val maxPrice: Long,
-    val sortBy: Int,
+    val sortBy: String,
     val lastId: Long?,
+    val searchAfter: List<String>?,
     val size: Int,
     val onSale: Boolean = true,
 ) {
-    fun toMap(): Map<String, String> =
-        if (lastId != null) {
-            mapOf(
-                "category" to category,
-                "query" to query,
-                "gugun" to region1,
-                "region" to region2,
-                "range" to range.toString(),
-                "minPrice" to minPrice.toString(),
-                "maxPrice" to maxPrice.toString(),
-                "sortBy" to sortBy.toString(),
-                "lastId" to lastId.toString(),
-                "size" to size.toString(),
-                "userLatitude" to latitude.toString(),
-                "userLongitude" to longitude.toString(),
-                "onSale" to onSale.toString(),
-            )
-        } else {
-            mapOf(
-                "category" to category,
-                "query" to query,
-                "gugun" to region1,
-                "region" to region2,
-                "range" to range.toString(),
-                "minPrice" to minPrice.toString(),
-                "maxPrice" to maxPrice.toString(),
-                "sortBy" to sortBy.toString(),
-                "size" to size.toString(),
-                "userLatitude" to latitude.toString(),
-                "userLongitude" to longitude.toString(),
-                "onSale" to onSale.toString(),
-            )
-        }
+    fun toMap(): Map<String, Any?> {
+        val params = mutableMapOf<String, Any?>(
+            "category" to category,
+            "query" to query,
+            "gugun" to region1,
+            "region" to region2,
+            "range" to range,
+            "minPrice" to minPrice.toString(),
+            "maxPrice" to maxPrice.toString(),
+            "sortBy" to sortBy,
+            "size" to size.toString(),
+            "userLatitude" to latitude.toString(),
+            "userLongitude" to longitude.toString(),
+            "onSale" to onSale.toString(),
+        )
+        lastId?.let { params["lastId"] = it }
+        searchAfter?.let { params["searchAfter"] = it }
+        return params
+    }
 
     companion object {
         fun fromModel(
             query: SearchQuery,
             nextId: Long?,
             searchCount: Int,
-        ): SearchServiceDTO =
-            SearchServiceDTO(
+            searchAfter: List<String>? = null
+        ): SearchServiceV2DTO =
+            SearchServiceV2DTO(
                 category = query.category.name,
                 query = query.query,
                 region1 = query.region1,
                 region2 = query.region2,
-                range = query.searchRange.ordinal,
+                range = query.searchRange.name,
                 minPrice = query.minPrice.toLong(),
                 maxPrice = query.maxPrice.toLong(),
-                sortBy = query.sortBy.index,
+                sortBy = query.sortBy.name,
                 lastId = nextId,
                 size = searchCount,
                 latitude = query.latitude,
                 longitude = query.longitude,
-                onSale = query.onSaleOnly
+                onSale = query.onSaleOnly,
+                searchAfter = searchAfter
             )
     }
 }
 
 @Serializable
-data class SearchServiceResponseDTO(
+data class SearchServiceV2ResponseDTO(
     val content: List<SearchServiceItemDTO>,
     val hasNext: Boolean,
+    val searchAfter: List<String>,
     val nextCursor: Long? = null,
 ) {
     fun toModel(): SearchResult =
@@ -92,11 +82,12 @@ data class SearchServiceResponseDTO(
             items = content.map { it.toModel() },
             hasNext = hasNext,
             nextCursor = nextCursor ?: -1,
+            searchAfter = searchAfter
         )
 }
 
 @Serializable
-data class SearchServiceItemDTO(
+data class SearchServiceV2ItemDTO(
     val serviceId: Long,
     val serviceImageUrl: String?,
     val category: String,

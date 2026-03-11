@@ -6,7 +6,9 @@ import com.ssavice.common.getDeadlineMessageFromTimestamp
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Date
+import com.ssavice.model.RegionDetail
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
@@ -20,189 +22,217 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchResultViewModel
-    @Inject
-    constructor(
-        private val serviceRepository: ServiceRepository,
-        private val userInfoRepository: UserInfoRepository,
-    ) : ViewModel() {
-        private var searchJob: Job? = null
+@Inject
+constructor(
+    private val serviceRepository: ServiceRepository,
+    private val userInfoRepository: UserInfoRepository,
+) : ViewModel() {
+    private var searchJob: Job? = null
 
-        private val _uiState =
-            MutableStateFlow(
-                SearchResultUiState(
-                    items = listOf(),
-                    status = SearchStatus.Loading,
-                    hasNext = false,
-                    nextId = 0,
-                    searchQuery =
-                        SearchQuery(
-                            query = "",
-                            region1 = "",
-                            region2 = "",
-                            searchRange = 0,
-                            minPrice = 0,
-                            maxPrice = 0,
-                            sortBy = SortingOrder.entries[0],
-                            category = Category.entries[0],
-                            latitude = 0.0,
-                            longitude = 0.0,
-                            onSaleOnly = true,
-                        ),
-                ),
+    private val _uiState =
+        MutableStateFlow(
+            SearchResultUiState(
+                items = listOf(),
+                status = SearchStatus.Loading,
+                hasNext = false,
+                nextId = 0,
+                searchQuery =
+                    SearchQuery(
+                        query = "",
+                        region1 = "",
+                        region2 = "",
+                        searchRange = SearchRange.entries[0],
+                        minPrice = 0,
+                        maxPrice = 0,
+                        sortBy = SortingOrder.entries[0],
+                        category = Category.entries[0],
+                        latitude = 0.0,
+                        longitude = 0.0,
+                        onSaleOnly = true,
+                    ),
+            ),
+        )
+    val uiState: StateFlow<SearchResultUiState> = _uiState
+
+    fun newSearch(searchQuery: SearchQuery) {
+        _uiState.value =
+            _uiState.value.copy(
+                searchQuery = searchQuery,
+                status = SearchStatus.Loading,
+                nextId = 0,
+                items = listOf(),
             )
-        val uiState: StateFlow<SearchResultUiState> = _uiState
 
-        fun newSearch(searchQuery: SearchQuery) {
-            _uiState.value =
-                _uiState.value.copy(
-                    searchQuery = searchQuery,
-                    status = SearchStatus.Loading,
-                    nextId = 0,
-                    items = listOf(),
-                )
-
-            if (searchJob?.isActive == true) {
-                searchJob?.cancel()
-            }
-
-            searchJob =
-                viewModelScope.launch(Dispatchers.IO) {
-                    val address =
-                        userInfoRepository.getUserAddress().getOrElse {
-                            return@launch
-                        }
-
-                    val query = uiState.value.searchQuery
-                    serviceRepository
-                        .searchService(
-                            query =
-                                SearchQuery(
-                                    category = query.category,
-                                    query = query.query,
-                                    region1 = address.region1,
-                                    region2 = address.region2,
-                                    searchRange = query.searchRange,
-                                    minPrice = query.minPrice,
-                                    maxPrice = query.maxPrice,
-                                    sortBy = query.sortBy,
-                                    latitude = address.regionInfo.latitude,
-                                    longitude = address.regionInfo.longitude,
-                                    onSaleOnly = query.onSaleOnly,
-                                ),
-                            searchCount = SEARCH_COUNT,
-                            startIndex = uiState.value.items.size,
-                        ).fold(
-                            onSuccess = {
-                                updateSearchResult(it)
-                            },
-                            onFailure = {
-                                onSearchFailure(it)
-                            },
-                        )
-                }
+        if (searchJob?.isActive == true) {
+            searchJob?.cancel()
         }
 
-        private suspend fun search() {
-            val address =
-                userInfoRepository.getUserAddress().getOrElse {
-                    return
-                }
-            val query = uiState.value.searchQuery
-            serviceRepository
-                .searchService(
-                    query =
-                        SearchQuery(
-                            category = query.category,
-                            query = query.query,
-                            region1 = address.region1,
-                            region2 = address.region2,
-                            searchRange = query.searchRange,
-                            minPrice = query.minPrice,
-                            maxPrice = query.maxPrice,
-                            sortBy = query.sortBy,
-                            latitude = address.regionInfo.latitude,
-                            longitude = address.regionInfo.longitude,
-                            onSaleOnly = query.onSaleOnly,
-                        ),
-                    nextId = uiState.value.nextId,
-                    searchCount = SEARCH_COUNT,
-                    startIndex = uiState.value.items.size,
-                ).fold(
-                    onSuccess = {
-                        updateSearchResult(it)
-                    },
-                    onFailure = {
-                        onSearchFailure(it)
-                    },
-                )
-        }
+        searchJob =
+            viewModelScope.launch(Dispatchers.IO) {
+                val address =
+                    userInfoRepository.getUserAddress().getOrElse {
+                        return@launch
+                    }
 
-        private fun updateSearchResult(searchResult: SearchResult) {
-            val lastIndex = _uiState.value.items.size
-            val newItems =
-                _uiState.value.items.toMutableList().apply {
-                    addAll(
-                        searchResult.items.mapIndexed { i, item ->
-                            val memberStatusText =
-                                if (item.currentMember >= item.minimumMember) {
-                                    "${item.currentMember}"
-                                } else {
-                                    "${item.currentMember}/${item.minimumMember}"
-                                }
-                            SearchResultItemUiState(
-                                name = item.name,
-                                tag = item.tag,
-                                id = item.id,
-                                index = i + lastIndex,
-                                imageUrl = item.image,
-                                companyName = item.companyName,
-                                address = item.region.region2,
-                                distance = "0.5km",
-                                deadLine = getDeadlineMessage(item.deadLine),
-                                discountedPrice = item.discountedPrice.toInt(),
-                                basePrice = item.basePrice.toInt(),
-                                discountRatio = item.discountRatio,
-                                memberStatus = memberStatusText,
-                            )
+                val query = uiState.value.searchQuery
+                serviceRepository
+                    .searchService(
+                        query =
+                            SearchQuery(
+                                category = query.category,
+                                query = query.query,
+                                region1 = address.region1,
+                                region2 = address.region2,
+                                searchRange = query.searchRange,
+                                minPrice = query.minPrice,
+                                maxPrice = query.maxPrice,
+                                sortBy = query.sortBy,
+                                latitude = address.regionInfo.latitude,
+                                longitude = address.regionInfo.longitude,
+                                onSaleOnly = query.onSaleOnly,
+                            ),
+                        searchCount = SEARCH_COUNT,
+                        startIndex = uiState.value.items.size,
+                    ).fold(
+                        onSuccess = {
+                            updateSearchResult(it)
+                        },
+                        onFailure = {
+                            onSearchFailure(it)
                         },
                     )
-                }
-            _uiState.value =
-                _uiState.value.copy(
-                    items = newItems,
-                    status = SearchStatus.Shown,
-                    hasNext = searchResult.hasNext,
-                    nextId = searchResult.nextCursor,
-                )
-        }
+            }
+    }
 
-        private fun getDeadlineMessage(deadline: Date): String =
-            getDeadlineMessageFromTimestamp(
-                deadline = deadline.toTimeStamp().timeInMillis,
-                today = Date.now().toTimeStamp().timeInMillis,
+    private suspend fun search() {
+        val address =
+            userInfoRepository.getUserAddress().getOrElse {
+                return
+            }
+        val query = uiState.value.searchQuery
+        (if (V2) searchV2(query, address) else searchV1(query, address)).fold(
+            onSuccess = {
+                updateSearchResult(it)
+            },
+            onFailure = {
+                onSearchFailure(it)
+            },
+        )
+    }
+
+    private suspend fun searchV1(query: SearchQuery, address: RegionDetail): Result<SearchResult> =
+        serviceRepository
+            .searchService(
+                query =
+                    SearchQuery(
+                        category = query.category,
+                        query = query.query,
+                        region1 = address.region1,
+                        region2 = address.region2,
+                        searchRange = query.searchRange,
+                        minPrice = query.minPrice,
+                        maxPrice = query.maxPrice,
+                        sortBy = query.sortBy,
+                        latitude = address.regionInfo.latitude,
+                        longitude = address.regionInfo.longitude,
+                        onSaleOnly = query.onSaleOnly,
+                    ),
+                nextId = uiState.value.nextId,
+                searchCount = SEARCH_COUNT,
+                startIndex = uiState.value.items.size,
             )
 
-        private fun onSearchFailure(exception: Throwable) {
-        }
+    private suspend fun searchV2(query: SearchQuery, address: RegionDetail): Result<SearchResult> =
+        serviceRepository
+            .searchServiceV2(
+                query =
+                    SearchQuery(
+                        category = query.category,
+                        query = query.query,
+                        region1 = address.region1,
+                        region2 = address.region2,
+                        searchRange = query.searchRange,
+                        minPrice = query.minPrice,
+                        maxPrice = query.maxPrice,
+                        sortBy = query.sortBy,
+                        latitude = address.regionInfo.latitude,
+                        longitude = address.regionInfo.longitude,
+                        onSaleOnly = query.onSaleOnly,
+                    ),
+                nextId = uiState.value.nextId,
+                searchCount = SEARCH_COUNT,
+                startIndex = uiState.value.items.size,
+                searchAfter = uiState.value.searchAfter
+            )
 
-        fun loadMoreItems() {
-            if (searchJob?.isActive == true) return
-            if (!uiState.value.hasNext) return
-
-            _uiState.value =
-                _uiState.value.copy(
-                    status = SearchStatus.Loading,
+    private fun updateSearchResult(searchResult: SearchResult) {
+        val lastIndex = _uiState.value.items.size
+        val newItems =
+            _uiState.value.items.toMutableList().apply {
+                addAll(
+                    searchResult.items.mapIndexed { i, item ->
+                        val memberStatusText =
+                            if (item.currentMember >= item.minimumMember) {
+                                "${item.currentMember}"
+                            } else {
+                                "${item.currentMember}/${item.minimumMember}"
+                            }
+                        SearchResultItemUiState(
+                            name = item.name,
+                            tag = item.tag,
+                            id = item.id,
+                            index = i + lastIndex,
+                            imageUrl = item.image,
+                            companyName = item.companyName,
+                            address = item.region.region2,
+                            distance = "0.5km",
+                            deadLine = getDeadlineMessage(item.deadLine),
+                            discountedPrice = item.discountedPrice.toInt(),
+                            basePrice = item.basePrice.toInt(),
+                            discountRatio = item.discountRatio,
+                            memberStatus = memberStatusText,
+                        )
+                    },
                 )
-            searchJob =
-                viewModelScope.launch(Dispatchers.IO) {
-                    search()
-                }
-        }
-
-        fun clickItem() {
-        }
-
-        companion object {
-            const val SEARCH_COUNT = 10
-        }
+            }
+        _uiState.value =
+            _uiState.value.copy(
+                items = newItems,
+                status = SearchStatus.Shown,
+                hasNext = searchResult.hasNext,
+                nextId = searchResult.nextCursor,
+                searchAfter = searchResult.searchAfter,
+            )
     }
+
+    private fun getDeadlineMessage(deadline: Date): String =
+        getDeadlineMessageFromTimestamp(
+            deadline = deadline.toTimeStamp().timeInMillis,
+            today = Date.now().toTimeStamp().timeInMillis,
+        )
+
+    private fun onSearchFailure(exception: Throwable) {
+    }
+
+    fun loadMoreItems() {
+        if (searchJob?.isActive == true) return
+        if (!uiState.value.hasNext) return
+
+        _uiState.value =
+            _uiState.value.copy(
+                status = SearchStatus.Loading,
+            )
+        searchJob =
+            viewModelScope.launch(Dispatchers.IO) {
+                search()
+            }
+    }
+
+    fun clickItem() {
+    }
+
+    companion object {
+        const val SEARCH_COUNT = 10
+        const val V2 = true
+    }
+}

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.enums.mapCategoryByName
 import com.ssavice.model.enums.mapCategoryByValue
@@ -36,8 +37,11 @@ constructor(
                         selectedCategory =
                             Category.mapCategoryByName(categorySelectionName ?: "ALL"),
                         searchRange =
-                            savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE)
-                                ?: 0,
+                            SearchRange.entries.getOrElse(
+                                savedStateHandle.get<Int>(
+                                    SearchFormRouteContract.SEARCH_RANGE
+                                ) ?: 0
+                            ) { SearchRange.entries[0] },
                         priceRange =
                             savedStateHandle
                                 .get<Int>(SearchFormRouteContract.START_PRICE)
@@ -91,16 +95,14 @@ constructor(
         }
     }
 
-    fun onSearchRangeSelect(index: Int) {
-        if (index in 0..3) {
-            _uiState.value =
-                _uiState.value.copy(
-                    form =
-                        _uiState.value.form.copy(
-                            searchRange = index,
-                        ),
-                )
-        }
+    fun onSearchRangeSelect(range: SearchRange) {
+        _uiState.value =
+            _uiState.value.copy(
+                form =
+                    _uiState.value.form.copy(
+                        searchRange = range,
+                    ),
+            )
     }
 
     fun onPriceRangeChange(range: IntRange) {
