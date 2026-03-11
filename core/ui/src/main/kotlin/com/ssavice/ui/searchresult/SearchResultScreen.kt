@@ -86,6 +86,8 @@ fun SearchResultScreen(
                 participationInfo = item.memberStatus,
                 onServiceClick = onServiceClick,
                 discountRate = item.discountRatio,
+                isBooked = item.booked,
+                state = item.state,
             ) { url ->
                 AsyncImage(
                     modifier =

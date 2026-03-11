@@ -1,5 +1,6 @@
 package com.ssavice.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,8 +43,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.enums.ServiceState
 import java.text.NumberFormat
 import java.util.Locale
+
+enum class ServiceItemState {
+    FINISHED, CANCELED, FULLED, AVAILABLE
+}
 
 @Composable
 fun ServiceListElement(
@@ -58,6 +64,51 @@ fun ServiceListElement(
     discountedPrice: Int,
     discountRate: Int,
     participationInfo: String,
+    isBooked: Boolean,
+    state: ServiceState,
+    onServiceClick: (Long) -> Unit,
+    thumbnail: @Composable (String) -> Unit = {},
+) {
+    val serviceItemState = when(state) {
+        ServiceState.COMPLETED, ServiceState.FAILED -> ServiceItemState.FINISHED
+        ServiceState.CANCELED, ServiceState.USER_CANCELED, ServiceState.SERVICE_CANCELED -> ServiceItemState.CANCELED
+        ServiceState.FULLED -> ServiceItemState.FULLED
+        ServiceState.ALL, ServiceState.UNKNOWN, ServiceState.RECRUITING, ServiceState.SUCCEEDED -> ServiceItemState.AVAILABLE
+    }
+    ServiceListElement(
+        id,
+        imageUrl,
+        sellerName,
+        serviceName,
+        tags,
+        locationInfo,
+        deadline,
+        price,
+        discountedPrice,
+        discountRate,
+        participationInfo,
+        isBooked,
+        serviceItemState,
+        onServiceClick,
+        thumbnail
+    )
+}
+
+@Composable
+fun ServiceListElement(
+    id: Long,
+    imageUrl: String,
+    sellerName: String,
+    serviceName: String,
+    tags: List<String>,
+    locationInfo: String,
+    deadline: String,
+    price: Int,
+    discountedPrice: Int,
+    discountRate: Int,
+    participationInfo: String,
+    isBooked: Boolean = false,
+    state: ServiceItemState = ServiceItemState.AVAILABLE,
     onServiceClick: (Long) -> Unit,
     thumbnail: @Composable (String) -> Unit = {},
 ) {
@@ -76,6 +127,38 @@ fun ServiceListElement(
                 modifier = Modifier.size(120.dp),
             ) {
                 thumbnail(imageUrl)
+                if (state != ServiceItemState.AVAILABLE) {
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.Black.copy(alpha = 0.4f))
+                    )
+                }
+
+                // 3. 우측 상단 인디케이터 모음 (할인율, 마감, 예약상태)
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(4.dp),
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // 모집 마감 표시
+                    if(state != ServiceItemState.AVAILABLE) {
+                        ServiceStateBadge(state)
+                    }
+
+                    // 예약 완료 표시 (마감되지 않았을 때만 혹은 마감과 함께 표시 가능)
+                    if (isBooked) {
+                        ServiceBadge(
+                            text = "이용 중",
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
+                        )
+                    }
+                }
+
                 Surface(
                     modifier =
                         Modifier
@@ -207,6 +290,56 @@ fun ServiceListElement(
         }
     }
 }
+@Composable
+private fun ServiceBadge(
+    text: String,
+    containerColor: Color,
+    contentColor: Color
+) {
+    Surface(
+        color = containerColor,
+        shape = RoundedCornerShape(4.dp),        modifier = Modifier.wrapContentWidth()
+    ) {
+        Text(
+            text = text,
+            color = contentColor,
+            fontSize = 10.sp,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun ServiceStateBadge(
+    state: ServiceItemState
+) {
+    when(state) {ServiceItemState.FINISHED -> {
+        ServiceBadge(
+            text = "판매 종료",
+            containerColor = Color.Gray,
+            contentColor = Color.White
+        )
+    }
+        ServiceItemState.CANCELED -> {
+            ServiceBadge(
+                text = "취소됨",
+                containerColor = Color.Gray,
+                contentColor = Color.White
+            )
+        }
+        ServiceItemState.FULLED -> {
+            ServiceBadge(
+                text = "모집 완료",
+                containerColor = Color.Gray,
+                contentColor = Color.White
+            )
+        }
+        ServiceItemState.AVAILABLE -> {} // no badge
+    }
+}
 
 private fun Int.format(): String = NumberFormat.getNumberInstance(Locale.US).format(this)
 
@@ -269,6 +402,23 @@ private fun ServiceListElementPreview() {
                     discountedPrice = 50000,
                     participationInfo = "8/15명 참여중",
                     onServiceClick = {},
+                    state = ServiceItemState.CANCELED
+                )
+                ServiceListElement(
+                    id = 1L,
+                    imageUrl = YOGA_IMAGE_URL,
+                    sellerName = "힐링요가스튜디오",
+                    serviceName = "주말 요가 클래스",
+                    tags = listOf("요가", "힐링"),
+                    locationInfo = "강남구 · 0.5km",
+                    deadline = "2일 후 마감",
+                    price = 70000,
+                    discountRate = 10,
+                    discountedPrice = 50000,
+                    participationInfo = "8/15명 참여중",
+                    onServiceClick = {},
+                    isBooked = true,
+                    state = ServiceItemState.FULLED
                 )
             }
         }

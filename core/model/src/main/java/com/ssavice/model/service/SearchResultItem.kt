@@ -2,6 +2,7 @@ package com.ssavice.model.service
 
 import com.ssavice.model.Date
 import com.ssavice.model.Region
+import com.ssavice.model.enums.ServiceState
 
 data class SearchResultItem(
     val name: String,
@@ -19,6 +20,7 @@ data class SearchResultItem(
     val companyId: Long,
     val region: Region,
     val booked: Boolean,
+    val state: ServiceState
 )
 
 data class SearchResult(

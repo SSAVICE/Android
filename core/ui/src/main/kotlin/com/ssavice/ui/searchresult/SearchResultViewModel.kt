@@ -179,6 +179,8 @@ constructor(
                             basePrice = item.basePrice.toInt(),
                             discountRatio = item.discountRatio,
                             memberStatus = memberStatusText,
+                            booked = item.booked,
+                            state = item.state,
                         )
                     },
                 )

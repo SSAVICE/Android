@@ -1,6 +1,8 @@
 package com.ssavice.network.model.service
 
 import com.ssavice.model.Date
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.mapState
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
@@ -123,5 +125,6 @@ data class SearchServiceV2ItemDTO(
             companyId = companyId,
             region = region.toModel(),
             booked = isBooked,
+            state = ServiceState.mapState(status)
         )
 }
