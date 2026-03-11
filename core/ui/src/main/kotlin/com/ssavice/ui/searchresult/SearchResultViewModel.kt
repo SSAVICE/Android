@@ -3,6 +3,7 @@ package com.ssavice.ui.searchresult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.common.getDeadlineMessageFromTimestamp
+import com.ssavice.common.mapDistanceKm
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Date
@@ -173,7 +174,7 @@ constructor(
                             imageUrl = item.image,
                             companyName = item.companyName,
                             address = item.region.region2,
-                            distance = "0.5km",
+                            distance = mapDistanceKm(item.distance),
                             deadLine = getDeadlineMessage(item.deadLine),
                             discountedPrice = item.discountedPrice.toInt(),
                             basePrice = item.basePrice.toInt(),

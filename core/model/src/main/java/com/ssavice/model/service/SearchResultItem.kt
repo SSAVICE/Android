@@ -20,6 +20,7 @@ data class SearchResultItem(
     val companyId: Long,
     val region: Region,
     val booked: Boolean,
+    val distance: Double,
     val state: ServiceState
 )
 

@@ -204,6 +204,7 @@ class DemoServiceRepository
                         companyName = generateRandomCompanyName(),
                         companyId = (0..100).random().toLong(),
                         booked = false,
+                        distance = 0.5,
                         state = ServiceState.RECRUITING,
                     )
                 }

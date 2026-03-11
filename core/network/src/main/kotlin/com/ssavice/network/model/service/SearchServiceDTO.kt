@@ -115,6 +115,7 @@ data class SearchServiceItemDTO(
     val discountRatio: Long,
     val discountedPrice: Long,
     val deadline: String,
+    val distanceKm: Double,
     val isBooked: Boolean,
 ) {
     fun toModel(): SearchResultItem =
@@ -134,6 +135,7 @@ data class SearchServiceItemDTO(
             companyId = companyId,
             region = region.toModel(),
             booked = isBooked,
-            state = ServiceState.mapState(status)
+            state = ServiceState.mapState(status),
+            distance = distanceKm,
         )
 }

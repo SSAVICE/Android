@@ -79,7 +79,7 @@ fun SearchResultScreen(
                 sellerName = item.companyName,
                 serviceName = item.name,
                 tags = item.tag.split(',').toList(),
-                locationInfo = item.address,
+                locationInfo = "${item.address} · ${item.distance}",
                 deadline = item.deadLine,
                 price = item.basePrice,
                 discountedPrice = item.discountedPrice,
