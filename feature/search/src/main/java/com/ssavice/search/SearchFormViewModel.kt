@@ -54,7 +54,7 @@ class SearchFormViewModel
                                             SearchFormRouteContract.SORT_BY,
                                         ) ?: -1,
                                     )
-                                    ) ?: SortingOrder.POPULARITY,
+                                    ) ?: SortingOrder.entries[0],
                     ),
                 region1String =
                     savedStateHandle.get<String>(SearchFormRouteContract.REGION1) ?: "",
@@ -109,16 +109,14 @@ class SearchFormViewModel
                 )
         }
 
-        fun onSortByChange(index: Int) {
-            if (index in 0 until SortingOrder.entries.size) {
-                _uiState.value =
-                    _uiState.value.copy(
-                        form =
-                            _uiState.value.form.copy(
-                                sortBy = SortingOrder.entries[index],
-                            ),
-                    )
-            }
+        fun onSortByChange(order: SortingOrder) {
+            _uiState.value =
+                _uiState.value.copy(
+                    form =
+                        _uiState.value.form.copy(
+                            sortBy = order,
+                        ),
+                )
         }
 
         fun initiateRegion() {

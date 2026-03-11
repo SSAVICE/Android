@@ -121,7 +121,7 @@ fun SearchFormScreen(
     onCategoryChange: (Category) -> Unit = {},
     onSearchRangeChange: (Int) -> Unit = {},
     onPriceRangeChange: (IntRange) -> Unit = {},
-    onSortByChange: (Int) -> Unit = {},
+    onSortByChange: (SortingOrder) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
     focusRequester: FocusRequester? = null,
     readyToRenderContent: Boolean = true,
@@ -299,21 +299,15 @@ fun SearchFormScreen(
                         Column(
                             verticalArrangement = spacedBy(5.dp),
                         ) {
-                            listOf(
-                                "인기순",
-                                "높은 가격순",
-                                "낮은 가격순",
-                                "할인율순",
-                                "마감 임박순",
-                            ).forEachIndexed { i, s ->
+                            SortingOrder.entries.forEach { s ->
                                 SsaviceChip(
                                     modifier =
                                         Modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 8.dp),
-                                    text = s,
-                                    selected = form.sortBy.value == i,
-                                    onSelectedChange = { onSortByChange(i) },
+                                    text = s.value,
+                                    selected = form.sortBy == s,
+                                    onSelectedChange = { onSortByChange(s) },
                                     innerPadding = PaddingValues(vertical = 10.dp),
                                 )
                             }
@@ -362,7 +356,7 @@ fun SearchFormPreview() {
                         selectedCategory = Category.entries.filter { it.showInUser }[0],
                         searchRange = 1,
                         priceRange = priceRange,
-                        sortBy = SortingOrder.POPULARITY,
+                        sortBy = SortingOrder.entries[0],
                     ),
                 query = query,
                 onSearchClick = {

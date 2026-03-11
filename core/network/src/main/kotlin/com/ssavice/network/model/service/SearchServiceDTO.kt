@@ -71,7 +71,7 @@ data class SearchServiceDTO(
                 range = query.searchRange,
                 minPrice = query.minPrice.toLong(),
                 maxPrice = query.maxPrice.toLong(),
-                sortBy = query.sortBy.value,
+                sortBy = query.sortBy.index,
                 lastId = nextId,
                 size = searchCount,
                 latitude = query.latitude,

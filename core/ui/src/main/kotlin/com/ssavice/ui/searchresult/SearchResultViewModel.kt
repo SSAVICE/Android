@@ -42,7 +42,7 @@ class SearchResultViewModel
                             searchRange = 0,
                             minPrice = 0,
                             maxPrice = 0,
-                            sortBy = SortingOrder.POPULARITY,
+                            sortBy = SortingOrder.entries[0],
                             category = Category.entries[0],
                             latitude = 0.0,
                             longitude = 0.0,

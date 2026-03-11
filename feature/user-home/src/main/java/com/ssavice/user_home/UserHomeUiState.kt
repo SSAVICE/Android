@@ -16,7 +16,7 @@ data class UserHomeUiState(
             searchRange = 1,
             minPrice = 0,
             maxPrice = Int.MAX_VALUE,
-            sortBy = SortingOrder.POPULARITY,
+            sortBy = SortingOrder.entries[0],
             latitude = 0.0,
             longitude = 0.0,
         ),

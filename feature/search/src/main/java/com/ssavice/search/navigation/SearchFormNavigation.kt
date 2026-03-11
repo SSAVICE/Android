@@ -37,7 +37,7 @@ fun NavController.navigateToSearchForm(
             searchRange = searchForm.searchRange,
             startPrice = searchForm.priceRange.first,
             endPrice = searchForm.priceRange.last,
-            sortBy = searchForm.sortBy.value,
+            sortBy = searchForm.sortBy.ordinal,
         ),
     ) {
         navOptions()

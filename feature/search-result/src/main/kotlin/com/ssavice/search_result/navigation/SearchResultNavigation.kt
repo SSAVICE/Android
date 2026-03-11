@@ -37,7 +37,7 @@ fun NavController.navigateToSearchResult(
             searchRange = searchQuery.searchRange,
             startPrice = searchQuery.minPrice,
             endPrice = searchQuery.maxPrice,
-            sortBy = searchQuery.sortBy.value,
+            sortBy = searchQuery.sortBy.ordinal,
         ),
     ) {
         launchSingleTop = true
