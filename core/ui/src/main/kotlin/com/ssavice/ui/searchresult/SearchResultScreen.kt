@@ -79,13 +79,15 @@ fun SearchResultScreen(
                 sellerName = item.companyName,
                 serviceName = item.name,
                 tags = item.tag.split(',').toList(),
-                locationInfo = item.address,
+                locationInfo = "${item.address} · ${item.distance}",
                 deadline = item.deadLine,
                 price = item.basePrice,
                 discountedPrice = item.discountedPrice,
                 participationInfo = item.memberStatus,
                 onServiceClick = onServiceClick,
                 discountRate = item.discountRatio,
+                isBooked = item.booked,
+                state = item.state,
             ) { url ->
                 AsyncImage(
                     modifier =

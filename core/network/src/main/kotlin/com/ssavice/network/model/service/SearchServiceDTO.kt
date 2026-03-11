@@ -1,6 +1,8 @@
 package com.ssavice.network.model.service
 
 import com.ssavice.model.Date
+import com.ssavice.model.enums.ServiceState
+import com.ssavice.model.enums.mapState
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
 import com.ssavice.model.service.SearchResultItem
@@ -64,18 +66,19 @@ data class SearchServiceDTO(
             searchCount: Int,
         ): SearchServiceDTO =
             SearchServiceDTO(
-                category = query.category.value,
+                category = query.category.name,
                 query = query.query,
                 region1 = query.region1,
                 region2 = query.region2,
-                range = query.searchRange,
+                range = query.searchRange.ordinal,
                 minPrice = query.minPrice.toLong(),
                 maxPrice = query.maxPrice.toLong(),
-                sortBy = query.sortBy.value,
+                sortBy = query.sortBy.index,
                 lastId = nextId,
                 size = searchCount,
                 latitude = query.latitude,
                 longitude = query.longitude,
+                onSale = query.onSaleOnly,
             )
     }
 }
@@ -112,6 +115,7 @@ data class SearchServiceItemDTO(
     val discountRatio: Long,
     val discountedPrice: Long,
     val deadline: String,
+    val distanceKm: Double,
     val isBooked: Boolean,
 ) {
     fun toModel(): SearchResultItem =
@@ -131,5 +135,7 @@ data class SearchServiceItemDTO(
             companyId = companyId,
             region = region.toModel(),
             booked = isBooked,
+            state = ServiceState.mapState(status),
+            distance = distanceKm,
         )
 }

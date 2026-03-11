@@ -6,6 +6,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.Region
 import com.ssavice.model.ResizableImage
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.service.ReviewForm
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
@@ -203,6 +204,8 @@ class DemoServiceRepository
                         companyName = generateRandomCompanyName(),
                         companyId = (0..100).random().toLong(),
                         booked = false,
+                        distance = 0.5,
+                        state = ServiceState.RECRUITING,
                     )
                 }
 
@@ -296,6 +299,24 @@ class DemoServiceRepository
             size: Int,
             page: Int,
         ): Result<ServiceParticipantResponse> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun searchServiceV2(
+            query: SearchQuery,
+            nextId: Long,
+            searchCount: Int,
+            startIndex: Int,
+            searchAfter: List<String>,
+        ): Result<SearchResult> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun searchServiceV2(
+            query: SearchQuery,
+            searchCount: Int,
+            startIndex: Int,
+        ): Result<SearchResult> {
             TODO("Not yet implemented")
         }
     }

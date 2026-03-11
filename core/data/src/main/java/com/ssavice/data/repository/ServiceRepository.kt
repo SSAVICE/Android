@@ -43,4 +43,18 @@ interface ServiceRepository {
         size: Int,
         page: Int,
     ): Result<ServiceParticipantResponse>
+
+    suspend fun searchServiceV2(
+        query: SearchQuery,
+        nextId: Long,
+        searchCount: Int,
+        startIndex: Int,
+        searchAfter: List<String>,
+    ): Result<SearchResult>
+
+    suspend fun searchServiceV2(
+        query: SearchQuery,
+        searchCount: Int,
+        startIndex: Int,
+    ): Result<SearchResult>
 }

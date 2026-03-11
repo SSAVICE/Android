@@ -3,10 +3,13 @@ package com.ssavice.ui.searchresult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.common.getDeadlineMessageFromTimestamp
+import com.ssavice.common.mapDistanceKm
 import com.ssavice.data.repository.ServiceRepository
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.Date
+import com.ssavice.model.RegionDetail
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.model.service.SearchQuery
 import com.ssavice.model.service.SearchResult
@@ -39,13 +42,14 @@ class SearchResultViewModel
                             query = "",
                             region1 = "",
                             region2 = "",
-                            searchRange = 0,
+                            searchRange = SearchRange.entries[0],
                             minPrice = 0,
                             maxPrice = 0,
-                            sortBy = SortingOrder.POPULARITY,
+                            sortBy = SortingOrder.entries[0],
                             category = Category.entries[0],
                             latitude = 0.0,
                             longitude = 0.0,
+                            onSaleOnly = true,
                         ),
                 ),
             )
@@ -71,68 +75,90 @@ class SearchResultViewModel
                             return@launch
                         }
 
-                    val query = uiState.value.searchQuery
-                    serviceRepository
-                        .searchService(
-                            query =
-                                SearchQuery(
-                                    category = query.category,
-                                    query = query.query,
-                                    region1 = address.region1,
-                                    region2 = address.region2,
-                                    searchRange = query.searchRange,
-                                    minPrice = query.minPrice,
-                                    maxPrice = query.maxPrice,
-                                    sortBy = query.sortBy,
-                                    latitude = address.regionInfo.latitude,
-                                    longitude = address.regionInfo.longitude,
-                                ),
-                            searchCount = SEARCH_COUNT,
-                            startIndex = uiState.value.items.size,
-                        ).fold(
-                            onSuccess = {
-                                updateSearchResult(it)
-                            },
-                            onFailure = {
-                                onSearchFailure(it)
-                            },
-                        )
+                    val query = getNewSearchQuery(uiState.value.searchQuery, address)
+                    getNewSearchResult(query, V2).fold(
+                        onSuccess = {
+                            updateSearchResult(it)
+                        },
+                        onFailure = {
+                            onSearchFailure(it)
+                        },
+                    )
                 }
         }
+
+        private fun getNewSearchQuery(
+            baseQuery: SearchQuery,
+            region: RegionDetail,
+        ): SearchQuery =
+            baseQuery.copy(
+                region1 = region.region1,
+                region2 = region.region2,
+                latitude = region.regionInfo.latitude,
+                longitude = region.regionInfo.longitude,
+            )
+
+        private suspend fun getNewSearchResult(
+            query: SearchQuery,
+            v2: Boolean,
+        ): Result<SearchResult> = if (v2) newSearchV2(query) else newSearchV1(query)
+
+        private suspend fun newSearchV1(query: SearchQuery): Result<SearchResult> =
+            serviceRepository
+                .searchService(
+                    query = query,
+                    searchCount = SEARCH_COUNT,
+                    startIndex = uiState.value.items.size,
+                )
+
+        private suspend fun newSearchV2(query: SearchQuery): Result<SearchResult> =
+            serviceRepository
+                .searchServiceV2(
+                    query = query,
+                    searchCount = SEARCH_COUNT,
+                    startIndex = uiState.value.items.size,
+                )
 
         private suspend fun search() {
             val address =
                 userInfoRepository.getUserAddress().getOrElse {
                     return
                 }
-            val query = uiState.value.searchQuery
+            val query = getNewSearchQuery(uiState.value.searchQuery, address)
+
+            getSearchResult(query, V2).fold(
+                onSuccess = {
+                    updateSearchResult(it)
+                },
+                onFailure = {
+                    onSearchFailure(it)
+                },
+            )
+        }
+
+        private suspend fun getSearchResult(
+            query: SearchQuery,
+            v2: Boolean,
+        ): Result<SearchResult> = if (v2) searchV2(query) else searchV1(query)
+
+        private suspend fun searchV1(query: SearchQuery): Result<SearchResult> =
             serviceRepository
                 .searchService(
-                    query =
-                        SearchQuery(
-                            category = query.category,
-                            query = query.query,
-                            region1 = address.region1,
-                            region2 = address.region2,
-                            searchRange = query.searchRange,
-                            minPrice = query.minPrice,
-                            maxPrice = query.maxPrice,
-                            sortBy = query.sortBy,
-                            latitude = address.regionInfo.latitude,
-                            longitude = address.regionInfo.longitude,
-                        ),
+                    query = query,
                     nextId = uiState.value.nextId,
                     searchCount = SEARCH_COUNT,
                     startIndex = uiState.value.items.size,
-                ).fold(
-                    onSuccess = {
-                        updateSearchResult(it)
-                    },
-                    onFailure = {
-                        onSearchFailure(it)
-                    },
                 )
-        }
+
+        private suspend fun searchV2(query: SearchQuery): Result<SearchResult> =
+            serviceRepository
+                .searchServiceV2(
+                    query = query,
+                    nextId = uiState.value.nextId,
+                    searchCount = SEARCH_COUNT,
+                    startIndex = uiState.value.items.size,
+                    searchAfter = uiState.value.searchAfter,
+                )
 
         private fun updateSearchResult(searchResult: SearchResult) {
             val lastIndex = _uiState.value.items.size
@@ -154,12 +180,14 @@ class SearchResultViewModel
                                 imageUrl = item.image,
                                 companyName = item.companyName,
                                 address = item.region.region2,
-                                distance = "0.5km",
+                                distance = mapDistanceKm(item.distance),
                                 deadLine = getDeadlineMessage(item.deadLine),
                                 discountedPrice = item.discountedPrice.toInt(),
                                 basePrice = item.basePrice.toInt(),
                                 discountRatio = item.discountRatio,
                                 memberStatus = memberStatusText,
+                                booked = item.booked,
+                                state = item.state,
                             )
                         },
                     )
@@ -170,6 +198,7 @@ class SearchResultViewModel
                     status = SearchStatus.Shown,
                     hasNext = searchResult.hasNext,
                     nextId = searchResult.nextCursor,
+                    searchAfter = searchResult.searchAfter,
                 )
         }
 
@@ -201,5 +230,6 @@ class SearchResultViewModel
 
         companion object {
             const val SEARCH_COUNT = 10
+            const val V2 = true
         }
     }

@@ -17,6 +17,7 @@ import com.ssavice.network.model.ImageUploadDTO
 import com.ssavice.network.model.review.PostReviewDTO
 import com.ssavice.network.model.service.AddServiceDTO
 import com.ssavice.network.model.service.SearchServiceDTO
+import com.ssavice.network.model.service.SearchServiceV2DTO
 import com.ssavice.network.retrofit.service.ImageUploadService
 import com.ssavice.network.retrofit.service.ServiceRetrofitService
 import kotlinx.coroutines.flow.Flow
@@ -142,6 +143,43 @@ internal class RemoteServiceRepository
                     id = id,
                     size = size,
                     page = page,
+                ).map {
+                    it.toModel()
+                }
+
+        override suspend fun searchServiceV2(
+            query: SearchQuery,
+            nextId: Long,
+            searchCount: Int,
+            startIndex: Int,
+            searchAfter: List<String>,
+        ): Result<SearchResult> =
+            serviceRetrofitService
+                .searchServiceV2(
+                    SearchServiceV2DTO
+                        .fromModel(
+                            query = query,
+                            nextId = nextId,
+                            searchCount = searchCount,
+                            searchAfter = searchAfter,
+                        ).toMap(),
+                ).map {
+                    it.toModel()
+                }
+
+        override suspend fun searchServiceV2(
+            query: SearchQuery,
+            searchCount: Int,
+            startIndex: Int,
+        ): Result<SearchResult> =
+            serviceRetrofitService
+                .searchServiceV2(
+                    SearchServiceV2DTO
+                        .fromModel(
+                            query = query,
+                            nextId = null,
+                            searchCount = searchCount,
+                        ).toMap(),
                 ).map {
                     it.toModel()
                 }

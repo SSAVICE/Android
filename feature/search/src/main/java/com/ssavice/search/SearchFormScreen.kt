@@ -1,6 +1,8 @@
 package com.ssavice.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -24,12 +26,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,6 +56,8 @@ import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay
@@ -105,6 +111,7 @@ fun SearchFormScreen(
         onSearchClick = {
             onSearch(state.form)
         },
+        onSaleOnlyChange = viewModel::onSaleOnlyChanged,
         focusRequester = focusRequester,
         readyToRenderContent = shouldRenderContent,
         region1 = state.region1String,
@@ -117,11 +124,12 @@ fun SearchFormScreen(
     modifier: Modifier = Modifier,
     form: SearchForm,
     query: TextFieldState,
-    onCategoryChange: (Int) -> Unit = {},
-    onSearchRangeChange: (Int) -> Unit = {},
+    onCategoryChange: (Category) -> Unit = {},
+    onSearchRangeChange: (SearchRange) -> Unit = {},
     onPriceRangeChange: (IntRange) -> Unit = {},
-    onSortByChange: (Int) -> Unit = {},
+    onSortByChange: (SortingOrder) -> Unit = {},
     onSearchClick: (query: String) -> Unit = {},
+    onSaleOnlyChange: (Boolean) -> Unit = {},
     focusRequester: FocusRequester? = null,
     readyToRenderContent: Boolean = true,
     region1: String = "",
@@ -202,11 +210,11 @@ fun SearchFormScreen(
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
                             verticalArrangement = spacedBy(10.dp),
                         ) {
-                            form.categories.forEachIndexed { index, category ->
+                            form.categories.filter { it.showInUser }.forEach { category ->
                                 SsaviceChip(
-                                    text = category,
-                                    selected = form.selectedCategory == index,
-                                    onSelectedChange = { onCategoryChange(index) },
+                                    text = category.value,
+                                    selected = form.selectedCategory == category,
+                                    onSelectedChange = { onCategoryChange(category) },
                                 )
                             }
                         }
@@ -220,13 +228,39 @@ fun SearchFormScreen(
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
                             verticalArrangement = spacedBy(10.dp),
                         ) {
-                            listOf(region1, region2, "1.5km", "3km").forEachIndexed { index, category ->
-                                SsaviceChip(
-                                    text = category,
-                                    selected = form.searchRange == index,
-                                    onSelectedChange = { onSearchRangeChange(index) },
-                                )
+                            listOf(region1, region2, "1.5km", "3km").forEachIndexed { index, range ->
+                                SearchRange.entries.getOrNull(index)?.run {
+                                    SsaviceChip(
+                                        text = range,
+                                        selected = this == form.searchRange,
+                                        onSelectedChange = { onSearchRangeChange(this) },
+                                    )
+                                }
                             }
+                        }
+
+                        Spacer(modifier = Modifier.padding(vertical = 5.dp))
+
+                        val checkboxInteractionSource = remember { MutableInteractionSource() }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier =
+                                Modifier.fillMaxWidth().clickable(
+                                    interactionSource = checkboxInteractionSource,
+                                    indication = null,
+                                    onClick = { onSaleOnlyChange(!form.onSaleOnly) },
+                                ),
+                        ) {
+                            Text(
+                                text = "참여 가능한 서비스만 조회",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Checkbox(
+                                checked = form.onSaleOnly,
+                                onCheckedChange = { onSaleOnlyChange(it) },
+                                modifier = Modifier.padding(0.dp),
+                                interactionSource = checkboxInteractionSource,
+                            )
                         }
                     }
 
@@ -298,21 +332,15 @@ fun SearchFormScreen(
                         Column(
                             verticalArrangement = spacedBy(5.dp),
                         ) {
-                            listOf(
-                                "인기순",
-                                "높은 가격순",
-                                "낮은 가격순",
-                                "할인율순",
-                                "마감 임박순",
-                            ).forEachIndexed { i, s ->
+                            SortingOrder.entries.forEach { s ->
                                 SsaviceChip(
                                     modifier =
                                         Modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 8.dp),
-                                    text = s,
-                                    selected = form.sortBy.value == i,
-                                    onSelectedChange = { onSortByChange(i) },
+                                    text = s.value,
+                                    selected = form.sortBy == s,
+                                    onSelectedChange = { onSortByChange(s) },
                                     innerPadding = PaddingValues(vertical = 10.dp),
                                 )
                             }
@@ -357,11 +385,12 @@ fun SearchFormPreview() {
                 form =
                     SearchForm(
                         query = query.text.toString(),
-                        categories = listOf("전체", "운동/피트니스", "교육/학습", "쇼핑/공동구매", "생활/취미"),
-                        selectedCategory = 0,
-                        searchRange = 1,
+                        categories = Category.entries,
+                        selectedCategory = Category.entries.filter { it.showInUser }[0],
+                        searchRange = SearchRange.entries[0],
                         priceRange = priceRange,
-                        sortBy = SortingOrder.POPULARITY,
+                        sortBy = SortingOrder.entries[0],
+                        onSaleOnly = false,
                     ),
                 query = query,
                 onSearchClick = {

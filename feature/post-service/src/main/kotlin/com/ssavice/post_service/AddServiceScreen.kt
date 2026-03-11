@@ -36,7 +36,6 @@ import androidx.compose.foundation.text.input.then
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -66,7 +65,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssavice.designsystem.component.InputTransformations
 import com.ssavice.designsystem.component.LabeledComponent
-import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.designsystem.component.OutputTransformations
 import com.ssavice.designsystem.component.SsaviceButton
 import com.ssavice.designsystem.component.SsaviceButtonOutlined
@@ -78,6 +76,8 @@ import com.ssavice.mappicker.AddressPickerDialog
 import com.ssavice.mappicker.AddressPickerSelectButton
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.TimeStamp
+import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.mapCategoryByValue
 import com.ssavice.post_service.AddServiceScreenDefaults.ADDRESS_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.ADD_IMAGE_TEXT
 import com.ssavice.post_service.AddServiceScreenDefaults.BASIC_INFORMATION_TEXT
@@ -178,7 +178,7 @@ fun AddServiceScreen(
     onImageSelected: (uri: Uri) -> Unit = {},
     onImageRemoveClicked: (Int) -> Unit = {},
     onServiceNameChanged: (String) -> Unit = {},
-    onCategoryChanged: (String) -> Unit = {},
+    onCategoryChanged: (Category) -> Unit = {},
     onTagChanged: (String) -> Unit = {},
     onMaxRecruitChanged: (Int) -> Unit = {},
     onMinRecruitChanged: (Int) -> Unit = {},
@@ -522,8 +522,8 @@ fun ImageSelector(
 fun AddServiceForm(
     modifier: Modifier = Modifier,
     serviceNameTextState: TextFieldState,
-    category: String,
-    categories: List<String>,
+    category: Category,
+    categories: List<Category>,
     tagTextState: TextFieldState,
     addressState: AddressForm,
     addressDetailTextState: TextFieldState,
@@ -552,7 +552,7 @@ fun AddServiceForm(
     onDeadlineChanged: (TimeStamp) -> Unit = {},
     onStartDateChanged: (TimeStamp) -> Unit = {},
     onEndDateChanged: (TimeStamp) -> Unit = {},
-    onCategoryChanged: (String) -> Unit = {},
+    onCategoryChanged: (Category) -> Unit = {},
     onAddressSelected: (AddressForm) -> Unit = {},
     onSubmitClicked: () -> Unit = {},
     onDismissClicked: () -> Unit = {},
@@ -574,10 +574,10 @@ fun AddServiceForm(
 
         SsaviceDropdown(
             modifier = Modifier.fillMaxWidth(),
-            options = categories,
+            options = categories.map { it.value },
             labelText = CATEGORY_TEXT,
-            selectedOption = category,
-            onOptionSelected = onCategoryChanged,
+            selectedOption = category.value,
+            onOptionSelected = { option -> onCategoryChanged(Category.mapCategoryByValue(option)) },
             isError = categoryErrorMessage != null,
             errorMessage = categoryErrorMessage,
         )
@@ -833,14 +833,13 @@ private fun InputAddressScreen(
 @Preview
 @Composable
 private fun AddServiceScreenPreview() {
-    val categories = listOf("건강 / 생활", "식품", "취미", "스포츠", "요양", "문화")
     val state by remember {
         mutableStateOf(
             AddServiceUiState(
                 form =
                     Form(
                         name = "요가 레슨",
-                        category = categories.first(),
+                        category = Category.HEALTH,
                         tag = "요가, 필라테스, 운동",
                         minRecruit = 0,
                         maxRecruit = 0,

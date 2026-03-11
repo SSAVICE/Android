@@ -5,11 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.Category
+import com.ssavice.model.enums.SearchRange
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.enums.mapCategoryByName
+import com.ssavice.model.enums.mapCategoryByValue
 import com.ssavice.search.navigation.SearchFormRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,19 +24,24 @@ class SearchFormViewModel
         savedStateHandle: SavedStateHandle,
         private val userInfoRepository: UserInfoRepository,
     ) : ViewModel() {
-        private val _uiState =
+        private val _uiState: MutableStateFlow<SearchFormUiState> by lazy {
+            val categories = Category.entries.filter { it.showInUser }
+            val categorySelectionName =
+                savedStateHandle.get<String>(SearchFormRouteContract.SELECTED_CATEGORY)
             MutableStateFlow(
                 SearchFormUiState(
                     form =
                         SearchForm(
                             query = savedStateHandle.get<String>(SearchFormRouteContract.QUERY) ?: "",
-                            categories = Category.entries.map { it.value },
+                            categories = categories,
                             selectedCategory =
-                                savedStateHandle.get<Int>(SearchFormRouteContract.SELECTED_CATEGORY)
-                                    ?: 0,
+                                Category.mapCategoryByName(categorySelectionName ?: "ALL"),
                             searchRange =
-                                savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE)
-                                    ?: 0,
+                                SearchRange.entries.getOrElse(
+                                    savedStateHandle.get<Int>(
+                                        SearchFormRouteContract.SEARCH_RANGE,
+                                    ) ?: 0,
+                                ) { SearchRange.entries[0] },
                             priceRange =
                                 savedStateHandle
                                     .get<Int>(SearchFormRouteContract.START_PRICE)
@@ -50,7 +59,10 @@ class SearchFormViewModel
                                             SearchFormRouteContract.SORT_BY,
                                         ) ?: -1,
                                     )
-                                ) ?: SortingOrder.POPULARITY,
+                                ) ?: SortingOrder.entries[0],
+                            onSaleOnly =
+                                savedStateHandle.get<Boolean>(SearchFormRouteContract.ON_SALE_ONLY)
+                                    ?: false,
                         ),
                     region1String =
                         savedStateHandle.get<String>(SearchFormRouteContract.REGION1) ?: "",
@@ -58,6 +70,7 @@ class SearchFormViewModel
                         savedStateHandle.get<String>(SearchFormRouteContract.REGION2) ?: "",
                 ),
             )
+        }
 
         val uiState = _uiState
 
@@ -71,28 +84,25 @@ class SearchFormViewModel
                 )
         }
 
-        fun onCategorySelect(index: Int) {
-            if (index in 0 until Category.entries.size) {
-                _uiState.value =
-                    _uiState.value.copy(
-                        form =
-                            _uiState.value.form.copy(
-                                selectedCategory = index,
-                            ),
-                    )
+        fun onCategorySelect(category: Category) {
+            _uiState.update {
+                _uiState.value.copy(
+                    form =
+                        _uiState.value.form.copy(
+                            selectedCategory = category,
+                        ),
+                )
             }
         }
 
-        fun onSearchRangeSelect(index: Int) {
-            if (index in 0..3) {
-                _uiState.value =
-                    _uiState.value.copy(
-                        form =
-                            _uiState.value.form.copy(
-                                searchRange = index,
-                            ),
-                    )
-            }
+        fun onSearchRangeSelect(range: SearchRange) {
+            _uiState.value =
+                _uiState.value.copy(
+                    form =
+                        _uiState.value.form.copy(
+                            searchRange = range,
+                        ),
+                )
         }
 
         fun onPriceRangeChange(range: IntRange) {
@@ -105,16 +115,14 @@ class SearchFormViewModel
                 )
         }
 
-        fun onSortByChange(index: Int) {
-            if (index in 0 until SortingOrder.entries.size) {
-                _uiState.value =
-                    _uiState.value.copy(
-                        form =
-                            _uiState.value.form.copy(
-                                sortBy = SortingOrder.entries[index],
-                            ),
-                    )
-            }
+        fun onSortByChange(order: SortingOrder) {
+            _uiState.value =
+                _uiState.value.copy(
+                    form =
+                        _uiState.value.form.copy(
+                            sortBy = order,
+                        ),
+                )
         }
 
         fun initiateRegion() {
@@ -128,6 +136,17 @@ class SearchFormViewModel
                             )
                     }
                 }
+            }
+        }
+
+        fun onSaleOnlyChanged(onSale: Boolean) {
+            _uiState.update {
+                it.copy(
+                    form =
+                        it.form.copy(
+                            onSaleOnly = onSale,
+                        ),
+                )
             }
         }
     }

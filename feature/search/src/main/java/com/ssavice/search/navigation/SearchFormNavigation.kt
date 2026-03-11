@@ -19,11 +19,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SearchFormRoute(
     val query: String = "",
-    val selectedCategory: Int = 0,
+    val selectedCategory: String = "ALL",
     val searchRange: Int = 0,
     val startPrice: Int = 0,
     val endPrice: Int = 10_000_000,
     val sortBy: Int = 0,
+    val onSaleOnly: Boolean = false,
 )
 
 fun NavController.navigateToSearchForm(
@@ -33,11 +34,12 @@ fun NavController.navigateToSearchForm(
     navigate(
         SearchFormRoute(
             query = searchForm.query,
-            selectedCategory = searchForm.selectedCategory,
-            searchRange = searchForm.searchRange,
+            selectedCategory = searchForm.selectedCategory.name,
+            searchRange = searchForm.searchRange.ordinal,
             startPrice = searchForm.priceRange.first,
             endPrice = searchForm.priceRange.last,
-            sortBy = searchForm.sortBy.value,
+            sortBy = searchForm.sortBy.ordinal,
+            onSaleOnly = searchForm.onSaleOnly,
         ),
     ) {
         navOptions()
@@ -97,4 +99,5 @@ object SearchFormRouteContract {
     const val SORT_BY = "sortBy"
     const val REGION1 = "region1"
     const val REGION2 = "region2"
+    const val ON_SALE_ONLY = "onSaleOnly"
 }

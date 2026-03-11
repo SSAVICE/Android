@@ -24,6 +24,11 @@ data class SearchResultRoute(
     val startPrice: Int = 0,
     val endPrice: Int = 10_000_000,
     val sortBy: Int = 0,
+    val onSaleOnly: Boolean = false,
+    val region1: String = "",
+    val region2: String = "",
+    val longitude: Double = 0.0,
+    val latitude: Double = 0.0,
 )
 
 fun NavController.navigateToSearchResult(
@@ -34,10 +39,15 @@ fun NavController.navigateToSearchResult(
         SearchResultRoute(
             query = searchQuery.query,
             selectedCategory = searchQuery.category.index,
-            searchRange = searchQuery.searchRange,
+            searchRange = searchQuery.searchRange.ordinal,
             startPrice = searchQuery.minPrice,
             endPrice = searchQuery.maxPrice,
-            sortBy = searchQuery.sortBy.value,
+            sortBy = searchQuery.sortBy.ordinal,
+            onSaleOnly = searchQuery.onSaleOnly,
+            region1 = searchQuery.region1,
+            region2 = searchQuery.region2,
+            longitude = searchQuery.longitude,
+            latitude = searchQuery.latitude,
         ),
     ) {
         launchSingleTop = true
@@ -83,4 +93,10 @@ object SearchResultRouteContract {
     const val START_PRICE = "startPrice"
     const val END_PRICE = "endPrice"
     const val SORT_BY = "sortBy"
+    const val ON_SALE_ONLY = "onSaleOnly"
+
+    const val REGION1 = "region1"
+    const val REGION2 = "region2"
+    const val LONGITUDE = "longitude"
+    const val LATITUDE = "latitude"
 }

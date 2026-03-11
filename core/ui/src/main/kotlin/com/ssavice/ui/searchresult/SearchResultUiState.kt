@@ -1,5 +1,6 @@
 package com.ssavice.ui.searchresult
 
+import com.ssavice.model.enums.ServiceState
 import com.ssavice.model.service.SearchQuery
 
 data class SearchResultUiState(
@@ -8,6 +9,7 @@ data class SearchResultUiState(
     val searchQuery: SearchQuery,
     val hasNext: Boolean,
     val nextId: Long,
+    val searchAfter: List<String> = emptyList(),
 )
 
 data class SearchResultItemUiState(
@@ -24,6 +26,8 @@ data class SearchResultItemUiState(
     val basePrice: Int,
     val discountRatio: Int,
     val memberStatus: String,
+    val booked: Boolean,
+    val state: ServiceState,
 )
 
 sealed interface SearchStatus {

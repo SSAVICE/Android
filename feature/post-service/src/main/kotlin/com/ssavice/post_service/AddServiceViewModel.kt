@@ -11,6 +11,7 @@ import com.ssavice.model.Date
 import com.ssavice.model.ImageUploadProgress
 import com.ssavice.model.RegionInfo
 import com.ssavice.model.TimeStamp
+import com.ssavice.model.enums.Category
 import com.ssavice.model.service.ServiceAddForm
 import com.ssavice.ui.model.AndroidResizableImage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,7 +71,7 @@ class AddServiceViewModel
                 )
         }
 
-        fun onCategoryChanged(category: String) {
+        fun onCategoryChanged(category: Category) {
             uiState.value =
                 uiState.value.copy(
                     form =
@@ -415,10 +416,19 @@ class AddServiceViewModel
                     null
                 }
 
+            fun validateAndGetMessage(
+                value: Category,
+                errorMessage: String,
+            ): String? =
+                if (value == Category.UNKNOWN) {
+                    hasError = true
+                    errorMessage
+                } else {
+                    null
+                }
+
             val serviceNameMessage: String? =
                 validateAndGetMessage(uiState.value.form.name, "서비스명을 입력해주세요")
-            val categoryMessage: String? =
-                validateAndGetMessage(uiState.value.form.category, "카테고리를 선택해주세요")
             val minRecruitMessage: String? =
                 validateAndGetMessage(
                     uiState.value.form.minRecruit
@@ -436,6 +446,11 @@ class AddServiceViewModel
                     uiState.value.form.price
                         .toLong(),
                     "가격을 정해주세요",
+                )
+            val categoryMessage: String? =
+                validateAndGetMessage(
+                    uiState.value.form.category,
+                    "잘못된 카테고리 값입니다.",
                 )
             val deadLineMessage: String?
             val startDateMessage: String?
@@ -468,8 +483,8 @@ class AddServiceViewModel
             val form =
                 uiState.value.form.copy(
                     nameErrorMessage = serviceNameMessage,
-                    categoryErrorMessage = categoryMessage,
                     tagErrorMessage = tagMessage,
+                    categoryErrorMessage = categoryMessage,
                     minRecruitErrorMessage = minRecruitMessage,
                     maxRecruitErrorMessage = maxRecruitMessage,
                     priceErrorMessage = priceMessage,
