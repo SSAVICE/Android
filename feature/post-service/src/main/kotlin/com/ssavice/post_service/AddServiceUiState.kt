@@ -52,7 +52,7 @@ data class AddressForm(
 
 data class Form(
     val name: String = "",
-    val category: String = "",
+    val category: Category = Category.entries[1],
     val tag: String = "",
     val minRecruit: Int,
     val maxRecruit: Int,
@@ -65,7 +65,7 @@ data class Form(
     val startDate: TimeStamp,
     val endDate: TimeStamp,
     val description: String = "",
-    val categoryList: List<String> = Category.entries.filter { it.shownInSeller }.map { it.value },
+    val categoryList: List<Category> = Category.entries.filter { it.shownInSeller },
     val nameErrorMessage: String? = null,
     val categoryErrorMessage: String? = null,
     val tagErrorMessage: String? = null,

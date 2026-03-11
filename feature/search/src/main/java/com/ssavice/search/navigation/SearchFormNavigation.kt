@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SearchFormRoute(
     val query: String = "",
-    val selectedCategory: Int = 0,
+    val selectedCategory: String = "ALL",
     val searchRange: Int = 0,
     val startPrice: Int = 0,
     val endPrice: Int = 10_000_000,
@@ -33,7 +33,7 @@ fun NavController.navigateToSearchForm(
     navigate(
         SearchFormRoute(
             query = searchForm.query,
-            selectedCategory = searchForm.selectedCategory,
+            selectedCategory = searchForm.selectedCategory.name,
             searchRange = searchForm.searchRange,
             startPrice = searchForm.priceRange.first,
             endPrice = searchForm.priceRange.last,

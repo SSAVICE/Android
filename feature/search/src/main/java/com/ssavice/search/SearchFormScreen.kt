@@ -52,6 +52,7 @@ import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.component.SsaviceInputField
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.enums.Category
 import com.ssavice.model.enums.SortingOrder
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay
@@ -117,7 +118,7 @@ fun SearchFormScreen(
     modifier: Modifier = Modifier,
     form: SearchForm,
     query: TextFieldState,
-    onCategoryChange: (Int) -> Unit = {},
+    onCategoryChange: (Category) -> Unit = {},
     onSearchRangeChange: (Int) -> Unit = {},
     onPriceRangeChange: (IntRange) -> Unit = {},
     onSortByChange: (Int) -> Unit = {},
@@ -202,11 +203,11 @@ fun SearchFormScreen(
                             horizontalArrangement = spacedBy(5.dp, alignment = Alignment.Start),
                             verticalArrangement = spacedBy(10.dp),
                         ) {
-                            form.categories.forEachIndexed { index, category ->
+                            form.categories.filter { it.showInUser }.forEach { category ->
                                 SsaviceChip(
-                                    text = category,
-                                    selected = form.selectedCategory == index,
-                                    onSelectedChange = { onCategoryChange(index) },
+                                    text = category.value,
+                                    selected = form.selectedCategory == category,
+                                    onSelectedChange = { onCategoryChange(category) },
                                 )
                             }
                         }
@@ -357,8 +358,8 @@ fun SearchFormPreview() {
                 form =
                     SearchForm(
                         query = query.text.toString(),
-                        categories = listOf("전체", "운동/피트니스", "교육/학습", "쇼핑/공동구매", "생활/취미"),
-                        selectedCategory = 0,
+                        categories = Category.entries,
+                        selectedCategory = Category.entries.filter { it.showInUser }[0],
                         searchRange = 1,
                         priceRange = priceRange,
                         sortBy = SortingOrder.POPULARITY,

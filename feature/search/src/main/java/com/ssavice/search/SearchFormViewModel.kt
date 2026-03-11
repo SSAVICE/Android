@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.ssavice.data.repository.UserInfoRepository
 import com.ssavice.model.enums.Category
 import com.ssavice.model.enums.SortingOrder
+import com.ssavice.model.enums.mapCategoryByName
+import com.ssavice.model.enums.mapCategoryByValue
 import com.ssavice.search.navigation.SearchFormRouteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,44 +23,46 @@ class SearchFormViewModel
         savedStateHandle: SavedStateHandle,
         private val userInfoRepository: UserInfoRepository,
     ) : ViewModel() {
-        private val _uiState =
-            MutableStateFlow(
-                SearchFormUiState(
-                    form =
-                        SearchForm(
-                            query = savedStateHandle.get<String>(SearchFormRouteContract.QUERY) ?: "",
-                            categories = Category.entries.map { it.value },
-                            selectedCategory =
-                                savedStateHandle.get<Int>(SearchFormRouteContract.SELECTED_CATEGORY)
-                                    ?: 0,
-                            searchRange =
-                                savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE)
-                                    ?: 0,
-                            priceRange =
-                                savedStateHandle
-                                    .get<Int>(SearchFormRouteContract.START_PRICE)
-                                    ?.let { start ->
-                                        savedStateHandle
-                                            .get<Int>(SearchFormRouteContract.END_PRICE)
-                                            ?.let { end ->
-                                                start..end
-                                            } ?: run { start..10_000_000 }
-                                    } ?: run { 0..10_000_000 },
-                            sortBy =
-                                (
+        private val _uiState: MutableStateFlow<SearchFormUiState> by lazy {
+        val categories = Category.entries.filter { it.showInUser }
+        val categorySelectionName = savedStateHandle.get<String>(SearchFormRouteContract.SELECTED_CATEGORY)
+        MutableStateFlow(
+            SearchFormUiState(
+                form =
+                    SearchForm(
+                        query = savedStateHandle.get<String>(SearchFormRouteContract.QUERY) ?: "",
+                        categories = categories,
+                        selectedCategory =
+                            Category.mapCategoryByName(categorySelectionName?:"ALL"),
+                        searchRange =
+                            savedStateHandle.get<Int>(SearchFormRouteContract.SEARCH_RANGE)
+                                ?: 0,
+                        priceRange =
+                            savedStateHandle
+                                .get<Int>(SearchFormRouteContract.START_PRICE)
+                                ?.let { start ->
+                                    savedStateHandle
+                                        .get<Int>(SearchFormRouteContract.END_PRICE)
+                                        ?.let { end ->
+                                            start..end
+                                        } ?: run { start..10_000_000 }
+                                } ?: run { 0..10_000_000 },
+                        sortBy =
+                            (
                                     SortingOrder.entries.getOrNull(
                                         savedStateHandle.get<Int>(
                                             SearchFormRouteContract.SORT_BY,
                                         ) ?: -1,
                                     )
-                                ) ?: SortingOrder.POPULARITY,
-                        ),
-                    region1String =
-                        savedStateHandle.get<String>(SearchFormRouteContract.REGION1) ?: "",
-                    region2String =
-                        savedStateHandle.get<String>(SearchFormRouteContract.REGION2) ?: "",
-                ),
-            )
+                                    ) ?: SortingOrder.POPULARITY,
+                    ),
+                region1String =
+                    savedStateHandle.get<String>(SearchFormRouteContract.REGION1) ?: "",
+                region2String =
+                    savedStateHandle.get<String>(SearchFormRouteContract.REGION2) ?: "",
+            ),
+        )
+    }
 
         val uiState = _uiState
 
@@ -71,15 +76,14 @@ class SearchFormViewModel
                 )
         }
 
-        fun onCategorySelect(index: Int) {
-            if (index in 0 until Category.entries.size) {
-                _uiState.value =
-                    _uiState.value.copy(
-                        form =
-                            _uiState.value.form.copy(
-                                selectedCategory = index,
-                            ),
-                    )
+        fun onCategorySelect(category: Category) {
+            _uiState.update {
+                _uiState.value.copy(
+                    form =
+                        _uiState.value.form.copy(
+                            selectedCategory = category,
+                        ),
+                )
             }
         }
 

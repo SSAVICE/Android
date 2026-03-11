@@ -29,6 +29,7 @@ import com.ssavice.designsystem.component.OutlinedTextFieldButton
 import com.ssavice.designsystem.component.SsaviceBackground
 import com.ssavice.designsystem.component.SsaviceChip
 import com.ssavice.designsystem.theme.SsaviceTheme
+import com.ssavice.model.enums.Category
 import com.ssavice.ui.common.collectAsEffect
 import com.ssavice.ui.searchresult.SearchResultScreen
 
@@ -114,7 +115,7 @@ fun UserHomeScreen(
                         Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp),
-                    categories = state.categories.map { it.value },
+                    categories = state.categories,
                     selection = state.selected,
                     onSelectionChanged = onCategoryClicked,
                 )
@@ -144,7 +145,7 @@ fun UserHomeScreen(
 @Composable
 fun CategoryPicker(
     modifier: Modifier,
-    categories: List<String>,
+    categories: List<Category>,
     selection: Int,
     spacing: Dp = 7.dp,
     onSelectionChanged: (Int) -> Unit = {},
@@ -157,11 +158,11 @@ fun CategoryPicker(
             androidx.compose.foundation.layout.Arrangement
                 .spacedBy(spacing),
     ) {
-        categories.forEachIndexed { i, category ->
+        categories.filter { it.showInUser }.forEachIndexed { i, category ->
             SsaviceChip(
                 selected = i == selection,
                 onSelectedChange = { onSelectionChanged(i) },
-                text = category,
+                text = category.value,
             )
         }
     }
@@ -170,7 +171,7 @@ fun CategoryPicker(
 @Preview
 @Composable
 fun CategoryPickerPreview() {
-    val categories by remember { mutableStateOf(List(5) { "Category $it" }) }
+    val categories by remember { mutableStateOf(Category.entries) }
     var selection by remember { mutableIntStateOf(0) }
 
     SsaviceTheme {

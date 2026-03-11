@@ -2,10 +2,11 @@ package com.ssavice.model.service
 
 import com.ssavice.model.Date
 import com.ssavice.model.RegionInfo
+import com.ssavice.model.enums.Category
 
 data class ServiceAddForm(
     val imageCount: Int = 0,
-    val category: String,
+    val category: Category,
     val name: String,
     val description: String,
     val minimumRecruit: Int,

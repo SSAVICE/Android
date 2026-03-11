@@ -30,7 +30,7 @@ data class AddServiceDTO(
             with(serviceInfo) {
                 AddServiceDTO(
                     imageCnt = imageCount.toLong(),
-                    category = category,
+                    category = category.name,
                     title = name,
                     description = description,
                     minimumMember = minimumRecruit.toLong(),

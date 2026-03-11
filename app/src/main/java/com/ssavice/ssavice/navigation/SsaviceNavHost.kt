@@ -94,11 +94,7 @@ fun SsaviceNavHost(
                     },
                     searchQuery =
                         SearchQuery(
-                            category =
-                                Category.entries.getOrElse(
-                                    searchForm.selectedCategory,
-                                    { Category.entries[0] },
-                                ),
+                            category = searchForm.selectedCategory,
                             query = searchForm.query,
                             minPrice = searchForm.priceRange.first,
                             maxPrice = searchForm.priceRange.last,
@@ -120,8 +116,8 @@ fun SsaviceNavHost(
                     searchForm =
                         SearchForm(
                             query = query.query,
-                            categories = Category.entries.map { it.value },
-                            selectedCategory = query.category.index,
+                            categories = Category.entries,
+                            selectedCategory = query.category,
                             searchRange = query.searchRange,
                             priceRange = query.minPrice..query.maxPrice,
                             sortBy = query.sortBy,
