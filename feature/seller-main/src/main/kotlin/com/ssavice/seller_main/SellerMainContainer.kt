@@ -1,19 +1,16 @@
 package com.ssavice.seller_main
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ssavice.designsystem.component.LocalSnackbarHostState
 import com.ssavice.seller_home.navigation.HomeRoute
 import com.ssavice.seller_home.navigation.home
 import com.ssavice.seller_my_page.ProfileState
 import com.ssavice.seller_my_page.navigation.myPage
 import com.ssavice.ui.navigation.SsaviceScaffold
-import com.ssavice.user_chatting.navigation.chat
+import com.ssavice.chat_list.navigation.chat
 
 @Composable
 fun SellerMainContainer(

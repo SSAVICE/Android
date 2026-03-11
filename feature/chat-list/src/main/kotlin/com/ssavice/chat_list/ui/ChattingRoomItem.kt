@@ -1,4 +1,4 @@
-package com.ssavice.user_chatting.ui
+package com.ssavice.chat_list.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

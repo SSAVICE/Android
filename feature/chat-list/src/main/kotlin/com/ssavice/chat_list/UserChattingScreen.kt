@@ -1,4 +1,4 @@
-package com.ssavice.user_chatting
+package com.ssavice.chat_list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,8 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.request.ImageRequest
-import com.ssavice.model.chat.ChattingRoomMetadata
-import com.ssavice.user_chatting.ui.ChattingRoomItem
+import com.ssavice.chat_list.ui.ChattingRoomItem
 
 @Composable
 fun UserChattingRoute(

@@ -1,4 +1,4 @@
-package com.ssavice.user_chatting.navigation
+package com.ssavice.chat_list.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import com.ssavice.user_chatting.UserChattingRoute
+import com.ssavice.chat_list.UserChattingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable

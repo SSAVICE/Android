@@ -1,4 +1,4 @@
-package com.ssavice.user_chatting
+package com.ssavice.chat_list
 
 import com.ssavice.model.DateTime
 

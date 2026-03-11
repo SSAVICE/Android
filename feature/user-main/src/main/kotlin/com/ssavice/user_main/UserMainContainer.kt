@@ -1,14 +1,13 @@
 package com.ssavice.user_main
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.ssavice.ui.navigation.SsaviceScaffold
-import com.ssavice.user_chatting.navigation.chat
+import com.ssavice.chat_list.navigation.chat
 import com.ssavice.user_home.UserHomeViewModel
 import com.ssavice.user_home.navigation.HomeRoute
 import com.ssavice.user_home.navigation.home
