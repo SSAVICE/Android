@@ -1,5 +1,6 @@
 package com.ssavice.chat.navigation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -13,6 +14,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -120,10 +124,12 @@ private fun ChattingRoomNavigationRoute(
     onServiceClick: (serviceId: Long) -> Unit = {},
 ) {
     val viewModel: ChattingViewModel = hiltViewModel()
-
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        drawerState.snapTo(DrawerValue.Closed)
+    }
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         ModalNavigationDrawer(
             drawerState = drawerState,
             scrimColor = DrawerDefaults.scrimColor,

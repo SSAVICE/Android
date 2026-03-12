@@ -45,13 +45,18 @@ fun ParticipantListSideBar(
     val roomUiState by viewModel.roomUiState.collectAsStateWithLifecycle()
     val chattingState by viewModel.chattingUiState.collectAsStateWithLifecycle()
 
-    if (roomUiState.chattingRoomState == ChattingRoomState.Ready) {
-        ParticipantListSideBar(
-            participants = roomUiState.participantIds,
-            participantInfo = chattingState.userInfo,
-            yourId = roomUiState.yourId,
-            modifier = modifier,
-        )
+    ModalDrawerSheet(
+        modifier = modifier.width(280.dp), // 사이드바 너비 조절
+        drawerContainerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        if (roomUiState.chattingRoomState == ChattingRoomState.Ready) {
+            ParticipantListSideBar(
+                participants = roomUiState.participantIds,
+                participantInfo = chattingState.userInfo,
+                yourId = roomUiState.yourId,
+                modifier = modifier,
+            )
+        }
     }
 }
 
@@ -77,34 +82,28 @@ private fun ParticipantListSideBar(
                 }
             listOfNotNull(mine) + others
         }
-
-    ModalDrawerSheet(
-        modifier = modifier.width(280.dp), // 사이드바 너비 조절
-        drawerContainerColor = MaterialTheme.colorScheme.surface,
+    Column(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-        ) {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                Text(
-                    text = "대화 상대",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                )
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            Text(
+                text = "대화 상대",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp),
+            )
 
-                HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    items(sortedParticipants, key = { it.id }) { participant ->
-                        ParticipantItem(participant)
-                    }
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                items(sortedParticipants, key = { it.id }) { participant ->
+                    ParticipantItem(participant)
                 }
             }
         }
