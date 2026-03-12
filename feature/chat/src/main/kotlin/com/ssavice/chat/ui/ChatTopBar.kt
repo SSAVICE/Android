@@ -27,7 +27,7 @@ fun ChatTopBar(
     viewModel: ChattingViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
     contentPadding: PaddingValues = TopAppBarDefaults.ContentPadding,
-    onDrawerOpenClick: () -> Unit = {}
+    onDrawerOpenClick: () -> Unit = {},
 ) {
     val state = viewModel.roomUiState.collectAsStateWithLifecycle()
     val title = if (state.value.roomName != "") state.value.roomName else defaultTitle

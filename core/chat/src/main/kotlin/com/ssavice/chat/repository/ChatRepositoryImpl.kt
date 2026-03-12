@@ -49,267 +49,267 @@ import javax.inject.Inject
 import kotlin.collections.filter
 
 class ChatRepositoryImpl
-@Inject
-constructor(
-    private val chatApi: ChatRetrofitService,
-    private val chatDao: ChatDao,
-    private val chatRoomDao: ChatRoomDao,
-    private val chatDatabase: ChatDatabase,
-    private val webSocketManager: ChatWebSocketManager,
-    private val eventHandler: WebSocketEventHandler,
-    private val userRetrofitService: UserInfoRetrofitService,
-    private val serviceRetrofitSummary: ServiceRetrofitService,
-    private val metadataRepository: ChattingMetadataRepository,
-) : ChatRepository {
-    init {
-        eventHandler.startObserving()
-    }
-
-    var refreshJob: Job? = null
-
-    @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
-    override fun getChatMessages(roomId: String): Flow<PagingData<Chat>> =
-        flow {
-            val lastChat = chatDao.getLastChat(roomId)
-            val lastReadChat = chatRoomDao.getRoomMetadata(roomId)?.lastReadMessageId
-            emit(lastChat?.id?.coerceAtLeast(lastReadChat ?: 0))
-        }.flatMapLatest { lastMessageId ->
-            Pager(
-                config =
-                    PagingConfig(
-                        pageSize = 20,
-                        initialLoadSize = 40,
-                        enablePlaceholders = true,
-                        prefetchDistance = 5,
-                    ),
-                remoteMediator =
-                    ChatRemoteMediator(
-                        roomId = roomId,
-                        chatRepository = this,
-                        chatDao = chatDao,
-                        initialMessageId = lastMessageId,
-                        chatDatabase = chatDatabase,
-                    ),
-                pagingSourceFactory = {
-                    chatDao.getChatPagingSource(roomId)
-                },
-            ).flow.map { pagingData ->
-                pagingData.map { entity ->
-                    entity.toModel()
-                }
-            }
-                .flowOn(Dispatchers.Default)
-                .distinctUntilChanged()
+    @Inject
+    constructor(
+        private val chatApi: ChatRetrofitService,
+        private val chatDao: ChatDao,
+        private val chatRoomDao: ChatRoomDao,
+        private val chatDatabase: ChatDatabase,
+        private val webSocketManager: ChatWebSocketManager,
+        private val eventHandler: WebSocketEventHandler,
+        private val userRetrofitService: UserInfoRetrofitService,
+        private val serviceRetrofitSummary: ServiceRetrofitService,
+        private val metadataRepository: ChattingMetadataRepository,
+    ) : ChatRepository {
+        init {
+            eventHandler.startObserving()
         }
 
-    override suspend fun sendChat(
-        roomId: String,
-        message: String,
-        roomType: RoomType,
-    ) {
-        webSocketManager.sendMessage(
-            WebSocketTxEntity.SendTextChat(
-                roomId = roomId,
-                content = message,
-                roomType = roomType,
-            ),
-        )
-    }
+        var refreshJob: Job? = null
 
-    override suspend fun startChat(
-        opponentId: Long,
-        serviceId: Long,
-        message: String,
-    ) {
-        webSocketManager.sendMessage(
-            WebSocketTxEntity.NewServiceInfoDM(
-                serviceId = serviceId,
-                receiverId = opponentId,
-            ),
-        )
-        delay(100)
-        webSocketManager.sendMessage(
-            WebSocketTxEntity.NewTextDM(
-                receiverId = opponentId,
-                content = message,
-            ),
-        )
-    }
-
-    override suspend fun setLastReadMessageId(
-        roomId: String,
-        messageId: Int,
-    ) {
-        chatRoomDao.updateLastReadIdIfGreater(roomId, messageId)
-    }
-
-    private fun mapLastMessageAtToMilliseconds(lastMessageAt: List<Int>?): Long =
-        try {
-            if (lastMessageAt == null) {
-                0L
-            } else if (lastMessageAt.size >= 6) {
-                java.time.LocalDateTime
-                    .of(
-                        lastMessageAt[0], // Year
-                        lastMessageAt[1], // Month
-                        lastMessageAt[2], // Day
-                        lastMessageAt[3], // Hour
-                        lastMessageAt[4], // Minute
-                        lastMessageAt[5], // Second
-                    ).toInstant(java.time.ZoneOffset.UTC)
-                    .toEpochMilli()
-            } else {
-                // 데이터가 불완전할 경우 처리 (예: 현재 시간 반환)
-                System.currentTimeMillis()
-            }
-        } catch (e: Exception) {
-            // 파싱 에러 시 기본값
-            0L
-        }
-
-    override fun getRoomList(): Flow<List<ChattingRoomMetadata>> =
-        chatRoomDao.getAllRoomsFlow().map {
-            it.map { entity ->
-                entity.toModel()
-            }
-        }.flowOn(Dispatchers.Default)
-            .distinctUntilChanged()
-
-    override fun refreshRoomList() {
-        refreshJob?.cancel()
-        refreshJob =
-            CoroutineScope(Dispatchers.IO).launch {
-                chatApi
-                    .getRoomList()
-                    .onSuccess { result ->
-                        Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
-
-                        chatRoomDao.upsertRoomsMetadata(
-                            result.rooms.map { room ->
-                                ChatRoomEntity(
-                                    roomId = room.roomId,
-                                    lastReadMessageId = 0,
-                                    lastMessageId = room.lastChatId ?: 0,
-                                    roomName = room.name,
-                                    lastMessage = room.lastMessage ?: "",
-                                    lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
-                                    roomType = RoomType.getValue(room.type),
-                                    serviceId = room.serviceId ?: -1,
-                                )
-                            }
-                        )
-                    }.onFailure {
-                        Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
-                    }
-            }
-    }
-
-    override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
-        chatApi.getRoomInfo(roomId).map {
-            it.toModel()
-        }
-
-    override suspend fun getMessages(
-        roomId: String,
-        cursor: Long,
-        size: Int,
-        direction: ChatCursorDirection,
-    ): Result<List<ChatEntity>> {
-        val response =
-            chatApi.getChatList(
-                roomId = roomId,
-                cursor = cursor,
-                size = size,
-                direction = direction.value,
-            )
-
-        return response.map { data ->
-            data.messages.map {
-                val content = if (it.messageType == "INFO") it.serviceId.toString() else it.message
-                ChatEntity(
-                    id = it.messageId,
-                    userId = it.sender,
-                    roomId = it.roomId,
-                    type = it.messageType,
-                    content = content,
-                    createdAt = mapLastMessageAtToMilliseconds(it.createdAt),
-                )
-            }
-        }
-    }
-
-    override suspend fun readyForAck(
-        serviceId: Long,
-        userId: Long,
-    ): Flow<Result<String>> =
-        webSocketManager.events
-            .filterIsInstance<WebSocketRxEntity.ServiceInfoChat>()
-            .filter { event ->
-                event.serviceId == serviceId && event.senderId == userId
-            }.map { event ->
-                Result.success(event.roomId)
-            }.take(1)
-            .let { flow ->
-                flow {
-                    try {
-                        withTimeout(10000L) {
-                            flow.collect { emit(it) }
+        @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
+        override fun getChatMessages(roomId: String): Flow<PagingData<Chat>> =
+            flow {
+                val lastChat = chatDao.getLastChat(roomId)
+                val lastReadChat = chatRoomDao.getRoomMetadata(roomId)?.lastReadMessageId
+                emit(lastChat?.id?.coerceAtLeast(lastReadChat ?: 0))
+            }.flatMapLatest { lastMessageId ->
+                Pager(
+                    config =
+                        PagingConfig(
+                            pageSize = 20,
+                            initialLoadSize = 40,
+                            enablePlaceholders = true,
+                            prefetchDistance = 5,
+                        ),
+                    remoteMediator =
+                        ChatRemoteMediator(
+                            roomId = roomId,
+                            chatRepository = this,
+                            chatDao = chatDao,
+                            initialMessageId = lastMessageId,
+                            chatDatabase = chatDatabase,
+                        ),
+                    pagingSourceFactory = {
+                        chatDao.getChatPagingSource(roomId)
+                    },
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { entity ->
+                            entity.toModel()
                         }
-                    } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
-                        emit(Result.failure(Exception("Ack 타임아웃: 서버 응답이 없습니다.")))
-                    } catch (e: Exception) {
-                        emit(Result.failure(e))
-                    }
-                }
+                    }.flowOn(Dispatchers.Default)
+                    .distinctUntilChanged()
             }
 
-    override fun getUserInfoMap(): Flow<Map<Long, ChattingUserInfo>> =
-        metadataRepository.getUserInfoFlow()
-
-    override suspend fun getMyId(): Result<Long> = userRetrofitService.getMyUserId().map { it.id }
-
-    override fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>> =
-        metadataRepository.getServiceSummaryFlow()
-
-    private suspend fun getIfUserInfoNeedUpdate(userId: Long): Boolean {
-        val data = metadataRepository.getUserInfo(userId)
-        data.onSuccess {
-            return it.needRefresh()
-        }
-        return true
-    }
-
-    private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
-        Log.d(TAG, "user ids which need to update: $userId")
-        val result = userRetrofitService.getUserInfoSummary(userId)
-        return result
-            .map { it.toModel() }
-            .onSuccess { data ->
-                metadataRepository.setUserInfos(data)
-                Log.d(TAG, "info updated: $data")
-            }.map { Unit }
-    }
-
-    override suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit> {
-        val updateList = userIds.filter { getIfUserInfoNeedUpdate(it) }
-        if (updateList.isEmpty()) return Result.success(Unit)
-        return getUserInfoFromRemoteAndUpdate(updateList)
-    }
-
-    override suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit> {
-        metadataRepository.getServiceSummary(serviceId).onSuccess {
-            if (!it.needRefresh()) return Result.success(Unit)
+        override suspend fun sendChat(
+            roomId: String,
+            message: String,
+            roomType: RoomType,
+        ) {
+            webSocketManager.sendMessage(
+                WebSocketTxEntity.SendTextChat(
+                    roomId = roomId,
+                    content = message,
+                    roomType = roomType,
+                ),
+            )
         }
 
-        val result = serviceRetrofitSummary.getServiceSummary(serviceId)
-        return result
-            .map { it.toModel(serviceId) }
-            .onSuccess { data ->
-                metadataRepository.setServiceSummary(data)
-            }.map { Unit }
-    }
+        override suspend fun startChat(
+            opponentId: Long,
+            serviceId: Long,
+            message: String,
+        ) {
+            webSocketManager.sendMessage(
+                WebSocketTxEntity.NewServiceInfoDM(
+                    serviceId = serviceId,
+                    receiverId = opponentId,
+                ),
+            )
+            delay(100)
+            webSocketManager.sendMessage(
+                WebSocketTxEntity.NewTextDM(
+                    receiverId = opponentId,
+                    content = message,
+                ),
+            )
+        }
 
-    companion object {
-        const val TAG = "ChatRepositoryImpl"
+        override suspend fun setLastReadMessageId(
+            roomId: String,
+            messageId: Int,
+        ) {
+            chatRoomDao.updateLastReadIdIfGreater(roomId, messageId)
+        }
+
+        private fun mapLastMessageAtToMilliseconds(lastMessageAt: List<Int>?): Long =
+            try {
+                if (lastMessageAt == null) {
+                    0L
+                } else if (lastMessageAt.size >= 6) {
+                    java.time.LocalDateTime
+                        .of(
+                            lastMessageAt[0], // Year
+                            lastMessageAt[1], // Month
+                            lastMessageAt[2], // Day
+                            lastMessageAt[3], // Hour
+                            lastMessageAt[4], // Minute
+                            lastMessageAt[5], // Second
+                        ).toInstant(java.time.ZoneOffset.UTC)
+                        .toEpochMilli()
+                } else {
+                    // 데이터가 불완전할 경우 처리 (예: 현재 시간 반환)
+                    System.currentTimeMillis()
+                }
+            } catch (e: Exception) {
+                // 파싱 에러 시 기본값
+                0L
+            }
+
+        override fun getRoomList(): Flow<List<ChattingRoomMetadata>> =
+            chatRoomDao
+                .getAllRoomsFlow()
+                .map {
+                    it.map { entity ->
+                        entity.toModel()
+                    }
+                }.flowOn(Dispatchers.Default)
+                .distinctUntilChanged()
+
+        override fun refreshRoomList() {
+            refreshJob?.cancel()
+            refreshJob =
+                CoroutineScope(Dispatchers.IO).launch {
+                    chatApi
+                        .getRoomList()
+                        .onSuccess { result ->
+                            Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
+
+                            chatRoomDao.upsertRoomsMetadata(
+                                result.rooms.map { room ->
+                                    ChatRoomEntity(
+                                        roomId = room.roomId,
+                                        lastReadMessageId = 0,
+                                        lastMessageId = room.lastChatId ?: 0,
+                                        roomName = room.name,
+                                        lastMessage = room.lastMessage ?: "",
+                                        lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
+                                        roomType = RoomType.getValue(room.type),
+                                        serviceId = room.serviceId ?: -1,
+                                    )
+                                },
+                            )
+                        }.onFailure {
+                            Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
+                        }
+                }
+        }
+
+        override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
+            chatApi.getRoomInfo(roomId).map {
+                it.toModel()
+            }
+
+        override suspend fun getMessages(
+            roomId: String,
+            cursor: Long,
+            size: Int,
+            direction: ChatCursorDirection,
+        ): Result<List<ChatEntity>> {
+            val response =
+                chatApi.getChatList(
+                    roomId = roomId,
+                    cursor = cursor,
+                    size = size,
+                    direction = direction.value,
+                )
+
+            return response.map { data ->
+                data.messages.map {
+                    val content = if (it.messageType == "INFO") it.serviceId.toString() else it.message
+                    ChatEntity(
+                        id = it.messageId,
+                        userId = it.sender,
+                        roomId = it.roomId,
+                        type = it.messageType,
+                        content = content,
+                        createdAt = mapLastMessageAtToMilliseconds(it.createdAt),
+                    )
+                }
+            }
+        }
+
+        override suspend fun readyForAck(
+            serviceId: Long,
+            userId: Long,
+        ): Flow<Result<String>> =
+            webSocketManager.events
+                .filterIsInstance<WebSocketRxEntity.ServiceInfoChat>()
+                .filter { event ->
+                    event.serviceId == serviceId && event.senderId == userId
+                }.map { event ->
+                    Result.success(event.roomId)
+                }.take(1)
+                .let { flow ->
+                    flow {
+                        try {
+                            withTimeout(10000L) {
+                                flow.collect { emit(it) }
+                            }
+                        } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+                            emit(Result.failure(Exception("Ack 타임아웃: 서버 응답이 없습니다.")))
+                        } catch (e: Exception) {
+                            emit(Result.failure(e))
+                        }
+                    }
+                }
+
+        override fun getUserInfoMap(): Flow<Map<Long, ChattingUserInfo>> = metadataRepository.getUserInfoFlow()
+
+        override suspend fun getMyId(): Result<Long> = userRetrofitService.getMyUserId().map { it.id }
+
+        override fun getChatServiceSummaryMap(): Flow<Map<Long, ChattingServiceSummary>> = metadataRepository.getServiceSummaryFlow()
+
+        private suspend fun getIfUserInfoNeedUpdate(userId: Long): Boolean {
+            val data = metadataRepository.getUserInfo(userId)
+            data.onSuccess {
+                return it.needRefresh()
+            }
+            return true
+        }
+
+        private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
+            Log.d(TAG, "user ids which need to update: $userId")
+            val result = userRetrofitService.getUserInfoSummary(userId)
+            return result
+                .map { it.toModel() }
+                .onSuccess { data ->
+                    metadataRepository.setUserInfos(data)
+                    Log.d(TAG, "info updated: $data")
+                }.map { Unit }
+        }
+
+        override suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit> {
+            val updateList = userIds.filter { getIfUserInfoNeedUpdate(it) }
+            if (updateList.isEmpty()) return Result.success(Unit)
+            return getUserInfoFromRemoteAndUpdate(updateList)
+        }
+
+        override suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit> {
+            metadataRepository.getServiceSummary(serviceId).onSuccess {
+                if (!it.needRefresh()) return Result.success(Unit)
+            }
+
+            val result = serviceRetrofitSummary.getServiceSummary(serviceId)
+            return result
+                .map { it.toModel(serviceId) }
+                .onSuccess { data ->
+                    metadataRepository.setServiceSummary(data)
+                }.map { Unit }
+        }
+
+        companion object {
+            const val TAG = "ChatRepositoryImpl"
+        }
     }
-}

@@ -45,12 +45,12 @@ fun ParticipantListSideBar(
     val roomUiState by viewModel.roomUiState.collectAsStateWithLifecycle()
     val chattingState by viewModel.chattingUiState.collectAsStateWithLifecycle()
 
-    if(roomUiState.chattingRoomState == ChattingRoomState.Ready) {
+    if (roomUiState.chattingRoomState == ChattingRoomState.Ready) {
         ParticipantListSideBar(
             participants = roomUiState.participantIds,
             participantInfo = chattingState.userInfo,
             yourId = roomUiState.yourId,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -63,37 +63,44 @@ private fun ParticipantListSideBar(
     yourId: Long,
 ) {
     // 1. 내 정보를 최상단으로 올리고 이름을 "당신"으로 변경하는 로직
-    val sortedParticipants = remember(participants, yourId) {
-        val mine = participants.find { it == yourId }?.let { ChattingUserInfo(
-            name = "당신", thumbnail = (participantInfo[it]?.thumbnail)?:"", id = it) }
-        val others = participants.filter { it != yourId }.map { participantInfo.getOrElse(it){
-            ChattingUserInfo(name="알 수 없음", thumbnail = "", id = it) }
+    val sortedParticipants =
+        remember(participants, yourId) {
+            val mine =
+                participants.find { it == yourId }?.let {
+                    ChattingUserInfo(name = "당신", thumbnail = (participantInfo[it]?.thumbnail) ?: "", id = it)
+                }
+            val others =
+                participants.filter { it != yourId }.map {
+                    participantInfo.getOrElse(it) {
+                        ChattingUserInfo(name = "알 수 없음", thumbnail = "", id = it)
+                    }
+                }
+            listOfNotNull(mine) + others
         }
-        listOfNotNull(mine) + others
-    }
 
     ModalDrawerSheet(
         modifier = modifier.width(280.dp), // 사이드바 너비 조절
         drawerContainerColor = MaterialTheme.colorScheme.surface,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
         ) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Text(
                     text = "대화 상대",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
 
                 HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
 
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     items(sortedParticipants, key = { it.id }) { participant ->
                         ParticipantItem(participant)
@@ -108,19 +115,21 @@ private fun ParticipantListSideBar(
 private fun ParticipantItem(participant: ChattingUserInfo) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
     ) {
         // 유저 썸네일
         AsyncImage(
             model = participant.thumbnail,
             contentDescription = null,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color.Gray),
-            contentScale = ContentScale.Crop
+            modifier =
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray),
+            contentScale = ContentScale.Crop,
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -129,7 +138,7 @@ private fun ParticipantItem(participant: ChattingUserInfo) {
         Text(
             text = participant.name,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

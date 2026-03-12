@@ -46,7 +46,7 @@ fun UserChattingRoute(
 
     // [추가] 화면 진입 후 일정 시간(애니메이션 시간) 동안 대기
     LaunchedEffect(Unit) {
-        if(initialLoadState) {
+        if (initialLoadState) {
             delay(Constant.ANIMATION_DELAY)
             viewModel.onTransitionFinished()
         }
@@ -55,14 +55,15 @@ fun UserChattingRoute(
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
     DisposableEffect(lifecycleOwner, initialLoadState) {
-        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-            if (event == androidx.lifecycle.Lifecycle.Event.ON_START && !initialLoadState) {
-                lifecycleOwner.lifecycleScope.launch {
-                    delay(Constant.ANIMATION_DELAY)
-                    viewModel.onRefresh()
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_START && !initialLoadState) {
+                    lifecycleOwner.lifecycleScope.launch {
+                        delay(Constant.ANIMATION_DELAY)
+                        viewModel.onRefresh()
+                    }
                 }
             }
-        }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
@@ -73,7 +74,7 @@ fun UserChattingRoute(
         modifier = modifier,
         rooms = if (!initialLoadState) state else emptyList(),
         onRoomClick = onRoomClick,
-        isTransitionFinished = !initialLoadState
+        isTransitionFinished = !initialLoadState,
     )
 }
 
@@ -82,13 +83,13 @@ fun ChatList(
     modifier: Modifier,
     rooms: List<ChattingRoomItem>,
     onRoomClick: (id: String) -> Unit = {},
-    isTransitionFinished: Boolean
+    isTransitionFinished: Boolean,
 ) {
-
     if (!isTransitionFinished) {
         val brush = shimmerBrush()
         LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(5) { // 로딩 중 10개의 가짜 아이템 표시
+            items(5) {
+                // 로딩 중 10개의 가짜 아이템 표시
                 ChatRoomSkeletonItem(brush = brush)
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),

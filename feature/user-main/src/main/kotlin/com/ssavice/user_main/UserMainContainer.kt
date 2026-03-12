@@ -6,8 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ssavice.ui.navigation.SsaviceScaffold
 import com.ssavice.chat_list.navigation.chat
+import com.ssavice.ui.navigation.SsaviceScaffold
 import com.ssavice.user_home.UserHomeViewModel
 import com.ssavice.user_home.navigation.HomeRoute
 import com.ssavice.user_home.navigation.home

@@ -45,8 +45,7 @@ class ChattingViewModel
                                 lastUpdateString = lastUpdate.dateToSimpleString(),
                             )
                         }
-                }
-                .flowOn(Dispatchers.Default)
+                }.flowOn(Dispatchers.Default)
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5000),
@@ -58,7 +57,7 @@ class ChattingViewModel
             chatRepository.refreshRoomList()
         }
 
-    fun onTransitionFinished() {
-        _initialLoad.update { false }
-    }
+        fun onTransitionFinished() {
+            _initialLoad.update { false }
+        }
     }

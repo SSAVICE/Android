@@ -21,17 +21,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ChatRoomSkeletonItem(brush: Brush) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         // 프로필 이미지 자리
         Box(
-            modifier = Modifier
-                .size(50.dp)
-                .clip(CircleShape)
-                .background(brush)
+            modifier =
+                Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .background(brush),
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -39,29 +41,36 @@ fun ChatRoomSkeletonItem(brush: Brush) {
         Column(modifier = Modifier.weight(1f)) {
             // 방 이름 자리
             Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.4f)
-                    .size(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(brush)
+                modifier =
+                    Modifier
+                        .fillMaxWidth(0.4f)
+                        .size(20.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(brush),
             )
             Spacer(modifier = Modifier.size(8.dp))
             // 마지막 메시지 자리
             Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .size(14.dp)
-                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
-                    .background(brush)
+                modifier =
+                    Modifier
+                        .fillMaxWidth(0.7f)
+                        .size(14.dp)
+                        .clip(
+                            androidx.compose.foundation.shape
+                                .RoundedCornerShape(4.dp),
+                        ).background(brush),
             )
         }
 
         // 날짜/시간 자리
         Box(
-            modifier = Modifier
-                .size(width = 40.dp, height = 14.dp)
-                .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
-                .background(brush)
+            modifier =
+                Modifier
+                    .size(width = 40.dp, height = 14.dp)
+                    .clip(
+                        androidx.compose.foundation.shape
+                            .RoundedCornerShape(4.dp),
+                    ).background(brush),
         )
     }
 }

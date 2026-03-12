@@ -67,7 +67,8 @@ fun ChattingRoomItem(
                         .Builder(context)
                         .crossfade(true)
                         .placeholder(android.R.drawable.ic_menu_info_details)
-                        .data(thumbnailUrl).build(),
+                        .data(thumbnailUrl)
+                        .build(),
                 contentDescription = null,
                 modifier =
                     Modifier

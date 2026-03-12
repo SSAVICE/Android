@@ -129,10 +129,10 @@ private fun ChattingRoomNavigationRoute(
             scrimColor = DrawerDefaults.scrimColor,
             drawerContent = {
                 ParticipantListSideBar(
-                    viewModel = viewModel
+                    viewModel = viewModel,
                 )
             },
-            gesturesEnabled = drawerState.isOpen
+            gesturesEnabled = drawerState.isOpen,
         ) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Scaffold(
@@ -145,7 +145,7 @@ private fun ChattingRoomNavigationRoute(
                                 scope.launch {
                                     drawerState.open()
                                 }
-                            }
+                            },
                         )
                     },
                     bottomBar = {
