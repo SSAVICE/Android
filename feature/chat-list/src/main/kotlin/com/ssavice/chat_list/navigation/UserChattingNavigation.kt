@@ -58,8 +58,8 @@ fun NavGraphBuilder.chat(onRoomClick: (id: String) -> Unit = {}) {
         UserChattingRoute(
             modifier =
                 Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
             onRoomClick = onRoomClick,
         )
     }

@@ -3,6 +3,7 @@ package com.ssavice.chat_list
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,9 +26,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import coil.request.ImageRequest
+import com.ssavice.chat_list.ui.ChatRoomSkeletonItem
 import com.ssavice.chat_list.ui.ChattingRoomItem
+import com.ssavice.designsystem.theme.shimmerBrush
 import com.ssavice.ui.common.Constant
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserChattingRoute(
@@ -36,38 +42,25 @@ fun UserChattingRoute(
     onRoomClick: (id: String) -> Unit = {},
 ) {
     val state by viewModel.chattingRoomState.collectAsStateWithLifecycle()
-
-    var isTransitionFinished by remember { mutableStateOf(false) }
+    val initialLoadState by viewModel.initialLoad.collectAsStateWithLifecycle()
 
     // [추가] 화면 진입 후 일정 시간(애니메이션 시간) 동안 대기
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(Constant.ANIMATION_DELAY)
-        isTransitionFinished = true
+        if(initialLoadState) {
+            delay(Constant.ANIMATION_DELAY)
+            viewModel.onTransitionFinished()
+        }
     }
 
-    ChatList(
-        modifier = modifier,
-        rooms = if (isTransitionFinished) state else emptyList(),
-        onRoomClick = onRoomClick,
-        onRefresh = viewModel::onRefresh,
-        isTransitionFinished = isTransitionFinished
-    )
-}
-
-@Composable
-fun ChatList(
-    modifier: Modifier,
-    rooms: List<ChattingRoomItem>,
-    onRoomClick: (id: String) -> Unit = {},
-    onRefresh: () -> Unit,
-    isTransitionFinished: Boolean
-) {
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
-    DisposableEffect(lifecycleOwner, isTransitionFinished) {
+    DisposableEffect(lifecycleOwner, initialLoadState) {
         val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-            if (event == androidx.lifecycle.Lifecycle.Event.ON_START && isTransitionFinished) {
-                onRefresh()
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_START && !initialLoadState) {
+                lifecycleOwner.lifecycleScope.launch {
+                    delay(Constant.ANIMATION_DELAY)
+                    viewModel.onRefresh()
+                }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -76,14 +69,39 @@ fun ChatList(
         }
     }
 
+    ChatList(
+        modifier = modifier,
+        rooms = if (!initialLoadState) state else emptyList(),
+        onRoomClick = onRoomClick,
+        isTransitionFinished = !initialLoadState
+    )
+}
+
+@Composable
+fun ChatList(
+    modifier: Modifier,
+    rooms: List<ChattingRoomItem>,
+    onRoomClick: (id: String) -> Unit = {},
+    isTransitionFinished: Boolean
+) {
+
     if (!isTransitionFinished) {
-        // 애니메이션 중에는 아무것도 그리지 않거나 아주 가벼운 로딩 인디케이터만 표시
+        val brush = shimmerBrush()
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            items(5) { // 로딩 중 10개의 가짜 아이템 표시
+                ChatRoomSkeletonItem(brush = brush)
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                )
+            }
+        }
         return
     }
 
     if (rooms.isEmpty()) {
         Column(
-            modifier = Modifier.fillMaxSize(), // 부모 크기만큼 차지
+            modifier = modifier.fillMaxSize(), // 부모 크기만큼 차지
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {

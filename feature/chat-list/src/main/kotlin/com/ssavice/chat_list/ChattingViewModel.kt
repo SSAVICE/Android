@@ -6,11 +6,14 @@ import com.ssavice.chat.repository.ChatRepository
 import com.ssavice.model.DateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +22,9 @@ class ChattingViewModel
     constructor(
         private val chatRepository: ChatRepository,
     ) : ViewModel() {
+        private val _initialLoad = MutableStateFlow(true)
+        val initialLoad = _initialLoad.asStateFlow()
+
         val chattingRoomState by lazy {
             chatRepository
                 .getRoomList()
@@ -51,4 +57,8 @@ class ChattingViewModel
         fun onRefresh() {
             chatRepository.refreshRoomList()
         }
+
+    fun onTransitionFinished() {
+        _initialLoad.update { false }
+    }
     }
