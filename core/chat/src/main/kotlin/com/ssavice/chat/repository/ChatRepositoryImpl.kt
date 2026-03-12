@@ -271,11 +271,13 @@ class ChatRepositoryImpl
         }
 
         private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
+            Log.d(TAG, "user ids which need to update: $userId")
             val result = userRetrofitService.getUserInfoSummary(userId)
             return result
                 .map { it.toModel() }
                 .onSuccess { data ->
                     metadataRepository.setUserInfos(data)
+                    Log.d(TAG, "info updated: $data")
                 }.map { Unit }
         }
 
@@ -297,4 +299,8 @@ class ChatRepositoryImpl
                     metadataRepository.setServiceSummary(data)
                 }.map { Unit }
         }
+
+    companion object {
+        const val TAG = "ChatRepositoryImpl"
+    }
     }
