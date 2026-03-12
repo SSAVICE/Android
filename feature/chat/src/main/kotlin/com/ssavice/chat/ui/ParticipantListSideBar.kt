@@ -67,12 +67,15 @@ private fun ParticipantListSideBar(
     participantInfo: Map<Long, ChattingUserInfo>,
     yourId: Long,
 ) {
-    // 1. 내 정보를 최상단으로 올리고 이름을 "당신"으로 변경하는 로직
     val sortedParticipants =
-        remember(participants, yourId) {
+        remember(participants, participantInfo, yourId) {
             val mine =
                 participants.find { it == yourId }?.let {
-                    ChattingUserInfo(name = "당신", thumbnail = (participantInfo[it]?.thumbnail) ?: "", id = it)
+                    ChattingUserInfo(
+                        name = "당신",
+                        thumbnail = (participantInfo[it]?.thumbnail) ?: "",
+                        id = it,
+                    )
                 }
             val others =
                 participants.filter { it != yourId }.map {
