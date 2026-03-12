@@ -9,7 +9,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.ssavice.user_chatting.navigation.UserChattingRoute
+import com.ssavice.chat_list.navigation.UserChattingRoute
 import com.ssavice.user_home.navigation.HomeRoute
 import com.ssavice.user_my_page.navigation.UserMyPageRoute
 import kotlinx.serialization.Serializable

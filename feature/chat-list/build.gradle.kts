@@ -4,9 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ssavice.feature.sellerchatting"
+    namespace = "com.ssavice.feature.chatlist"
 }
 
 dependencies {
     implementation(projects.core.data)
+    implementation(projects.core.chat)
+    api(libs.androidx.paging.compose)
 }

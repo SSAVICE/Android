@@ -159,40 +159,18 @@ class ChattingViewModel
             loadChattingRoomInfo()
         }
 
-        fun initRoom() {
-            val roomId: String? = savedStateHandle[ChatRouteContract.ROOM_ID]
-            if (roomId == null) {
-                savedStateHandle.get<Long>(ChatRouteContract.SERVICE_ID)?.let { id ->
-                    viewModelScope.launch {
-                        chatRepository.updateServiceSummaryIfNeed(id)
-                    }
-                }
-                _roomUiState.update {
-                    it.copy(
-                        chattingRoomState = ChattingRoomState.Pending,
-                        roomId = "",
-                        serviceIdToSend = savedStateHandle[ChatRouteContract.SERVICE_ID] ?: -1L,
-                        sendingService = (savedStateHandle.contains(ChatRouteContract.SERVICE_ID)),
-                    )
-                }
-            } else {
-                _roomUiState.update {
-                    it.copy(
-                        roomId = roomId,
-                        serviceIdToSend = -1L,
-                        sendingService = false,
-                    )
-                }
-                loadChattingRoomInfo()
-            }
-        }
-
         fun updateLastRead(messageId: Int) {
             viewModelScope.launch(Dispatchers.IO) {
                 chatRepository.setLastReadMessageId(_roomUiState.value.roomId, messageId)
             }
         }
 
+        /**
+         * **Step 1: 사용자 ID 조회 단계**
+         *
+         * 채팅 화면 진입 시 가장 먼저 호출되어야 하는 함수입니다.
+         * 성공 시 **Step 2: Init Room**으로 진행합니다.
+         */
         fun getYourId() {
             if (_roomUiState.value.yourId != -1L ||
                 _roomUiState.value.chattingRoomState != ChattingRoomState.Initial
@@ -233,6 +211,50 @@ class ChattingViewModel
             }
         }
 
+        /**
+         * **Step 2: 채팅방 초기화 및 분기 처리**
+         *
+         * 내 ID가 확보된 후, 기존 채팅방 진입인지 신규 채팅 시도(방 없음)인지 판단합니다.
+         *
+         * 신규 채팅일 시, **ChattingRoomState**를 **Pending**으로 초기화 합니다.
+         *
+         * 채팅방 정보가 있을 시, **Load Chatting Room Info**로 진행합니다
+         */
+        fun initRoom() {
+            val roomId: String? = savedStateHandle[ChatRouteContract.ROOM_ID]
+            if (roomId == null) {
+                savedStateHandle.get<Long>(ChatRouteContract.SERVICE_ID)?.let { id ->
+                    viewModelScope.launch {
+                        chatRepository.updateServiceSummaryIfNeed(id)
+                    }
+                }
+                _roomUiState.update {
+                    it.copy(
+                        chattingRoomState = ChattingRoomState.Pending,
+                        roomId = "",
+                        serviceIdToSend = savedStateHandle[ChatRouteContract.SERVICE_ID] ?: -1L,
+                        sendingService = (savedStateHandle.contains(ChatRouteContract.SERVICE_ID)),
+                    )
+                }
+            } else {
+                _roomUiState.update {
+                    it.copy(
+                        roomId = roomId,
+                        serviceIdToSend = -1L,
+                        sendingService = false,
+                    )
+                }
+                loadChattingRoomInfo()
+            }
+        }
+
+        /**
+         * **Step 3: 채팅방 상세 정보 로드**
+         *
+         * 존재하는 roomId를 기반으로 서버에서 방 이름, 참여자 정보 등을 가져옵니다.
+         *
+         * 로드 완료 시 ChattingRoomState는 최종적으로 **Ready** 상태가 됩니다.
+         */
         fun loadChattingRoomInfo() {
             if (_roomUiState.value.roomInfoLoadState == ChattingRoomInfoLoadState.Loading) return
 
@@ -243,24 +265,19 @@ class ChattingViewModel
                 )
             }
             viewModelScope.launch(Dispatchers.IO) {
-                chatRepository.getMyId().onSuccess {
+                chatRepository.getRoomInfo(_roomUiState.value.roomId).onSuccess { info ->
                     _roomUiState.update {
-                        it.copy(yourId = it.yourId)
-                    }
-
-                    chatRepository.getRoomInfo(_roomUiState.value.roomId).onSuccess { info ->
-                        _roomUiState.update {
-                            it.copy(
-                                roomName = info.name,
-                                roomType = info.roomType,
-                                roomInfoLoadState = ChattingRoomInfoLoadState.Success,
-                                chattingRoomState = ChattingRoomState.Ready,
-                            )
-                        }
-                        chatRepository.updateUserInfoIfNeed(
-                            info.participantIds,
+                        it.copy(
+                            roomName = info.name,
+                            roomType = info.roomType,
+                            roomInfoLoadState = ChattingRoomInfoLoadState.Success,
+                            chattingRoomState = ChattingRoomState.Ready,
+                            participantIds = info.participantIds,
                         )
                     }
+                    chatRepository.updateUserInfoIfNeed(
+                        info.participantIds,
+                    )
                 }
             }
         }

@@ -9,9 +9,9 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import com.ssavice.chat_list.navigation.UserChattingRoute
 import com.ssavice.seller_home.navigation.HomeRoute
 import com.ssavice.seller_my_page.navigation.MyPageRoute
-import com.ssavice.user_chatting.navigation.UserChattingRoute
 import kotlinx.serialization.Serializable
 
 enum class TopLevelDestination(

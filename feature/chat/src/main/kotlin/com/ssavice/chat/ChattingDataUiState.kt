@@ -19,6 +19,7 @@ data class RoomUiState(
     val roomType: RoomType = RoomType.DM,
     val chattingRoomState: ChattingRoomState,
     val roomInfoLoadState: ChattingRoomInfoLoadState = ChattingRoomInfoLoadState.Initial,
+    val participantIds: List<Long> = emptyList(),
 )
 
 sealed interface ChattingRoomInfoLoadState {

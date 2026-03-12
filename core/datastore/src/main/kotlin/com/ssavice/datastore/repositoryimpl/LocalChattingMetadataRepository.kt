@@ -63,7 +63,7 @@ class LocalChattingMetadataRepository
         override suspend fun setUserInfos(userInfos: List<ChattingUserInfo>) {
             userInfoDataStore.updateData { preferences ->
                 preferences.copy(
-                    infos = userInfos.associateBy { it.id },
+                    infos = preferences.infos + userInfos.associateBy { it.id },
                 )
             }
         }

@@ -1,4 +1,4 @@
-package com.ssavice.user_chatting.ui
+package com.ssavice.chat_list.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,8 +43,8 @@ fun ChattingRoomItem(
     unreadCount: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    requestBuilder: ImageRequest.Builder,
 ) {
+    val context = LocalContext.current
     Surface(
         modifier =
             modifier
@@ -61,7 +62,13 @@ fun ChattingRoomItem(
         ) {
             // 1. 좌측 썸네일
             AsyncImage(
-                model = requestBuilder.data(thumbnailUrl).build(),
+                model =
+                    ImageRequest
+                        .Builder(context)
+                        .crossfade(true)
+                        .placeholder(android.R.drawable.ic_menu_info_details)
+                        .data(thumbnailUrl)
+                        .build(),
                 contentDescription = null,
                 modifier =
                     Modifier
@@ -172,7 +179,6 @@ fun ChattingRoomItemPreview() {
                 updatedAt = "오후 2:30",
                 unreadCount = 5,
                 onClick = {},
-                requestBuilder = previewRequestBuilder,
             )
 
             androidx.compose.material3.HorizontalDivider(
@@ -189,7 +195,6 @@ fun ChattingRoomItemPreview() {
                 updatedAt = "어제",
                 unreadCount = 0,
                 onClick = {},
-                requestBuilder = previewRequestBuilder,
             )
 
             // 3. 메시지가 매우 길고 읽지 않은 알림이 99+인 경우
@@ -200,7 +205,6 @@ fun ChattingRoomItemPreview() {
                 updatedAt = "3월 2일",
                 unreadCount = 150,
                 onClick = {},
-                requestBuilder = previewRequestBuilder,
             )
         }
     }

@@ -4,17 +4,12 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import com.google.crypto.tink.Aead
-import com.ssavice.datastore.preferences.JwtPreferences
-import com.ssavice.datastore.preferences.JwtPreferencesSerializer
 import com.ssavice.datastore.preferences.ServiceMetadataPreferences
 import com.ssavice.datastore.preferences.ServiceMetadataPreferencesSerializer
 import com.ssavice.datastore.preferences.UserInfoPreferences
 import com.ssavice.datastore.preferences.UserInfoPreferencesSerializer
 import com.ssavice.datastore.repository.ChattingMetadataRepository
-import com.ssavice.datastore.repository.JwtRepository
 import com.ssavice.datastore.repositoryimpl.LocalChattingMetadataRepository
-import com.ssavice.datastore.repositoryimpl.LocalJwtRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

@@ -10,5 +10,5 @@ android {
 dependencies {
     implementation(projects.feature.userHome)
     implementation(projects.feature.userMyPage)
-    implementation(projects.feature.userChatting)
+    implementation(projects.feature.chatList)
 }

@@ -1,8 +1,9 @@
-package com.ssavice.user_chatting
+package com.ssavice.chat_list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,17 +14,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import coil.request.ImageRequest
-import com.ssavice.model.chat.ChattingRoomMetadata
-import com.ssavice.user_chatting.ui.ChattingRoomItem
+import com.ssavice.chat_list.ui.ChatRoomSkeletonItem
+import com.ssavice.chat_list.ui.ChattingRoomItem
+import com.ssavice.designsystem.theme.shimmerBrush
+import com.ssavice.ui.common.Constant
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserChattingRoute(
@@ -32,12 +42,39 @@ fun UserChattingRoute(
     onRoomClick: (id: String) -> Unit = {},
 ) {
     val state by viewModel.chattingRoomState.collectAsStateWithLifecycle()
+    val initialLoadState by viewModel.initialLoad.collectAsStateWithLifecycle()
+
+    // [추가] 화면 진입 후 일정 시간(애니메이션 시간) 동안 대기
+    LaunchedEffect(Unit) {
+        if (initialLoadState) {
+            delay(Constant.ANIMATION_DELAY)
+            viewModel.onTransitionFinished()
+        }
+    }
+
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner, initialLoadState) {
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_START && !initialLoadState) {
+                    lifecycleOwner.lifecycleScope.launch {
+                        delay(Constant.ANIMATION_DELAY)
+                        viewModel.onRefresh()
+                    }
+                }
+            }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     ChatList(
         modifier = modifier,
-        rooms = state,
-        onRoomClick,
-        onRefresh = viewModel::onRefresh,
+        rooms = if (!initialLoadState) state else emptyList(),
+        onRoomClick = onRoomClick,
+        isTransitionFinished = !initialLoadState,
     )
 }
 
@@ -46,38 +83,26 @@ fun ChatList(
     modifier: Modifier,
     rooms: List<ChattingRoomItem>,
     onRoomClick: (id: String) -> Unit = {},
-    onRefresh: () -> Unit,
+    isTransitionFinished: Boolean,
 ) {
-    val context = LocalContext.current
-    val imageRequestBuilder =
-        remember {
-            ImageRequest
-                .Builder(context)
-                .crossfade(true)
-                .placeholder(android.R.drawable.ic_menu_info_details)
-        }
-
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner) {
-        val observer =
-            androidx.lifecycle.LifecycleEventObserver { _, event ->
-                if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
-                    onRefresh()
-                }
+    if (!isTransitionFinished) {
+        val brush = shimmerBrush()
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            items(5) {
+                // 로딩 중 10개의 가짜 아이템 표시
+                ChatRoomSkeletonItem(brush = brush)
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                )
             }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        // Composable이 파괴될 때 옵저버를 제거합니다.
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
         }
+        return
     }
 
     if (rooms.isEmpty()) {
         Column(
-            modifier = Modifier.fillMaxSize(), // 부모 크기만큼 차지
+            modifier = modifier.fillMaxSize(), // 부모 크기만큼 차지
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -91,7 +116,7 @@ fun ChatList(
         LazyColumn(
             modifier = modifier.fillMaxSize(), // 중앙 배치를 위해 fillMaxSize 추가
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = if (rooms.isEmpty()) Arrangement.Center else Arrangement.Top,
+            verticalArrangement = Arrangement.Top,
         ) {
             items(
                 count = rooms.size,
@@ -101,7 +126,6 @@ fun ChatList(
                     modifier = Modifier.fillMaxWidth(),
                     room = rooms[index],
                     onClick = onRoomClick,
-                    imageRequestBuilder = imageRequestBuilder,
                 )
                 if (index < rooms.size - 1) {
                     HorizontalDivider(
@@ -119,25 +143,20 @@ fun RoomItem(
     modifier: Modifier,
     room: ChattingRoomItem,
     onClick: (id: String) -> Unit = {},
-    imageRequestBuilder: ImageRequest.Builder,
 ) {
     Column(
         modifier =
             modifier
-                .fillMaxWidth()
-                .clickable {
-                    onClick(room.roomId)
-                },
+                .fillMaxWidth(),
         verticalArrangement = spacedBy(5.dp),
     ) {
         ChattingRoomItem(
             title = room.name,
             lastMessage = room.lastMessage ?: "",
             thumbnailUrl = null,
-            updatedAt = room.lastUpdate.dateToSimpleString(),
+            updatedAt = room.lastUpdateString,
             unreadCount = room.unreadCount,
             onClick = { onClick(room.roomId) },
-            requestBuilder = imageRequestBuilder,
         )
     }
 }

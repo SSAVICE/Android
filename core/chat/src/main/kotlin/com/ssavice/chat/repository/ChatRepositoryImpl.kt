@@ -34,10 +34,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -90,11 +93,13 @@ class ChatRepositoryImpl
                     pagingSourceFactory = {
                         chatDao.getChatPagingSource(roomId)
                     },
-                ).flow.map { pagingData ->
-                    pagingData.map { entity ->
-                        entity.toModel()
-                    }
-                }
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { entity ->
+                            entity.toModel()
+                        }
+                    }.flowOn(Dispatchers.Default)
+                    .distinctUntilChanged()
             }
 
         override suspend fun sendChat(
@@ -163,11 +168,14 @@ class ChatRepositoryImpl
             }
 
         override fun getRoomList(): Flow<List<ChattingRoomMetadata>> =
-            chatRoomDao.getAllRoomsFlow().map {
-                it.map { entity ->
-                    entity.toModel()
-                }
-            }
+            chatRoomDao
+                .getAllRoomsFlow()
+                .map {
+                    it.map { entity ->
+                        entity.toModel()
+                    }
+                }.flowOn(Dispatchers.Default)
+                .distinctUntilChanged()
 
         override fun refreshRoomList() {
             refreshJob?.cancel()
@@ -177,8 +185,9 @@ class ChatRepositoryImpl
                         .getRoomList()
                         .onSuccess { result ->
                             Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
-                            result.rooms.forEach { room ->
-                                chatRoomDao.upsertRoomMetadata(
+
+                            chatRoomDao.upsertRoomsMetadata(
+                                result.rooms.map { room ->
                                     ChatRoomEntity(
                                         roomId = room.roomId,
                                         lastReadMessageId = 0,
@@ -188,9 +197,9 @@ class ChatRepositoryImpl
                                         lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
                                         roomType = RoomType.getValue(room.type),
                                         serviceId = room.serviceId ?: -1,
-                                    ),
-                                )
-                            }
+                                    )
+                                },
+                            )
                         }.onFailure {
                             Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
                         }
@@ -271,11 +280,13 @@ class ChatRepositoryImpl
         }
 
         private suspend fun getUserInfoFromRemoteAndUpdate(userId: List<Long>): Result<Unit> {
+            Log.d(TAG, "user ids which need to update: $userId")
             val result = userRetrofitService.getUserInfoSummary(userId)
             return result
                 .map { it.toModel() }
                 .onSuccess { data ->
                     metadataRepository.setUserInfos(data)
+                    Log.d(TAG, "info updated: $data")
                 }.map { Unit }
         }
 
@@ -296,5 +307,9 @@ class ChatRepositoryImpl
                 .onSuccess { data ->
                     metadataRepository.setServiceSummary(data)
                 }.map { Unit }
+        }
+
+        companion object {
+            const val TAG = "ChatRepositoryImpl"
         }
     }
