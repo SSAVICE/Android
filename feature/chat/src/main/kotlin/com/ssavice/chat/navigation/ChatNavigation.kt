@@ -3,10 +3,20 @@ package com.ssavice.chat.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerDefaults
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,7 +26,9 @@ import com.ssavice.chat.ChatBottomBar
 import com.ssavice.chat.ChatRoute
 import com.ssavice.chat.ChattingViewModel
 import com.ssavice.chat.ui.ChatTopBar
+import com.ssavice.chat.ui.ParticipantListSideBar
 import com.ssavice.designsystem.component.SsavicePopUpTopBar
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -74,31 +86,10 @@ fun NavGraphBuilder.chattingRoom(
             )
         },
     ) {
-        val viewModel: ChattingViewModel = hiltViewModel()
-
-        Scaffold(
-            topBar = {
-                ChatTopBar(
-                    defaultTitle = "새 채팅",
-                    viewModel = viewModel,
-                    onBack = onBack,
-                )
-            },
-            bottomBar = {
-                ChatBottomBar(
-                    viewModel = viewModel,
-                )
-            },
-        ) { innerPadding ->
-            ChatRoute(
-                modifier =
-                    Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(innerPadding),
-                viewModel = viewModel,
-                onServiceClick = onServiceClick,
-            )
-        }
+        ChattingRoomNavigationRoute(
+            onBack = onBack,
+            onServiceClick = onServiceClick,
+        )
     }
 
     composable<OnePerOneChatRoute>(
@@ -115,29 +106,64 @@ fun NavGraphBuilder.chattingRoom(
                 animationSpec = tween(),
             )
         },
-    ) { innerPadding ->
-        val viewModel: ChattingViewModel = hiltViewModel()
+    ) {
+        ChattingRoomNavigationRoute(
+            onBack = onBack,
+            onServiceClick = onServiceClick,
+        )
+    }
+}
 
-        Scaffold(
-            topBar = {
-                SsavicePopUpTopBar(
-                    title = "1:1 채팅",
-                    onBackClicked = onBack,
+@Composable
+private fun ChattingRoomNavigationRoute(
+    onBack: () -> Unit = {},
+    onServiceClick: (serviceId: Long) -> Unit = {},
+) {
+    val viewModel: ChattingViewModel = hiltViewModel()
+
+    val scope = rememberCoroutineScope()
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            scrimColor = DrawerDefaults.scrimColor,
+            drawerContent = {
+                ParticipantListSideBar(
+                    viewModel = viewModel
                 )
             },
-            bottomBar = {
-                ChatBottomBar(
-                    viewModel = viewModel,
-                )
-            },
-        ) { innerPadding ->
-            ChatRoute(
-                modifier =
-                    Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(innerPadding),
-                viewModel = viewModel,
-            )
+            gesturesEnabled = drawerState.isOpen
+        ) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Scaffold(
+                    topBar = {
+                        ChatTopBar(
+                            defaultTitle = "새 채팅",
+                            viewModel = viewModel,
+                            onBack = onBack,
+                            onDrawerOpenClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }
+                        )
+                    },
+                    bottomBar = {
+                        ChatBottomBar(
+                            viewModel = viewModel,
+                        )
+                    },
+                ) { innerPadding ->
+                    ChatRoute(
+                        modifier =
+                            Modifier
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(innerPadding),
+                        viewModel = viewModel,
+                        onServiceClick = onServiceClick,
+                    )
+                }
+            }
         }
     }
 }

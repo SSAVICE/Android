@@ -273,6 +273,7 @@ constructor(
                         roomType = info.roomType,
                         roomInfoLoadState = ChattingRoomInfoLoadState.Success,
                         chattingRoomState = ChattingRoomState.Ready,
+                        participantIds = info.participantIds
                     )
                 }
                 chatRepository.updateUserInfoIfNeed(
