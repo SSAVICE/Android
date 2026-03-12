@@ -13,8 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.request.ImageRequest
 import com.ssavice.chat_list.ui.ChattingRoomItem
+import com.ssavice.ui.common.Constant
 
 @Composable
 fun UserChattingRoute(
@@ -32,11 +37,20 @@ fun UserChattingRoute(
 ) {
     val state by viewModel.chattingRoomState.collectAsStateWithLifecycle()
 
+    var isTransitionFinished by remember { mutableStateOf(false) }
+
+    // [추가] 화면 진입 후 일정 시간(애니메이션 시간) 동안 대기
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(Constant.ANIMATION_DELAY)
+        isTransitionFinished = true
+    }
+
     ChatList(
         modifier = modifier,
-        rooms = state,
-        onRoomClick,
+        rooms = if (isTransitionFinished) state else emptyList(),
+        onRoomClick = onRoomClick,
         onRefresh = viewModel::onRefresh,
+        isTransitionFinished = isTransitionFinished
     )
 }
 
@@ -46,32 +60,25 @@ fun ChatList(
     rooms: List<ChattingRoomItem>,
     onRoomClick: (id: String) -> Unit = {},
     onRefresh: () -> Unit,
+    isTransitionFinished: Boolean
 ) {
-    val context = LocalContext.current
-    val imageRequestBuilder =
-        remember {
-            ImageRequest
-                .Builder(context)
-                .crossfade(true)
-                .placeholder(android.R.drawable.ic_menu_info_details)
-        }
-
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
-    DisposableEffect(lifecycleOwner) {
-        val observer =
-            androidx.lifecycle.LifecycleEventObserver { _, event ->
-                if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
-                    onRefresh()
-                }
+    DisposableEffect(lifecycleOwner, isTransitionFinished) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_START && isTransitionFinished) {
+                onRefresh()
             }
-
+        }
         lifecycleOwner.lifecycle.addObserver(observer)
-
-        // Composable이 파괴될 때 옵저버를 제거합니다.
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
+    }
+
+    if (!isTransitionFinished) {
+        // 애니메이션 중에는 아무것도 그리지 않거나 아주 가벼운 로딩 인디케이터만 표시
+        return
     }
 
     if (rooms.isEmpty()) {
@@ -90,7 +97,7 @@ fun ChatList(
         LazyColumn(
             modifier = modifier.fillMaxSize(), // 중앙 배치를 위해 fillMaxSize 추가
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = if (rooms.isEmpty()) Arrangement.Center else Arrangement.Top,
+            verticalArrangement = Arrangement.Top,
         ) {
             items(
                 count = rooms.size,
@@ -100,7 +107,6 @@ fun ChatList(
                     modifier = Modifier.fillMaxWidth(),
                     room = rooms[index],
                     onClick = onRoomClick,
-                    imageRequestBuilder = imageRequestBuilder,
                 )
                 if (index < rooms.size - 1) {
                     HorizontalDivider(
@@ -118,25 +124,20 @@ fun RoomItem(
     modifier: Modifier,
     room: ChattingRoomItem,
     onClick: (id: String) -> Unit = {},
-    imageRequestBuilder: ImageRequest.Builder,
 ) {
     Column(
         modifier =
             modifier
-                .fillMaxWidth()
-                .clickable {
-                    onClick(room.roomId)
-                },
+                .fillMaxWidth(),
         verticalArrangement = spacedBy(5.dp),
     ) {
         ChattingRoomItem(
             title = room.name,
             lastMessage = room.lastMessage ?: "",
             thumbnailUrl = null,
-            updatedAt = room.lastUpdate.dateToSimpleString(),
+            updatedAt = room.lastUpdateString,
             unreadCount = room.unreadCount,
             onClick = { onClick(room.roomId) },
-            requestBuilder = imageRequestBuilder,
         )
     }
 }

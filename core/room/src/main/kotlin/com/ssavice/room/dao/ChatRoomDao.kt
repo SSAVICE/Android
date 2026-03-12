@@ -14,6 +14,9 @@ interface ChatRoomDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRoomMetadata(room: ChatRoomEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertRoomsMetadata(rooms: List<ChatRoomEntity>): List<Long>
+
     @Query("SELECT * FROM chat_rooms WHERE roomId = :roomId")
     suspend fun getRoomMetadata(roomId: String): ChatRoomEntity?
 
@@ -50,10 +53,6 @@ interface ChatRoomDao {
 
     @Transaction
     suspend fun upsertRoomMetadata(room: ChatRoomEntity) {
-        Log.d(
-            "ChatRoomDao",
-            "upsertRoomMetadata: roomId=${room.roomId}, lastMessage=${room.lastMessage}",
-        )
         val result = insertRoomMetadata(room)
         if (result == -1L) { // -1은 IGNORE되어 삽입되지 않았음을 의미
             Log.d(
@@ -69,6 +68,28 @@ interface ChatRoomDao {
                 )
             } catch (e: Exception) {
                 Log.e("ChatRoomDao", "Error updating room last message", e)
+            }
+        }
+    }
+
+    @Transaction
+    suspend fun upsertRoomsMetadata(rooms: List<ChatRoomEntity>) {
+        Log.d(
+            "ChatRoomDao",
+            "upsertRoomsMetadata: count=${rooms.size}",
+        )
+        val insertResults = insertRoomsMetadata(rooms)
+
+        insertResults.forEachIndexed { index, rowId ->
+            if (rowId == -1L) {
+                val room = rooms[index]
+                // 개별 업데이트 수행 (이미 @Transaction 내부이므로 속도가 빠릅니다)
+                updateRoomLastMessage(
+                    room.roomId,
+                    room.lastMessage,
+                    room.lastMessageId,
+                    room.lastMessageCreatedAt,
+                )
             }
         }
     }
