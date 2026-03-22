@@ -77,7 +77,7 @@ fun ServiceListElement(
             ServiceState.COMPLETED, ServiceState.FAILED -> ServiceItemState.FINISHED
             ServiceState.CANCELED, ServiceState.USER_CANCELED, ServiceState.SERVICE_CANCELED -> ServiceItemState.CANCELED
             ServiceState.FULLED -> ServiceItemState.FULLED
-            ServiceState.ALL, ServiceState.UNKNOWN, ServiceState.RECRUITING, ServiceState.SUCCEEDED -> ServiceItemState.AVAILABLE
+            ServiceState.ALL, ServiceState.IN_USE, ServiceState.UNKNOWN, ServiceState.RECRUITING, ServiceState.SUCCEEDED -> ServiceItemState.AVAILABLE
         }
     ServiceListElement(
         id,

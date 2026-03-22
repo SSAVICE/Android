@@ -134,19 +134,20 @@ private fun StatusChip(
             ServiceState.RECRUITING -> Color(0xFFFFF3E0) to Color(0xFFE65100)
 
             ServiceState.SUCCEEDED,
+            ServiceState.IN_USE,
             ServiceState.COMPLETED,
             ServiceState.FULLED,
             ServiceState.ALL,
-            -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
+                -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
 
             ServiceState.CANCELED,
             ServiceState.SERVICE_CANCELED,
             ServiceState.USER_CANCELED,
             ServiceState.FAILED,
-            -> Color(0xFFF5F5F5) to Color(0xFF757575)
+                -> Color(0xFFF5F5F5) to Color(0xFF757575)
 
             ServiceState.UNKNOWN,
-            -> Color(0xFFFF8B8B) to Color(0xFFFF3434)
+                -> Color(0xFFFF8B8B) to Color(0xFFFF3434)
         }
 
     Box(
