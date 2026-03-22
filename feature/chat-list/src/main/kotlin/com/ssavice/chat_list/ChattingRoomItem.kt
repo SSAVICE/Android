@@ -11,4 +11,5 @@ data class ChattingRoomItem(
     val unreadCount: Int,
     val roomId: String,
     val lastMessage: String? = null,
+    val thumbnail: String
 )

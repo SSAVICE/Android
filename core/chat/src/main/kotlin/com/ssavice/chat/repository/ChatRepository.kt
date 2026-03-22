@@ -59,4 +59,6 @@ interface ChatRepository {
     suspend fun updateUserInfoIfNeed(userIds: List<Long>): Result<Unit>
 
     suspend fun updateServiceSummaryIfNeed(serviceId: Long): Result<Unit>
+
+    suspend fun getThumbnailNeedToUpdate(threshold: Long): List<ChattingRoomMetadata>
 }

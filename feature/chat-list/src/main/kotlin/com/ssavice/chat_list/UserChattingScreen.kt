@@ -155,6 +155,8 @@ fun RoomItem(
             lastMessage = room.lastMessage ?: "",
             thumbnailUrl = null,
             updatedAt = room.lastUpdateString,
+            thumbnailUrl = room.thumbnail,
+            updatedAt = room.lastUpdate.dateToSimpleString(),
             unreadCount = room.unreadCount,
             onClick = { onClick(room.roomId) },
         )

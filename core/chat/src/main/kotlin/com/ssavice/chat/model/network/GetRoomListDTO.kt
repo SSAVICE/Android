@@ -24,4 +24,5 @@ data class RoomDTO(
     val lastMessageAt: List<Int>?,
     val unReadMsgCnt: Int,
     val memberCnt: Int,
+    val thumbnailId: Long,
 )

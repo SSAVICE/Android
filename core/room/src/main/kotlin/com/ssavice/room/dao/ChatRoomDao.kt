@@ -93,4 +93,12 @@ interface ChatRoomDao {
             }
         }
     }
+
+    @Query("""
+        UPDATE chat_rooms SET thumbnailUrl = :thumbnailUrl, thumbnailUpdatedAt = :thumbnailUpdatedAt 
+WHERE roomId = :roomId""")
+    suspend fun updateThumbnail(roomId: String, thumbnailUrl: String, thumbnailUpdatedAt: Long)
+
+    @Query("""SELECT * FROM chat_rooms WHERE thumbnailUpdatedAt < :threshold""")
+    suspend fun getThumbnailNeedToUpdate(threshold: Long): List<ChatRoomEntity>
 }

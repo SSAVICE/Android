@@ -1,4 +1,4 @@
-package com.ssavice.chat_list
+package com.ssavice.user_chatting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,6 +42,7 @@ class ChattingViewModel
                                 unreadCount = room.unreadCount,
                                 roomId = room.roomId,
                                 lastMessage = room.lastMessage,
+                                thumbnail = room.thumbnailUrl,
                                 lastUpdateString = lastUpdate.dateToSimpleString(),
                             )
                         }
