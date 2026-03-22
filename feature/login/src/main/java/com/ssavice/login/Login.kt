@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
@@ -73,8 +74,15 @@ fun LoginRoute(
                 onLoginComplete()
             }
 
-            else -> {}
+            else -> {
+
+            }
         }
+    }
+
+    if (state.loginState == LoginState.NotAvailable) {
+        NotSupportedDeviceErrorScreen(modifier = modifier)
+        return
     }
 
     LoginPage(
@@ -124,6 +132,22 @@ fun LoginPage(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun NotSupportedDeviceErrorScreen(
+    modifier: Modifier
+) {
+    Box(
+        modifier = modifier.background(SsaviceGradientBackground),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "지원하지 않는 기기입니다.\n개발사에 문의하세요.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.White
+        )
     }
 }
 
@@ -305,7 +329,11 @@ fun LoginSpace(
 
 @Composable
 fun HashKeySpace(modifier: Modifier) {
-    val hashText = KakaoSdk.keyHash
+    val hashText = try {
+        KakaoSdk.keyHash
+    } catch (e: Exception) {
+        e.message
+    }
     val clipboardManager = LocalClipboard.current
     val context = LocalContext.current
     Column(modifier = modifier) {
@@ -313,7 +341,8 @@ fun HashKeySpace(modifier: Modifier) {
             Modifier
                 .background(
                     color = MaterialTheme.colorScheme.background,
-                ).clickable {
+                )
+                .clickable {
                     val data = android.content.ClipData.newPlainText("Hash", hashText)
                     CoroutineScope(Dispatchers.Main).launch {
                         clipboardManager.setClipEntry(
@@ -362,12 +391,12 @@ fun LoginPageErrorPreview() {
             loginState =
                 LoginState.Error(
                     "ErrorThisisLongErrorThisisVeryLongError\n" +
-                        "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
-                        "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
-                        "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
-                        "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
-                        "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
-                        "ongErrorErrorThisisLongErrorThisisVeryLongError",
+                            "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
+                            "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
+                            "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
+                            "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
+                            "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
+                            "ongErrorErrorThisisLongErrorThisisVeryLongError",
                 ),
             isUser = true,
         )
