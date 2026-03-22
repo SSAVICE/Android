@@ -16,6 +16,9 @@ data class ChatRoomEntity(
     val lastMessageCreatedAt: Long,
     val roomType: RoomType,
     val serviceId: Long,
+    val thumbnailId: Long,
+    val thumbnailUrl: String = "",
+    val thumbnailUpdatedAt: Long = 0L,
 ) {
     val unreadCount: Long
         get() = (lastMessageId - lastReadMessageId).coerceAtLeast(0L)
@@ -29,5 +32,8 @@ data class ChatRoomEntity(
             unreadCount = unreadCount.toInt(),
             roomId = roomId,
             roomType = roomType,
+            thumbnailId = thumbnailId,
+            thumbnailUrl = thumbnailUrl,
+            thumbnailUpdatedAt = thumbnailUpdatedAt,
         )
 }

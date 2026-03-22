@@ -21,8 +21,8 @@ android {
     }
     defaultConfig {
         applicationId = "com.ssavice_seller"
-        versionCode = 5
-        versionName = "0.0.2"
+        versionCode = 6
+        versionName = "0.0.3"
     }
 }
 

@@ -36,9 +36,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var networkEventManager: NetworkEventManager
+    @Inject
+    lateinit var networkEventManager: NetworkEventManager
 
-    @Inject lateinit var webSocketManager: ChatWebSocketManager
+    @Inject
+    lateinit var webSocketManager: ChatWebSocketManager
 
     private fun sendSnackBar(
         text: String,
@@ -102,8 +104,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
-        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+        try {
+            KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
+            KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+        } catch (e: Exception) {
+            Log.e("MainActivity", "카카오 SDK 연결 오류")
+        }
     }
 
     override fun onStart() {

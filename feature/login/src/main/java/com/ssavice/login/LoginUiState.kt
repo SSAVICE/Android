@@ -19,4 +19,6 @@ sealed interface LoginState {
     object Success : LoginState
 
     object Idle : LoginState
+
+    object NotAvailable : LoginState
 }

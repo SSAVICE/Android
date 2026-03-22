@@ -134,6 +134,7 @@ private fun StatusChip(
             ServiceState.RECRUITING -> Color(0xFFFFF3E0) to Color(0xFFE65100)
 
             ServiceState.SUCCEEDED,
+            ServiceState.IN_USE,
             ServiceState.COMPLETED,
             ServiceState.FULLED,
             ServiceState.ALL,

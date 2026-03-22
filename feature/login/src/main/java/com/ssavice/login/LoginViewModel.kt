@@ -92,27 +92,33 @@ class LoginViewModel
         }
 
         fun tryAutoLogin() {
-            if (!AuthApiClient.instance.hasToken()) {
-                requestLogin()
-                return
-            }
-
-            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                if (error != null) {
-                    Log.d(TAG, "토큰 정보 조회 실패", error)
+            try {
+                if (!AuthApiClient.instance.hasToken()) {
                     requestLogin()
-                } else if (tokenInfo != null) {
-                    Log.d(TAG, "토큰 정보 조회 성공 $tokenInfo")
-                    val token =
-                        AuthApiClient.instance.tokenManagerProvider.manager
-                            .getToken()
-                    if (token != null) {
-                        Log.d(TAG, "토큰 조회 성공 ${token.accessToken}")
-                        login(token.accessToken)
-                    } else {
-                        Log.d(TAG, "토큰 조회 실패", error)
+                    return
+                }
+
+                UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                    if (error != null) {
+                        Log.d(TAG, "토큰 정보 조회 실패", error)
                         requestLogin()
+                    } else if (tokenInfo != null) {
+                        Log.d(TAG, "토큰 정보 조회 성공 $tokenInfo")
+                        val token =
+                            AuthApiClient.instance.tokenManagerProvider.manager
+                                .getToken()
+                        if (token != null) {
+                            Log.d(TAG, "토큰 조회 성공 ${token.accessToken}")
+                            login(token.accessToken)
+                        } else {
+                            Log.d(TAG, "토큰 조회 실패", error)
+                            requestLogin()
+                        }
                     }
+                }
+            } catch (e: UninitializedPropertyAccessException) {
+                _uiState.update {
+                    it.copy(loginState = LoginState.NotAvailable)
                 }
             }
         }

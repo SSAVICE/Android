@@ -45,6 +45,7 @@ import com.ssavice.designsystem.component.SsaviceElevatedCard
 import com.ssavice.designsystem.theme.SsaviceTheme
 import com.ssavice.kakaomap.KakaoMapDialog
 import com.ssavice.model.Date
+import com.ssavice.service_detail.ui.ServiceDetailSkeleton
 import com.ssavice.service_detail.ui.ServiceImagesWithButtons
 import com.ssavice.service_detail.ui.seller.ParticipantUiModel
 import com.ssavice.service_detail.ui.seller.SellerManageScreen
@@ -131,7 +132,7 @@ fun ServiceDetailScreen(
                     onMoreReviewClick = onMoreReviewClick,
                 )
             } else {
-                Loading(400.dp)
+                ServiceDetailSkeleton(modifier = Modifier.padding(top = 16.dp))
             }
         }
 
@@ -155,7 +156,7 @@ fun ServiceDetailScreen(
                     onChatClick = { onChatToUserClick(it.userId) },
                 )
             } else {
-                Loading(400.dp)
+                ServiceDetailSkeleton()
             }
         }
     }
@@ -289,7 +290,7 @@ fun ServiceDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
         } else {
-            Loading(400.dp)
+            ServiceDetailSkeleton(modifier = Modifier.padding(top = 16.dp))
         }
     }
 

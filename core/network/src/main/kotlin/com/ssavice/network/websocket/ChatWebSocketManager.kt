@@ -7,8 +7,15 @@ import com.ssavice.network.NetworkEventManager
 import com.ssavice.network.websocket.model.WebSocketResponse
 import com.ssavice.network.websocket.model.WebSocketRxEntity
 import com.ssavice.network.websocket.model.WebSocketTxEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable.isActive
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import okhttp3.OkHttpClient
@@ -31,6 +38,8 @@ class ChatWebSocketManager
         private var reconnectCount = 0
         val events = _events.asSharedFlow()
         private var intentionalClose = false
+        private val externalScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        private var pingJob: Job? = null
 
         private fun tryConnect(): ChatWebSocketManager {
             intentionalClose = false
@@ -51,6 +60,7 @@ class ChatWebSocketManager
                             ) {
                                 Log.d(TAG, "Websocket connected")
                                 reconnectCount = 0
+                                startPingLoop()
                                 super.onOpen(webSocket, response)
                             }
 
@@ -59,6 +69,10 @@ class ChatWebSocketManager
                                 text: String,
                             ) {
                                 try {
+                                    if (text.length == 4 && text.lowercase() == "pong") {
+                                        Log.i(TAG, "received pong message")
+                                        return
+                                    }
                                     val dto = json.decodeFromString<WebSocketResponse>(text)
                                     Log.d(TAG, "Got websocket message: $dto.")
                                     val entity = webSocketDtoMapper.mapWebSocketResponse(dto)
@@ -78,6 +92,7 @@ class ChatWebSocketManager
                                 response: Response?,
                             ) {
                                 Log.e(TAG, "Error connecting to websocket", t)
+                                stopPingLoop()
                                 webSocket = null
                                 if (!intentionalClose) {
                                     reconnect()
@@ -89,6 +104,7 @@ class ChatWebSocketManager
                                 code: Int,
                                 reason: String,
                             ) {
+                                stopPingLoop()
                                 webSocket = null
                                 Log.d(TAG, "Websocket closed: $code, $reason")
                             }
@@ -115,6 +131,34 @@ class ChatWebSocketManager
             return tryConnect()
         }
 
+        private fun startPingLoop() {
+            pingJob?.cancel() // 기존 실행 중인 잡이 있다면 취소
+            pingJob =
+                externalScope.launch {
+                    while (isActive) { // 코루틴이 활성화된 동안 반복
+                        delay(30000L) // 30초 대기
+                        if (webSocket != null) {
+                            sendPing()
+                        } else {
+                            break // 웹소켓이 없으면 루프 탈출
+                        }
+                    }
+                }
+        }
+
+        private fun stopPingLoop() {
+            pingJob?.cancel()
+            pingJob = null
+        }
+
+        private fun sendPing() {
+            Log.d(TAG, "Sending ping message...")
+            val success = webSocket?.send("ping") ?: false
+            if (!success) {
+                Log.e(TAG, "Failed to send ping")
+            }
+        }
+
         fun sendMessage(data: WebSocketTxEntity) {
             try {
                 val dto = webSocketDtoMapper.mapWebSocketRequest(data)
@@ -128,12 +172,14 @@ class ChatWebSocketManager
 
         fun close() {
             intentionalClose = true
+            stopPingLoop()
             webSocket?.close(1000, "Normal Closure")
             webSocket = null
         }
 
         private fun reconnect() {
             reconnectCount++
+            stopPingLoop()
             if (reconnectCount >= MAX_RECONNECT) {
                 sendWebsocketNotAvailableEvent()
                 return
@@ -185,7 +231,13 @@ class ChatWebSocketManager
                 }
 
                 fun build(): ChatWebSocketManager {
-                    val manager = ChatWebSocketManager(okHttpClient, webSocketDtoMapper, json, networkEventManager)
+                    val manager =
+                        ChatWebSocketManager(
+                            okHttpClient,
+                            webSocketDtoMapper,
+                            json,
+                            networkEventManager,
+                        )
                     return manager
                 }
             }

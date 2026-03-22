@@ -67,6 +67,7 @@ class FakeChatRetrofitService : ChatRetrofitService {
                         lastMessageAt = listOf(2026, 3, 2, 6, 40, 15),
                         unReadMsgCnt = 0,
                         memberCnt = 2,
+                        thumbnailId = 1,
                     )
                 },
             ),

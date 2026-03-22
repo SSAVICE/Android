@@ -185,6 +185,7 @@ private fun StatusChip(
 
             ServiceState.SUCCEEDED,
             ServiceState.COMPLETED,
+            ServiceState.IN_USE,
             ServiceState.FULLED,
             ServiceState.ALL,
             -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
