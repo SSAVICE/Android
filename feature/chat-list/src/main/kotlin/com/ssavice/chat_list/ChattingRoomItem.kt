@@ -1,6 +1,7 @@
 package com.ssavice.chat_list
 
 import com.ssavice.model.DateTime
+import com.ssavice.model.enums.RoomType
 
 data class ChattingRoomItem(
     val name: String,
@@ -11,5 +12,6 @@ data class ChattingRoomItem(
     val unreadCount: Int,
     val roomId: String,
     val lastMessage: String? = null,
-    val thumbnail: String
+    val thumbnail: String,
+    val roomType: RoomType
 )

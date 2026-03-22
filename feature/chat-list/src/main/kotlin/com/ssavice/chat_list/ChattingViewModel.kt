@@ -44,6 +44,7 @@ constructor(
                             lastMessage = room.lastMessage,
                             lastUpdateString = lastUpdate.dateToSimpleString(),
                             thumbnail = room.thumbnailUrl,
+                            roomType = room.roomType
                         )
                     }
             }.flowOn(Dispatchers.Default)

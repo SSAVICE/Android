@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import com.ssavice.chat_list.ui.ChatRoomSkeletonItem
 import com.ssavice.chat_list.ui.ChattingRoomItem
 import com.ssavice.designsystem.theme.shimmerBrush
+import com.ssavice.model.enums.RoomType
 import com.ssavice.ui.common.Constant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -149,6 +150,7 @@ fun RoomItem(
             thumbnailUrl = room.thumbnail,
             unreadCount = room.unreadCount,
             onClick = { onClick(room.roomId) },
+            isGroup = room.roomType == RoomType.GROUP,
         )
     }
 }
