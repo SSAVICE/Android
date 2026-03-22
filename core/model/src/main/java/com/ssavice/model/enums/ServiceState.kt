@@ -16,7 +16,7 @@ enum class ServiceState(
     UNKNOWN("알 수 없음"),
     FULLED("모집 마감"),
     SERVICE_CANCELED("취소됨"),
-    IN_USE("이용 중",)
+    IN_USE("이용 중"),
     ;
 
     companion object

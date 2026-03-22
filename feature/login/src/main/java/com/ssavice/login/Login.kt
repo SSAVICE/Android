@@ -75,7 +75,6 @@ fun LoginRoute(
             }
 
             else -> {
-
             }
         }
     }
@@ -136,9 +135,7 @@ fun LoginPage(
 }
 
 @Composable
-fun NotSupportedDeviceErrorScreen(
-    modifier: Modifier
-) {
+fun NotSupportedDeviceErrorScreen(modifier: Modifier) {
     Box(
         modifier = modifier.background(SsaviceGradientBackground),
         contentAlignment = Alignment.Center,
@@ -146,7 +143,7 @@ fun NotSupportedDeviceErrorScreen(
         Text(
             text = "지원하지 않는 기기입니다.\n개발사에 문의하세요.",
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.White
+            color = Color.White,
         )
     }
 }
@@ -329,11 +326,12 @@ fun LoginSpace(
 
 @Composable
 fun HashKeySpace(modifier: Modifier) {
-    val hashText = try {
-        KakaoSdk.keyHash
-    } catch (e: Exception) {
-        e.message
-    }
+    val hashText =
+        try {
+            KakaoSdk.keyHash
+        } catch (e: Exception) {
+            e.message
+        }
     val clipboardManager = LocalClipboard.current
     val context = LocalContext.current
     Column(modifier = modifier) {
@@ -341,8 +339,7 @@ fun HashKeySpace(modifier: Modifier) {
             Modifier
                 .background(
                     color = MaterialTheme.colorScheme.background,
-                )
-                .clickable {
+                ).clickable {
                     val data = android.content.ClipData.newPlainText("Hash", hashText)
                     CoroutineScope(Dispatchers.Main).launch {
                         clipboardManager.setClipEntry(
@@ -391,12 +388,12 @@ fun LoginPageErrorPreview() {
             loginState =
                 LoginState.Error(
                     "ErrorThisisLongErrorThisisVeryLongError\n" +
-                            "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
-                            "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
-                            "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
-                            "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
-                            "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
-                            "ongErrorErrorThisisLongErrorThisisVeryLongError",
+                        "ErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisi" +
+                        "sVeryLongErrorErrorThisisLongErrorThisisVeryLongErrorErrorThisisLon" +
+                        "gErrorThisisVeryLongError\nErrorThisisLongErrorThisisVeryLongErrorErr" +
+                        "orThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryLongErr" +
+                        "orErrorThisisLongErrorThisisVeryLongErrorErrorThisisLongErrorThisisVeryL" +
+                        "ongErrorErrorThisisLongErrorThisisVeryLongError",
                 ),
             isUser = true,
         )

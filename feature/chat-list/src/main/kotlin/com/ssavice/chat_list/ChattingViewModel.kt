@@ -18,48 +18,48 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChattingViewModel
-@Inject
-constructor(
-    private val chatRepository: ChatRepository,
-) : ViewModel() {
-    private val _initialLoad = MutableStateFlow(true)
-    val initialLoad = _initialLoad.asStateFlow()
+    @Inject
+    constructor(
+        private val chatRepository: ChatRepository,
+    ) : ViewModel() {
+        private val _initialLoad = MutableStateFlow(true)
+        val initialLoad = _initialLoad.asStateFlow()
 
-    val chattingRoomState by lazy {
-        chatRepository
-            .getRoomList()
-            .distinctUntilChanged()
-            .map {
-                it
-                    .sortedByDescending { room -> room.lastUpdate }
-                    .map { room ->
-                        val lastUpdate = DateTime.fromTimeStamp(room.lastUpdate)
-                        ChattingRoomItem(
-                            name = room.name,
-                            serviceId = null,
-                            serviceName = "",
-                            lastUpdate = lastUpdate,
-                            unreadCount = room.unreadCount,
-                            roomId = room.roomId,
-                            lastMessage = room.lastMessage,
-                            lastUpdateString = lastUpdate.dateToSimpleString(),
-                            thumbnail = room.thumbnailUrl,
-                            roomType = room.roomType
-                        )
-                    }
-            }.flowOn(Dispatchers.Default)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyList(),
-            )
-    }
+        val chattingRoomState by lazy {
+            chatRepository
+                .getRoomList()
+                .distinctUntilChanged()
+                .map {
+                    it
+                        .sortedByDescending { room -> room.lastUpdate }
+                        .map { room ->
+                            val lastUpdate = DateTime.fromTimeStamp(room.lastUpdate)
+                            ChattingRoomItem(
+                                name = room.name,
+                                serviceId = null,
+                                serviceName = "",
+                                lastUpdate = lastUpdate,
+                                unreadCount = room.unreadCount,
+                                roomId = room.roomId,
+                                lastMessage = room.lastMessage,
+                                lastUpdateString = lastUpdate.dateToSimpleString(),
+                                thumbnail = room.thumbnailUrl,
+                                roomType = room.roomType,
+                            )
+                        }
+                }.flowOn(Dispatchers.Default)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = emptyList(),
+                )
+        }
 
-    fun onRefresh() {
-        chatRepository.refreshRoomList()
-    }
+        fun onRefresh() {
+            chatRepository.refreshRoomList()
+        }
 
-    fun onTransitionFinished() {
-        _initialLoad.update { false }
+        fun onTransitionFinished() {
+            _initialLoad.update { false }
+        }
     }
-}

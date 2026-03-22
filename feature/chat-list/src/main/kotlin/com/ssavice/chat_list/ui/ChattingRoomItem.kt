@@ -94,7 +94,7 @@ fun ChattingRoomItem(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = title,
@@ -106,7 +106,7 @@ fun ChattingRoomItem(
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false) // 타이틀이 길어도 아이콘 공간 확보
+                        modifier = Modifier.weight(1f, fill = false), // 타이틀이 길어도 아이콘 공간 확보
                     )
 
                     Spacer(modifier = Modifier.width(4.dp))
@@ -115,7 +115,7 @@ fun ChattingRoomItem(
                         imageVector = if (isGroup) Icons.Default.Groups else Icons.Default.Person,
                         contentDescription = if (isGroup) "그룹 채팅" else "개인 채팅",
                         modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.outline
+                        tint = MaterialTheme.colorScheme.outline,
                     )
                 }
 

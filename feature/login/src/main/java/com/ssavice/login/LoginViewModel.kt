@@ -116,8 +116,7 @@ class LoginViewModel
                         }
                     }
                 }
-            }
-            catch (e: UninitializedPropertyAccessException) {
+            } catch (e: UninitializedPropertyAccessException) {
                 _uiState.update {
                     it.copy(loginState = LoginState.NotAvailable)
                 }

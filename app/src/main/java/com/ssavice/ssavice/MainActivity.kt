@@ -108,7 +108,7 @@ class MainActivity : ComponentActivity() {
             KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
             KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
         } catch (e: Exception) {
-            Log.e("MainActivity","카카오 SDK 연결 오류")
+            Log.e("MainActivity", "카카오 SDK 연결 오류")
         }
     }
 

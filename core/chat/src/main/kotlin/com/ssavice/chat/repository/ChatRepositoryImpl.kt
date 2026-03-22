@@ -184,65 +184,64 @@ class ChatRepositoryImpl
                         .getRoomList()
                         .onSuccess { result ->
                             Log.d("ChatRepositoryImpl", "getRoomList Success: ${result.rooms}")
-                            val entities = result.rooms.map { room ->
-                                ChatRoomEntity(
-                                    roomId = room.roomId,
-                                    lastReadMessageId = 0,
-                                    lastMessageId = room.lastChatId ?: 0,
-                                    roomName = room.name,
-                                    lastMessage = room.lastMessage ?: "",
-                                    lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
-                                    roomType = RoomType.getValue(room.type),
-                                    serviceId = room.serviceId ?: -1,
-                                    thumbnailId = room.thumbnailId,
-                                )
-                            }
+                            val entities =
+                                result.rooms.map { room ->
+                                    ChatRoomEntity(
+                                        roomId = room.roomId,
+                                        lastReadMessageId = 0,
+                                        lastMessageId = room.lastChatId ?: 0,
+                                        roomName = room.name,
+                                        lastMessage = room.lastMessage ?: "",
+                                        lastMessageCreatedAt = mapLastMessageAtToMilliseconds(room.lastMessageAt),
+                                        roomType = RoomType.getValue(room.type),
+                                        serviceId = room.serviceId ?: -1,
+                                        thumbnailId = room.thumbnailId,
+                                    )
+                                }
                             chatRoomDao.upsertRoomsMetadata(
                                 entities,
                             )
                             updateRoomThumbnailIfNeed()
-
                         }.onFailure {
                             Log.e("ChatRepositoryImpl", "getRoomList Failed", it)
                         }
                 }
         }
 
-    private suspend fun updateRoomThumbnailIfNeed() {
-        val threshold = System.currentTimeMillis() - THUMBNAIL_UPDATE_RATE
-        val thumbnailsToUpdate = getThumbnailNeedToUpdate(threshold)
+        private suspend fun updateRoomThumbnailIfNeed() {
+            val threshold = System.currentTimeMillis() - THUMBNAIL_UPDATE_RATE
+            val thumbnailsToUpdate = getThumbnailNeedToUpdate(threshold)
 
-        val updates = mutableSetOf<Pair<String, String>>()
-        val userRoomMap = mutableMapOf<Long, String>()
-        val services = mutableListOf<Pair<String, Long>>()
+            val updates = mutableSetOf<Pair<String, String>>()
+            val userRoomMap = mutableMapOf<Long, String>()
+            val services = mutableListOf<Pair<String, Long>>()
 
-        thumbnailsToUpdate.forEach {
-            if(it.roomType == RoomType.DM) {
-                userRoomMap[it.thumbnailId] = it.roomId
-            }
-            else if(it.roomType == RoomType.GROUP) {
-                services.add(Pair(it.roomId, it.thumbnailId))
-            }
-        }
-
-        val userInfos = userRetrofitService.getUserInfoSummary(userRoomMap.keys.toList())
-
-        userInfos.onSuccess {
-            it.toModel().forEach { user ->
-                userRoomMap[user.id]?.let { roomId ->
-                    updates.add(roomId to user.thumbnail)
+            thumbnailsToUpdate.forEach {
+                if (it.roomType == RoomType.DM) {
+                    userRoomMap[it.thumbnailId] = it.roomId
+                } else if (it.roomType == RoomType.GROUP) {
+                    services.add(Pair(it.roomId, it.thumbnailId))
                 }
             }
-        }
-        services.forEach {
-            serviceRetrofitSummary.getServiceSummary(it.second).onSuccess { service ->
-                updates.add(it.first to service.serviceThumbnail)
+
+            val userInfos = userRetrofitService.getUserInfoSummary(userRoomMap.keys.toList())
+
+            userInfos.onSuccess {
+                it.toModel().forEach { user ->
+                    userRoomMap[user.id]?.let { roomId ->
+                        updates.add(roomId to user.thumbnail)
+                    }
+                }
+            }
+            services.forEach {
+                serviceRetrofitSummary.getServiceSummary(it.second).onSuccess { service ->
+                    updates.add(it.first to service.serviceThumbnail)
+                }
+            }
+            updates.forEach {
+                chatRoomDao.updateThumbnail(it.first, it.second, System.currentTimeMillis())
             }
         }
-        updates.forEach {
-            chatRoomDao.updateThumbnail(it.first, it.second, System.currentTimeMillis())
-        }
-    }
 
         override suspend fun getRoomInfo(roomId: String): Result<ChattingRoomInfo> =
             chatApi.getRoomInfo(roomId).map {
@@ -347,12 +346,13 @@ class ChatRepositoryImpl
                 }.map { Unit }
         }
 
-    override suspend fun getThumbnailNeedToUpdate(threshold: Long): List<ChattingRoomMetadata> {
-        return chatRoomDao.getThumbnailNeedToUpdate(threshold).map { it.toModel() }
-    }
+        override suspend fun getThumbnailNeedToUpdate(threshold: Long): List<ChattingRoomMetadata> =
+            chatRoomDao.getThumbnailNeedToUpdate(threshold).map {
+                it.toModel()
+            }
 
-    companion object {
-        const val TAG = "ChatRepositoryImpl"
-        const val THUMBNAIL_UPDATE_RATE = 3600_000L
+        companion object {
+            const val TAG = "ChatRepositoryImpl"
+            const val THUMBNAIL_UPDATE_RATE = 3600_000L
+        }
     }
-}
