@@ -2,6 +2,7 @@ package com.ssavice.service_detail.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
@@ -22,7 +23,9 @@ fun ServiceDetailBottomBar(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     if (!state.showUserInfo) return
     Row(
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .navigationBarsPadding(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OutlinedButton(
